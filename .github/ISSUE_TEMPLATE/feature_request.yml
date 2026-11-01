@@ -1,0 +1,23 @@
+name: Propor recurso
+description: Proposta de funcionalidade com escopo controlado.
+title: "[FEATURE] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema do jogador
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Mecânica proposta e consequências
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critérios de aceitação e testes
+    validations:
+      required: true

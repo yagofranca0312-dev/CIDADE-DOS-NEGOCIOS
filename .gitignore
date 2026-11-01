@@ -1,0 +1,16 @@
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+coverage/
+playwright-report/
+test-results/
+*.save.json
+*.backup.json
+.env
+.env.*
+!.env.example
+# Atualizacoes locais / dados privados
+_atualizador/
+saves/
+backups/

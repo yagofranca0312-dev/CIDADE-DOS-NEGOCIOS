@@ -1,0 +1,13 @@
+{
+  "name": "cidade-dos-negocios",
+  "version": "1.0.0-rc.1",
+  "private": true,
+  "type": "module",
+  "description": "Cidade dos Negócios 1: simulador econômico educativo em HTML único offline",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "check": "npm run build && npm test"
+  },
+  "engines": {"node": ">=22"}
+}

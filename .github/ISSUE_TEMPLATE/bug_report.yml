@@ -1,0 +1,23 @@
+name: Relatar defeito
+description: Registre um erro reproduzível sem divulgar dados pessoais.
+title: "[BUG] "
+labels: [bug]
+body:
+  - type: textarea
+    id: steps
+    attributes:
+      label: Passos para reproduzir
+      description: Informe versão, estado/seed sintética e sequência de ações.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Resultado esperado e observado
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidências e ambiente
+      description: Não anexe saves reais, credenciais ou dados pessoais.

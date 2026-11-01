@@ -1,0 +1,23 @@
+name: Validacao do Cidade dos Negocios 1
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  tests:
+    name: Build do HTML unico e testes
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm run check
+      - name: Verificar se index.html gerado corresponde ao commit
+        run: git diff --exit-code -- index.html
+      - name: SHA-256 do executavel
+        run: sha256sum index.html

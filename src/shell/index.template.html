@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10243E">
+  <meta name="description" content="Cidade dos Negócios 1, simulador empresarial brasileiro offline, em um único HTML.">
+  <title>Cidade dos Negócios 1 — Simulação empresarial</title>
+  <style>
+/* CDN_CSS */
+  </style>
+</head>
+<body>
+  <div class="onboarding" id="onboarding">
+    <div class="onboarding-art" aria-hidden="true"><div class="skyline"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    <div class="intro-copy">
+      <p class="eyebrow"><span class="eyebrow-dot"></span> CIDADE DOS NEGÓCIOS · PRIMEIRA EDIÇÃO</p>
+      <div class="brand-icon brand-intro" aria-hidden="true"><svg viewBox="0 0 62 62" width="60" height="60"><rect x="5" y="30" width="13" height="27" rx="2" fill="#51A9DF"/><rect x="24" y="19" width="13" height="38" rx="2" fill="#E9AD50"/><rect x="43" y="8" width="13" height="49" rx="2" fill="#51A9DF"/><path d="M8 20l15-8 12 5L51 1" fill="none" stroke="#F4D49A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h1>CIDADE DOS<br><em>NEGÓCIOS</em></h1>
+      <p class="hero-subtitle">Uma cidade. Uma empresa. Mil decisões.</p>
+      <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
+      <div class="intro-features"><span>◆ Economia simulada</span><span>◆ 30 cidades</span><span>◆ Offline</span></div>
+      <p class="fine-print">V1.0.0-rc.1 — prévia jogável. Parâmetros econômicos fictícios e legislação tributária ainda não implementada.</p>
+    </div>
+    <section class="start-card" aria-labelledby="start-title">
+      <div class="card-kicker">NOVA CARREIRA</div>
+      <h2 id="start-title">Seu próximo capítulo começa aqui.</h2>
+      <p class="muted">Defina o empreendedor e escolha onde abrir a primeira empresa.</p>
+      <form id="career-form">
+        <label for="player-name">Seu nome no jogo</label>
+        <input required minlength="2" maxlength="60" id="player-name" autocomplete="off" value="Empreendedor">
+        <label for="company-name">Nome do negócio</label>
+        <input required minlength="3" maxlength="70" id="company-name" value="Meu Primeiro Negócio" autocomplete="off">
+        <label for="start-city">Cidade inicial</label>
+        <select id="start-city" required></select>
+        <p class="field-hint">As características econômicas iniciais são parâmetros fictícios de gameplay, não dados oficiais municipais.</p>
+        <button class="btn btn-primary btn-big" type="submit">Iniciar carreira <span aria-hidden="true">↗</span></button>
+      </form>
+      <button class="text-action" id="start-import" type="button">Já tenho um save JSON · Importar</button>
+      <p id="start-message" class="status-text" aria-live="polite"></p>
+    </section>
+  </div>
+  <div id="game-shell" class="game-shell" hidden>
+    <aside class="sidebar">
+      <div class="sidebar-brand"><div class="brand-mark" aria-hidden="true"><span>▥</span></div><div><strong>CIDADE DOS<br>NEGÓCIOS</strong><small>EDIÇÃO 01</small></div></div>
+      <div class="nav-label">VISÃO GERAL</div>
+      <nav class="nav-items" aria-label="Seções do jogo">
+        <button type="button" data-tab="cidade" class="nav-item active"><span>▦</span> Cidade</button>
+        <button type="button" data-tab="empresa" class="nav-item"><span>▣</span> Minha empresa</button>
+        <button type="button" data-tab="mercado" class="nav-item"><span>⇅</span> Mercado</button>
+        <button type="button" data-tab="financas" class="nav-item"><span>▥</span> Finanças</button>
+        <button type="button" data-tab="fiscal" class="nav-item"><span>§</span> Fiscal</button>
+        <button type="button" data-tab="sistema" class="nav-item"><span>⚙</span> Sistema</button>
+      </nav>
+      <div class="sidebar-bottom"><span class="online-dot"></span> EXECUÇÃO LOCAL <small>100% sem servidor</small></div>
+    </aside>
+    <div class="main-pane">
+      <header class="topbar">
+        <div><div class="overline">MUNDO ATIVO</div><h2 id="top-city">Tianguá <span>· CE</span></h2></div>
+        <div class="topbar-controls">
+          <label class="compact-label" for="explore-city">Explorar cidade</label><select id="explore-city" aria-label="Cidade em visualização"></select>
+          <div class="date-box"><small>DATA DO MUNDO</small><strong id="date-label">—</strong></div>
+          <button type="button" id="pause-btn" class="btn btn-outline" aria-label="Iniciar ou pausar simulação">▶ Jogar</button>
+          <select id="speed-select" aria-label="Velocidade da simulação"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select>
+        </div>
+      </header>
+      <div class="world-warning" id="other-city-warning" hidden>Você está explorando outra cidade. A empresa atual opera apenas na cidade de origem nesta versão.</div>
+      <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Tributação legal não calculada nesta versão.</div>
+      <main class="content">
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.0.0-rc.1</span></div>
+        <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
+          <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
+          <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
+          <div class="stat"><span>RESULTADO OPERACIONAL</span><strong id="kpi-profit">—</strong><small>Antes de tributos não simulados</small></div>
+          <div class="stat"><span>ESTOQUE DISPONÍVEL</span><strong id="kpi-stock">—</strong><small id="kpi-stock-label">Unidades do negócio</small></div>
+        </section>
+        <section data-view="cidade" class="view active">
+          <div class="dashboard-grid">
+            <article class="panel map-panel"><div class="panel-heading"><div><div class="overline">MAPA URBANO · ESTILIZADO</div><h3 id="map-title">Seu distrito comercial</h3></div><span class="tag-soft" id="map-uf">CE</span></div>
+              <div id="map-canvas" class="map-canvas" role="group" aria-label="Mapa ilustrativo clicável com 18 lotes"></div>
+              <div class="map-legend"><span><i class="legend-color lot"></i> Lote disponível</span><span><i class="legend-color own"></i> Sua empresa</span><span><i class="legend-color sel"></i> Selecionado</span></div>
+              <p class="map-disclaimer">Mapa fictício para jogabilidade. Não representa ruas, lotes ou imóveis reais.</p>
+            </article>
+            <div class="right-column"><article class="panel"><div class="panel-heading"><h3>Lote selecionado</h3><span class="tag-soft">COMERCIAL</span></div><div class="big-number" id="selected-lot">Lote 01</div><p class="muted">Selecione um dos lotes no mapa. Na V1 é possível abrir um estabelecimento por carreira.</p><button class="btn btn-primary full" id="map-open-company" type="button">Abrir empresa neste lote</button></article>
+              <article class="panel"><div class="panel-heading"><h3>Aconteceu na cidade</h3><span class="tag-soft">EVENTOS REAIS DO JOGO</span></div><div id="city-events" class="event-list"></div></article></div>
+          </div>
+        </section>
+        <section data-view="empresa" class="view" hidden>
+          <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Minha empresa</h3><span class="tag-soft" id="company-status">NÃO INAUGURADA</span></div>
+            <div id="company-empty"><p class="muted">Escolha um ramo de negócio e um lote para dar o primeiro passo.</p><form id="open-form"><label for="sector-select">Ramo de atividade</label><select id="sector-select"><option value="mercado">Mercado de bairro</option><option value="padaria">Padaria</option><option value="roupas">Loja de roupas</option></select><p id="open-preview" class="field-hint"></p><button type="submit" class="btn btn-primary">Inaugurar negócio</button></form></div>
+            <div id="company-active" hidden><div class="company-emblem"><span id="company-glyph">▣</span><div><h3 id="company-title">—</h3><p id="company-product" class="muted"></p></div></div><dl class="detail-list"><dt>Endereço virtual</dt><dd id="company-location">—</dd><dt>Unidades vendidas</dt><dd id="company-sold">—</dd><dt>Preço atual</dt><dd id="company-price">—</dd><dt>Obrigações a pagar</dt><dd id="company-payable">—</dd></dl></div>
+            </article><article class="panel"><div class="panel-heading"><h3>Administração</h3></div><p class="muted">Gerencie seus produtos na aba Mercado e acompanhe as contas em Finanças.</p><button type="button" class="btn btn-outline full" data-go="mercado">Ir para o mercado ↗</button><button type="button" class="btn btn-outline full spaced" data-go="financas">Ver demonstrativos ↗</button></article></div>
+        </section>
+        <section data-view="mercado" class="view" hidden>
+          <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Compras e estoque</h3><span class="tag-soft">M15 · SUPRIMENTOS</span></div><form id="buy-form"><p id="market-product" class="muted">Abra uma empresa antes de comprar mercadorias.</p><label for="buy-quantity">Quantidade de unidades</label><input type="number" min="1" max="2000" value="30" id="buy-quantity" required><p id="buy-total" class="field-hint">—</p><button type="submit" class="btn btn-primary">Comprar mercadorias</button></form></article>
+          <article class="panel"><div class="panel-heading"><h3>Estratégia de preços</h3><span class="tag-soft">M08 · MERCADO</span></div><form id="price-form"><label for="price-value">Preço de venda (R$)</label><input id="price-value" type="number" min="1" max="10000" step="0.01" required><p id="competitor-price" class="field-hint">Concorrência: —</p><button type="submit" class="btn btn-outline">Atualizar preço</button></form><p class="muted hint-bottom">Preços mais altos podem reduzir a demanda. Simulação econômica experimental.</p></article></div>
+        </section>
+        <section data-view="financas" class="view" hidden>
+          <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Demonstrativo gerencial</h3><span class="tag-soft">M11 · LEDGER</span></div><dl class="finance-list" id="finance-summary"></dl><p class="muted">Resultado operacional demonstrativo. Não inclui tributos não implementados.</p></article><article class="panel"><div class="panel-heading"><h3>Últimos lançamentos</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
+        </section>
+        <section data-view="fiscal" class="view" hidden>
+          <article class="panel fiscal-panel"><span class="fiscal-icon">§</span><div><div class="overline">MT-01 · COBERTURA NORMATIVA</div><h3>Tributação não implementada nesta versão</h3><p>O jogo simula operações econômicas fictícias, mas não calcula ICMS, ISS, PIS/Cofins, IBS, CBS, Simples Nacional ou obrigações acessórias. Ausência de cálculo <strong>não significa alíquota zero</strong>.</p><p>O calendário pode avançar até 2033 e além; isso não representa validação da legislação desses anos. Uma futura implementação exigirá bases legais identificadas, vigência por competência e testes fiscais independentes.</p><div class="tag-warning">STATUS: NOT_COVERED · MODO DEMONSTRAÇÃO</div></div></article>
+        </section>
+        <section data-view="sistema" class="view" hidden>
+          <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Salvamento e recuperação</h3><span class="tag-soft">M05</span></div><p class="muted">O backup JSON é o método portátil recomendado, especialmente ao atualizar o HTML no Windows.</p><div class="button-stack"><button class="btn btn-primary" type="button" id="export-btn">Exportar minha carreira (.json)</button><button class="btn btn-outline" type="button" id="import-btn">Importar carreira (.json)</button><button class="btn btn-outline" type="button" id="new-career-btn">Começar uma nova carreira</button></div><p class="field-hint" id="autosave-label">Verificando salvamento local…</p></article>
+          <article class="panel"><div class="panel-heading"><h3>Diagnóstico e integridade</h3><span class="tag-soft">M06</span></div><dl class="detail-list" id="diagnostic-details"></dl><button class="btn btn-outline spaced" id="run-diagnostic" type="button">Executar verificação</button><p class="field-hint" id="diagnostic-result">—</p></article></div>
+        </section>
+        <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
+      </main>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.0.0-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+    </div>
+  </div>
+  <input type="file" id="import-file" accept=".json,application/json" hidden>
+  <div class="toast" id="toast" aria-live="polite" role="status"></div>
+  <script>
+/* CDN_CORE */
+/* CDN_UI */
+  </script>
+</body>
+</html>

@@ -6,7 +6,7 @@
 
 Coloque `ATUALIZAR_E_JOGAR.bat`, `JOGAR_OFFLINE.bat` e a pasta `tools/` dentro da mesma pasta que contém `index.html`:
 
-`C:\Users\Yago França\Documents\00_Yago\2026_ano\11_mes\01\CIDADE DOS NEGOCIOS\cidade-dos-negocios`
+`<pasta do jogo>\cidade-dos-negocios`
 
 Faça **dois cliques em `ATUALIZAR_E_JOGAR.bat`**. O script consulta o commit `main` do repositório `yagofranca0312-dev/CIDADE-DOS-NEGOCIOS`, baixa o arquivo ZIP daquela revisão, substitui apenas os arquivos publicados e abre `index.html` no navegador padrão. Quando a revisão já é a mesma, não baixa o ZIP.
 
@@ -40,7 +40,7 @@ Use `JOGAR_OFFLINE.bat` para abrir o HTML local sem internet.
 
 ## Primeira publicacao no GitHub (apenas uma vez)
 
-Como a conexao do GitHub no chat retornou **403** ao gravar, a publicacao inicial pode ser feita com `PUBLICAR_PRIMEIRA_VERSAO.bat` na pasta do jogo. O script:
+**Registro histórico:** o script `PUBLICAR_PRIMEIRA_VERSAO.bat` foi criado quando o repositório estava vazio. **A V1 RC1 já foi publicada diretamente no GitHub. Não execute o publicador inicial novamente.** O script, agora legado:
 
 1. Confirma que a conta/repo corresponde ao repositorio esperado e que `main` ainda esta vazia.
 2. Solicita confirmacao explicita para publicar o codigo em repositorio PUBLICO.

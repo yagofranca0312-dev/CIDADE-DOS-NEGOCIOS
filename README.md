@@ -26,7 +26,7 @@
 
 ### Atualizar pelo GitHub
 
-O `ATUALIZAR_E_JOGAR.bat` foi preparado para obter a versão da branch `main` do repositório [CIDADE-DOS-NEGOCIOS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS). **Não funcionará enquanto o HTML não estiver publicado no GitHub.** Veja [ATUALIZADOR_WINDOWS.md](docs/ATUALIZADOR_WINDOWS.md).
+O `ATUALIZAR_E_JOGAR.bat` foi preparado para obter a versão da branch `main` do repositório [CIDADE-DOS-NEGOCIOS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS). **A V1 RC1 já está publicada no GitHub.** Veja [ATUALIZADOR_WINDOWS.md](docs/ATUALIZADOR_WINDOWS.md).
 
 ## Desenvolver
 

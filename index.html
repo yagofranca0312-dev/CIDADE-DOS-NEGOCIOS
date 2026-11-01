@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10243E">
+  <meta name="description" content="Cidade dos Negócios 1, simulador empresarial brasileiro offline, em um único HTML.">
+  <title>Cidade dos Negócios 1 — Simulação empresarial</title>
+  <style>
+:root{color-scheme:dark;--navy:#10243e;--deep:#091629;--panel:#142b45;--panelhi:#193451;--blue:#51a9df;--gold:#e9ad50;--green:#51bd83;--text:#f4f7fb;--muted:#b8c6d8;--stroke:#2b4860;--red:#ef7070;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:15px}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#091629;color:var(--text)}[hidden]{display:none!important}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.46;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f4d49a;outline-offset:2px}a{color:#9dcee9}h1,h2,h3,p{margin-top:0}h1,h2,h3{letter-spacing:-.025em}h3{font-size:1.12rem;margin-bottom:0}p{line-height:1.65}small,.muted,.field-hint{color:var(--muted)}.field-hint{font-size:.83rem;margin:10px 0 19px;line-height:1.45}.hint-bottom{margin-top:26px}.status-text{font-size:.87rem;margin:13px 0 0;min-height:1.25rem}.overline,.eyebrow,.card-kicker,.nav-label{font-size:.7rem;letter-spacing:.16em;font-weight:800;color:#a3b7cb}.eyebrow-dot,.online-dot{display:inline-block;background:var(--green);width:7px;height:7px;border-radius:50%;margin-right:7px}.btn{border:1px solid #466178;border-radius:10px;padding:12px 16px;background:#24415a;color:var(--text);font-size:.89rem;font-weight:750;transition:transform .15s,filter .15s;min-height:44px}.btn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px)}.btn-primary{background:linear-gradient(135deg,#e9ad50,#f3c775);color:#101d2b;border-color:#f4d49a}.btn-outline{background:#14283b;color:#f2f7fb}.btn-big{width:100%;padding:16px 20px;display:flex;justify-content:space-between;margin-top:18px}.full{width:100%}.spaced{margin-top:9px}.tag-soft,.tag-warning{display:inline-block;letter-spacing:.05em;font-weight:800;font-size:.63rem;background:#203e58;color:#a9dafa;border:1px solid #3b617b;border-radius:8px;padding:8px 10px}.tag-warning{color:#f4d49a;background:#3c301d;border-color:#906c39}.brand-icon{filter:drop-shadow(0 9px 28px #0003)}.onboarding{min-height:100vh;display:grid;grid-template-columns:minmax(390px,1fr) minmax(380px,.78fr);gap:clamp(30px,6vw,100px);align-items:center;max-width:1540px;margin:0 auto;padding:45px clamp(24px,6vw,94px);position:relative;overflow:hidden}.onboarding:before{content:"";background:radial-gradient(ellipse at center,#193e6077,transparent 70%);position:absolute;inset:0 0 0 -30%;pointer-events:none}.onboarding-art{position:absolute;inset:0;opacity:.14;pointer-events:none;overflow:hidden}.skyline{display:flex;align-items:end;gap:18px;position:absolute;bottom:0;left:-2%;height:63%;width:110%;transform:skewY(-7deg)}.skyline i{display:block;flex:1;background:linear-gradient(180deg,#7dbde3,#1d5070);height:65%;border-radius:5px 5px 0 0;box-shadow:inset 10px 0 0 #0a223a}.skyline i:nth-child(2n){height:78%}.skyline i:nth-child(3n){height:44%}.skyline i:nth-child(5n){height:95%}.intro-copy{position:relative;z-index:1}.intro-copy .eyebrow{color:#9ddfe2;margin-bottom:48px}.brand-intro{margin-bottom:15px}.intro-copy h1{font-size:clamp(3.3rem,6vw,6.8rem);line-height:.92;margin-bottom:20px;font-weight:900}.intro-copy h1 em{font-style:normal;background:linear-gradient(120deg,#f6ce82,#d89d41);background-clip:text;-webkit-background-clip:text;color:transparent}.hero-subtitle{font-size:1.55rem;font-weight:700;margin:29px 0 10px}.intro-desc{font-size:1.02rem;color:#c7d3df;max-width:540px}.intro-features{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}.intro-features span{padding:10px 12px;border:1px solid #395875;background:#12304aab;border-radius:8px;font-size:.78rem;color:#b9d6e6}.fine-print{font-size:.72rem;color:#8fa8bb;margin-top:40px}.start-card{position:relative;z-index:1;background:linear-gradient(158deg,#1a3652 0%,#102339 100%);padding:clamp(25px,4vw,42px);border:1px solid #3c5970;box-shadow:0 24px 90px #0007;border-radius:20px}.card-kicker{color:var(--gold);margin-bottom:13px}.start-card h2{font-size:2rem;line-height:1.1;margin-bottom:12px}.start-card label,.panel label{display:block;font-size:.78rem;color:#c5d6e6;font-weight:700;margin:18px 0 7px}.start-card input,.start-card select,.panel input,.panel select,.topbar select{width:100%;background:#0c2136;border:1px solid #3c5a71;color:var(--text);border-radius:9px;min-height:42px;padding:10px 13px;outline-color:var(--gold)}.text-action{border:0;color:#b7d9f5;background:transparent;font-size:.86rem;margin:15px auto 0;display:block;padding:10px}.game-shell{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:100vh}.sidebar{background:linear-gradient(175deg,#0b1b2e,#10243e);border-right:1px solid #203e59;display:flex;flex-direction:column;padding:27px 15px 18px;position:sticky;top:0;height:100vh}.sidebar-brand{display:flex;gap:10px;align-items:center;padding:0 8px 32px}.brand-mark{width:43px;height:43px;border-radius:10px;background:linear-gradient(135deg,#e2a450,#f0c77d);color:#092037;display:grid;place-items:center;font-size:2rem}.sidebar-brand strong{display:block;font-size:.9rem;letter-spacing:.065em;line-height:1.15}.sidebar-brand small{font-size:.59rem;letter-spacing:.16em;color:var(--gold)}.nav-label{padding:0 14px 12px;color:#7896b4}.nav-items{display:grid;gap:5px}.nav-item{width:100%;background:none;border:1px solid transparent;color:#b6c7d8;padding:13px 14px;border-radius:9px;text-align:left;font-weight:650;display:flex;align-items:center;gap:14px;font-size:.88rem}.nav-item span{font-size:1.17rem;width:24px;text-align:center}.nav-item.active{background:#244360;color:#fff;border-color:#3a6080;box-shadow:inset 3px 0 0 var(--gold)}.nav-item:hover{background:#1a3852}.sidebar-bottom{margin-top:auto;padding:17px 11px 0;border-top:1px solid #29425a;font-size:.69rem;letter-spacing:.1em;font-weight:800;color:#bdd4e2}.sidebar-bottom small{display:block;letter-spacing:0;font-weight:400;margin:8px 0 0 16px}.main-pane{min-width:0;display:flex;flex-direction:column}.topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px clamp(16px,3vw,39px);border-bottom:1px solid #28435c;background:#0e2035}.topbar h2{font-size:1.4rem;margin:3px 0 0}.topbar h2 span{color:#95adbf;font-weight:500}.topbar-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.compact-label{font-size:.72rem;color:var(--muted)}.topbar select{width:auto;max-width:195px;font-size:.78rem}.date-box{background:#152f47;border:1px solid #34516c;border-radius:9px;padding:7px 15px;min-width:115px}.date-box small{display:block;font-size:.57rem;letter-spacing:.1em}.date-box strong{display:block;font-size:.93rem;margin-top:3px;font-variant-numeric:tabular-nums}.world-warning{padding:10px clamp(16px,3vw,39px);border-bottom:1px solid #4b492d;background:#2e2b1d;color:#f6d69b;font-size:.76rem;font-weight:600}.legal-warning{background:#132b3a;border-color:#24485b;color:#a7c9d9}.content{padding:30px clamp(16px,3vw,39px);max-width:1720px;width:100%;margin:0 auto;flex:1}.page-title{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:25px}.page-title h1{font-size:clamp(1.5rem,2.6vw,2.2rem);margin:7px 0 2px}.page-title p{color:#a9bacb;font-size:.85rem;margin:0}.build-badge{border:1px solid #3d5a71;color:#a4cce4;padding:8px 11px;border-radius:8px;font-size:.72rem;white-space:nowrap}.stats-bar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:20px}.stat,.panel{border:1px solid #304c63;border-radius:13px;background:linear-gradient(155deg,#17314a,#10273e);box-shadow:0 10px 22px #0002}.stat{padding:21px 20px}.stat span{display:block;font-size:.67rem;letter-spacing:.085em;color:#afc0d2;font-weight:700}.stat strong{display:block;font-size:clamp(1.3rem,2vw,2rem);margin:10px 0 3px;font-variant-numeric:tabular-nums;letter-spacing:-.035em;white-space:nowrap}.stat small{font-size:.68rem}.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(280px,.83fr);gap:17px}.right-column{display:grid;gap:17px;align-content:start}.panel{padding:23px}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.map-panel{padding:0;overflow:hidden;align-self:start}.map-panel .panel-heading{padding:23px 23px 0;margin-bottom:0}.map-panel .overline{margin-bottom:6px}.map-canvas{min-height:350px;background:radial-gradient(ellipse at 55% 37%,#265372 0%,#163751 54%,#0d2436 100%);overflow:hidden}.map-canvas svg{display:block;width:100%;height:auto;min-height:320px;max-height:480px;touch-action:manipulation}.map-canvas svg [data-lot]{cursor:pointer;outline:none;transition:filter .15s}.map-canvas svg [data-lot]:hover,.map-canvas svg [data-lot]:focus{filter:brightness(1.5)}.map-legend{display:flex;gap:20px;flex-wrap:wrap;font-size:.71rem;color:#b8cadd;padding:0 23px 12px}.legend-color{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}.legend-color.lot{background:#537d69}.legend-color.own{background:#e9ad50}.legend-color.sel{background:#51a9df}.map-disclaimer{font-size:.68rem;color:#91b0c0;padding:0 23px 15px;margin:0}.big-number{font-size:2.1rem;font-weight:850;color:var(--gold);letter-spacing:-.06em;margin:12px 0}.event-list{display:grid;gap:13px;max-height:320px;overflow:auto}.event-item{border-bottom:1px solid #264259;padding-bottom:10px;display:flex;gap:10px;align-items:start}.event-item:last-child{border-bottom:0}.event-dot{background:var(--blue);width:7px;height:7px;border-radius:50%;flex:none;margin-top:7px}.event-item p{margin:0;color:#d0dde8;font-size:.81rem;line-height:1.45}.event-item small{display:block;margin-top:4px;font-size:.67rem;color:#8eabc0}.view{min-height:370px}.detail-list,.finance-list{display:grid;grid-template-columns:1fr auto;gap:15px;margin:19px 0}.detail-list dt,.finance-list dt{color:#bed0df}.detail-list dd,.finance-list dd{margin:0;text-align:right;font-weight:800;font-variant-numeric:tabular-nums}.finance-list{border-top:1px solid #3b586c;padding-top:17px}.finance-list dt,.finance-list dd{font-size:.85rem}.finance-list .emphasis{color:var(--gold);font-weight:800;font-size:1rem}.company-emblem{display:flex;align-items:center;gap:16px;background:#102c40;border:1px solid #31526b;border-radius:12px;padding:16px}.company-emblem>span{font-size:2.4rem}.company-emblem h3{margin-bottom:3px}.company-emblem p{margin:0}.button-stack{display:grid;gap:10px;margin:20px 0}.fiscal-panel{display:flex;gap:24px;max-width:920px}.fiscal-icon{font-size:3.2rem;font-weight:850;color:var(--gold)}.turnbar{margin-top:23px;background:linear-gradient(125deg,#173c58,#132b44);border:1px solid #3d6480;border-radius:13px;padding:20px 25px;display:flex;justify-content:space-between;align-items:center;gap:20px}.turnbar h3{margin:6px 0}.turnbar p{font-size:.77rem;color:#a5bfd2;margin:0}.turn-actions{display:flex;gap:8px;flex-wrap:wrap}.game-footer{padding:19px clamp(16px,3vw,39px);display:flex;justify-content:space-between;gap:10px;font-size:.63rem;letter-spacing:.08em;color:#91aabd;border-top:1px solid #213e56}.toast{position:fixed;bottom:25px;right:25px;max-width:min(90vw,460px);z-index:99;pointer-events:none;background:#1b3a52;border:1px solid #5e869e;box-shadow:0 15px 45px #0009;color:#fff;padding:14px 19px;border-radius:11px;font-size:.82rem;transform:translateY(140px);opacity:0;transition:transform .25s,opacity .25s}.toast.visible{transform:none;opacity:1}.toast.error{border-color:var(--red);background:#4c2a34}@media(max-width:1180px){.game-shell{grid-template-columns:190px minmax(0,1fr)}.dashboard-grid{grid-template-columns:1fr}.stats-bar{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar{padding-left:10px;padding-right:10px}}@media(max-width:800px){.onboarding{grid-template-columns:1fr;gap:25px;padding:24px}.intro-copy .eyebrow{margin-bottom:20px}.intro-copy h1{font-size:3.8rem}.fine-print{margin-top:14px}.game-shell{display:block}.sidebar{position:relative;height:auto;padding:14px}.sidebar-brand{padding-bottom:12px}.nav-label,.sidebar-bottom{display:none}.nav-items{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px}.nav-item{width:auto;flex:none;padding:9px 11px;font-size:.75rem;gap:6px}.nav-item span{font-size:1rem;width:18px}.topbar{align-items:flex-start;flex-wrap:wrap}.topbar-controls{width:100%}.compact-label{display:none}.page-title{align-items:start}.turnbar{flex-direction:column;align-items:stretch}.turn-actions{width:100%}.turn-actions .btn{flex:1}.game-footer{flex-direction:column}}@media(max-width:480px){.stat{padding:15px 12px}.stat strong{font-size:1.16rem}.stat small{font-size:.6rem}.stats-bar{gap:8px}.panel{padding:17px}.map-panel .panel-heading{padding:16px 16px 0}.map-legend{padding:0 16px 12px}.map-disclaimer{padding:0 16px 12px}.topbar-controls select{max-width:140px}.page-title{flex-direction:column}.game-footer{font-size:.59rem}.fiscal-panel{flex-direction:column;gap:10px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+  </style>
+</head>
+<body>
+  <div class="onboarding" id="onboarding">
+    <div class="onboarding-art" aria-hidden="true"><div class="skyline"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    <div class="intro-copy">
+      <p class="eyebrow"><span class="eyebrow-dot"></span> CIDADE DOS NEGÓCIOS · PRIMEIRA EDIÇÃO</p>
+      <div class="brand-icon brand-intro" aria-hidden="true"><svg viewBox="0 0 62 62" width="60" height="60"><rect x="5" y="30" width="13" height="27" rx="2" fill="#51A9DF"/><rect x="24" y="19" width="13" height="38" rx="2" fill="#E9AD50"/><rect x="43" y="8" width="13" height="49" rx="2" fill="#51A9DF"/><path d="M8 20l15-8 12 5L51 1" fill="none" stroke="#F4D49A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h1>CIDADE DOS<br><em>NEGÓCIOS</em></h1>
+      <p class="hero-subtitle">Uma cidade. Uma empresa. Mil decisões.</p>
+      <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
+      <div class="intro-features"><span>◆ Economia simulada</span><span>◆ 30 cidades</span><span>◆ Offline</span></div>
+      <p class="fine-print">V1.0.0-rc.1 — prévia jogável. Parâmetros econômicos fictícios e legislação tributária ainda não implementada.</p>
+    </div>
+    <section class="start-card" aria-labelledby="start-title">
+      <div class="card-kicker">NOVA CARREIRA</div>
+      <h2 id="start-title">Seu próximo capítulo começa aqui.</h2>
+      <p class="muted">Defina o empreendedor e escolha onde abrir a primeira empresa.</p>
+      <form id="career-form">
+        <label for="player-name">Seu nome no jogo</label>
+        <input required minlength="2" maxlength="60" id="player-name" autocomplete="off" value="Empreendedor">
+        <label for="company-name">Nome do negócio</label>
+        <input required minlength="3" maxlength="70" id="company-name" value="Meu Primeiro Negócio" autocomplete="off">
+        <label for="start-city">Cidade inicial</label>
+        <select id="start-city" required></select>
+        <p class="field-hint">As características econômicas iniciais são parâmetros fictícios de gameplay, não dados oficiais municipais.</p>
+        <button class="btn btn-primary btn-big" type="submit">Iniciar carreira <span aria-hidden="true">↗</span></button>
+      </form>
+      <button class="text-action" id="start-import" type="button">Já tenho um save JSON · Importar</button>
+      <p id="start-message" class="status-text" aria-live="polite"></p>
+    </section>
+  </div>
+  <div id="game-shell" class="game-shell" hidden>
+    <aside class="sidebar">
+      <div class="sidebar-brand"><div class="brand-mark" aria-hidden="true"><span>▥</span></div><div><strong>CIDADE DOS<br>NEGÓCIOS</strong><small>EDIÇÃO 01</small></div></div>
+      <div class="nav-label">VISÃO GERAL</div>
+      <nav class="nav-items" aria-label="Seções do jogo">
+        <button type="button" data-tab="cidade" class="nav-item active"><span>▦</span> Cidade</button>
+        <button type="button" data-tab="empresa" class="nav-item"><span>▣</span> Minha empresa</button>
+        <button type="button" data-tab="mercado" class="nav-item"><span>⇅</span> Mercado</button>
+        <button type="button" data-tab="financas" class="nav-item"><span>▥</span> Finanças</button>
+        <button type="button" data-tab="fiscal" class="nav-item"><span>§</span> Fiscal</button>
+        <button type="button" data-tab="sistema" class="nav-item"><span>⚙</span> Sistema</button>
+      </nav>
+      <div class="sidebar-bottom"><span class="online-dot"></span> EXECUÇÃO LOCAL <small>100% sem servidor</small></div>
+    </aside>
+    <div class="main-pane">
+      <header class="topbar">
+        <div><div class="overline">MUNDO ATIVO</div><h2 id="top-city">Tianguá <span>· CE</span></h2></div>
+        <div class="topbar-controls">
+          <label class="compact-label" for="explore-city">Explorar cidade</label><select id="explore-city" aria-label="Cidade em visualização"></select>
+          <div class="date-box"><small>DATA DO MUNDO</small><strong id="date-label">—</strong></div>
+          <button type="button" id="pause-btn" class="btn btn-outline" aria-label="Iniciar ou pausar simulação">▶ Jogar</button>
+          <select id="speed-select" aria-label="Velocidade da simulação"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select>
+        </div>
+      </header>
+      <div class="world-warning" id="other-city-warning" hidden>Você está explorando outra cidade. A empresa atual opera apenas na cidade de origem nesta versão.</div>
+      <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Tributação legal não calculada nesta versão.</div>
+      <main class="content">
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.0.0-rc.1</span></div>
+        <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
+          <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
+          <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
+          <div class="stat"><span>RESULTADO OPERACIONAL</span><strong id="kpi-profit">—</strong><small>Antes de tributos não simulados</small></div>
+          <div class="stat"><span>ESTOQUE DISPONÍVEL</span><strong id="kpi-stock">—</strong><small id="kpi-stock-label">Unidades do negócio</small></div>
+        </section>
+        <section data-view="cidade" class="view active">
+          <div class="dashboard-grid">
+            <article class="panel map-panel"><div class="panel-heading"><div><div class="overline">MAPA URBANO · ESTILIZADO</div><h3 id="map-title">Seu distrito comercial</h3></div><span class="tag-soft" id="map-uf">CE</span></div>
+              <div id="map-canvas" class="map-canvas" role="group" aria-label="Mapa ilustrativo clicável com 18 lotes"></div>
+              <div class="map-legend"><span><i class="legend-color lot"></i> Lote disponível</span><span><i class="legend-color own"></i> Sua empresa</span><span><i class="legend-color sel"></i> Selecionado</span></div>
+              <p class="map-disclaimer">Mapa fictício para jogabilidade. Não representa ruas, lotes ou imóveis reais.</p>
+            </article>
+            <div class="right-column"><article class="panel"><div class="panel-heading"><h3>Lote selecionado</h3><span class="tag-soft">COMERCIAL</span></div><div class="big-number" id="selected-lot">Lote 01</div><p class="muted">Selecione um dos lotes no mapa. Na V1 é possível abrir um estabelecimento por carreira.</p><button class="btn btn-primary full" id="map-open-company" type="button">Abrir empresa neste lote</button></article>
+              <article class="panel"><div class="panel-heading"><h3>Aconteceu na cidade</h3><span class="tag-soft">EVENTOS REAIS DO JOGO</span></div><div id="city-events" class="event-list"></div></article></div>
+          </div>
+        </section>
+        <section data-view="empresa" class="view" hidden>
+          <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Minha empresa</h3><span class="tag-soft" id="company-status">NÃO INAUGURADA</span></div>
+            <div id="company-empty"><p class="muted">Escolha um ramo de negócio e um lote para dar o primeiro passo.</p><form id="open-form"><label for="sector-select">Ramo de atividade</label><select id="sector-select"><option value="mercado">Mercado de bairro</option><option value="padaria">Padaria</option><option value="roupas">Loja de roupas</option></select><p id="open-preview" class="field-hint"></p><button type="submit" class="btn btn-primary">Inaugurar negócio</button></form></div>
+            <div id="company-active" hidden><div class="company-emblem"><span id="company-glyph">▣</span><div><h3 id="company-title">—</h3><p id="company-product" class="muted"></p></div></div><dl class="detail-list"><dt>Endereço virtual</dt><dd id="company-location">—</dd><dt>Unidades vendidas</dt><dd id="company-sold">—</dd><dt>Preço atual</dt><dd id="company-price">—</dd><dt>Obrigações a pagar</dt><dd id="company-payable">—</dd></dl></div>
+            </article><article class="panel"><div class="panel-heading"><h3>Administração</h3></div><p class="muted">Gerencie seus produtos na aba Mercado e acompanhe as contas em Finanças.</p><button type="button" class="btn btn-outline full" data-go="mercado">Ir para o mercado ↗</button><button type="button" class="btn btn-outline full spaced" data-go="financas">Ver demonstrativos ↗</button></article></div>
+        </section>
+        <section data-view="mercado" class="view" hidden>
+          <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Compras e estoque</h3><span class="tag-soft">M15 · SUPRIMENTOS</span></div><form id="buy-form"><p id="market-product" class="muted">Abra uma empresa antes de comprar mercadorias.</p><label for="buy-quantity">Quantidade de unidades</label><input type="number" min="1" max="2000" value="30" id="buy-quantity" required><p id="buy-total" class="field-hint">—</p><button type="submit" class="btn btn-primary">Comprar mercadorias</button></form></article>
+          <article class="panel"><div class="panel-heading"><h3>Estratégia de preços</h3><span class="tag-soft">M08 · MERCADO</span></div><form id="price-form"><label for="price-value">Preço de venda (R$)</label><input id="price-value" type="number" min="1" max="10000" step="0.01" required><p id="competitor-price" class="field-hint">Concorrência: —</p><button type="submit" class="btn btn-outline">Atualizar preço</button></form><p class="muted hint-bottom">Preços mais altos podem reduzir a demanda. Simulação econômica experimental.</p></article></div>
+        </section>
+        <section data-view="financas" class="view" hidden>
+          <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Demonstrativo gerencial</h3><span class="tag-soft">M11 · LEDGER</span></div><dl class="finance-list" id="finance-summary"></dl><p class="muted">Resultado operacional demonstrativo. Não inclui tributos não implementados.</p></article><article class="panel"><div class="panel-heading"><h3>Últimos lançamentos</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
+        </section>
+        <section data-view="fiscal" class="view" hidden>
+          <article class="panel fiscal-panel"><span class="fiscal-icon">§</span><div><div class="overline">MT-01 · COBERTURA NORMATIVA</div><h3>Tributação não implementada nesta versão</h3><p>O jogo simula operações econômicas fictícias, mas não calcula ICMS, ISS, PIS/Cofins, IBS, CBS, Simples Nacional ou obrigações acessórias. Ausência de cálculo <strong>não significa alíquota zero</strong>.</p><p>O calendário pode avançar até 2033 e além; isso não representa validação da legislação desses anos. Uma futura implementação exigirá bases legais identificadas, vigência por competência e testes fiscais independentes.</p><div class="tag-warning">STATUS: NOT_COVERED · MODO DEMONSTRAÇÃO</div></div></article>
+        </section>
+        <section data-view="sistema" class="view" hidden>
+          <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Salvamento e recuperação</h3><span class="tag-soft">M05</span></div><p class="muted">O backup JSON é o método portátil recomendado, especialmente ao atualizar o HTML no Windows.</p><div class="button-stack"><button class="btn btn-primary" type="button" id="export-btn">Exportar minha carreira (.json)</button><button class="btn btn-outline" type="button" id="import-btn">Importar carreira (.json)</button><button class="btn btn-outline" type="button" id="new-career-btn">Começar uma nova carreira</button></div><p class="field-hint" id="autosave-label">Verificando salvamento local…</p></article>
+          <article class="panel"><div class="panel-heading"><h3>Diagnóstico e integridade</h3><span class="tag-soft">M06</span></div><dl class="detail-list" id="diagnostic-details"></dl><button class="btn btn-outline spaced" id="run-diagnostic" type="button">Executar verificação</button><p class="field-hint" id="diagnostic-result">—</p></article></div>
+        </section>
+        <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
+      </main>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.0.0-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+    </div>
+  </div>
+  <input type="file" id="import-file" accept=".json,application/json" hidden>
+  <div class="toast" id="toast" aria-live="polite" role="status"></div>
+  <script>
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.0.0-rc.1 */
+const CidadeCore = (() => {
+  'use strict';
+  const VERSION = '1.0.0-rc.1';
+  const SCHEMA_VERSION = 2;
+  const START_DATE = '2026-11-01';
+  const MAX_SAVE_CHARS = 25_000_000;
+  const CITIES_SOURCE = [
+    ['AC','Rio Branco'],['AL','Maceió'],['AP','Macapá'],['AM','Manaus'],
+    ['BA','Salvador'],['CE','Fortaleza'],['DF','Brasília'],['ES','Vitória'],
+    ['GO','Goiânia'],['MA','São Luís'],['MT','Cuiabá'],['MS','Campo Grande'],
+    ['MG','Belo Horizonte'],['PA','Belém'],['PB','João Pessoa'],['PR','Curitiba'],
+    ['PE','Recife'],['PI','Teresina'],['RJ','Rio de Janeiro'],['RN','Natal'],
+    ['RS','Porto Alegre'],['RO','Porto Velho'],['RR','Boa Vista'],['SC','Florianópolis'],
+    ['SP','São Paulo'],['SE','Aracaju'],['TO','Palmas'],
+    ['CE','Tianguá'],['CE','Sobral'],['CE','Ubajara']
+  ];
+  const CITIES = Object.freeze(CITIES_SOURCE.map(([uf,name], index) => Object.freeze({
+    id:`${uf}-${name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z\d]+/gi,'-').toUpperCase()}`,
+    uf, name, capital:index<27, factor:[85,100,115,95,110][index%5]  // Apenas parâmetros inventados para gameplay, NÃO indicadores oficiais.
+  })));
+  const SECTORS = Object.freeze({
+    mercado: Object.freeze({name:'Mercado de bairro', product:'Cesta de produtos', cost:3200, recommended:4900, openCost:750000, dailyCost:13500, demand:13, glyph:'🛒'}),
+    padaria: Object.freeze({name:'Padaria', product:'Pão artesanal', cost:540, recommended:960, openCost:900000, dailyCost:15900, demand:22, glyph:'🥖'}),
+    roupas: Object.freeze({name:'Loja de roupas', product:'Peça de vestuário', cost:4800, recommended:8500, openCost:1100000, dailyCost:11900, demand:8, glyph:'👕'})
+  });
+  const clone = value => JSON.parse(JSON.stringify(value));
+  const plain = x => !!x && typeof x === 'object' && !Array.isArray(x);
+  const int = x => Number.isSafeInteger(x) && x>=0;
+  const money = cents => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(cents/100);
+  const cityById = id => CITIES.find(x=>x.id===id);
+  const clamp = (x,min,max)=>Math.max(min,Math.min(max,x));
+  const fingerprint = cmd => JSON.stringify({type:cmd.type,payload:cmd.payload??{}});
+  function hash(input) { let h=0x811c9dc5;for(let i=0;i<input.length;i++){h^=input.charCodeAt(i);h=Math.imul(h,0x01000193)}return (h>>>0).toString(16).padStart(8,'0'); }
+  function assert(test,message) { if(!test) throw Error(message); }
+  function dateNext(iso) { const d=new Date(`${iso}T12:00:00Z`);assert(!Number.isNaN(d.getTime()),'Data inválida');d.setUTCDate(d.getUTCDate()+1);return d.toISOString().slice(0,10); }
+  function random(draft) { draft.rng.seed=(Math.imul(draft.rng.seed,1664525)+1013904223)>>>0;return draft.rng.seed/4294967296; }
+  function event(draft,type,text,data={}) { const id=`evt-${++draft.audit.eventSeq}`;draft.audit.events.push({id,type,date:draft.calendar.date,text,data}); }
+  function journal(draft,memo,entries) {
+    const debit=entries.reduce((n,x)=>n+x.debit,0),credit=entries.reduce((n,x)=>n+x.credit,0);
+    assert(debit===credit && debit>0,'Lançamento desequilibrado');
+    assert(entries.every(x=>typeof x.account==='string'&&int(x.debit)&&int(x.credit)&&!(x.debit&&x.credit)),'Linha financeira inválida');
+    draft.economy.ledger.push({id:`jnl-${++draft.economy.journalSeq}`,date:draft.calendar.date,memo,entries});
+  }
+  function balance(draft,account) {let total=0;for(const j of draft.economy.ledger)for(const e of j.entries)if(e.account===account)total+=(['CAPITAL','REVENUE','PAYABLE'].includes(account)?e.credit-e.debit:e.debit-e.credit);return total;}
+  function overview(draft) {
+    if(!draft)return null;
+    const revenue=balance(draft,'REVENUE'),cogs=balance(draft,'COGS'),expenses=balance(draft,'EXPENSE');
+    return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),revenue,cogs,expenses,profit:revenue-cogs-expenses,stock:draft.world.business?.stockUnits??0,unitPrice:draft.world.business?.unitPrice??null,tick:draft.calendar.tick,city:cityById(draft.player.cityId)?.name??'—'};
+  }
+  function emptyLegacy(seed) {return {
+    schemaVersion:2,worldId:`legacy-${seed}`,revision:0,
+    meta:{title:'Cidade dos Negócios',version:VERSION,origin:'MIGRATED_EMPTY_CP000',mode:'DEMONSTRACAO_ECONOMICA'},
+    calendar:{date:START_DATE,tick:0},rng:{seed},
+    player:{name:'',companyName:'',cityId:null},world:{cities:CITIES.map(x=>x.id),business:null,competitor:{priceIndex:100}},
+    economy:{journalSeq:0,ledger:[]},fiscal:{mode:'DEMONSTRACAO_ECONOMICA',coverageStatus:'NOT_COVERED',rulePackId:null},
+    audit:{eventSeq:0,events:[],commands:{}}
+  };}
+  function init(payload,commandId) {
+    assert(plain(payload),'Dados da carreira inválidos');
+    const city=cityById(payload.cityId);assert(city,'Cidade não cadastrada');
+    const name=String(payload.name??'').trim().slice(0,60),companyName=String(payload.companyName??'').trim().slice(0,70);
+    assert(name.length>=2 && companyName.length>=3,'Informe nome e empresa válidos');
+    const seed=(Number(payload.seed)>>>0)||20261101;
+    const state=emptyLegacy(seed);
+    state.worldId=`carreira-${seed}-${city.id}`;
+    state.player={name,companyName,cityId:city.id};
+    state.meta.origin='NEW_CAREER';
+    journal(state,'Capital inicial do empreendedor',[{account:'CASH',debit:3000000,credit:0},{account:'CAPITAL',debit:0,credit:3000000}]);
+    event(state,'CARREIRA.CRIADA',`Carreira iniciada em ${city.name} (${city.uf}).`);
+    state.revision=1;
+    state.audit.commands[commandId]=fingerprint({type:'CARREIRA.CRIAR',payload});
+    validate(state);
+    return state;
+  }
+  function handler(draft,type,payload) {
+    const b=draft.world.business;
+    if(type==='EMPRESA.ABRIR') {
+      assert(!b,'Uma empresa já está aberta nesta carreira');
+      const s=SECTORS[payload.sector],lot=Number(payload.lot);
+      assert(s,'Atividade comercial desconhecida');assert(Number.isInteger(lot)&&lot>=1&&lot<=18,'Selecione um lote válido (1 a 18)');
+      assert(balance(draft,'CASH')>=s.openCost,'Caixa insuficiente para abrir esta empresa');
+      draft.world.business={id:'est-1',sector:payload.sector,lot,stockUnits:0,unitPrice:s.recommended,openedAt:draft.calendar.date,totalSold:0};
+      journal(draft,`Abertura: ${s.name}`,[{account:'EXPENSE',debit:s.openCost,credit:0},{account:'CASH',debit:0,credit:s.openCost}]);
+      event(draft,'EMPRESA.ABERTA',`${s.name} inaugurado no lote ${lot}.`,{lot,sector:payload.sector});
+      return;
+    }
+    if(type==='ESTOQUE.COMPRAR') {
+      assert(b,'Abra uma empresa antes de comprar');
+      const qty=Number(payload.quantity),s=SECTORS[b.sector];
+      assert(Number.isInteger(qty)&&qty>=1&&qty<=2000,'Quantidade de compra inválida (1–2000)');
+      assert(b.stockUnits+qty<=100000,'Capacidade máxima de estoque excedida');
+      const cost=qty*s.cost;assert(balance(draft,'CASH')>=cost,`Caixa insuficiente para comprar: ${money(cost)}`);
+      b.stockUnits+=qty;
+      journal(draft,`Compra de ${qty} un. de ${s.product}`,[{account:'INVENTORY',debit:cost,credit:0},{account:'CASH',debit:0,credit:cost}]);
+      event(draft,'ESTOQUE.COMPRADO',`${qty} unidades recebidas por ${money(cost)}.`,{qty,cost});
+      return;
+    }
+    if(type==='PRECO.DEFINIR') {
+      assert(b,'Abra uma empresa antes de definir preços');
+      const cents=Number(payload.cents);assert(int(cents)&&cents>=100&&cents<=1000000,'Preço deve estar entre R$ 1 e R$ 10.000');
+      const old=b.unitPrice;b.unitPrice=cents;
+      event(draft,'PRECO.ALTERADO',`Preço de ${money(old)} para ${money(cents)}.`,{old,cents});return;
+    }
+    if(type==='IA.AJUSTAR_PRECO') {
+      assert(Number.isInteger(payload.priceIndex)&&payload.priceIndex>=70&&payload.priceIndex<=140,'Estratégia IA inválida');
+      draft.world.competitor.priceIndex=payload.priceIndex;
+      event(draft,'IA.REACAO',`Concorrência ajustou a política de preços (índice ${payload.priceIndex}).`);return;
+    }
+    if(type==='TEMPO.AVANCAR_DIA'||type==='TEMPO.AVANCAR_LOTE') {
+      const days=type==='TEMPO.AVANCAR_DIA'?1:Number(payload.days);
+      assert(Number.isInteger(days)&&days>=1&&days<=30,'Avanço permitido: 1 a 30 dias');
+      for(let i=0;i<days;i++) day(draft);
+      return;
+    }
+    throw Error(`Comando não implementado: ${type}`);
+  }
+  function day(draft) {
+    const b=draft.world.business;
+    if(b){
+      const s=SECTORS[b.sector],city=cityById(draft.player.cityId);
+      const competitorPrice=s.recommended*(draft.world.competitor.priceIndex/100);
+      const ratio=b.unitPrice/competitorPrice;
+      const elasticity=clamp(1.32-(ratio-1)*1.4,0.08,1.85);
+      const season=1+0.13*Math.sin((draft.calendar.tick%365)/365*Math.PI*2);
+      const demand=Math.max(0,Math.floor(s.demand*(city.factor/100)*elasticity*season*(0.75+random(draft)*0.55)));
+      const sold=Math.min(b.stockUnits,demand);
+      if(sold>0){
+        const total=sold*b.unitPrice,cost=sold*s.cost;
+        b.stockUnits-=sold;b.totalSold+=sold;
+        journal(draft,`${s.product} — ${sold} vendas`,[
+          {account:'CASH',debit:total,credit:0},{account:'REVENUE',debit:0,credit:total},
+          {account:'COGS',debit:cost,credit:0},{account:'INVENTORY',debit:0,credit:cost}
+        ]);
+        event(draft,'VENDA.CONCLUIDA',`${sold} unidades vendidas: ${money(total)}.`,{sold,total,cost});
+      }
+      const cash=balance(draft,'CASH'),expense=s.dailyCost;
+      // Despesa não desaparece quando não há caixa: vira obrigação a pagar.
+      journal(draft,'Despesa operacional diária',[
+        {account:'EXPENSE',debit:expense,credit:0},
+        {account:cash>=expense?'CASH':'PAYABLE',debit:0,credit:expense}
+      ]);
+      if(cash<expense) event(draft,'CONTAS.A_PAGAR',`Despesa de ${money(expense)} registrada como obrigação pendente.`);
+      // A IA é uma intenção interna processada pelo mesmo handler e confirmada no mesmo tick.
+      if((draft.calendar.tick+1)%7===0){
+        const change=Math.floor(random(draft)*17)-8;
+        handler(draft,'IA.AJUSTAR_PRECO',{priceIndex:clamp(draft.world.competitor.priceIndex+change,75,125)});
+      }
+    }
+    const finished=draft.calendar.date;
+    event(draft,'DIA.ENCERRADO',`Dia ${finished} concluído.`,{finished});
+    draft.calendar.tick++;
+    draft.calendar.date=dateNext(draft.calendar.date);
+  }
+  function dispatch(current,cmd) {
+    try{
+      assert(plain(cmd)&&typeof cmd.type==='string'&&typeof cmd.id==='string'&&/^[a-zA-Z\d._:-]{2,100}$/.test(cmd.id),'Comando sem ID válido');
+      const payload=plain(cmd.payload)?cmd.payload:{};
+      if(current){ validate(current);const prev=current.audit.commands[cmd.id];if(prev!==undefined){
+        assert(prev===fingerprint({type:cmd.type,payload}),'Conflito: ID reutilizado com conteúdo diferente');
+        return {ok:true,status:'DUPLICATE',state:clone(current),message:'Comando já confirmado; nenhuma operação duplicada.'};
+      }}
+      if(cmd.type==='CARREIRA.CRIAR') {
+        assert(!current || !current.player.cityId,'Já existe uma carreira ativa');
+        return {ok:true,status:'APPLIED',state:init(payload,cmd.id),message:'Carreira criada.'};
+      }
+      assert(current && current.player.cityId,'Crie uma carreira antes de jogar');
+      const draft=clone(current);
+      assert(Object.keys(draft.audit.commands).length<100000,'Limite de histórico de comandos atingido; exporte a carreira');
+      handler(draft,cmd.type,payload);
+      draft.revision++;
+      draft.audit.commands[cmd.id]=fingerprint({type:cmd.type,payload});
+      validate(draft);
+      return {ok:true,status:'APPLIED',state:draft,message:'Operação confirmada.'};
+    }catch(error){return {ok:false,status:'REJECTED',state:current?clone(current):null,error:error.message};}
+  }
+  function validate(state) {
+    assert(plain(state)&&state.schemaVersion===2,'Save com schema incompatível');
+    assert(Number.isSafeInteger(state.revision)&&state.revision>=0,'Revisão inválida');
+    assert(plain(state.player)&&plain(state.calendar)&&int(state.calendar.tick),'Jogador/calendário inválidos');
+    assert(/^\d{4}-\d{2}-\d{2}$/.test(state.calendar.date)&&!Number.isNaN(Date.parse(state.calendar.date+'T12:00:00Z')),'Data inválida');
+    assert(plain(state.rng)&&int(state.rng.seed)&&state.rng.seed<=4294967295,'Semente inválida');
+    assert(plain(state.world)&&Array.isArray(state.world.cities)&&state.world.cities.length===30&&new Set(state.world.cities).size===30,'Mapa nacional inconsistente');
+    assert(state.world.cities.every(id=>!!cityById(id)),'Cidade inválida');
+    assert(state.player.cityId===null||!!cityById(state.player.cityId),'Cidade de carreira inválida');
+    assert(plain(state.world.competitor)&&int(state.world.competitor.priceIndex),'Concorrente inválido');
+    assert(plain(state.economy)&&Array.isArray(state.economy.ledger)&&state.economy.ledger.length<=150000,'Ledger inválido');
+    assert(plain(state.audit)&&Array.isArray(state.audit.events)&&plain(state.audit.commands),'Auditoria inválida');
+    assert(state.audit.events.length<=250000&&new Set(state.audit.events.map(x=>x.id)).size===state.audit.events.length,'Eventos duplicados ou excesso');
+    assert(Object.keys(state.audit.commands).length<=100000,'Registro de comandos inválido');
+    assert(plain(state.fiscal)&&state.fiscal.coverageStatus==='NOT_COVERED'&&state.fiscal.rulePackId===null,'Regra fiscal da V1 inválida');
+    const journalIds=new Set();
+    for(const j of state.economy.ledger){
+      assert(typeof j.id==='string'&&!journalIds.has(j.id)&&Array.isArray(j.entries)&&j.entries.length>1,'Lançamento duplicado/inválido');journalIds.add(j.id);
+      let d=0,c=0;
+      for(const e of j.entries){assert(typeof e.account==='string'&&int(e.debit)&&int(e.credit)&&!(e.debit&&e.credit),'Linha financeira inválida');d+=e.debit;c+=e.credit;}
+      assert(d===c&&d>0,'Lançamento financeiro desequilibrado');
+    }
+    const cash=balance(state,'CASH'),inventory=balance(state,'INVENTORY');
+    assert(int(cash)&&int(inventory)&&int(balance(state,'PAYABLE')),'Saldos financeiros inválidos');
+    const b=state.world.business;
+    if(b){assert(SECTORS[b.sector]&&Number.isInteger(b.lot)&&b.lot>=1&&b.lot<=18&&int(b.stockUnits)&&int(b.totalSold)&&int(b.unitPrice),'Empresa inválida');assert(inventory===b.stockUnits*SECTORS[b.sector].cost,'Estoque físico e contábil divergentes');}
+    else assert(inventory===0,'Estoque sem empresa');
+    return true;
+  }
+  function exportSave(state) {
+    validate(state);const payload=clone(state),raw=JSON.stringify(payload);
+    assert(raw.length<MAX_SAVE_CHARS,'Carreira excede limite de exportação');
+    return JSON.stringify({saveFormatVersion:1,app:'Cidade dos Negócios',checksumAlgorithm:'FNV1A32',checksum:hash(raw),payload},null,2);
+  }
+  function importSave(raw) {
+    assert(typeof raw==='string'&&raw.length<MAX_SAVE_CHARS,'Arquivo muito grande ou inválido');
+    const data=JSON.parse(raw);
+    if(plain(data)&&data.schemaVersion===1) {
+      assert(plain(data.meta)&&data.meta.title==='Cidade dos Negócios'&&int(data.meta.seed)&&data.meta.seed<=4294967295,'Save legado inválido');
+      assert(plain(data.world)&&Array.isArray(data.world.entities)&&data.world.entities.length===0&&plain(data.player)&&Object.keys(data.player).length===0&&plain(data.calendar)&&data.calendar.tick===0&&Array.isArray(data.history)&&data.history.length===0,'Save legado com atividade não suportada: preserve o original');
+      const state=emptyLegacy(data.meta.seed);validate(state);
+      return {state,migrated:true,message:'Fundação vazia CP-000 migrada; escolha nova carreira. Nenhum histórico criado.'};
+    }
+    assert(plain(data)&&data.saveFormatVersion===1&&data.app==='Cidade dos Negócios'&&data.checksumAlgorithm==='FNV1A32'&&typeof data.checksum==='string'&&plain(data.payload),'Envelope de save incompatível');
+    assert(hash(JSON.stringify(data.payload))===data.checksum,'Checksum diverge: arquivo alterado ou corrompido');
+    validate(data.payload);
+    return {state:clone(data.payload),migrated:false,message:'Carreira restaurada com integridade validada.'};
+  }
+  function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
+  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,CITIES,SECTORS,dispatch,validate,overview,exportSave,importSave,diagnostics,cityById,money,hash,dateNext});
+  return API;
+})();
+
+/* Cidade dos Negócios 1 — interface. Sem regras econômicas e sem RNG. */
+(() => {
+  'use strict';
+  const Core=CidadeCore;
+  const $=id=>document.getElementById(id);
+  const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const BRDate=iso=>iso.split('-').reverse().join('/');
+  const KEY='cidade-dos-negocios-save-v1';
+  let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
+  let toastTimer;
+  const nextId=()=>`ui:${Date.now()}:${++sequence}`;
+  const setText=(id,value)=>{const el=$(id);if(el)el.textContent=String(value)};
+  function notify(message,isError=false){
+    const n=$('toast');n.textContent=message;n.classList.toggle('error',isError);n.classList.add('visible');
+    clearTimeout(toastTimer);toastTimer=setTimeout(()=>n.classList.remove('visible'),4500);
+    setText('start-message',message);
+  }
+  function saveLocal(){
+    if(!state)return;
+    try{
+      const contents=Core.exportSave(state);
+      localStorage.setItem(KEY,contents);
+      if(localStorage.getItem(KEY)!==contents)throw Error('Falha de leitura de retorno');
+      autosaveStatus='Cópia local verificada neste navegador; mantenha backup JSON externo.';
+    }catch(e){autosaveStatus=`Salvamento local indisponível (${e.message}); exporte o JSON.`;notify(autosaveStatus,true);}
+    setText('autosave-label',autosaveStatus);
+    setText('footer-state',autosaveStatus.startsWith('Cópia')?'Cópia local verificada · backup JSON recomendado':'Salvamento local sem garantia');
+  }
+  function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
+  function commit(type,payload={}){
+    if(type==='CARREIRA.CRIAR')resetTimer();
+    const result=Core.dispatch(state,{type,id:nextId(),payload});
+    if(!result.ok){notify(result.error,true);return false;}
+    if(result.status==='APPLIED'){state=result.state;viewCityId=viewCityId??state.player.cityId;saveLocal();render();}
+    notify(result.message);
+    return true;
+  }
+  function goto(name){tab=name;document.querySelectorAll('[data-view]').forEach(el=>{const chosen=el.getAttribute('data-view')===name;el.hidden=!chosen;el.classList.toggle('active',chosen);});document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.tab===name));
+    const labels={cidade:['CENTRAL DE OPERAÇÕES','A sua cidade, as suas decisões.','Explore lotes comerciais e acompanhe os acontecimentos.'],empresa:['GESTÃO EMPRESARIAL','Cada escolha constrói um negócio.','Abra sua empresa e tome decisões de administração.'],mercado:['VENDAS E SUPRIMENTOS','Preço, demanda e estoque.','Compre mercadorias e encontre sua estratégia de preço.'],financas:['INDICADORES CONTÁBEIS','Os números contam sua história.','Acompanhe lançamentos e resultados rastreáveis.'],fiscal:['REGRAS E COBERTURA','Transparência sobre os limites.','Nenhum cálculo tributário fictício será apresentado como legal.'],sistema:['PERSISTÊNCIA E QA','Seu progresso, sua segurança.','Faça backups e confira o estado da simulação.']};
+    const info=labels[name]||labels.cidade;setText('page-kicker',info[0]);setText('page-title-text',info[1]);setText('page-subtitle',info[2]);
+    if(state)render();
+  }
+  function cityOptions(){
+    const items=Core.CITIES.slice().sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
+    for(const selectId of ['start-city','explore-city']){
+      $(selectId).innerHTML='';
+      const group=document.createDocumentFragment();
+      for(const city of items){const opt=document.createElement('option');opt.value=city.id;opt.textContent=`${city.name} · ${city.uf}${city.capital?' (capital)':''}`;group.appendChild(opt);}
+      $(selectId).appendChild(group);
+    }
+    const tiangua=Core.CITIES.find(c=>c.name==='Tianguá');$('start-city').value=tiangua.id;
+  }
+  function svgMap(city,own,lot){
+    // SVG estilizado original: cada grupo tem identificação de lote, sem dependências externas.
+    const seed=city.name.length+city.id.length;
+    const fragments=[`<svg viewBox="180 10 600 360" xmlns="http://www.w3.org/2000/svg" aria-label="Mapa isométrico fictício de ${escape(city.name)}">`,
+      `<defs><linearGradient id="sea" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#1e5270"/><stop offset="1" stop-color="#0b2639"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="4"/></filter></defs>`,
+      `<path d="M0 325 Q180 310 280 370 T800 340 L870 410H0Z" fill="#16516e" opacity=".42"/>`,
+      `<path d="M145 155 L436 19 L813 196 L519 366Z" fill="#102d3b" opacity=".9"/>`];
+    for(let row=0;row<3;row++)for(let col=0;col<6;col++){
+      const num=row*6+col+1,x=392+(col-row)*57,y=91+(col+row)*26;
+      const isOwn=own?.lot===num,isSelected=lot===num;
+      const ground=isOwn?'#9e8144':isSelected?'#3f8bb2':'#42665f';
+      const roofs=['#487d8c','#316275','#607387','#597c80','#425a6b'];
+      const roof=isOwn?'#e8b55f':roofs[(num+seed)%roofs.length];
+      const height=isOwn?42:14+((num*7+seed)%4)*9;
+      const xx=x,yy=y,wide=49,tall=23;
+      fragments.push(`<g data-lot="${num}" tabindex="0" role="button" aria-label="Selecionar lote ${num}">`);
+      if(isSelected)fragments.push(`<ellipse cx="${xx}" cy="${yy+12}" rx="65" ry="37" fill="#6dc9ff" opacity=".16" filter="url(#glow)"/>`);
+      fragments.push(`<polygon points="${xx},${yy-tall} ${xx+wide},${yy} ${xx},${yy+tall} ${xx-wide},${yy}" fill="${ground}" stroke="${isSelected?'#9bdbff':'#416773'}" stroke-width="${isSelected?3:1.7}"/>`);
+      if(num%5===0&&!isOwn){
+        fragments.push(`<path d="M${xx-7} ${yy+5}l-6-18h12l-6 18" fill="#42745c" stroke="#8fc09c" stroke-width="2"/><circle cx="${xx-6}" cy="${yy-10}" r="11" fill="#2d8d66"/><circle cx="${xx+7}" cy="${yy-12}" r="9" fill="#419672"/>`);
+      }else{
+        const cx=xx,cy=yy-3;
+        fragments.push(`<polygon points="${cx-17},${cy-height} ${cx},${cy-height-8} ${cx+19},${cy-height} ${cx+2},${cy-height+10}" fill="${roof}" stroke="#9cc1cb" stroke-width=".7"/>`);
+        fragments.push(`<polygon points="${cx-17},${cy-height} ${cx+2},${cy-height+10} ${cx+2},${cy+13} ${cx-17},${cy+2}" fill="${isOwn?'#bb873c':'#345569'}"/>`);
+        fragments.push(`<polygon points="${cx+2},${cy-height+10} ${cx+19},${cy-height} ${cx+19},${cy+2} ${cx+2},${cy+13}" fill="${isOwn?'#e2a450':'#27485e'}"/>`);
+        fragments.push(`<path d="M${cx-10} ${cy-height+14}v5 M${cx-3} ${cy-height+18}v5 M${cx+8} ${cy-height+17}v6" stroke="${isOwn?'#f7d99e':'#7ba9bf'}" stroke-width="2"/>`);
+      }
+      fragments.push(`<text x="${xx}" y="${yy+36}" fill="${isSelected?'#f5d89a':'#9fbac5'}" text-anchor="middle" font-size="12" font-weight="700">${String(num).padStart(2,'0')}${isOwn?' ★':''}</text></g>`);
+    }
+    fragments.push(`<text x="208" y="40" fill="#9fbfd2" font-size="15" font-weight="700" letter-spacing="3">${escape(city.name.toUpperCase())} · ${escape(city.uf)}</text><text x="208" y="60" fill="#7eabc0" font-size="10">DISTRITO COMERCIAL FICTÍCIO</text></svg>`);
+    return fragments.join('');
+  }
+  function eventsHTML(events){if(!events.length)return '<p class="muted">Nenhum evento registrado ainda.</p>';return events.map(e=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(e.text)}</p><small>${escape(e.date)} · ${escape(e.type)}</small></div></div>`).join('');}
+  function render(){
+    const started=!!state?.player?.cityId;
+    $('onboarding').hidden=started;$('game-shell').hidden=!started;
+    if(!started)return;
+    const b=state.world.business,info=Core.overview(state),ownCity=Core.cityById(state.player.cityId);
+    const visibleCity=Core.cityById(viewCityId)||ownCity;
+    viewCityId=visibleCity.id;
+    setText('top-city',`${visibleCity.name} · ${visibleCity.uf}`);
+    $('explore-city').value=visibleCity.id;
+    setText('date-label',BRDate(state.calendar.date));
+    setText('kpi-cash',Core.money(info.cash));setText('kpi-revenue',Core.money(info.revenue));setText('kpi-profit',Core.money(info.profit));setText('kpi-stock',info.stock);
+    setText('kpi-stock-label',b?`${Core.SECTORS[b.sector].product} · unidades`:'Sem estoque');
+    $('other-city-warning').hidden=visibleCity.id===ownCity.id;
+    setText('map-title',`Distrito comercial de ${visibleCity.name}`);setText('map-uf',visibleCity.uf);
+    $('map-canvas').innerHTML=svgMap(visibleCity,visibleCity.id===ownCity.id?b:null,selectedLot);
+    setText('selected-lot',`Lote ${String(selectedLot).padStart(2,'0')}`);
+    $('map-open-company').disabled=!!b||visibleCity.id!==ownCity.id;
+    setText('city-events','');$('city-events').innerHTML=eventsHTML(state.audit.events.slice(-6).reverse());
+    $('company-empty').hidden=!!b;$('company-active').hidden=!b;
+    setText('company-status',b?'EM OPERAÇÃO':'NÃO INAUGURADA');
+    $('buy-form').querySelector('button').disabled=!b;$('price-form').querySelector('button').disabled=!b;
+    if(b){const s=Core.SECTORS[b.sector];setText('company-glyph',s.glyph);setText('company-title',`${state.player.companyName} · ${s.name}`);setText('company-product',s.product);setText('company-location',`${ownCity.name} / ${ownCity.uf} · lote ${String(b.lot).padStart(2,'0')}`);setText('company-sold',b.totalSold);setText('company-price',Core.money(b.unitPrice));setText('company-payable',Core.money(info.payable));
+      setText('market-product',`${s.product} · custo simulado por unidade: ${Core.money(s.cost)}`);
+      setText('competitor-price',`Preço de referência do concorrente: ${Core.money(Math.round(s.recommended*state.world.competitor.priceIndex/100))} (simulado)`);
+      if(document.activeElement!==$('price-value'))$('price-value').value=(b.unitPrice/100).toFixed(2);
+      updateBuyPreview();
+    }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('competitor-price','Concorrência: abra uma empresa para visualizar.');setText('buy-total','—');}
+    const rows=[['Capital investido',Core.money(3000000)],['Receita de vendas',Core.money(info.revenue)],['(-) Custo das mercadorias',Core.money(info.cogs)],['(-) Despesas operacionais',Core.money(info.expenses)],['Resultado antes dos tributos',Core.money(info.profit)],['Caixa',Core.money(info.cash)],['Estoque contabilizado',Core.money(info.inventoryValue)],['Obrigações a pagar',Core.money(info.payable)]];
+    $('finance-summary').innerHTML=rows.map((x,i)=>`<dt class="${i===4?'emphasis':''}">${escape(x[0])}</dt><dd class="${i===4?'emphasis':''}">${escape(x[1])}</dd>`).join('');
+    setText('journal-count',`${state.economy.ledger.length} registros`);
+    $('journal-events').innerHTML=state.economy.ledger.slice(-8).reverse().map(j=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(j.memo)}</p><small>${escape(j.date)} · ${escape(j.id)}</small></div></div>`).join('');
+    const report=Core.diagnostics(state);
+    $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Cidade ativa',ownCity.name],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal','NOT_COVERED']].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
+    setText('turn-message',!b?'Abra sua primeira empresa.':b.stockUnits===0?'Seu estoque está vazio. Reabasteça.':`Sua empresa está operando há ${state.calendar.tick} dia(s).`);
+    setText('turn-subtext',!b?'Clique em um lote para iniciar.':`Estoque ${b.stockUnits} un. · Preço atual ${Core.money(b.unitPrice)} · próximo dia ${BRDate(state.calendar.date)}.`);
+    setText('autosave-label',autosaveStatus);
+    setText('footer-state',autosaveStatus.startsWith('Cópia')?'Cópia local verificada · backup JSON recomendado':'Backup JSON recomendado');
+  }
+  function updateBuyPreview(){
+    if(!state?.world.business)return;
+    const qty=Number($('buy-quantity').value),sector=Core.SECTORS[state.world.business.sector];
+    setText('buy-total',Number.isInteger(qty)&&qty>0?`Custo total: ${Core.money(qty*sector.cost)} (saldo: ${Core.money(Core.overview(state).cash)})`:'Informe uma quantidade válida.');
+  }
+  function exportFile(){
+    if(!state){notify('Crie uma carreira antes de exportar.',true);return;}
+    try{
+      const data=Core.exportSave(state),blob=new Blob([data],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+      a.href=url;a.download=`cidade-dos-negocios-${state.player.cityId}-${state.calendar.date}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
+      notify('Download do backup solicitado. Confira se o arquivo JSON foi salvo no computador.');
+    }catch(e){notify(e.message,true);}
+  }
+  async function importFile(file){
+    if(!file)return;
+    if(file.size>25_000_000){notify('Save excede 25 MB.',true);return;}
+    if(state?.player.cityId&&!confirm('Substituir a carreira atual pelo save importado? Recomendamos exportar antes.'))return;
+    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;viewCityId=state.player.cityId;selectedLot=1;saveLocal();render();notify(incoming.message);}
+    catch(e){notify(`Importação rejeitada: ${e.message}. A carreira anterior foi preservada.`,true);}
+  }
+  function launchAuto(){
+    if(timer){resetTimer();return;}
+    if(!state)return;
+    timer=setInterval(()=>{if(!commit('TEMPO.AVANCAR_DIA'))resetTimer();},Math.round(1900/speed));setText('pause-btn','Ⅱ Pausar');
+  }
+  function bind(){
+    $('career-form').addEventListener('submit',e=>{e.preventDefault();const name=$('player-name').value,companyName=$('company-name').value,cityId=$('start-city').value;commit('CARREIRA.CRIAR',{name,companyName,cityId,seed:(Date.now()>>>0)});});
+    for(const button of document.querySelectorAll('[data-tab]'))button.addEventListener('click',()=>goto(button.dataset.tab));
+    for(const button of document.querySelectorAll('[data-go]'))button.addEventListener('click',()=>goto(button.dataset.go));
+    $('explore-city').addEventListener('change',e=>{viewCityId=e.target.value;render();});
+    $('map-canvas').addEventListener('click',e=>{const target=e.target.closest('[data-lot]');if(target){selectedLot=Number(target.dataset.lot);render();}});
+    $('map-canvas').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const target=e.target.closest('[data-lot]');if(target){e.preventDefault();selectedLot=Number(target.dataset.lot);render();}}});
+    $('map-open-company').addEventListener('click',()=>{goto('empresa');$('sector-select').focus();});
+    $('sector-select').addEventListener('change',updateOpenPreview);
+    $('open-form').addEventListener('submit',e=>{e.preventDefault();if(!state||viewCityId!==state.player.cityId){notify('Volte à cidade de origem para abrir o negócio.',true);return;}if(commit('EMPRESA.ABRIR',{sector:$('sector-select').value,lot:selectedLot}))goto('cidade');});
+    $('buy-quantity').addEventListener('input',updateBuyPreview);
+    $('buy-form').addEventListener('submit',e=>{e.preventDefault();commit('ESTOQUE.COMPRAR',{quantity:Number($('buy-quantity').value)});});
+    $('price-form').addEventListener('submit',e=>{e.preventDefault();const value=$('price-value').value,cents=Math.round(Number(value)*100);commit('PRECO.DEFINIR',{cents});});
+    $('next-day').addEventListener('click',()=>commit('TEMPO.AVANCAR_DIA'));
+    $('next-week').addEventListener('click',()=>commit('TEMPO.AVANCAR_LOTE',{days:7}));
+    $('next-month').addEventListener('click',()=>commit('TEMPO.AVANCAR_LOTE',{days:30}));
+    $('speed-select').addEventListener('change',e=>{speed=Number(e.target.value);if(timer){resetTimer();launchAuto();}});
+    $('pause-btn').addEventListener('click',launchAuto);
+    $('export-btn').addEventListener('click',exportFile);
+    $('import-btn').addEventListener('click',()=>$('import-file').click());
+    $('start-import').addEventListener('click',()=>$('import-file').click());
+    $('import-file').addEventListener('change',async e=>{const f=e.target.files?.[0];try{await importFile(f);}finally{e.target.value='';}});
+    $('run-diagnostic').addEventListener('click',()=>{try{const before=JSON.stringify(state),out=Core.diagnostics(state);if(before!==JSON.stringify(state))throw Error('Diagnóstico alterou o estado');setText('diagnostic-result',out.status+' · revisão '+out.revision);notify('Verificação estrutural e contábil aprovada.');}catch(e){setText('diagnostic-result',e.message);notify(e.message,true);}});
+    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
+  }
+  function updateOpenPreview(){const s=Core.SECTORS[$('sector-select').value];if(s)setText('open-preview',`Investimento inicial simulado: ${Core.money(s.openCost)} · Produto: ${s.product}`);}
+  function start(){
+    cityOptions();bind();updateOpenPreview();
+    try{const raw=localStorage.getItem(KEY);if(raw){const loaded=Core.importSave(raw);state=loaded.state;viewCityId=state.player.cityId;autosaveStatus='Cópia local verificada neste navegador; mantenha backup JSON externo.';}}
+    catch(e){autosaveStatus='Não foi possível recuperar o salvamento local; importe backup JSON.';notify(autosaveStatus+' '+e.message,true);}
+    render();goto('cidade');
+  }
+  start();
+})();
+
+  </script>
+</body>
+</html>

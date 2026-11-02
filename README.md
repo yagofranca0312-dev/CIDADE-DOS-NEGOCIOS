@@ -6,6 +6,8 @@
 
 **Homologação da V2.0:** aprovada expressamente pelo jogador em 02/11/2026. Versão preservada em `releases/v2.0.0-homologada` (commit `ac3e840b71d3551026f62cc6a04c9173f553f9d7`). A identificação técnica `2.0.0-rc.1` foi mantida para corresponder ao executável testado; não houve mudança do motor.
 
+**Próxima versão planejada:** [V2.1 — Identidade Visual, HUD e Clareza de Jogo](docs/PLANO_V21_VISUAL.md). Diretriz: **versões 2.x apenas visuais; funcionalidades novas somente em 3.x**. V2.1 não foi implementada.
+
 ## V2.0 — Um mundo de negócios, sem mecânicas novas
 
 - **Cidade como protagonista:** mapa isométrico ocupa a área principal, lotes interativos e inspetor de terreno/empresa contextual.

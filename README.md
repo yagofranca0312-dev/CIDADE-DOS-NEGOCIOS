@@ -1,33 +1,39 @@
 # 🏙️ Cidade dos Negócios 1
 
-**Versão:** `1.1.1-rc.1` — **patch de gestão empresarial, candidata jogável**, homologação estável ainda pendente.  
+**Versão:** `1.2.0-rc.1` — **patch comercial com múltiplos produtos**, candidato a homologação.  
 **Formato:** um `index.html` autônomo, com CSS e JS incorporados; sem internet ou instalação obrigatória para jogar.  
 **Data-base do planejamento:** 01/11/2026.
 
-## Hotfix V1.1.1-rc.1 — filtros financeiros manuais
+## Patch 1.2.0-rc.1 — gestão comercial multitem
 
-- A consulta financeira deixa de acompanhar automaticamente o calendário do jogo. Depois de escolhida, a data/competência permanece fixa durante a sessão.
-- **Toda carreira**: data de corte; **Dia**: calendário diário com todas as datas alcançadas; **Competência**: seletor de mês/ano.
-- **Trimestre**: trimestre 1–4 + ano; **Semestre**: semestre 1–2 + ano; **Ano**: campo exclusivo de ano.
-- **Intervalo personalizado**: seleção de data inicial e final na cronologia do jogo.
-- **Usar data atual do jogo** exige clique explícito; não há avanço automático do período escolhido.
-- Datas impossíveis, intervalos invertidos ou futuros são rejeitados sem alterar a carreira.
-- O save `schemaVersion: 2` e as fórmulas econômicas foram mantidos.
+- **Catálogo:** cada empresa começa com três produtos fictícios; cadastre novos até o limite de 40 por estabelecimento, definindo nome, custo e preço de venda em centavos.
+- **Compras:** selecione produto, fornecedor fictício e quantidade; as entradas incrementam estoque e baixam o caixa. Cada pedido guarda itens, fornecedor, data, custo e lançamento contábil.
+- **Vendas:** carrinho permite vários itens e confirma uma única venda à vista, com baixa de estoque, entrada no caixa, receita e CMV por item no mesmo commit. Vendas simuladas dos dias também trabalham por produto.
+- **Consultas:** catálogo exibe estoque, custo, preço, unidades vendidas, receita e CMV por produto a partir desta edição; últimos pedidos e vendas ficam visíveis.
+- **Saves antigos:** conversão automática e validada de `schemaVersion: 2` para `3` após verificar o checksum do save original. Caixa, estoque total, preço base, histórico contábil, RNG, datas e total histórico de vendas são preservados; registros anteriores não são artificialmente distribuídos entre novos produtos.
+- **Importante:** antes de atualizar, faça backup JSON na V1.1.1. Saves convertidos para schema 3 **não são legíveis por versões antigas**. A migração é unidirecional; mantenha o backup pré-migração para poder retornar ao executável anterior.
+- **Limites:** fornecedores, preços, demanda e custos são fictícios; não há cadastro de NFe, pagamentos a prazo, impostos, perdas, frete nem aquisição de novos estabelecimentos. A compra usa custo unitário simulado fixo por SKU, independentemente do fornecedor.
 
-## Patch V1.1.0-rc.1
+## Hotfix 1.1.1-rc.1 — filtros financeiros manuais
 
-- Histórico de alterações do preço próprio, inclusive nas carreiras antigas.
-- Atalhos para preencher a compra de estoque (10, 50, 100 e 250 unidades), sem executar automaticamente a compra.
-- Demonstrativo financeiro por dia, competência mensal, trimestre, ano e toda a carreira, com data de referência.
-- CMV, lucro bruto e resultado derivados de lançamentos reais do jogo; fluxos separados de saldos acumulados de caixa, estoque e obrigações.
-- Mesma estrutura de save `schemaVersion: 2`: o autosave existente continua sendo lido sem reimportação se o navegador/caminho for mantido.
+- A consulta financeira deixa de avançar automaticamente com o calendário do jogo. Depois de escolher um período, a data/competência permanece fixa mesmo após simular mais dias.
+- **Toda a carreira**: data de referência (corte) escolhida manualmente.
+- **Dia**: calendário com todas as datas selecionáveis até o momento do jogo; **competência**: seletor específico de mês/ano.
+- **Trimestre**: escolha do trimestre 1–4 e do ano; **semestre**: escolha do semestre 1–2 e do ano.
+- **Ano**: campo só de ano; **intervalo**: data inicial e final livres dentro da cronologia já alcançada.
+- Botão **Usar data atual do jogo** disponível como ação explícita, não automática.
+- Inversão de datas ou datas impossíveis são rejeitadas sem afetar a carreira. O demonstrativo permanece derivado dos lançamentos reais do jogo e distingue fluxos do período de saldos no encerramento.
+- **Compatibilidade**: formato de save `schemaVersion: 2`, economia, preços e histórico permanecem inalterados. O filtro é uma preferência de visualização, não um lançamento da carreira.
 
-## Base homologada V1.0.1
+## Patch 1.1.0-rc.1
 
-- O hotfix anterior foi aprovado pelo jogador em Windows, incluindo atualização via BAT, autosave e melhoria de precificação.
-- Snapshot preservado em `releases/v1.0.1-homologada` antes deste patch.
+- Compras de estoque com atalhos de preenchimento (10/50/100/250 unidades); nenhum botão compra sem confirmação.
+- Histórico de mudanças do preço próprio reconstruído dos eventos do save, sem campo novo persistido.
+- Relatórios contábeis filtrados por dia, competência (mês), trimestre, ano ou período total, escolhendo uma data de referência.
+- Receita, CMV, lucro bruto, despesas e resultado representam o **fluxo no período**; caixa, estoque e obrigações são **saldos acumulados no encerramento**.
+- Compatível com saves da V1.0.1 (`schemaVersion: 2`) sem exigir reimportação no mesmo navegador/caminho.
 
-## Hotfix anterior
+## Hotfix 1.0.1-rc.1 (homologado)
 
 - O lote selecionado aparece em uma etiqueta destacada sobre o mapa, sem sobrecarregar a cidade com 18 rótulos permanentes; cada lote preserva sua identificação acessível.
 - A aba Mercado exibe lado a lado **seu preço atual** e a **referência independente do concorrente**.
@@ -56,7 +62,7 @@
 
 ### Atualizar pelo GitHub
 
-O `ATUALIZAR_E_JOGAR.bat` foi preparado para obter a versão da branch `main` do repositório [CIDADE-DOS-NEGOCIOS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS). **O atualizador consulta a branch `main` e instala a versão mais recente publicada ali.** Veja [ATUALIZADOR_WINDOWS.md](docs/ATUALIZADOR_WINDOWS.md).
+O `ATUALIZAR_E_JOGAR.bat` obtém a versão da branch `main` do repositório [CIDADE-DOS-NEGOCIOS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS). **O HTML já está publicado no GitHub.** Veja [ATUALIZADOR_WINDOWS.md](docs/ATUALIZADOR_WINDOWS.md).
 
 ## Desenvolver
 
@@ -73,7 +79,7 @@ npm run check   # build reproduzível + testes
 ### Arquitetura
 
 - C00: um controlador (`CidadeCore.dispatch`), comandos com ID, idempotência e commit lógico.
-- M01: estado canônico (`schemaVersion: 2`), 30 cidades, empresa, ledger, calendário, auditoria e cobertura fiscal.
+- M01: estado canônico (`schemaVersion: 3`), 30 cidades, empresa, ledger, calendário, auditoria e cobertura fiscal.
 - M02/M04: data única por mundo, demanda e concorrente básico determinísticos.
 - M03: eventos confirmados no mesmo commit; consultas não alteram o jogo.
 - M05: exportação/importação com checksum FNV1A32 (detecção acidental de corrupção, **não** autenticação criptográfica); armazenamento local de melhor esforço.
@@ -82,7 +88,7 @@ npm run check   # build reproduzível + testes
 
 ## Qualidade e publicação
 
-Os testes automatizados comprovam apenas os cenários executados. Não substituem o ensaio por duplo clique no Windows e um ciclo real de salvamento/reabertura. A V1.0.1 foi homologada pelo jogador e preservada na branch de release; a V1.1 permanece candidata até validar a atualização na máquina Windows.
+Os testes automatizados comprovam apenas os cenários executados. Não substituem o ensaio por duplo clique no Windows e um ciclo real de salvamento/reabertura. O hotfix V1.0.1 foi homologado pelo usuário e preservado na branch `releases/v1.0.1-homologada`. A V1.1.1 foi validada no Windows pelo usuário; a V1.2 permanece candidata até novos testes na máquina do jogador.
 
 Documentação histórica inicial: [checkpoint CP-000](docs/00_CHECKPOINT_CP000.md), [arquitetura](docs/ARQUITETURA.md), [roadmap](docs/ROADMAP.md), [atualizador Windows](docs/ATUALIZADOR_WINDOWS.md). O **pacote local** inclui as sete especificações e o guia do programador em `docs/especificacoes/`. Esses documentos não entram no publicador inicial por conterem referências a fontes privadas do projeto.
 

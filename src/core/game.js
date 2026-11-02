@@ -1,8 +1,8 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.1.1-rc.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.2.0-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '1.1.1-rc.1';
-  const SCHEMA_VERSION = 2;
+  const VERSION = '1.2.0-rc.1';
+  const SCHEMA_VERSION = 3;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
   const CITIES_SOURCE = [
@@ -25,6 +25,78 @@ const CidadeCore = (() => {
     roupas: Object.freeze({name:'Loja de roupas', product:'Peça de vestuário', cost:4800, recommended:8500, openCost:1100000, dailyCost:11900, demand:8, glyph:'👕'})
   });
   const clone = value => JSON.parse(JSON.stringify(value));
+  // Catálogo fictício de cada ramo. Valores em centavos para não gerar erro de ponto flutuante.
+  const EXTRA_PRODUCTS=Object.freeze({
+    mercado:[['Arroz 5 kg',2200,3400,7],['Óleo de cozinha',700,1100,7]],
+    padaria:[['Bolo caseiro',900,1700,8],['Café coado',250,600,12]],
+    roupas:[['Camiseta',2500,4900,6],['Calça jeans',6000,10500,4]]
+  });
+  const SUPPLIERS=Object.freeze([{id:'regional',name:'Distribuidora Regional (fictícia)'},{id:'atacado',name:'Atacado Comercial (fictício)'}]);
+  function initialProducts(sector,baseStock=0,basePrice=null) {
+    const s=SECTORS[sector];
+    return [{id:'base',name:s.product,costCents:s.cost,priceCents:basePrice??s.recommended,referenceCents:s.recommended,demand:s.demand,stockUnits:baseStock},
+      ...EXTRA_PRODUCTS[sector].map(([name,costCents,priceCents,demand],i)=>({id:`extra-${i+1}`,name,costCents,priceCents,referenceCents:priceCents,demand,stockUnits:0}))];
+  }
+  function upgradedState(original) {
+    if(original.schemaVersion===3)return clone(original);
+    assert(original.schemaVersion===2,'Schema de save não suportado');
+    const state=clone(original);state.schemaVersion=3;
+    if(state.world.business){const b=state.world.business;
+      b.products=initialProducts(b.sector,b.stockUnits,b.unitPrice);
+      b.productSeq=0;b.saleSeq=0;b.orderSeq=0;b.sales=[];b.purchaseOrders=[];
+    }
+    return state;
+  }
+  function product(b,id) {const p=b.products.find(x=>x.id===(id??'base'));assert(p,'Produto não cadastrado');return p;}
+  function syncTotals(b) {b.stockUnits=b.products.reduce((n,p)=>n+p.stockUnits,0);b.unitPrice=product(b,'base').priceCents;}
+  function registerPurchase(draft,b,supplierId,items) {
+    assert(SUPPLIERS.some(x=>x.id===supplierId),'Fornecedor não cadastrado');
+    assert(Array.isArray(items)&&items.length>=1&&items.length<=40,'Informe de 1 a 40 itens');
+    const used=new Set();let total=0,qtyTotal=0;
+    const lines=items.map(line=>{assert(plain(line),'Item de compra inválido');const p=product(b,line.productId),quantity=Number(line.quantity);
+      assert(!used.has(p.id),'Produto repetido na mesma compra');used.add(p.id);
+      assert(Number.isInteger(quantity)&&quantity>=1&&quantity<=2000,'Quantidade inválida (1–2000)');
+      assert(p.stockUnits+quantity<=100000,'Limite por produto excedido');
+      const cost=quantity*p.costCents;total+=cost;qtyTotal+=quantity;
+      return {productId:p.id,name:p.name,quantity,unitCost:p.costCents,total:cost};});
+    assert(b.stockUnits+qtyTotal<=100000,'Capacidade total de estoque excedida');
+    assert(Number.isSafeInteger(total)&&balance(draft,'CASH')>=total,`Caixa insuficiente para comprar: ${money(total)}`);
+    assert(b.purchaseOrders.length<20000,'Histórico de compras cheio');
+    for(const line of lines)product(b,line.productId).stockUnits+=line.quantity;
+    syncTotals(b);const id=`pc-${++b.orderSeq}`;
+    b.purchaseOrders.push({id,date:draft.calendar.date,supplierId,items:lines,total});
+    journal(draft,`Compra ${id}: ${lines.map(x=>`${x.quantity} ${x.name}`).join(', ')}`,[
+      {account:'INVENTORY',debit:total,credit:0},{account:'CASH',debit:0,credit:total}]);
+    event(draft,'ESTOQUE.COMPRADO',`Compra ${id} confirmada: ${qtyTotal} unidades por ${money(total)}.`,{id,total,supplierId});
+  }
+  function registerSale(draft,b,items,kind='BALCAO') {
+    assert(Array.isArray(items)&&items.length>=1&&items.length<=40,'Carrinho vazio ou inválido');
+    const used=new Set();let total=0,cost=0,qtyTotal=0;
+    const lines=items.map(line=>{assert(plain(line),'Item de venda inválido');const p=product(b,line.productId),quantity=Number(line.quantity);
+      assert(!used.has(p.id),'Produto repetido na mesma venda');used.add(p.id);
+      assert(Number.isInteger(quantity)&&quantity>=1&&quantity<=2000,'Quantidade de venda inválida (1–2000)');
+      assert(p.stockUnits>=quantity,`Estoque insuficiente para ${p.name}`);
+      const revenue=quantity*p.priceCents,cogs=quantity*p.costCents;
+      total+=revenue;cost+=cogs;qtyTotal+=quantity;
+      return {productId:p.id,name:p.name,quantity,unitPrice:p.priceCents,unitCost:p.costCents,revenue,cogs};});
+    assert(Number.isSafeInteger(total)&&Number.isSafeInteger(cost),'Valor da venda excede limite');
+    assert(b.sales.length<20000,'Limite de histórico de vendas atingido');
+    for(const line of lines)product(b,line.productId).stockUnits-=line.quantity;
+    b.totalSold+=qtyTotal;syncTotals(b);const id=`vd-${++b.saleSeq}`;
+    b.sales.push({id,date:draft.calendar.date,kind,items:lines,total,cogs:cost});
+    journal(draft,`Venda ${id} (${kind}): ${lines.map(x=>`${x.quantity} ${x.name}`).join(', ')}`,[
+      {account:'CASH',debit:total,credit:0},{account:'REVENUE',debit:0,credit:total},
+      {account:'COGS',debit:cost,credit:0},{account:'INVENTORY',debit:0,credit:cost}]);
+    event(draft,'VENDA.CONCLUIDA',`${kind==='BALCAO'?'Venda manual':'Vendas do dia'} ${id}: ${qtyTotal} unidades por ${money(total)}.`,{id,total,cost,qtyTotal});
+  }
+  function productPerformance(state) {
+    const b=state?.world?.business;if(!b)return [];
+    return b.products.map(p=>{const lines=b.sales.flatMap(s=>s.items).filter(x=>x.productId===p.id);
+      return {id:p.id,name:p.name,stockUnits:p.stockUnits,stockValue:p.stockUnits*p.costCents,
+        sold:lines.reduce((n,l)=>n+l.quantity,0),revenue:lines.reduce((n,l)=>n+l.revenue,0),
+        cogs:lines.reduce((n,l)=>n+l.cogs,0),priceCents:p.priceCents,costCents:p.costCents};});
+  }
+
   const plain = x => !!x && typeof x === 'object' && !Array.isArray(x);
   const int = x => Number.isSafeInteger(x) && x>=0;
   const money = cents => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(cents/100);
@@ -49,7 +121,7 @@ const CidadeCore = (() => {
     return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),revenue,cogs,expenses,profit:revenue-cogs-expenses,stock:draft.world.business?.stockUnits??0,unitPrice:draft.world.business?.unitPrice??null,tick:draft.calendar.tick,city:cityById(draft.player.cityId)?.name??'—'};
   }
   function emptyLegacy(seed) {return {
-    schemaVersion:2,worldId:`legacy-${seed}`,revision:0,
+    schemaVersion:3,worldId:`legacy-${seed}`,revision:0,
     meta:{title:'Cidade dos Negócios',version:VERSION,origin:'MIGRATED_EMPTY_CP000',mode:'DEMONSTRACAO_ECONOMICA'},
     calendar:{date:START_DATE,tick:0},rng:{seed},
     player:{name:'',companyName:'',cityId:null},world:{cities:CITIES.map(x=>x.id),business:null,competitor:{priceIndex:100}},
@@ -80,27 +152,41 @@ const CidadeCore = (() => {
       const s=SECTORS[payload.sector],lot=Number(payload.lot);
       assert(s,'Atividade comercial desconhecida');assert(Number.isInteger(lot)&&lot>=1&&lot<=18,'Selecione um lote válido (1 a 18)');
       assert(balance(draft,'CASH')>=s.openCost,'Caixa insuficiente para abrir esta empresa');
-      draft.world.business={id:'est-1',sector:payload.sector,lot,stockUnits:0,unitPrice:s.recommended,openedAt:draft.calendar.date,totalSold:0};
+      draft.world.business={id:'est-1',sector:payload.sector,lot,stockUnits:0,unitPrice:s.recommended,openedAt:draft.calendar.date,totalSold:0,products:initialProducts(payload.sector),productSeq:0,saleSeq:0,orderSeq:0,sales:[],purchaseOrders:[]};
       journal(draft,`Abertura: ${s.name}`,[{account:'EXPENSE',debit:s.openCost,credit:0},{account:'CASH',debit:0,credit:s.openCost}]);
       event(draft,'EMPRESA.ABERTA',`${s.name} inaugurado no lote ${lot}.`,{lot,sector:payload.sector});
       return;
     }
+    if(type==='PRODUTO.CADASTRAR') {
+      assert(b,'Abra uma empresa antes de cadastrar produtos');
+      assert(b.products.length<40,'Limite de 40 produtos atingido');
+      const name=String(payload.name??'').trim().slice(0,70);
+      const costCents=Number(payload.costCents),priceCents=Number(payload.priceCents);
+      assert(name.length>=3&&name.length<=70,'Nome do produto inválido');
+      assert(int(costCents)&&costCents>=100&&costCents<=1000000,'Custo do produto inválido');
+      assert(int(priceCents)&&priceCents>=100&&priceCents<=1000000,'Preço do produto inválido');
+      assert(!b.products.some(p=>p.name.toLowerCase()===name.toLowerCase()),'Já existe produto com este nome');
+      const id=`custom-${++b.productSeq}`;
+      b.products.push({id,name,costCents,priceCents,referenceCents:priceCents,demand:6,stockUnits:0});
+      event(draft,'PRODUTO.CADASTRADO',`Novo produto: ${name}.`,{id});return;
+    }
     if(type==='ESTOQUE.COMPRAR') {
       assert(b,'Abra uma empresa antes de comprar');
-      const qty=Number(payload.quantity),s=SECTORS[b.sector];
-      assert(Number.isInteger(qty)&&qty>=1&&qty<=2000,'Quantidade de compra inválida (1–2000)');
-      assert(b.stockUnits+qty<=100000,'Capacidade máxima de estoque excedida');
-      const cost=qty*s.cost;assert(balance(draft,'CASH')>=cost,`Caixa insuficiente para comprar: ${money(cost)}`);
-      b.stockUnits+=qty;
-      journal(draft,`Compra de ${qty} un. de ${s.product}`,[{account:'INVENTORY',debit:cost,credit:0},{account:'CASH',debit:0,credit:cost}]);
-      event(draft,'ESTOQUE.COMPRADO',`${qty} unidades recebidas por ${money(cost)}.`,{qty,cost});
-      return;
+      registerPurchase(draft,b,payload.supplierId||'regional',[{productId:payload.productId||'base',quantity:payload.quantity}]);return;
+    }
+    if(type==='COMPRAS.REGISTRAR') {
+      assert(b,'Abra uma empresa antes de comprar');
+      registerPurchase(draft,b,payload.supplierId,payload.items);return;
+    }
+    if(type==='VENDA.REGISTRAR') {
+      assert(b,'Abra uma empresa antes de vender');
+      registerSale(draft,b,payload.items);return;
     }
     if(type==='PRECO.DEFINIR') {
       assert(b,'Abra uma empresa antes de definir preços');
       const cents=Number(payload.cents);assert(int(cents)&&cents>=100&&cents<=1000000,'Preço deve estar entre R$ 1 e R$ 10.000');
-      const old=b.unitPrice;b.unitPrice=cents;
-      event(draft,'PRECO.ALTERADO',`Preço de ${money(old)} para ${money(cents)}.`,{old,cents});return;
+      const p=product(b,payload.productId||'base');const old=p.priceCents;p.priceCents=cents;syncTotals(b);
+      event(draft,'PRECO.ALTERADO',`${p.name}: preço de ${money(old)} para ${money(cents)}.`,{old,cents,productId:p.id,productName:p.name});return;
     }
     if(type==='IA.AJUSTAR_PRECO') {
       assert(Number.isInteger(payload.priceIndex)&&payload.priceIndex>=70&&payload.priceIndex<=140,'Estratégia IA inválida');
@@ -119,21 +205,18 @@ const CidadeCore = (() => {
     const b=draft.world.business;
     if(b){
       const s=SECTORS[b.sector],city=cityById(draft.player.cityId);
-      const competitorPrice=s.recommended*(draft.world.competitor.priceIndex/100);
-      const ratio=b.unitPrice/competitorPrice;
-      const elasticity=clamp(1.32-(ratio-1)*1.4,0.08,1.85);
       const season=1+0.13*Math.sin((draft.calendar.tick%365)/365*Math.PI*2);
-      const demand=Math.max(0,Math.floor(s.demand*(city.factor/100)*elasticity*season*(0.75+random(draft)*0.55)));
-      const sold=Math.min(b.stockUnits,demand);
-      if(sold>0){
-        const total=sold*b.unitPrice,cost=sold*s.cost;
-        b.stockUnits-=sold;b.totalSold+=sold;
-        journal(draft,`${s.product} — ${sold} vendas`,[
-          {account:'CASH',debit:total,credit:0},{account:'REVENUE',debit:0,credit:total},
-          {account:'COGS',debit:cost,credit:0},{account:'INVENTORY',debit:0,credit:cost}
-        ]);
-        event(draft,'VENDA.CONCLUIDA',`${sold} unidades vendidas: ${money(total)}.`,{sold,total,cost});
+      const items=[];
+      for(const p of b.products){
+        if(!p.stockUnits)continue; // Sem consumo de RNG para produto sem estoque.
+        const competitorPrice=p.referenceCents*(draft.world.competitor.priceIndex/100);
+        const ratio=p.priceCents/competitorPrice;
+        const elasticity=clamp(1.32-(ratio-1)*1.4,0.08,1.85);
+        const demand=Math.max(0,Math.floor(p.demand*(city.factor/100)*elasticity*season*(0.75+random(draft)*0.55)));
+        const sold=Math.min(p.stockUnits,demand);
+        if(sold>0)items.push({productId:p.id,quantity:sold});
       }
+      if(items.length)registerSale(draft,b,items,'SIMULACAO_DIARIA');
       const cash=balance(draft,'CASH'),expense=s.dailyCost;
       // Despesa não desaparece quando não há caixa: vira obrigação a pagar.
       journal(draft,'Despesa operacional diária',[
@@ -165,7 +248,7 @@ const CidadeCore = (() => {
         return {ok:true,status:'APPLIED',state:init(payload,cmd.id),message:'Carreira criada.'};
       }
       assert(current && current.player.cityId,'Crie uma carreira antes de jogar');
-      const draft=clone(current);
+      const draft=upgradedState(current);
       assert(Object.keys(draft.audit.commands).length<100000,'Limite de histórico de comandos atingido; exporte a carreira');
       handler(draft,cmd.type,payload);
       draft.revision++;
@@ -175,7 +258,7 @@ const CidadeCore = (() => {
     }catch(error){return {ok:false,status:'REJECTED',state:current?clone(current):null,error:error.message};}
   }
   function validate(state) {
-    assert(plain(state)&&state.schemaVersion===2,'Save com schema incompatível');
+    assert(plain(state)&&(state.schemaVersion===2||state.schemaVersion===3),'Save com schema incompatível');
     assert(Number.isSafeInteger(state.revision)&&state.revision>=0,'Revisão inválida');
     assert(plain(state.player)&&plain(state.calendar)&&int(state.calendar.tick),'Jogador/calendário inválidos');
     assert(/^\d{4}-\d{2}-\d{2}$/.test(state.calendar.date)&&!Number.isNaN(Date.parse(state.calendar.date+'T12:00:00Z')),'Data inválida');
@@ -199,7 +282,25 @@ const CidadeCore = (() => {
     const cash=balance(state,'CASH'),inventory=balance(state,'INVENTORY');
     assert(int(cash)&&int(inventory)&&int(balance(state,'PAYABLE')),'Saldos financeiros inválidos');
     const b=state.world.business;
-    if(b){assert(SECTORS[b.sector]&&Number.isInteger(b.lot)&&b.lot>=1&&b.lot<=18&&int(b.stockUnits)&&int(b.totalSold)&&int(b.unitPrice),'Empresa inválida');assert(inventory===b.stockUnits*SECTORS[b.sector].cost,'Estoque físico e contábil divergentes');}
+    if(b){assert(SECTORS[b.sector]&&Number.isInteger(b.lot)&&b.lot>=1&&b.lot<=18&&int(b.stockUnits)&&int(b.totalSold)&&int(b.unitPrice),'Empresa inválida');
+      if(state.schemaVersion===2){assert(inventory===b.stockUnits*SECTORS[b.sector].cost,'Estoque físico e contábil divergentes');}
+      else {
+        assert(Array.isArray(b.products)&&b.products.length>=3&&b.products.length<=40,'Catálogo inválido');
+        assert(Array.isArray(b.sales)&&b.sales.length<=20000&&Array.isArray(b.purchaseOrders)&&b.purchaseOrders.length<=20000,'Histórico comercial inválido');
+        assert(int(b.productSeq)&&int(b.orderSeq)&&int(b.saleSeq),'Sequências comerciais inválidas');
+        const ids=new Set();let stockSum=0,stockValue=0;
+        for(const p of b.products){
+          assert(plain(p)&&typeof p.id==='string'&&!ids.has(p.id)&&typeof p.name==='string'&&p.name.trim().length>=3,'Produto inválido');ids.add(p.id);
+          assert(int(p.stockUnits)&&p.stockUnits<=100000&&int(p.costCents)&&p.costCents>=100&&p.costCents<=1000000,'Estoque ou custo inválido');
+          assert(int(p.priceCents)&&p.priceCents>=100&&p.priceCents<=1000000&&int(p.referenceCents)&&p.referenceCents>=100&&int(p.demand)&&p.demand<=40,'Preço ou demanda inválida');
+          stockSum+=p.stockUnits;stockValue+=p.stockUnits*p.costCents;
+        }
+        assert(stockSum===b.stockUnits&&stockValue===inventory&&stockSum<=100000,'Estoque físico e contábil divergentes');
+        assert(b.unitPrice===product(b,'base').priceCents,'Preço base inconsistente');
+        assert(b.sales.every(s=>s&&typeof s.id==='string'&&Array.isArray(s.items)&&int(s.total)&&int(s.cogs)),'Vendas inválidas');
+        assert(b.purchaseOrders.every(o=>o&&typeof o.id==='string'&&Array.isArray(o.items)&&int(o.total)),'Compras inválidas');
+      }
+    }
     else assert(inventory===0,'Estoque sem empresa');
     return true;
   }
@@ -260,7 +361,7 @@ const CidadeCore = (() => {
     if(!state?.world?.business)return [];
     return state.audit.events.filter(e=>e.type==='PRECO.ALTERADO')
       .filter(e=>Number.isSafeInteger(e.data?.old)&&Number.isSafeInteger(e.data?.cents))
-      .map(e=>({id:e.id,date:e.date,old:e.data.old,cents:e.data.cents}));
+      .map(e=>({id:e.id,date:e.date,old:e.data.old,cents:e.data.cents,productId:e.data.productId||'base',productName:e.data.productName||SECTORS[state.world.business.sector].product}));
   }
   function exportSave(state) {
     validate(state);const payload=clone(state),raw=JSON.stringify(payload);
@@ -279,9 +380,10 @@ const CidadeCore = (() => {
     assert(plain(data)&&data.saveFormatVersion===1&&data.app==='Cidade dos Negócios'&&data.checksumAlgorithm==='FNV1A32'&&typeof data.checksum==='string'&&plain(data.payload),'Envelope de save incompatível');
     assert(hash(JSON.stringify(data.payload))===data.checksum,'Checksum diverge: arquivo alterado ou corrompido');
     validate(data.payload);
-    return {state:clone(data.payload),migrated:false,message:'Carreira restaurada com integridade validada.'};
+    const migrated=data.payload.schemaVersion===2,state=upgradedState(data.payload);validate(state);
+    return {state,migrated,message:migrated?'Carreira da V1 migrada com estoque, caixa e histórico preservados.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,CITIES,SECTORS,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,cityById,money,hash,dateNext});
+  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,CITIES,SECTORS,SUPPLIERS,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();

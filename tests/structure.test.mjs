@@ -32,22 +32,22 @@ test('Hotfix: preço próprio visível, concorrente independente e confirmação
  assert.match(template,/id="competitor-price"/);
  assert.match(template,/id="price-change-feedback"/);
  assert.match(ui,/setText\('your-current-price',Core.money\(b.unitPrice\)\)/);
- assert.match(ui,/Seu preço foi atualizado:/);
- assert.match(ui,/const after=state.world.business.unitPrice/);
+ assert.match(ui,/Preço de \${p.name} atualizado:/);
+ assert.match(ui,/const after=state.world.business.products.find/);
 });
-test('Hotfix: schema de save preservado e versão nova apenas da aplicação',()=>{
+test('V1.2: schema 3 com migração da V1 e formato de exportação validado',()=>{
  const core=readFileSync('src/core/game.js','utf8');
- assert.match(core,/SCHEMA_VERSION = 2/);
- assert.match(core,/VERSION = '1\.1\.1-rc\.1'/);
+ assert.match(core,/SCHEMA_VERSION = 3/);
+ assert.match(core,/VERSION = '1\.2\.0-rc\.1'/);
  assert.match(core,/function importSave\(raw\)/);
+ assert.match(core,/function upgradedState\(original\)/);
 });
 
-test('V1.1: atalhos de estoque, filtros e histórico de preços presentes no HTML',()=>{
+test('V1.1: controles de quantidade, recortes financeiros e histórico de preços presentes',()=>{
  const template=readFileSync('src/shell/index.template.html','utf8');
  const ui=readFileSync('src/ui/app.js','utf8');
- for(const n of ['10','50','100','250'])assert.ok(template.includes('data-buy-preset="'+n+'"'));
- for(const id of ['finance-period','finance-date','finance-period-label','price-history'])
-   assert.ok(template.includes('id="'+id+'"'),id);
+ for(const v of ['10','50','100','250'])assert.match(template,new RegExp(`data-buy-preset="${v}"`));
+ for(const id of ['finance-period','finance-date','finance-period-label','price-history'])assert.ok(template.includes(`id="${id}"`));
  assert.match(ui,/renderPriceHistory\(\)/);
  assert.match(ui,/renderFinances\(\)/);
 });

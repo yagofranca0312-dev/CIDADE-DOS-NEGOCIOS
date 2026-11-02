@@ -1,30 +1,43 @@
 # Histórico de versões — Cidade dos Negócios
 
-## 1.1.1-rc.1 — hotfix: filtros financeiros manuais
+## 1.2.0-rc.1 — gestão comercial multitem (candidata)
 
-- Seletores de data de corte, dia, mês, trimestre, semestre, ano e intervalo personalizado.
-- Referência consultada deixa de mudar automaticamente com a passagem dos dias.
-- Motor aceita semestre e intervalo, com validação de datas e recortes do ledger.
-- Botão manual para carregar a última data concluída.
-- Sem mudança no GameState, no formato dos saves ou nas operações econômicas; novos testes de regressão.
+- Três SKUs iniciais por ramo e cadastro de novos produtos até 40 por estabelecimento.
+- Compras de estoque por produto e fornecedor fictício, com custo unitário, caixa e valor de inventário reconciliados.
+- Carrinho com venda à vista de múltiplos itens, receita e CMV registrados atomicamente, além de vendas diárias simuladas por SKU.
+- Painel de desempenho por produto e últimos movimentos comerciais.
+- Migração validada de saves schema 2 para schema 3, preservando economia anterior e histórico agregado sem criar detalhes retroativos inexistentes.
+- **Não é retrocompatível com a V1.1.1:** exporte backup JSON antes de atualizar. A migração é somente para frente.
+- Mantém filtros financeiros manuais, integridade contábil e transparência fiscal `NOT_COVERED`.
+- Homologação prática no Windows pendente.
 
-## 1.1.0-rc.1 — 01/11/2026 (patch de gestão; candidata em testes)
+## 1.1.1-rc.1 — hotfix de filtros financeiros manuais
 
-- Histórico de preços da empresa baseado nos eventos de alteração já presentes nos saves anteriores.
-- Atalhos de quantidades de estoque: 10, 50, 100 e 250 unidades. A compra ainda exige confirmação.
-- Demonstrativo financeiro por dia, competência mensal, trimestre, ano ou carreira inteira, com data de referência.
-- Receita, CMV, lucro bruto, despesas e resultado são fluxos do intervalo; caixa, estoque e obrigações são saldos acumulados.
-- `schemaVersion: 2` e operações econômicas preservados, sem alteração tributária nem migração exigida.
-- Testes de compatibilidade e cálculos por competência acrescentados; homologação da V1.1 no Windows pendente.
+- Relatório não acompanha automaticamente o avanço dos dias do mundo.
+- Campos especializados: data de corte, dia, competência mês/ano, trimestre/ano, semestre/ano, ano e intervalo inicial–final.
+- Novo recorte `semester` e `range` no relatório financeiro, sem alteração do ledger ou dos saves.
+- Validação de datas impossíveis, intervalos invertidos e datas futuras do jogo.
+- Botão opcional para selecionar a última data concluída explicitamente.
+- Testes de regressão para recortes, isolamento de dados, preservação de save e interface.
 
-## 1.0.1-rc.1 — 01/11/2026 (hotfix homologado pelo usuário)
+## 1.1.0-rc.1 — 01/11/2026 (patch de gestão; candidata a homologação)
+
+- Histórico consultável de alterações de preços, inclusive eventos presentes nos saves da V1.0.1.
+- Atalhos que preenchem quantidades de compra (10, 50, 100, 250), sem compra automática.
+- Demonstrativos por dia, competência mensal, trimestre, ano ou carreira inteira, com seleção da data de referência.
+- Lucro bruto, CMV e resultado operacional derivados do ledger; saldos de caixa/estoque/obrigações sempre acumulados até a data-limite e devidamente rotulados.
+- Sem mudança de `schemaVersion: 2`, sem migração de saves, sem alteração na lógica dos preços/vendas ou nos tributos não cobertos.
+- Testes de compatibilidade e cálculos históricos acrescidos. Validação real da atualização no Windows pendente.
+
+
+## 1.0.1-rc.1 — 01/11/2026 (hotfix HOMOLOGADO pelo usuário)
 
 - Destaque visual legível do lote selecionado; remove rótulos numéricos permanentes no mapa para evitar poluição.
 - Exibe preço atual da empresa separado do preço de referência do concorrente.
 - Confirma a alteração do preço com o valor antigo e o novo, mantendo registro no journal de eventos.
 - Retém formato do save (`schemaVersion: 2`), lógica econômica, transparência fiscal e compatibilidade com a V1 anterior.
-- Homologação funcional confirmada pelo usuário: atualização pelo BAT, leitura automática do último save sem reimportação e precificação visual aprovada.
-- Instantâneo preservado em `releases/v1.0.1-homologada` (commit `6d6321622df0d0337e783e13a4da868db2c10831`).
+- Aprovado em uso real pelo usuário: atualização via BAT, persistência automática da carreira sem reimportação e clareza do novo preço; homologação funcional confirmada.
+- Status: base funcional homologada; evidência do usuário não equivale a auditoria externa universal.
 
 ## 1.0.0-rc.1 — 01/11/2026 (candidata jogável; publicação e homologação pendentes)
 

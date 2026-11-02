@@ -1,7 +1,9 @@
 # 🏙️ Cidade dos Negócios 1
 
-**Versão:** `1.8.0-rc.1` — **demonstrações contábeis gerenciais e conciliação**, candidata a homologação Windows.  
+**Versão:** `1.8.0-rc.1` — **demonstrações contábeis gerenciais e conciliação**, homologada pelo jogador em 02/11/2026.  
 **Formato:** HTML autônomo, sem internet durante a partida.  
+
+**Homologação V1.8:** aprovada pelo jogador em 02/11/2026. Snapshot preservado na branch `releases/v1.8.0-homologada` (commit `66bdab08547daec1df50eca3d6b1967a2a664d2c`). **Próxima etapa:** [planejamento V1.9](docs/PLANO_V19.md), ainda não implementada.
 
 ## Patch V1.8.0-rc.1 — Contabilidade Empresarial Avançada
 

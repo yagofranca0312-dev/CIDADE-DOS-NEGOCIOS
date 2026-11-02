@@ -68,3 +68,17 @@
 @media(max-width:480px){.sales-kpis{grid-template-columns:1fr}}
 /* Corrige a largura minima implicita de cards em resolucoes estreitas. */
 @media(max-width:1180px){.commerce-dashboard,.commerce-history-grid{grid-template-columns:minmax(0,1fr)}.commerce-dashboard>.panel,.commerce-history-grid>.panel{min-width:0}}
+
+/* V1.3: quadro de abastecimento compacto e acessível */
+.stock-planner{margin-top:18px;min-width:0}
+.stock-planner .catalog-table{min-width:760px}
+.stock-policy-form{display:grid;grid-template-columns:1.3fr 1fr 1fr auto;gap:10px;align-items:end;margin-top:12px}
+.stock-policy-form label{margin:0 0 5px}
+.stock-policy-form input,.stock-policy-form select{min-width:0;width:100%}
+.stock-policy-form button{align-self:end}
+.stock-policy-form>label{display:none}
+.stock-policy-form>select,.stock-policy-form>input{margin-top:18px}
+.stock-alert{color:#f3c37a;font-weight:800}
+.stock-ok{color:#9fdcc1}
+@media(max-width:900px){.stock-policy-form{grid-template-columns:repeat(2,minmax(0,1fr))}.stock-policy-form button{grid-column:1/-1}}
+@media(max-width:480px){.stock-policy-form{grid-template-columns:1fr}}

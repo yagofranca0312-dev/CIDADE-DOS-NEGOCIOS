@@ -35,10 +35,10 @@ test('Hotfix: preço próprio visível, concorrente independente e confirmação
  assert.match(ui,/Preço de \${p.name} atualizado:/);
  assert.match(ui,/const after=state.world.business.products.find/);
 });
-test('V1.2: schema 3 com migração da V1 e formato de exportação validado',()=>{
+test('V1.3: schema 4 com migração da V1 e formato de exportação validado',()=>{
  const core=readFileSync('src/core/game.js','utf8');
- assert.match(core,/SCHEMA_VERSION = 3/);
- assert.match(core,/VERSION = '1\.2\.1-rc\.1'/);
+ assert.match(core,/SCHEMA_VERSION = 4/);
+ assert.match(core,/VERSION = '1\.3\.0-rc\.1'/);
  assert.match(core,/function importSave\(raw\)/);
  assert.match(core,/function upgradedState\(original\)/);
 });

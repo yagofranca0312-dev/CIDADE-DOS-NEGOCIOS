@@ -1,8 +1,8 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.2.1-rc.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.3.0-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '1.2.1-rc.1';
-  const SCHEMA_VERSION = 3;
+  const VERSION = '1.3.0-rc.1';
+  const SCHEMA_VERSION = 4;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
   const CITIES_SOURCE = [
@@ -31,43 +31,106 @@ const CidadeCore = (() => {
     padaria:[['Bolo caseiro',900,1700,8],['Café coado',250,600,12]],
     roupas:[['Camiseta',2500,4900,6],['Calça jeans',6000,10500,4]]
   });
-  const SUPPLIERS=Object.freeze([{id:'regional',name:'Distribuidora Regional (fictícia)'},{id:'atacado',name:'Atacado Comercial (fictício)'}]);
+  // Condições fictícias de logística: unidade da capacidade é por SKU, por fornecedor, por dia.
+  const SUPPLIERS=Object.freeze([
+    Object.freeze({id:'regional',name:'Distribuidora Regional (fictícia)',leadDays:1,priceFactor:100,maxDailyPerSku:200}),
+    Object.freeze({id:'atacado',name:'Atacado Comercial (fictício)',leadDays:3,priceFactor:94,maxDailyPerSku:500})
+  ]);
   function initialProducts(sector,baseStock=0,basePrice=null) {
     const s=SECTORS[sector];
-    return [{id:'base',name:s.product,costCents:s.cost,priceCents:basePrice??s.recommended,referenceCents:s.recommended,demand:s.demand,stockUnits:baseStock},
-      ...EXTRA_PRODUCTS[sector].map(([name,costCents,priceCents,demand],i)=>({id:`extra-${i+1}`,name,costCents,priceCents,referenceCents:priceCents,demand,stockUnits:0}))];
+    const base=(id,name,costCents,priceCents,referenceCents,demand,stockUnits)=>({id,name,costCents,priceCents,referenceCents,demand,stockUnits,
+      stockValueCents:stockUnits*costCents,reorderPoint:Math.max(5,demand*3),targetStock:Math.max(20,demand*10)});
+    return [base('base',s.product,s.cost,basePrice??s.recommended,s.recommended,s.demand,baseStock),
+      ...EXTRA_PRODUCTS[sector].map(([name,costCents,priceCents,demand],i)=>base(`extra-${i+1}`,name,costCents,priceCents,priceCents,demand,0))];
   }
+  // Migração aditiva e auditável: inventário anterior fica no valor original;
+  // ordens recebidas antes da V1.3 não geram novos créditos/debitos.
   function upgradedState(original) {
-    if(original.schemaVersion===3)return clone(original);
-    assert(original.schemaVersion===2,'Schema de save não suportado');
-    const state=clone(original);state.schemaVersion=3;
+    if(original.schemaVersion===4)return clone(original);
+    assert([2,3].includes(original.schemaVersion),'Schema de save não suportado');
+    const state=clone(original);
+    if(state.schemaVersion===2){
+      state.schemaVersion=3;
+      if(state.world.business){const b=state.world.business;
+        b.products=initialProducts(b.sector,b.stockUnits,b.unitPrice);
+        b.productSeq=0;b.saleSeq=0;b.orderSeq=0;b.sales=[];b.purchaseOrders=[];
+      }
+    }
+    state.schemaVersion=4;
     if(state.world.business){const b=state.world.business;
-      b.products=initialProducts(b.sector,b.stockUnits,b.unitPrice);
-      b.productSeq=0;b.saleSeq=0;b.orderSeq=0;b.sales=[];b.purchaseOrders=[];
+      b.products.forEach(p=>{
+        p.stockValueCents=p.stockUnits*p.costCents;
+        p.reorderPoint=Math.max(5,p.demand*3);
+        p.targetStock=Math.max(20,p.demand*10);
+      });
+      b.purchaseOrders.forEach(o=>{
+        o.status='RECEIVED';o.dueDate=o.date;o.receivedAt=o.date;
+      });
     }
     return state;
   }
   function product(b,id) {const p=b.products.find(x=>x.id===(id??'base'));assert(p,'Produto não cadastrado');return p;}
   function syncTotals(b) {b.stockUnits=b.products.reduce((n,p)=>n+p.stockUnits,0);b.unitPrice=product(b,'base').priceCents;}
-  function registerPurchase(draft,b,supplierId,items) {
-    assert(SUPPLIERS.some(x=>x.id===supplierId),'Fornecedor não cadastrado');
+  function addDays(iso,days){let result=iso;for(let i=0;i<days;i++)result=dateNext(result);return result;}
+  const supplierById=id=>SUPPLIERS.find(s=>s.id===id);
+  const pendingQuantity=(b,id)=>b.purchaseOrders.filter(o=>o.status==='PENDING').reduce((n,o)=>
+    n+o.items.reduce((sum,line)=>sum+(line.productId===id?line.quantity:0),0),0);
+  function registerPurchase(draft,b,supplierId,items){
+    const supplier=supplierById(supplierId);
+    assert(supplier,'Fornecedor não cadastrado');
     assert(Array.isArray(items)&&items.length>=1&&items.length<=40,'Informe de 1 a 40 itens');
     const used=new Set();let total=0,qtyTotal=0;
-    const lines=items.map(line=>{assert(plain(line),'Item de compra inválido');const p=product(b,line.productId),quantity=Number(line.quantity);
+    const lines=items.map(line=>{
+      assert(plain(line),'Item de compra inválido');
+      const p=product(b,line.productId),quantity=Number(line.quantity);
       assert(!used.has(p.id),'Produto repetido na mesma compra');used.add(p.id);
       assert(Number.isInteger(quantity)&&quantity>=1&&quantity<=2000,'Quantidade inválida (1–2000)');
-      assert(p.stockUnits+quantity<=100000,'Limite por produto excedido');
-      const cost=quantity*p.costCents;total+=cost;qtyTotal+=quantity;
-      return {productId:p.id,name:p.name,quantity,unitCost:p.costCents,total:cost};});
-    assert(b.stockUnits+qtyTotal<=100000,'Capacidade total de estoque excedida');
-    assert(Number.isSafeInteger(total)&&balance(draft,'CASH')>=total,`Caixa insuficiente para comprar: ${money(total)}`);
+      const boughtToday=b.purchaseOrders.filter(o=>o.date===draft.calendar.date&&o.supplierId===supplier.id)
+        .reduce((n,o)=>n+o.items.reduce((sum,x)=>sum+(x.productId===p.id?x.quantity:0),0),0);
+      assert(quantity+boughtToday<=supplier.maxDailyPerSku,`Capacidade diária de ${supplier.name}: ${supplier.maxDailyPerSku} unidades por produto`);
+      assert(p.stockUnits+pendingQuantity(b,p.id)+quantity<=100000,'Capacidade máxima do produto excedida');
+      const unitCost=Math.round(p.costCents*supplier.priceFactor/100),cost=quantity*unitCost;
+      total+=cost;qtyTotal+=quantity;
+      return {productId:p.id,name:p.name,quantity,unitCost,total:cost};
+    });
+    const allPending=b.purchaseOrders.filter(o=>o.status==='PENDING')
+      .reduce((n,o)=>n+o.items.reduce((sum,x)=>sum+x.quantity,0),0);
+    assert(b.stockUnits+allPending+qtyTotal<=100000,'Capacidade total do depósito (incluindo trânsito) excedida');
+    assert(Number.isSafeInteger(total)&&balance(draft,'CASH')>=total,`Caixa insuficiente para encomenda: ${money(total)}`);
     assert(b.purchaseOrders.length<20000,'Histórico de compras cheio');
-    for(const line of lines)product(b,line.productId).stockUnits+=line.quantity;
-    syncTotals(b);const id=`pc-${++b.orderSeq}`;
-    b.purchaseOrders.push({id,date:draft.calendar.date,supplierId,items:lines,total});
-    journal(draft,`Compra ${id}: ${lines.map(x=>`${x.quantity} ${x.name}`).join(', ')}`,[
-      {account:'INVENTORY',debit:total,credit:0},{account:'CASH',debit:0,credit:total}]);
-    event(draft,'ESTOQUE.COMPRADO',`Compra ${id} confirmada: ${qtyTotal} unidades por ${money(total)}.`,{id,total,supplierId});
+    const id=`pc-${++b.orderSeq}`,dueDate=addDays(draft.calendar.date,supplier.leadDays);
+    b.purchaseOrders.push({id,date:draft.calendar.date,supplierId,items:lines,total,status:'PENDING',dueDate,receivedAt:null});
+    journal(draft,`Encomenda ${id}: mercadorias em trânsito`,[
+      {account:'IN_TRANSIT',debit:total,credit:0},{account:'CASH',debit:0,credit:total}]);
+    event(draft,'COMPRA.ENCOMENDADA',`Pedido ${id} pago (${money(total)}); previsão ${dueDate} (${supplier.leadDays} dia(s)).`,{id,total,dueDate,supplierId});
+  }
+  function receiveDueOrders(draft){
+    const b=draft.world.business;
+    if(!b)return;
+    for(const order of b.purchaseOrders){
+      if(order.status!=='PENDING'||order.dueDate>draft.calendar.date)continue;
+      for(const line of order.items){const p=product(b,line.productId);
+        p.stockUnits+=line.quantity;p.stockValueCents+=line.total;
+      }
+      syncTotals(b);
+      order.status='RECEIVED';order.receivedAt=draft.calendar.date;
+      journal(draft,`Recebimento ${order.id} em estoque`,[
+        {account:'INVENTORY',debit:order.total,credit:0},{account:'IN_TRANSIT',debit:0,credit:order.total}]);
+      event(draft,'COMPRA.RECEBIDA',`Pedido ${order.id} recebido: ${order.items.reduce((n,l)=>n+l.quantity,0)} unidades.`,{id:order.id,total:order.total});
+    }
+  }
+  function inventoryReport(state){
+    const b=state?.world?.business;if(!b)return [];
+    const events=state.audit.events.filter(e=>e.type==='DEMANDA.SIMULADA').slice(-7);
+    return b.products.map(p=>{
+      const series=events.map(e=>e.data?.items?.find(x=>x.productId===p.id)?.estimated).filter(Number.isInteger);
+      const observedDaily=series.length?Math.round(series.reduce((n,v)=>n+v,0)/series.length*10)/10:null;
+      const fallback=Math.max(1,Math.round(p.demand*cityById(state.player.cityId).factor/100));
+      const daily=observedDaily??fallback,inTransit=pendingQuantity(b,p.id),available=p.stockUnits+inTransit;
+      return {id:p.id,name:p.name,stock:p.stockUnits,inTransit,reorderPoint:p.reorderPoint,targetStock:p.targetStock,
+        observedDaily,forecastDaily:daily,sampleDays:series.length,coverageDays:Math.round(available/daily*10)/10,
+        recommended:Math.max(0,p.targetStock-available),alert:available<=p.reorderPoint};
+    });
   }
   function registerSale(draft,b,items,kind='SIMULACAO_DIARIA') {
     assert(kind==='SIMULACAO_DIARIA','A venda só pode ser gerada pela simulação de demanda');
@@ -77,12 +140,12 @@ const CidadeCore = (() => {
       assert(!used.has(p.id),'Produto repetido na mesma venda');used.add(p.id);
       assert(Number.isInteger(quantity)&&quantity>=1&&quantity<=2000,'Quantidade de venda inválida (1–2000)');
       assert(p.stockUnits>=quantity,`Estoque insuficiente para ${p.name}`);
-      const revenue=quantity*p.priceCents,cogs=quantity*p.costCents;
+      const revenue=quantity*p.priceCents,cogs=quantity===p.stockUnits?p.stockValueCents:Math.round(p.stockValueCents*quantity/p.stockUnits);
       total+=revenue;cost+=cogs;qtyTotal+=quantity;
       return {productId:p.id,name:p.name,quantity,unitPrice:p.priceCents,unitCost:p.costCents,revenue,cogs};});
     assert(Number.isSafeInteger(total)&&Number.isSafeInteger(cost),'Valor da venda excede limite');
     assert(b.sales.length<20000,'Limite de histórico de vendas atingido');
-    for(const line of lines)product(b,line.productId).stockUnits-=line.quantity;
+    for(const line of lines){const p=product(b,line.productId);p.stockUnits-=line.quantity;p.stockValueCents-=line.cogs;}
     b.totalSold+=qtyTotal;syncTotals(b);const id=`vd-${++b.saleSeq}`;
     b.sales.push({id,date:draft.calendar.date,kind,items:lines,total,cogs:cost});
     journal(draft,`Venda ${id} (${kind}): ${lines.map(x=>`${x.quantity} ${x.name}`).join(', ')}`,[
@@ -93,9 +156,9 @@ const CidadeCore = (() => {
   function productPerformance(state) {
     const b=state?.world?.business;if(!b)return [];
     return b.products.map(p=>{const lines=b.sales.flatMap(s=>s.items).filter(x=>x.productId===p.id);
-      return {id:p.id,name:p.name,stockUnits:p.stockUnits,stockValue:p.stockUnits*p.costCents,
+      return {id:p.id,name:p.name,stockUnits:p.stockUnits,stockValue:p.stockValueCents,
         sold:lines.reduce((n,l)=>n+l.quantity,0),revenue:lines.reduce((n,l)=>n+l.revenue,0),
-        cogs:lines.reduce((n,l)=>n+l.cogs,0),priceCents:p.priceCents,costCents:p.costCents};});
+        cogs:lines.reduce((n,l)=>n+l.cogs,0),priceCents:p.priceCents,costCents:p.stockUnits?Math.round(p.stockValueCents/p.stockUnits):p.costCents};});
   }
 
   const plain = x => !!x && typeof x === 'object' && !Array.isArray(x);
@@ -119,10 +182,10 @@ const CidadeCore = (() => {
   function overview(draft) {
     if(!draft)return null;
     const revenue=balance(draft,'REVENUE'),cogs=balance(draft,'COGS'),expenses=balance(draft,'EXPENSE');
-    return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),revenue,cogs,expenses,profit:revenue-cogs-expenses,stock:draft.world.business?.stockUnits??0,unitPrice:draft.world.business?.unitPrice??null,tick:draft.calendar.tick,city:cityById(draft.player.cityId)?.name??'—'};
+    return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),inTransit:balance(draft,'IN_TRANSIT'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),revenue,cogs,expenses,profit:revenue-cogs-expenses,stock:draft.world.business?.stockUnits??0,unitPrice:draft.world.business?.unitPrice??null,tick:draft.calendar.tick,city:cityById(draft.player.cityId)?.name??'—'};
   }
   function emptyLegacy(seed) {return {
-    schemaVersion:3,worldId:`legacy-${seed}`,revision:0,
+    schemaVersion:4,worldId:`legacy-${seed}`,revision:0,
     meta:{title:'Cidade dos Negócios',version:VERSION,origin:'MIGRATED_EMPTY_CP000',mode:'DEMONSTRACAO_ECONOMICA'},
     calendar:{date:START_DATE,tick:0},rng:{seed},
     player:{name:'',companyName:'',cityId:null},world:{cities:CITIES.map(x=>x.id),business:null,competitor:{priceIndex:100}},
@@ -168,8 +231,16 @@ const CidadeCore = (() => {
       assert(int(priceCents)&&priceCents>=100&&priceCents<=1000000,'Preço do produto inválido');
       assert(!b.products.some(p=>p.name.toLowerCase()===name.toLowerCase()),'Já existe produto com este nome');
       const id=`custom-${++b.productSeq}`;
-      b.products.push({id,name,costCents,priceCents,referenceCents:priceCents,demand:6,stockUnits:0});
+      b.products.push({id,name,costCents,priceCents,referenceCents:priceCents,demand:6,stockUnits:0,stockValueCents:0,reorderPoint:18,targetStock:60});
       event(draft,'PRODUTO.CADASTRADO',`Novo produto: ${name}.`,{id});return;
+    }
+    if(type==='ESTOQUE.POLITICA_DEFINIR') {
+      assert(b,'Abra uma empresa antes de definir reposição');
+      const p=product(b,payload.productId),reorderPoint=Number(payload.reorderPoint),targetStock=Number(payload.targetStock);
+      assert(Number.isInteger(reorderPoint)&&reorderPoint>=0&&reorderPoint<=100000,'Estoque mínimo inválido');
+      assert(Number.isInteger(targetStock)&&targetStock>=1&&targetStock<=100000&&targetStock>=reorderPoint,'Meta de estoque deve ser maior ou igual ao mínimo');
+      p.reorderPoint=reorderPoint;p.targetStock=targetStock;
+      event(draft,'ESTOQUE.POLITICA',`Reposição de ${p.name}: mínimo ${reorderPoint}, meta ${targetStock}.`,{productId:p.id,reorderPoint,targetStock});return;
     }
     if(type==='ESTOQUE.COMPRAR') {
       assert(b,'Abra uma empresa antes de comprar');
@@ -211,24 +282,21 @@ const CidadeCore = (() => {
       const items=[],demandLines=[];
       let estimated=0,fulfilled=0,unmet=0,withoutStock=0;
       for(const p of b.products){
-        if(!p.stockUnits){
-          // Sem estoque, a V1 não calcula nem inventa demanda: diferencie de demanda zero.
-          withoutStock++;
-          demandLines.push({productId:p.id,name:p.name,stockBefore:0,estimated:null,fulfilled:0,unmet:null});
-          continue; // Preserva o consumo de RNG e a economia da V1.2.
-        }
         const competitorPrice=p.referenceCents*(draft.world.competitor.priceIndex/100);
         const ratio=p.priceCents/competitorPrice;
         const elasticity=clamp(1.32-(ratio-1)*1.4,0.08,1.85);
+        // Procura existe mesmo se o produto estiver esgotado; são unidades desejadas, não vendas garantidas.
         const demand=Math.max(0,Math.floor(p.demand*(city.factor/100)*elasticity*season*(0.75+random(draft)*0.55)));
-        const sold=Math.min(p.stockUnits,demand);
-        estimated+=demand;fulfilled+=sold;unmet+=demand-sold;
-        demandLines.push({productId:p.id,name:p.name,stockBefore:p.stockUnits,estimated:demand,fulfilled:sold,unmet:demand-sold});
+        const sold=Math.min(p.stockUnits,demand),lost=demand-sold;
+        estimated+=demand;fulfilled+=sold;unmet+=lost;
+        if(!p.stockUnits)withoutStock++;
+        demandLines.push({productId:p.id,name:p.name,stockBefore:p.stockUnits,estimated:demand,fulfilled:sold,unmet:lost,
+          lostPotentialCents:lost*p.priceCents});
         if(sold>0)items.push({productId:p.id,quantity:sold});
       }
       if(items.length)registerSale(draft,b,items,'SIMULACAO_DIARIA');
       event(draft,'DEMANDA.SIMULADA',`Demanda simulada: ${estimated} un. estimadas, ${fulfilled} vendidas, ${unmet} não atendidas; ${withoutStock} produto(s) sem estimativa por falta de estoque.`,
-        {estimated,fulfilled,unmet,withoutStock,items:demandLines});
+        {estimated,fulfilled,unmet,withoutStock,lostPotentialCents:demandLines.reduce((n,x)=>n+x.lostPotentialCents,0),items:demandLines});
       const cash=balance(draft,'CASH'),expense=s.dailyCost;
       // Despesa não desaparece quando não há caixa: vira obrigação a pagar.
       journal(draft,'Despesa operacional diária',[
@@ -246,6 +314,7 @@ const CidadeCore = (() => {
     event(draft,'DIA.ENCERRADO',`Dia ${finished} concluído.`,{finished});
     draft.calendar.tick++;
     draft.calendar.date=dateNext(draft.calendar.date);
+    receiveDueOrders(draft);
   }
   function dispatch(current,cmd) {
     try{
@@ -270,7 +339,7 @@ const CidadeCore = (() => {
     }catch(error){return {ok:false,status:'REJECTED',state:current?clone(current):null,error:error.message};}
   }
   function validate(state) {
-    assert(plain(state)&&(state.schemaVersion===2||state.schemaVersion===3),'Save com schema incompatível');
+    assert(plain(state)&&[2,3,4].includes(state.schemaVersion),'Save com schema incompatível');
     assert(Number.isSafeInteger(state.revision)&&state.revision>=0,'Revisão inválida');
     assert(plain(state.player)&&plain(state.calendar)&&int(state.calendar.tick),'Jogador/calendário inválidos');
     assert(/^\d{4}-\d{2}-\d{2}$/.test(state.calendar.date)&&!Number.isNaN(Date.parse(state.calendar.date+'T12:00:00Z')),'Data inválida');
@@ -305,9 +374,21 @@ const CidadeCore = (() => {
           assert(plain(p)&&typeof p.id==='string'&&!ids.has(p.id)&&typeof p.name==='string'&&p.name.trim().length>=3,'Produto inválido');ids.add(p.id);
           assert(int(p.stockUnits)&&p.stockUnits<=100000&&int(p.costCents)&&p.costCents>=100&&p.costCents<=1000000,'Estoque ou custo inválido');
           assert(int(p.priceCents)&&p.priceCents>=100&&p.priceCents<=1000000&&int(p.referenceCents)&&p.referenceCents>=100&&int(p.demand)&&p.demand<=40,'Preço ou demanda inválida');
-          stockSum+=p.stockUnits;stockValue+=p.stockUnits*p.costCents;
+          stockSum+=p.stockUnits;stockValue+=state.schemaVersion===4?p.stockValueCents:p.stockUnits*p.costCents;
         }
         assert(stockSum===b.stockUnits&&stockValue===inventory&&stockSum<=100000,'Estoque físico e contábil divergentes');
+        if(state.schemaVersion===4){
+          const transit=b.purchaseOrders.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.total,0);
+          assert(transit===balance(state,'IN_TRANSIT'),'Mercadorias em trânsito não conciliadas');
+          for(const p of b.products)assert(int(p.stockValueCents)&&p.stockValueCents<=100000000000&&
+            int(p.reorderPoint)&&p.reorderPoint<=100000&&int(p.targetStock)&&p.targetStock<=100000&&p.targetStock>=p.reorderPoint,
+            'Custo médio e política de reposição inválidos');
+          for(const o of b.purchaseOrders){
+            assert(['PENDING','RECEIVED'].includes(o.status)&&isoDate(o.dueDate)&&o.dueDate>=o.date&&
+              (o.status==='PENDING'?o.receivedAt===null:isoDate(o.receivedAt)), 'Pedido ou prazo inválido');
+            assert(o.items.reduce((n,x)=>n+x.total,0)===o.total,'Total de compra divergente');
+          }
+        }
         assert(b.unitPrice===product(b,'base').priceCents,'Preço base inconsistente');
         assert(b.sales.every(s=>s&&typeof s.id==='string'&&Array.isArray(s.items)&&int(s.total)&&int(s.cogs)),'Vendas inválidas');
         assert(b.purchaseOrders.every(o=>o&&typeof o.id==='string'&&Array.isArray(o.items)&&int(o.total)),'Compras inválidas');
@@ -365,7 +446,7 @@ const CidadeCore = (() => {
       revenue,cogs,expenses,grossProfit:revenue-cogs,profit:revenue-cogs-expenses,
       grossMarginPercent:revenue?Math.round((revenue-cogs)*10000/revenue)/100:null,
       closingCash:account(until,'CASH'),closingInventory:account(until,'INVENTORY'),
-      closingPayable:account(until,'PAYABLE'),capital:account(entries,'CAPITAL')
+      closingPayable:account(until,'PAYABLE'),closingInTransit:account(until,'IN_TRANSIT'),capital:account(entries,'CAPITAL')
     };
   }
   // O histórico persiste nos eventos existentes da V1; nenhum campo novo é adicionado ao save.
@@ -392,10 +473,10 @@ const CidadeCore = (() => {
     assert(plain(data)&&data.saveFormatVersion===1&&data.app==='Cidade dos Negócios'&&data.checksumAlgorithm==='FNV1A32'&&typeof data.checksum==='string'&&plain(data.payload),'Envelope de save incompatível');
     assert(hash(JSON.stringify(data.payload))===data.checksum,'Checksum diverge: arquivo alterado ou corrompido');
     validate(data.payload);
-    const migrated=data.payload.schemaVersion===2,state=upgradedState(data.payload);validate(state);
-    return {state,migrated,message:migrated?'Carreira da V1 migrada com estoque, caixa e histórico preservados.':'Carreira restaurada com integridade validada.'};
+    const migrated=data.payload.schemaVersion!==4,state=upgradedState(data.payload);validate(state);
+    return {state,migrated,message:migrated?'Carreira migrada para V1.3 com caixa, estoque e histórico preservados.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,CITIES,SECTORS,SUPPLIERS,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,CITIES,SECTORS,SUPPLIERS,inventoryReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();

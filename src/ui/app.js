@@ -24,6 +24,7 @@
     setText('demand-fulfilled',latest?String(latest.data.fulfilled):'—');
     setText('demand-unmet',latest?String(latest.data.unmet):'—');
     setText('demand-without-stock',latest?String(latest.data.withoutStock):'—');
+    setText('demand-lost-potential',latest&&Number.isSafeInteger(latest.data.lostPotentialCents)?Core.money(latest.data.lostPotentialCents):'—');
     const rows=latest?.data?.items||[];
     $('demand-rows').innerHTML=rows.length?rows.map(p=>`<tr><td>${escape(p.name)}</td><td>${p.estimated===null?'Sem estimativa':p.estimated}</td><td>${p.fulfilled}</td><td>${p.unmet===null?'—':p.unmet}</td></tr>`).join(''):'<tr><td colspan="4">Avance pelo menos um dia com uma empresa aberta para visualizar a demanda simulada.</td></tr>';
     const daily=latest?sales.filter(s=>s.date===latest.date&&s.kind==='SIMULACAO_DIARIA'):[];
@@ -36,19 +37,30 @@
       return `<details class="commerce-receipt"><summary>${escape(BRDate(o.date))} · ${escape(o.id)} · ${escape(name)} · ${escape(Core.money(o.total))}</summary><ul>${detail}</ul><p>CMV: ${escape(Core.money(o.cogs))} · Lucro bruto: ${escape(Core.money(o.total-o.cogs))}</p></details>`;
     }).join(''):'<p class="muted">Nenhuma venda registrada. Abasteça o estoque e avance um dia.</p>';
   }
+  function renderInventoryPlanner(){
+    const b=business(),rows=b?Core.inventoryReport(state):[];
+    $('inventory-planner-rows').innerHTML=rows.length?rows.map(p=>`<tr><td class="${p.alert?'stock-alert':'stock-ok'}">${escape(p.name)}${p.alert?' ⚠':''}</td><td>${p.stock}</td><td>${p.inTransit}</td><td>${p.forecastDaily} ${p.sampleDays?'(observada)':'(base)'}</td><td>${p.coverageDays} dias</td><td>${p.reorderPoint}</td><td>${p.targetStock}</td><td>${p.recommended}</td></tr>`).join(''):'<tr><td colspan="8">Abra a empresa para configurar a reposição.</td></tr>';
+    refillSelect('policy-product',b?.products||[]);
+    const selected=chooseProduct('policy-product');
+    if(selected&&document.activeElement!==$('policy-reorder'))$('policy-reorder').value=selected.reorderPoint;
+    if(selected&&document.activeElement!==$('policy-target'))$('policy-target').value=selected.targetStock;
+    $('stock-policy-form').querySelector('button').disabled=!b;
+  }
   function renderCommerce(){
     const b=business(),products=b?.products||[];
     for(const id of ['buy-product','price-product'])refillSelect(id,products);
     const suppliers=Core.SUPPLIERS,$supplier=$('buy-supplier'),previous=$supplier.value;
     $supplier.replaceChildren(...suppliers.map(s=>{const opt=document.createElement('option');opt.value=s.id;opt.textContent=s.name;return opt;}));
     if(suppliers.some(x=>x.id===previous))$supplier.value=previous;
+    const supplier=suppliers.find(x=>x.id===$supplier.value);
+    setText('supplier-terms',supplier?`Entrega em ${supplier.leadDays} dia(s) · custo ${supplier.priceFactor}% da referência · capacidade de ${supplier.maxDailyPerSku} un. por produto/dia.`:'Escolha um fornecedor.');
     const chosenPrice=chooseProduct('price-product');
     setText('product-count',`${products.length} produto(s)`);
     const stats=b?Core.productPerformance(state):[];
     $('catalog-rows').innerHTML=stats.length?stats.map(p=>`<tr><td>${escape(p.name)}</td><td>${p.stockUnits}</td><td>${escape(Core.money(p.costCents))}</td><td>${escape(Core.money(p.priceCents))}</td><td>${p.sold}</td><td>${escape(Core.money(p.revenue))}</td><td>${escape(Core.money(p.cogs))}</td></tr>`).join(''):'<tr><td colspan="7">Abra uma empresa para ver o catálogo.</td></tr>';
     const orders=b?.purchaseOrders||[];
-    $('recent-purchases').innerHTML=orders.length?orders.slice(-6).reverse().map(o=>`<div class="commerce-history-row">${escape(BRDate(o.date))} · ${escape(o.id)} · ${escape(o.items.map(x=>x.quantity+'× '+x.name).join(', '))} · ${escape(Core.money(o.total))}</div>`).join(''):'<p class="muted">Nenhuma compra registrada nesta edição.</p>';
-    renderSalesMonitor();
+    $('recent-purchases').innerHTML=orders.length?orders.slice(-8).reverse().map(o=>`<div class="commerce-history-row"><strong>${escape(o.status==='PENDING'?'🚚 EM TRÂNSITO':'✓ RECEBIDO')}</strong> · ${escape(BRDate(o.date))} → ${escape(BRDate(o.dueDate||o.date))} · ${escape(o.id)} · ${escape(o.items.map(x=>x.quantity+'× '+x.name).join(', '))} · ${escape(Core.money(o.total))}</div>`).join(''):'<p class="muted">Nenhum pedido realizado nesta edição.</p>';
+    renderSalesMonitor();renderInventoryPlanner();
     setText('your-current-price',chosenPrice?Core.money(chosenPrice.priceCents):'—');
     setText('competitor-price',chosenPrice?Core.money(Math.round(chosenPrice.referenceCents*state.world.competitor.priceIndex/100)):'—');
     if(chosenPrice&&document.activeElement!==$('price-value'))$('price-value').value=(chosenPrice.priceCents/100).toFixed(2);
@@ -137,7 +149,8 @@
       ['Resultado antes dos tributos',report.profit],
       ['Caixa acumulado no encerramento',report.closingCash],
       ['Estoque contabilizado no encerramento',report.closingInventory],
-      ['Obrigações acumuladas a pagar',report.closingPayable]
+      ['Obrigações acumuladas a pagar',report.closingPayable],
+      ['Mercadorias pagas em trânsito (ativo)',report.closingInTransit]
     ];
     $('finance-summary').innerHTML=rows.map((x,i)=>`<dt class="${i===4?'emphasis':''}">${escape(x[0])}</dt><dd class="${i===4?'emphasis':''}">${escape(Core.money(x[1]))}</dd>`).join('');
     setText('journal-count',`${report.entries.length} registros`);
@@ -244,7 +257,9 @@
   function updateBuyPreview(){
     if(!state?.world.business)return;
     const qty=Number($('buy-quantity').value),p=chooseProduct('buy-product');
-    setText('buy-total',p&&Number.isInteger(qty)&&qty>0?`Custo unitário: ${Core.money(p.costCents)} · total: ${Core.money(qty*p.costCents)} (caixa: ${Core.money(Core.overview(state).cash)})`:'Informe uma quantidade válida.');
+    const supplier=Core.SUPPLIERS.find(s=>s.id===$('buy-supplier').value);
+    const unit=p&&supplier?Math.round(p.costCents*supplier.priceFactor/100):0;
+    setText('buy-total',p&&supplier&&Number.isInteger(qty)&&qty>0?`Encomenda: ${Core.money(unit)} por unidade · total pago hoje: ${Core.money(qty*unit)} · entrega em ${supplier.leadDays} dia(s) · caixa: ${Core.money(Core.overview(state).cash)}`:'Informe quantidade e fornecedor.');
   }
   function exportFile(){
     if(!state){notify('Crie uma carreira antes de exportar.',true);return;}
@@ -278,10 +293,13 @@
     $('open-form').addEventListener('submit',e=>{e.preventDefault();if(!state||viewCityId!==state.player.cityId){notify('Volte à cidade de origem para abrir o negócio.',true);return;}if(commit('EMPRESA.ABRIR',{sector:$('sector-select').value,lot:selectedLot}))goto('cidade');});
     $('buy-quantity').addEventListener('input',updateBuyPreview);
     $('buy-product').addEventListener('change',updateBuyPreview);
+    $('buy-supplier').addEventListener('change',()=>{renderCommerce();updateBuyPreview();});
+    $('policy-product').addEventListener('change',()=>{const p=chooseProduct('policy-product');if(p){$('policy-reorder').value=p.reorderPoint;$('policy-target').value=p.targetStock;}});
+    $('stock-policy-form').addEventListener('submit',e=>{e.preventDefault();const productId=$('policy-product').value;commit('ESTOQUE.POLITICA_DEFINIR',{productId,reorderPoint:Number($('policy-reorder').value),targetStock:Number($('policy-target').value)});});
     $('price-product').addEventListener('change',()=>{const p=chooseProduct('price-product');if(p)$('price-value').value=(p.priceCents/100).toFixed(2);renderCommerce();});
     $('product-form').addEventListener('submit',e=>{e.preventDefault();
       const name=$('new-product-name').value,costCents=Math.round(Number($('new-product-cost').value)*100),priceCents=Math.round(Number($('new-product-price').value)*100);
-      if(commit('PRODUTO.CADASTRAR',{name,costCents,priceCents})){$('product-form').reset();notify('Produto cadastrado. Agora você pode comprar estoque.');}
+      if(commit('PRODUTO.CADASTRAR',{name,costCents,priceCents})){$('product-form').reset();notify('Produto cadastrado. Agora configure estoque mínimo e encomende mercadorias.');}
     });
     for(const b of document.querySelectorAll('[data-buy-preset]'))b.addEventListener('click',()=>{$('buy-quantity').value=b.dataset.buyPreset;updateBuyPreview();$('buy-quantity').focus();});
     $('finance-period').addEventListener('change',e=>{ensureFinanceQuery().period=e.target.value;renderFinances();});

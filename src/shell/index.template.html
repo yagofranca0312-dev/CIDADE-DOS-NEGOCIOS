@@ -58,21 +58,22 @@
       <header class="topbar">
         <div><div class="overline">MUNDO ATIVO</div><h2 id="top-city">Tianguá <span>· CE</span></h2></div>
         <div class="topbar-controls">
+          <div id="unit-switch-container" class="unit-switch" hidden><label class="compact-label" for="unit-switch">Unidade ativa</label><select id="unit-switch" aria-label="Selecionar estabelecimento para gerenciar"></select></div>
           <label class="compact-label" for="explore-city">Explorar cidade</label><select id="explore-city" aria-label="Cidade em visualização"></select>
           <div class="date-box"><small>DATA DO MUNDO</small><strong id="date-label">—</strong></div>
           <button type="button" id="pause-btn" class="btn btn-outline" aria-label="Iniciar ou pausar simulação">▶ Jogar</button>
           <select id="speed-select" aria-label="Velocidade da simulação"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select>
         </div>
       </header>
-      <div class="world-warning" id="other-city-warning" hidden>Você está explorando outra cidade. A empresa atual opera apenas na cidade de origem nesta versão.</div>
+      <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
       <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Tributação legal não calculada nesta versão.</div>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.4.0-rc.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.5.0-rc.1</span></div>
         <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
           <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
           <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
           <div class="stat"><span>RESULTADO OPERACIONAL</span><strong id="kpi-profit">—</strong><small>Antes de tributos não simulados</small></div>
-          <div class="stat"><span>ESTOQUE DISPONÍVEL</span><strong id="kpi-stock">—</strong><small id="kpi-stock-label">Unidades do negócio</small></div>
+          <div class="stat"><span>ESTOQUE DISPONÍVEL</span><strong id="kpi-stock">—</strong><small id="kpi-stock-label">Estoque físico consolidado do grupo</small></div>
         </section>
         <section data-view="cidade" class="view active">
           <div class="dashboard-grid">
@@ -81,15 +82,22 @@
               <div class="map-legend"><span><i class="legend-color lot"></i> Lote disponível</span><span><i class="legend-color own"></i> Sua empresa</span><span><i class="legend-color sel"></i> Selecionado</span></div>
               <p class="map-disclaimer">Mapa fictício para jogabilidade. Não representa ruas, lotes ou imóveis reais.</p>
             </article>
-            <div class="right-column"><article class="panel"><div class="panel-heading"><h3>Lote selecionado</h3><span class="tag-soft">COMERCIAL</span></div><div class="big-number" id="selected-lot">Lote 01</div><p class="muted">Selecione um dos lotes no mapa. Na V1 é possível abrir um estabelecimento por carreira.</p><button class="btn btn-primary full" id="map-open-company" type="button">Abrir empresa neste lote</button></article>
+            <div class="right-column"><article class="panel"><div class="panel-heading"><h3>Lote selecionado</h3><span class="tag-soft">COMERCIAL</span></div><div class="big-number" id="selected-lot">Lote 01</div><p class="muted">Selecione um dos lotes no mapa. O grupo pode ter até cinco estabelecimentos, em cidades diferentes. Cada lote comporta uma unidade.</p><button class="btn btn-primary full" id="map-open-company" type="button">Abrir unidade neste lote</button></article>
               <article class="panel"><div class="panel-heading"><h3>Aconteceu na cidade</h3><span class="tag-soft">EVENTOS REAIS DO JOGO</span></div><div id="city-events" class="event-list"></div></article></div>
           </div>
         </section>
         <section data-view="empresa" class="view" hidden>
-          <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Minha empresa</h3><span class="tag-soft" id="company-status">NÃO INAUGURADA</span></div>
-            <div id="company-empty"><p class="muted">Escolha um ramo de negócio e um lote para dar o primeiro passo.</p><form id="open-form"><label for="sector-select">Ramo de atividade</label><select id="sector-select"><option value="mercado">Mercado de bairro</option><option value="padaria">Padaria</option><option value="roupas">Loja de roupas</option></select><p id="open-preview" class="field-hint"></p><button type="submit" class="btn btn-primary">Inaugurar negócio</button></form></div>
-            <div id="company-active" hidden><div class="company-emblem"><span id="company-glyph">▣</span><div><h3 id="company-title">—</h3><p id="company-product" class="muted"></p></div></div><dl class="detail-list"><dt>Endereço virtual</dt><dd id="company-location">—</dd><dt>Unidades vendidas</dt><dd id="company-sold">—</dd><dt>Preço atual</dt><dd id="company-price">—</dd><dt>Obrigações a pagar</dt><dd id="company-payable">—</dd></dl></div>
-            </article><article class="panel"><div class="panel-heading"><h3>Administração</h3></div><p class="muted">Gerencie seus produtos na aba Mercado e acompanhe as contas em Finanças.</p><button type="button" class="btn btn-outline full" data-go="mercado">Ir para o mercado ↗</button><button type="button" class="btn btn-outline full spaced" data-go="financas">Ver demonstrativos ↗</button></article></div>
+          <article class="panel group-panel" aria-label="Gestão consolidada do grupo">
+            <div class="panel-heading"><h3>Minha rede empresarial</h3><span class="tag-soft" id="group-count">0/5 estabelecimentos</span></div>
+            <p class="muted" id="group-scope-note">Caixa compartilhado; estoques e resultados pertencem a cada unidade.</p>
+            <div class="group-highlights"><div><small>Caixa compartilhado</small><strong id="group-available-cash">—</strong></div><div><small>Resultado operacional consolidado</small><strong id="group-operating-result">—</strong></div></div>
+            <div class="table-scroll"><table class="catalog-table group-table"><thead><tr><th>Estabelecimento</th><th>Receita acumulada</th><th>Resultado</th><th>Estoque</th><th>Ação</th></tr></thead><tbody id="unit-rows"></tbody></table></div>
+            <p class="field-hint">Matriz e filiais são unidades gerenciais do jogo, não CNPJs independentes. O limite é de cinco unidades. A abertura não injeta capital.</p>
+          </article>
+          <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Unidade operacional selecionada</h3><span class="tag-soft" id="company-status">NÃO INAUGURADA</span></div>
+            <div id="company-empty"><p class="muted">Escolha cidade e lote no mapa para abrir a matriz ou uma filial. A nova unidade utiliza o caixa compartilhado.</p><form id="open-form"><label for="sector-select">Ramo de atividade</label><select id="sector-select"><option value="mercado">Mercado de bairro</option><option value="padaria">Padaria</option><option value="roupas">Loja de roupas</option></select><p id="open-preview" class="field-hint"></p><button type="submit" class="btn btn-primary">Inaugurar negócio</button></form></div>
+            <div id="company-active" hidden><div class="company-emblem"><span id="company-glyph">▣</span><div><h3 id="company-title">—</h3><p id="company-product" class="muted"></p></div></div><dl class="detail-list"><dt>Endereço virtual</dt><dd id="company-location">—</dd><dt>Unidades vendidas</dt><dd id="company-sold">—</dd><dt>Preço atual</dt><dd id="company-price">—</dd><dt>Obrigações a pagar (grupo)</dt><dd id="company-payable">—</dd></dl></div>
+            </article><article class="panel"><div class="panel-heading"><h3>Administração da rede</h3></div><p class="muted">Selecione a unidade ativa no topo. Produtos, compras, preços e vendas pertencem à unidade; o caixa e o calendário são do grupo.</p><button type="button" class="btn btn-outline full" data-go="mercado">Ir para o mercado ↗</button><button type="button" class="btn btn-outline full spaced" data-go="financas">Ver demonstrativos ↗</button></article></div>
         </section>
         <section data-view="mercado" class="view" hidden>
           <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Compras e estoque</h3><span class="tag-soft">M15 · SUPRIMENTOS</span></div><form id="buy-form"><label for="buy-product">Produto</label><select id="buy-product"></select><label for="buy-supplier">Fornecedor simulado</label><select id="buy-supplier"></select><p id="supplier-terms" class="field-hint" aria-live="polite">Consulte prazos e limites do fornecedor.</p><p id="market-product" class="muted">Abra uma empresa antes de comprar mercadorias.</p><label for="buy-quantity">Quantidade de unidades</label><input type="number" min="1" max="2000" value="30" id="buy-quantity" required><div class="buy-presets" aria-label="Atalhos para preencher quantidade"><span>Preencher:</span><button type="button" class="btn btn-outline" data-buy-preset="10">10 un.</button><button type="button" class="btn btn-outline" data-buy-preset="50">50 un.</button><button type="button" class="btn btn-outline" data-buy-preset="100">100 un.</button><button type="button" class="btn btn-outline" data-buy-preset="250">250 un.</button></div><p class="field-hint">O pedido é pago hoje, fica **em trânsito** e só pode gerar vendas após a entrega. Atalhos apenas preenchem a quantidade.</p><p id="buy-total" class="field-hint">—</p><button type="submit" class="btn btn-primary">Encomendar mercadorias</button></form></article>
@@ -145,6 +153,7 @@
           <article class="panel finance-filters">
             <div class="panel-heading"><h3>Consulta financeira por período</h3><span class="tag-soft">M11 · NÃO ALTERA A CARREIRA</span></div>
             <div class="filter-fields">
+              <div><label for="finance-scope">Estabelecimento ou grupo</label><select id="finance-scope"><option value="all">Grupo consolidado</option></select></div>
               <div><label for="finance-period">Tipo de consulta</label><select id="finance-period">
                 <option value="all">Toda a carreira até uma data</option>
                 <option value="day">Dia específico</option>
@@ -168,9 +177,9 @@
             <div class="filter-action-row"><button type="button" id="finance-current-date" class="btn btn-outline">Usar data atual do jogo</button><span class="muted">O filtro não muda quando você avança os dias.</span></div>
             <p id="finance-validation" class="finance-validation" aria-live="polite" hidden></p>
             <p id="finance-period-label" class="field-hint" aria-live="polite">Escolha a data ou competência que deseja consultar.</p>
-          </article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Demonstrativo gerencial</h3><span class="tag-soft">M11 · LEDGER</span></div><dl class="finance-list" id="finance-summary"></dl><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Tributação ainda não é calculada.</p></div><p class="muted">Fluxos do período filtrado; saldos de caixa, estoque e contas a pagar são acumulados até seu encerramento, não despesas do período.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
+          </article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Demonstrativo gerencial</h3><span class="tag-soft">M11 · LEDGER</span></div><dl class="finance-list" id="finance-summary"></dl><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Tributação ainda não é calculada.</p></div><p class="muted">Fluxos do período filtrado e separados por unidade; saldos de estoque e obrigações são acumulados até o encerramento. O caixa não é repartido artificialmente entre filiais: somente a consulta consolidada exibe o saldo compartilhado.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
           <article class="panel strategy-panel"><div class="panel-heading"><h3>Gestão estratégica e equilíbrio econômico</h3><span class="tag-soft">V1.4 · ANÁLISE E PROJEÇÃO</span></div>
-            <p class="muted">Resultados realizados vêm exclusivamente do livro contábil. Projeções são cenários hipotéticos, não lançamentos, e não realizam novas compras nem liquidam obrigações existentes.</p>
+            <p class="muted">Resultados realizados vêm exclusivamente do livro contábil. Projeções são cenários hipotéticos, não lançamentos. A projeção estratégica considera a unidade ativa e o caixa compartilhado atual, sem projetar simultaneamente as demais unidades; não é uma projeção consolidada da rede. Esses cenários não realizam novas compras nem liquidam obrigações existentes. Não gera lançamentos.</p>
             <div class="strategy-controls"><label for="strategy-horizon">Horizonte de projeção (dias)</label><select id="strategy-horizon"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select></div>
             <div id="strategy-metrics" class="strategy-metrics" aria-live="polite"><p class="muted">Abra uma empresa para gerar indicadores.</p></div>
             <div class="table-scroll"><table class="strategy-table"><thead><tr><th>Tipo de custo / resultado</th><th>Realizado: últimos 30 dias encerrados</th><th>Projeção: horizonte escolhido</th></tr></thead><tbody id="strategy-cost-rows"></tbody></table></div>
@@ -187,7 +196,7 @@
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.4.0-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.5.0-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>

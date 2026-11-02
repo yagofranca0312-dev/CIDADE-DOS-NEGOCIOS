@@ -1,5 +1,15 @@
 # Histórico de versões — Cidade dos Negócios
 
+## 1.5.0-rc.1 — expansão empresarial (02/11/2026)
+
+- Até cinco estabelecimentos em cidades, setores e lotes distintos, com caixa compartilhado e operações separadas.
+- ID de estabelecimento vinculado a lançamentos novos e aos indicadores de cada filial; matriz recebe historicamente lançamentos legados, sem modificar valores anteriores.
+- Visões financeiras consolidadas ou individuais; caixa não é dividido artificialmente.
+- Demanda compartilhada entre estabelecimentos do mesmo ramo/cidade; simulação econômica única por calendário.
+- Migração validada schema 2/3/4/5 → 6; backup anterior à atualização é indispensável para rollback.
+- V1.4 validada no Windows pelo jogador e preservada em `releases/v1.4.0-homologada`.
+- Testes estruturais, econômicos e navegador. V1.5 ainda aguarda homologação no Windows.
+
 ## 1.4.0-rc.1 — estratégia e equilíbrio econômico (02/11/2026)
 
 - Campanhas de desconto por SKU e prazo determinado; motor altera preço efetivo e elasticidade da demanda sem trocar preço de tabela ou criar vendas manuais.

@@ -7,8 +7,8 @@
   const BRDate=iso=>iso.split('-').reverse().join('/');
   const KEY='cidade-dos-negocios-save-v1';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
-  let financeQuery=null,strategyHorizon=30; // preferências de interface, independentes do GameState
-  const business=()=>state?.world?.business||null;
+  let financeQuery=null,strategyHorizon=30,financeScope='all'; // preferências de interface, independentes do GameState
+  const business=()=>state?Core.activeBusiness(state):null;
   function chooseProduct(id){const b=business();return b?.products?.find(p=>p.id===$(id)?.value)||b?.products?.[0]||null;}
   function refillSelect(id,products){
     const select=$(id),previous=select.value;
@@ -17,7 +17,7 @@
   }
   function renderSalesMonitor(){
     const b=business(),sales=b?.sales||[];
-    const checks=state?.audit?.events?.filter(e=>e.type==='DEMANDA.SIMULADA')||[];
+    const checks=state?.audit?.events?.filter(e=>e.type==='DEMANDA.SIMULADA'&&b&&(e.businessId===b.id||(!e.businessId&&b.id===state.world.business?.id)))||[];
     const latest=checks.at(-1);
     setText('demand-date',latest?BRDate(latest.date):'Aguardando primeiro dia simulado');
     setText('demand-estimated',latest?String(latest.data.estimated):'—');
@@ -98,6 +98,24 @@
     const d=new Date(state.calendar.date+'T12:00:00Z');d.setUTCDate(d.getUTCDate()-1);
     return d.toISOString().slice(0,10);
   }
+  function renderGroup(){
+    const group=Core.groupReport(state),active=business();
+    const select=$('unit-switch'),previous=active?.id||'';
+    select.replaceChildren(...group.units.map(u=>{const option=document.createElement('option');option.value=u.id;option.textContent=`${u.id} · ${u.city} · ${Core.SECTORS[u.sector].name}`;return option;}));
+    select.disabled=!group.count;select.value=previous;
+    $('unit-switch-container').hidden=!group.count;
+    const finance=$('finance-scope'),scope=financeScope;
+    finance.replaceChildren(...[{id:'all',name:'Grupo consolidado'},...group.units.map(u=>({id:u.id,name:`${u.id} · ${u.city}`}))].map(x=>{
+      const opt=document.createElement('option');opt.value=x.id;opt.textContent=x.name;return opt;
+    }));
+    if(![...finance.options].some(o=>o.value===scope))financeScope='all';finance.value=financeScope;
+    setText('group-count',`${group.count}/5 estabelecimentos`);
+    setText('group-available-cash',Core.money(group.group.cash));
+    setText('group-operating-result',Core.money(group.group.profit));
+    const rows=group.units.map(u=>`<tr><td><strong>${escape(u.id)}</strong> · ${escape(Core.SECTORS[u.sector].name)}<br><small>${escape(u.city)} · lote ${u.lot}</small></td><td>${escape(Core.money(u.revenue))}</td><td>${escape(Core.money(u.profit))}</td><td>${u.stock}</td><td><button type="button" class="btn btn-outline" data-unit-activate="${escape(u.id)}" ${u.id===active?.id?'disabled':''}>${u.id===active?.id?'Ativa':'Gerenciar'}</button></td></tr>`).join('');
+    $('unit-rows').innerHTML=rows||'<tr><td colspan="5">Inaugure sua primeira unidade.</td></tr>';
+    setText('group-scope-note','Receitas, CMV e despesas atribuídos a cada unidade; caixa pertence ao grupo. Nenhum capital é criado ao abrir filial.');
+  }
   function renderPriceHistory(){
     const items=Core.priceHistory(state),container=$('price-history');
     setText('price-history-count',`${items.length} alteração(ões)`);
@@ -122,7 +140,7 @@
     return {date:q.to,range:{from:q.from,to:q.to}};
   }
   function renderStrategy(){
-    if(!state?.world?.business){$('strategy-metrics').innerHTML='<p class="muted">Abra uma empresa para consultar as projeções.</p>';$('strategy-cost-rows').innerHTML='';$('strategy-risks').innerHTML='';return;}
+    if(!business()){$('strategy-metrics').innerHTML='<p class="muted">Abra uma empresa para consultar as projeções.</p>';$('strategy-cost-rows').innerHTML='';$('strategy-risks').innerHTML='';return;}
     const report=Core.strategyReport(state,strategyHorizon);
     $('strategy-horizon').value=String(strategyHorizon);
     const value=(v)=>v===null?'Não atingível':Core.money(v);
@@ -169,7 +187,7 @@
     let report;
     try {
       const params=financeQueryDate(q);
-      report=Core.financialReport(state,q.period,params.date,params.range);
+      report=Core.financialReport(state,q.period,params.date,params.range,financeScope);
       $('finance-validation').hidden=true;setText('finance-validation','');
     }catch(e){
       $('finance-validation').hidden=false;setText('finance-validation',e.message);
@@ -178,29 +196,29 @@
       $('journal-events').innerHTML='<p class="muted">Período inválido. Nenhum dado foi alterado.</p>';
       return;
     }
-    setText('finance-period-label',`${report.label} · lançamentos até ${BRDate(report.effectiveEnd)}. Saldos acumulados no encerramento. Consulta fixa até você alterar os filtros.`);
+    setText('finance-period-label',`${report.label} · ${financeScope==='all'?'GRUPO CONSOLIDADO':`UNIDADE ${financeScope}`} · lançamentos até ${BRDate(report.effectiveEnd)}. Consulta fixa até você alterar os filtros.`);
     const rows=[
       ['Receita de vendas (período)',report.revenue],
       ['(-) Custo das mercadorias vendidas',report.cogs],
       ['Lucro bruto (período)',report.grossProfit],
       ['(-) Despesas operacionais',report.expenses],
       ['Resultado antes dos tributos',report.profit],
-      ['Caixa acumulado no encerramento',report.closingCash],
+      ['Caixa centralizado do grupo',financeScope==='all'?report.closingCash:null],
       ['Estoque contabilizado no encerramento',report.closingInventory],
       ['Obrigações acumuladas a pagar',report.closingPayable],
       ['Mercadorias pagas em trânsito (ativo)',report.closingInTransit]
     ];
-    $('finance-summary').innerHTML=rows.map((x,i)=>`<dt class="${i===4?'emphasis':''}">${escape(x[0])}</dt><dd class="${i===4?'emphasis':''}">${escape(Core.money(x[1]))}</dd>`).join('');
+    $('finance-summary').innerHTML=rows.map((x,i)=>`<dt class="${i===4?'emphasis':''}">${escape(x[0])}</dt><dd class="${i===4?'emphasis':''}">${x[1]===null?'Compartilhado (ver grupo)':escape(Core.money(x[1]))}</dd>`).join('');
     setText('journal-count',`${report.entries.length} registros`);
     $('journal-events').innerHTML=report.entries.length?report.entries.slice(-8).reverse().map(j=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(j.memo)}</p><small>${escape(BRDate(j.date))} · ${escape(j.id)}</small></div></div>`).join(''):'<p class="muted">Nenhum lançamento neste período.</p>';
     renderStrategy();
   }
   function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
   function commit(type,payload={}){
-    if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;}
+    if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;financeScope='all';}
     const result=Core.dispatch(state,{type,id:nextId(),payload});
     if(!result.ok){notify(result.error,true);return false;}
-    if(result.status==='APPLIED'){state=result.state;viewCityId=viewCityId??state.player.cityId;saveLocal();render();}
+    if(result.status==='APPLIED'){state=result.state;const chosen=business();if((type==='EMPRESA.ABRIR'||type==='EMPRESA.ATIVAR')&&chosen){viewCityId=chosen.cityId;selectedLot=chosen.lot;}else viewCityId=viewCityId??state.player.cityId;saveLocal();render();}
     notify(result.message);
     return true;
   }
@@ -219,7 +237,7 @@
     }
     const tiangua=Core.CITIES.find(c=>c.name==='Tianguá');$('start-city').value=tiangua.id;
   }
-  function svgMap(city,own,lot){
+  function svgMap(city,ownedLots,lot){
     // SVG estilizado original: cada grupo tem identificação de lote, sem dependências externas.
     const seed=city.name.length+city.id.length;
     const fragments=[`<svg viewBox="180 10 600 360" xmlns="http://www.w3.org/2000/svg" aria-label="Mapa isométrico fictício de ${escape(city.name)}">`,
@@ -228,7 +246,7 @@
       `<path d="M145 155 L436 19 L813 196 L519 366Z" fill="#102d3b" opacity=".9"/>`];
     for(let row=0;row<3;row++)for(let col=0;col<6;col++){
       const num=row*6+col+1,x=392+(col-row)*57,y=91+(col+row)*26;
-      const isOwn=own?.lot===num,isSelected=lot===num;
+      const isOwn=ownedLots.includes(num),isSelected=lot===num;
       const ground=isOwn?'#9e8144':isSelected?'#3f8bb2':'#42665f';
       const roofs=['#487d8c','#316275','#607387','#597c80','#425a6b'];
       const roof=isOwn?'#e8b55f':roofs[(num+seed)%roofs.length];
@@ -260,7 +278,7 @@
     const started=!!state?.player?.cityId;
     $('onboarding').hidden=started;$('game-shell').hidden=!started;
     if(!started)return;
-    const b=state.world.business,info=Core.overview(state),ownCity=Core.cityById(state.player.cityId);
+    const b=business(),units=Core.businesses(state),info=Core.overview(state),ownCity=Core.cityById(b?.cityId||state.player.cityId);
     const visibleCity=Core.cityById(viewCityId)||ownCity;
     viewCityId=visibleCity.id;
     setText('top-city',`${visibleCity.name} · ${visibleCity.uf}`);
@@ -268,16 +286,18 @@
     setText('date-label',BRDate(state.calendar.date));
     setText('kpi-cash',Core.money(info.cash));setText('kpi-revenue',Core.money(info.revenue));setText('kpi-profit',Core.money(info.profit));setText('kpi-stock',info.stock);
     setText('kpi-stock-label',b?`${b.products.length} produtos cadastrados · unidades totais`:'Sem estoque');
-    $('other-city-warning').hidden=visibleCity.id===ownCity.id;
+    $('other-city-warning').hidden=units.some(x=>x.cityId===visibleCity.id);
+    setText('other-city-warning','Cidade sem unidade da sua rede. Você pode inaugurar uma unidade num lote disponível.');
     setText('map-title',`Distrito comercial de ${visibleCity.name}`);setText('map-uf',visibleCity.uf);
-    $('map-canvas').innerHTML=svgMap(visibleCity,visibleCity.id===ownCity.id?b:null,selectedLot);
-    setText('selected-lot',`Lote ${String(selectedLot).padStart(2,'0')} de 18`);
-    $('map-open-company').disabled=!!b||visibleCity.id!==ownCity.id;
+    $('map-canvas').innerHTML=svgMap(visibleCity,units.filter(x=>x.cityId===visibleCity.id).map(x=>x.lot),selectedLot);
+    setText('selected-lot',`Lote ${String(selectedLot).padStart(2,'0')} de 18`);updateOpenPreview();
+    $('map-open-company').disabled=units.length>=5||units.some(x=>x.cityId===visibleCity.id&&x.lot===selectedLot);
     setText('city-events','');$('city-events').innerHTML=eventsHTML(state.audit.events.slice(-6).reverse());
-    $('company-empty').hidden=!!b;$('company-active').hidden=!b;
+    $('company-empty').hidden=units.length>=5;$('company-active').hidden=!b;
+    renderGroup();
     setText('company-status',b?'EM OPERAÇÃO':'NÃO INAUGURADA');
     $('buy-form').querySelector('button').disabled=!b;$('price-form').querySelector('button').disabled=!b;
-    if(b){const s=Core.SECTORS[b.sector];setText('company-glyph',s.glyph);setText('company-title',`${state.player.companyName} · ${s.name}`);setText('company-product',`${b.products.length} produto(s) cadastrados`);setText('company-location',`${ownCity.name} / ${ownCity.uf} · lote ${String(b.lot).padStart(2,'0')}`);setText('company-sold',b.totalSold);setText('company-price',Core.money(b.unitPrice));setText('company-payable',Core.money(info.payable));
+    if(b){const s=Core.SECTORS[b.sector];setText('company-glyph',s.glyph);setText('company-title',`${state.player.companyName} · ${b.id} · ${s.name}`);setText('company-product',`${b.products.length} produto(s) cadastrados`);setText('company-location',`${Core.cityById(b.cityId).name} / ${Core.cityById(b.cityId).uf} · lote ${String(b.lot).padStart(2,'0')}`);setText('company-sold',b.totalSold);setText('company-price',Core.money(b.unitPrice));setText('company-payable',Core.money(info.payable));
       setText('market-product','Escolha o produto e o fornecedor. Custos unitários são simulados.');
       setText('your-current-price',Core.money(b.unitPrice));
       setText('competitor-price',Core.money(Math.round(s.recommended*state.world.competitor.priceIndex/100)));
@@ -287,14 +307,14 @@
     renderCommerce();renderPriceHistory();
     if(tab==='financas'||financeQuery)renderFinances();
     const report=Core.diagnostics(state);
-    $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Cidade ativa',ownCity.name],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal','NOT_COVERED']].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
+    $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal','NOT_COVERED']].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
     setText('turn-message',!b?'Abra sua primeira empresa.':b.stockUnits===0?'Seu estoque está vazio. Reabasteça.':`Sua empresa está operando há ${state.calendar.tick} dia(s).`);
     setText('turn-subtext',!b?'Clique em um lote para iniciar.':`${b.products.length} produtos · Estoque total ${b.stockUnits} un. · próximo dia ${BRDate(state.calendar.date)}.`);
     setText('autosave-label',autosaveStatus);
     setText('footer-state',autosaveStatus.startsWith('Cópia')?'Cópia local verificada · backup JSON recomendado':'Backup JSON recomendado');
   }
   function updateBuyPreview(){
-    if(!state?.world.business)return;
+    if(!business())return;
     const qty=Number($('buy-quantity').value),p=chooseProduct('buy-product');
     const supplier=Core.SUPPLIERS.find(s=>s.id===$('buy-supplier').value);
     const unit=p&&supplier?Math.round(p.costCents*supplier.priceFactor/100):0;
@@ -312,7 +332,7 @@
     if(!file)return;
     if(file.size>25_000_000){notify('Save excede 25 MB.',true);return;}
     if(state?.player.cityId&&!confirm('Substituir a carreira atual pelo save importado? Recomendamos exportar antes.'))return;
-    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;viewCityId=state.player.cityId;selectedLot=1;financeQuery=null;saveLocal();render();notify(incoming.message);}
+    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';saveLocal();render();notify(incoming.message);}
     catch(e){notify(`Importação rejeitada: ${e.message}. A carreira anterior foi preservada.`,true);}
   }
   function launchAuto(){
@@ -324,12 +344,15 @@
     $('career-form').addEventListener('submit',e=>{e.preventDefault();const name=$('player-name').value,companyName=$('company-name').value,cityId=$('start-city').value;commit('CARREIRA.CRIAR',{name,companyName,cityId,seed:(Date.now()>>>0)});});
     for(const button of document.querySelectorAll('[data-tab]'))button.addEventListener('click',()=>goto(button.dataset.tab));
     for(const button of document.querySelectorAll('[data-go]'))button.addEventListener('click',()=>goto(button.dataset.go));
-    $('explore-city').addEventListener('change',e=>{viewCityId=e.target.value;render();});
-    $('map-canvas').addEventListener('click',e=>{const target=e.target.closest('[data-lot]');if(target){selectedLot=Number(target.dataset.lot);render();}});
+    $('unit-switch').addEventListener('change',e=>{if(e.target.value)commit('EMPRESA.ATIVAR',{businessId:e.target.value});});
+    $('finance-scope').addEventListener('change',e=>{financeScope=e.target.value;renderFinances();});
+    $('unit-rows').addEventListener('click',e=>{const btn=e.target.closest('[data-unit-activate]');if(btn)commit('EMPRESA.ATIVAR',{businessId:btn.dataset.unitActivate});});
+    $('explore-city').addEventListener('change',e=>{viewCityId=e.target.value;render();updateOpenPreview();});
+    $('map-canvas').addEventListener('click',e=>{const target=e.target.closest('[data-lot]');if(target){selectedLot=Number(target.dataset.lot);render();updateOpenPreview();}});
     $('map-canvas').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const target=e.target.closest('[data-lot]');if(target){e.preventDefault();selectedLot=Number(target.dataset.lot);render();}}});
     $('map-open-company').addEventListener('click',()=>{goto('empresa');$('sector-select').focus();});
     $('sector-select').addEventListener('change',updateOpenPreview);
-    $('open-form').addEventListener('submit',e=>{e.preventDefault();if(!state||viewCityId!==state.player.cityId){notify('Volte à cidade de origem para abrir o negócio.',true);return;}if(commit('EMPRESA.ABRIR',{sector:$('sector-select').value,lot:selectedLot}))goto('cidade');});
+    $('open-form').addEventListener('submit',e=>{e.preventDefault();if(!state)return;if(commit('EMPRESA.ABRIR',{sector:$('sector-select').value,cityId:viewCityId,lot:selectedLot}))goto('cidade');});
     $('buy-quantity').addEventListener('input',updateBuyPreview);
     $('buy-product').addEventListener('change',updateBuyPreview);
     $('buy-supplier').addEventListener('change',()=>{renderCommerce();updateBuyPreview();});
@@ -365,7 +388,7 @@
       renderFinances();
     });
     $('buy-form').addEventListener('submit',e=>{e.preventDefault();commit('ESTOQUE.COMPRAR',{productId:$('buy-product').value,supplierId:$('buy-supplier').value,quantity:Number($('buy-quantity').value)});});
-    $('price-form').addEventListener('submit',e=>{e.preventDefault();const p=chooseProduct('price-product'),value=$('price-value').value,cents=Math.round(Number(value)*100),before=p?.priceCents;if(commit('PRECO.DEFINIR',{productId:p?.id,cents})){const after=state.world.business.products.find(x=>x.id===p.id).priceCents;const message=`Preço de ${p.name} atualizado: ${Core.money(before)} → ${Core.money(after)}.`;setText('price-change-feedback',message);notify(message);}});
+    $('price-form').addEventListener('submit',e=>{e.preventDefault();const p=chooseProduct('price-product'),value=$('price-value').value,cents=Math.round(Number(value)*100),before=p?.priceCents;if(commit('PRECO.DEFINIR',{productId:p?.id,cents})){const after=business().products.find(x=>x.id===p.id).priceCents;const message=`Preço de ${p.name} atualizado: ${Core.money(before)} → ${Core.money(after)}.`;setText('price-change-feedback',message);notify(message);}});
     $('next-day').addEventListener('click',()=>commit('TEMPO.AVANCAR_DIA'));
     $('next-week').addEventListener('click',()=>commit('TEMPO.AVANCAR_LOTE',{days:7}));
     $('next-month').addEventListener('click',()=>commit('TEMPO.AVANCAR_LOTE',{days:30}));
@@ -376,12 +399,12 @@
     $('start-import').addEventListener('click',()=>$('import-file').click());
     $('import-file').addEventListener('change',async e=>{const f=e.target.files?.[0];try{await importFile(f);}finally{e.target.value='';}});
     $('run-diagnostic').addEventListener('click',()=>{try{const before=JSON.stringify(state),out=Core.diagnostics(state);if(before!==JSON.stringify(state))throw Error('Diagnóstico alterou o estado');setText('diagnostic-result',out.status+' · revisão '+out.revision);notify('Verificação estrutural e contábil aprovada.');}catch(e){setText('diagnostic-result',e.message);notify(e.message,true);}});
-    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financeQuery=null;render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
+    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financeQuery=null;financeScope='all';render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
   }
-  function updateOpenPreview(){const s=Core.SECTORS[$('sector-select').value];if(s)setText('open-preview',`Investimento inicial simulado: ${Core.money(s.openCost)} · Produto: ${s.product}`);}
+  function updateOpenPreview(){const s=Core.SECTORS[$('sector-select').value],city=Core.cityById(viewCityId);if(s)setText('open-preview',`Abertura em ${city?.name||'cidade selecionada'} · lote ${String(selectedLot).padStart(2,'0')} · investimento ${Core.money(s.openCost)} do caixa compartilhado · ramo: ${s.name}.`);}
   function start(){
     cityOptions();bind();updateOpenPreview();
-    try{const raw=localStorage.getItem(KEY);if(raw){const loaded=Core.importSave(raw);state=loaded.state;viewCityId=state.player.cityId;autosaveStatus='Cópia local verificada neste navegador; mantenha backup JSON externo.';}}
+    try{const raw=localStorage.getItem(KEY);if(raw){const loaded=Core.importSave(raw);state=loaded.state;viewCityId=business()?.cityId||state.player.cityId;autosaveStatus='Cópia local verificada neste navegador; mantenha backup JSON externo.';}}
     catch(e){autosaveStatus='Não foi possível recuperar o salvamento local; importe backup JSON.';notify(autosaveStatus+' '+e.message,true);}
     render();goto('cidade');
   }

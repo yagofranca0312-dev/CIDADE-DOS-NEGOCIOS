@@ -1,8 +1,20 @@
 # 🏙️ Cidade dos Negócios 1
 
-**Versão:** `1.4.0-rc.1` — **gestão estratégica, promoções e cenários financeiros**, candidata jogável aguardando homologação.  
+**Versão:** `1.5.0-rc.1` — **rede empresarial multiunidade**, candidata jogável, aguardando homologação no Windows.  
 **Formato:** um `index.html` autônomo, com CSS e JS incorporados; sem internet ou instalação obrigatória para jogar.  
 **Data-base do planejamento:** 01/11/2026.
+
+## Patch 1.5.0-rc.1 — Expansão Empresarial e Múltiplos Estabelecimentos
+
+- **Grupo empresarial:** até **cinco estabelecimentos por carreira** (matriz mais quatro filiais), inclusive em cidades diferentes e setores distintos. Lotes só podem ser ocupados por uma unidade do grupo; os demais lotes permanecem disponíveis.
+- **Caixa compartilhado:** abrir filial desconta o custo de abertura do caixa existente sem criar aporte/capital adicional; vendas, compras e despesas de cada unidade impactam o caixa do grupo. A consulta individual **não apresenta um caixa fictício próprio**.
+- **Operação segregada:** cada unidade possui setor, cidade, lote, produtos, preços, promoções, estoque físico, mercadorias em trânsito, pedidos, vendas e despesas próprias. Alternar a unidade ativa não altera RNG, tempo ou saldos.
+- **Demanda com canibalização:** unidades do **mesmo setor e mesma cidade** compartilham a procura estimada de cada SKU. O fator por unidade é `1 / número de unidades da rede naquele setor e cidade`; o modelo evita duplicar integralmente a demanda, porém ainda é uma aproximação econômica fictícia.
+- **Finanças:** o livro contábil global continua equilibrado. Lançamentos novos são marcados com ID da unidade, e os históricos anteriores à V1.5 são atribuídos à matriz, sem reescrever seus valores. Os filtros financeiros permitem escolher **grupo consolidado** ou **unidade**, mantendo os períodos independentes do calendário. Caixa só é exibido na visão consolidada.
+- **Indicadores:** visão de receita, CMV, despesas, lucro e estoque por unidade e total da rede. As projeções V1.4 continuam limitadas à **unidade ativa**, utilizando o caixa compartilhado de partida sem simular as demais unidades em paralelo; não devem ser somadas como projeção consolidada.
+- **Migração:** o `schemaVersion` passou de **5 para 6**. Saves válidos de versões 2–5 são convertidos preservando ledger, saldos, vendas e estoque históricos; **o executável antigo não abre schema 6**. Exporte backup JSON na V1.4 antes de atualizar pelo BAT. O HTML mantém a mesma chave de salvamento local.
+- **Limites da edição:** filiais não são CNPJs distintos, nem têm regimes fiscais próprios. Não há transferências entre depósitos, empréstimos, funcionários, logística entre unidades, tributação legal ou indicadores econômicos reais nesta versão. Fornecedores continuam fictícios; a capacidade diária é por unidade e SKU.
+- **Qualidade:** testes multiloja, migração, conciliação por unidade e grupo, demanda compartilhada, simulação longa e quatro resoluções de interface. Homologação Windows pendente.
 
 ## Patch 1.4.0-rc.1 — Gestão Estratégica e Equilíbrio Econômico
 

@@ -24,7 +24,7 @@ const advance=(s,days=1,engine=Core)=>cmd(engine,s,'TEMPO.AVANCAR_LOTE',{days});
 const order=(s,qty=100,id='base')=>cmd(Core,s,'ESTOQUE.COMPRAR',{supplierId:'regional',productId:id,quantity:qty});
 
 test('V1.4: nova carreira schema 5 e campanhas vazias, sem mudar contabilidade inicial',()=>{
- const s=make();assert.equal(Core.VERSION,'1.4.0-rc.1');assert.equal(s.schemaVersion,5);
+ const s=make();assert.equal(Core.VERSION,'1.5.0-rc.1');assert.equal(s.schemaVersion,6);
  assert.deepEqual(JSON.parse(JSON.stringify(s.world.business.promotions)),{});
  assert.equal(Core.overview(s).cash,2250000);
  Core.validate(s);
@@ -72,7 +72,7 @@ test('V1.4: save 4 com pedido em trânsito migra 4→5 preservando caixa, custo 
  let old=make(V13);old=cmd(V13,old,'ESTOQUE.COMPRAR',{supplierId:'atacado',productId:'base',quantity:70});
  old=advance(old,1,V13);const report=V13.overview(old),raw=V13.exportSave(old);
  const result=Core.importSave(raw),s=result.state;
- assert.equal(result.migrated,true);assert.equal(s.schemaVersion,5);
+ assert.equal(result.migrated,true);assert.equal(s.schemaVersion,6);
  assert.equal(JSON.stringify(s.economy.ledger),JSON.stringify(old.economy.ledger));
  assert.equal(s.rng.seed,old.rng.seed);
  assert.equal(Core.overview(s).cash,report.cash);

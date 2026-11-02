@@ -78,6 +78,20 @@
 /* Corrige a largura minima implicita de cards em resolucoes estreitas. */
 @media(max-width:1180px){.commerce-dashboard,.commerce-history-grid{grid-template-columns:minmax(0,1fr)}.commerce-dashboard>.panel,.commerce-history-grid>.panel{min-width:0}}
 
+/* V1.3: quadro de abastecimento compacto e acessível */
+.stock-planner{margin-top:18px;min-width:0}
+.stock-planner .catalog-table{min-width:760px}
+.stock-policy-form{display:grid;grid-template-columns:1.3fr 1fr 1fr auto;gap:10px;align-items:end;margin-top:12px}
+.stock-policy-form label{margin:0 0 5px}
+.stock-policy-form input,.stock-policy-form select{min-width:0;width:100%}
+.stock-policy-form button{align-self:end}
+.stock-policy-form>label{display:none}
+.stock-policy-form>select,.stock-policy-form>input{margin-top:18px}
+.stock-alert{color:#f3c37a;font-weight:800}
+.stock-ok{color:#9fdcc1}
+@media(max-width:900px){.stock-policy-form{grid-template-columns:repeat(2,minmax(0,1fr))}.stock-policy-form button{grid-column:1/-1}}
+@media(max-width:480px){.stock-policy-form{grid-template-columns:1fr}}
+
   </style>
 </head>
 <body>
@@ -90,7 +104,7 @@
       <p class="hero-subtitle">Uma cidade. Uma empresa. Mil decisões.</p>
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◆ Economia simulada</span><span>◆ 30 cidades</span><span>◆ Offline</span></div>
-      <p class="fine-print">V1.2.1-rc.1 — prévia jogável. Parâmetros econômicos fictícios e legislação tributária ainda não implementada.</p>
+      <p class="fine-print">V1.3.0-rc.1 — prévia jogável. Parâmetros econômicos fictícios e legislação tributária ainda não implementada.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -137,7 +151,7 @@
       <div class="world-warning" id="other-city-warning" hidden>Você está explorando outra cidade. A empresa atual opera apenas na cidade de origem nesta versão.</div>
       <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Tributação legal não calculada nesta versão.</div>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.2.1-rc.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.3.0-rc.1</span></div>
         <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
           <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
           <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
@@ -162,7 +176,7 @@
             </article><article class="panel"><div class="panel-heading"><h3>Administração</h3></div><p class="muted">Gerencie seus produtos na aba Mercado e acompanhe as contas em Finanças.</p><button type="button" class="btn btn-outline full" data-go="mercado">Ir para o mercado ↗</button><button type="button" class="btn btn-outline full spaced" data-go="financas">Ver demonstrativos ↗</button></article></div>
         </section>
         <section data-view="mercado" class="view" hidden>
-          <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Compras e estoque</h3><span class="tag-soft">M15 · SUPRIMENTOS</span></div><form id="buy-form"><label for="buy-product">Produto</label><select id="buy-product"></select><label for="buy-supplier">Fornecedor simulado</label><select id="buy-supplier"></select><p id="market-product" class="muted">Abra uma empresa antes de comprar mercadorias.</p><label for="buy-quantity">Quantidade de unidades</label><input type="number" min="1" max="2000" value="30" id="buy-quantity" required><div class="buy-presets" aria-label="Atalhos para preencher quantidade"><span>Preencher:</span><button type="button" class="btn btn-outline" data-buy-preset="10">10 un.</button><button type="button" class="btn btn-outline" data-buy-preset="50">50 un.</button><button type="button" class="btn btn-outline" data-buy-preset="100">100 un.</button><button type="button" class="btn btn-outline" data-buy-preset="250">250 un.</button></div><p class="field-hint">Atalhos apenas preenchem a quantidade; a compra exige confirmação no botão abaixo.</p><p id="buy-total" class="field-hint">—</p><button type="submit" class="btn btn-primary">Comprar mercadorias</button></form></article>
+          <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Compras e estoque</h3><span class="tag-soft">M15 · SUPRIMENTOS</span></div><form id="buy-form"><label for="buy-product">Produto</label><select id="buy-product"></select><label for="buy-supplier">Fornecedor simulado</label><select id="buy-supplier"></select><p id="supplier-terms" class="field-hint" aria-live="polite">Consulte prazos e limites do fornecedor.</p><p id="market-product" class="muted">Abra uma empresa antes de comprar mercadorias.</p><label for="buy-quantity">Quantidade de unidades</label><input type="number" min="1" max="2000" value="30" id="buy-quantity" required><div class="buy-presets" aria-label="Atalhos para preencher quantidade"><span>Preencher:</span><button type="button" class="btn btn-outline" data-buy-preset="10">10 un.</button><button type="button" class="btn btn-outline" data-buy-preset="50">50 un.</button><button type="button" class="btn btn-outline" data-buy-preset="100">100 un.</button><button type="button" class="btn btn-outline" data-buy-preset="250">250 un.</button></div><p class="field-hint">O pedido é pago hoje, fica **em trânsito** e só pode gerar vendas após a entrega. Atalhos apenas preenchem a quantidade.</p><p id="buy-total" class="field-hint">—</p><button type="submit" class="btn btn-primary">Encomendar mercadorias</button></form></article>
           <article class="panel"><div class="panel-heading"><h3>Estratégia de preços</h3><span class="tag-soft">M08 · MERCADO</span></div><form id="price-form"><label for="price-product">Produto a precificar</label><select id="price-product"></select><label for="price-value">Preço de venda (R$)</label><input id="price-value" type="number" min="1" max="10000" step="0.01" required><div class="price-compare" aria-label="Comparação de preços simulados"><div class="price-tile yours"><small>SEU PREÇO ATUAL</small><strong id="your-current-price" aria-live="polite">—</strong></div><div class="price-tile"><small>REFERÊNCIA DO CONCORRENTE</small><strong id="competitor-price">—</strong></div></div><button type="submit" class="btn btn-outline">Atualizar preço</button></form><p class="price-change-feedback" id="price-change-feedback" role="status" aria-live="polite">Alterações de preços serão confirmadas aqui.</p><p class="muted hint-bottom">O preço do concorrente é independente do seu e pode mudar com o tempo. Preços mais altos podem reduzir a demanda.</p><div class="history-title"><h3>Histórico de preços</h3><span class="tag-soft" id="price-history-count">0 alterações</span></div><p class="muted">Alterações da sua empresa registradas na carreira, inclusive antes desta atualização.</p><div id="price-history" class="price-history" aria-label="Histórico de alterações de preços"></div></article></div>
 
           <div class="dashboard-grid commerce-dashboard">
@@ -185,18 +199,24 @@
               </div>
               <div class="sales-kpis sales-money">
                 <div><small>Receita do dia</small><strong id="demand-day-revenue">—</strong></div>
-                <div><small>CMV do dia</small><strong id="demand-day-cogs">—</strong></div>
+                <div><small>CMV do dia</small><strong id="demand-day-cogs">—</strong></div><div><small>Faturamento potencial perdido*</small><strong id="demand-lost-potential">—</strong></div>
               </div>
               <div class="table-scroll"><table class="catalog-table demand-table"><thead><tr><th>Produto</th><th>Demanda*</th><th>Vendido</th><th>Não atendido</th></tr></thead><tbody id="demand-rows"></tbody></table></div>
-              <p class="field-hint">* Estimativa calculada apenas para produtos com estoque no começo do dia. Sem estoque, a demanda não é estimada, não é zero. Dados detalhados disponíveis apenas para dias simulados a partir da V1.2.1.</p>
+              <p class="field-hint">* A partir da V1.3, a procura é estimada mesmo sem estoque. O faturamento potencial perdido é ilustrativo (unidades não atendidas × preço atual do dia), não receita realizada. Eventos anteriores à V1.3 não são recalculados.</p>
             </article>
           </div>
           <article class="panel commerce-catalog"><div class="panel-heading"><h3>Catálogo e desempenho por produto</h3><span class="tag-soft" id="product-count">0 produtos</span></div>
             <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Produto</th><th>Estoque</th><th>Custo un.</th><th>Venda un.</th><th>Vendido*</th><th>Receita*</th><th>CMV*</th></tr></thead><tbody id="catalog-rows"></tbody></table></div>
             <p class="field-hint">* Desempenho por produto registrado a partir desta edição. Vendas antigas continuam preservadas no total contábil, sem distribuição fictícia entre SKUs.</p>
           </article>
+          <article class="panel stock-planner" aria-labelledby="planner-title">
+            <div class="panel-heading"><h3 id="planner-title">Inteligência de estoque e abastecimento</h3><span class="tag-soft">V1.3 · PROJEÇÕES SIMULADAS</span></div>
+            <p class="muted">Média de demanda observada nos últimos 7 dias (quando disponível), estoque físico, pedidos em trânsito, cobertura e sugestão de reposição. Nenhum pedido é feito automaticamente.</p>
+            <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Produto</th><th>Em estoque</th><th>Em trânsito</th><th>Previsão/dia</th><th>Cobertura</th><th>Mínimo</th><th>Meta</th><th>Sugerido</th></tr></thead><tbody id="inventory-planner-rows"></tbody></table></div>
+            <form id="stock-policy-form" class="stock-policy-form"><label for="policy-product">Produto</label><select id="policy-product"></select><label for="policy-reorder">Alerta: estoque mínimo (un.)</label><input id="policy-reorder" type="number" min="0" max="100000" step="1" required><label for="policy-target">Meta de estoque (un.)</label><input id="policy-target" type="number" min="1" max="100000" step="1" required><button type="submit" class="btn btn-outline">Salvar política de reposição</button></form>
+          </article>
           <div class="dashboard-grid commerce-history-grid">
-            <article class="panel"><h3>Últimas compras</h3><div id="recent-purchases" class="commerce-log"></div></article>
+            <article class="panel"><h3>Pedidos e entregas</h3><p class="field-hint">Pedido pago e em trânsito não representa estoque disponível. O recebimento entra na contabilidade ao vencer o prazo.</p><div id="recent-purchases" class="commerce-log"></div></article>
             <article class="panel"><h3>Comprovantes de vendas simuladas</h3><p class="muted">Cada registro automático consolida as vendas do dia, não representa um cliente individual. Registros manuais anteriores permanecem identificados como históricos.</p><div id="recent-sales" class="commerce-log commerce-receipts"></div></article>
           </div>
         </section>
@@ -238,17 +258,17 @@
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.2.1-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.3.0-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>
   <div class="toast" id="toast" aria-live="polite" role="status"></div>
   <script>
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.2.1-rc.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.3.0-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '1.2.1-rc.1';
-  const SCHEMA_VERSION = 3;
+  const VERSION = '1.3.0-rc.1';
+  const SCHEMA_VERSION = 4;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
   const CITIES_SOURCE = [
@@ -277,43 +297,106 @@ const CidadeCore = (() => {
     padaria:[['Bolo caseiro',900,1700,8],['Café coado',250,600,12]],
     roupas:[['Camiseta',2500,4900,6],['Calça jeans',6000,10500,4]]
   });
-  const SUPPLIERS=Object.freeze([{id:'regional',name:'Distribuidora Regional (fictícia)'},{id:'atacado',name:'Atacado Comercial (fictício)'}]);
+  // Condições fictícias de logística: unidade da capacidade é por SKU, por fornecedor, por dia.
+  const SUPPLIERS=Object.freeze([
+    Object.freeze({id:'regional',name:'Distribuidora Regional (fictícia)',leadDays:1,priceFactor:100,maxDailyPerSku:200}),
+    Object.freeze({id:'atacado',name:'Atacado Comercial (fictício)',leadDays:3,priceFactor:94,maxDailyPerSku:500})
+  ]);
   function initialProducts(sector,baseStock=0,basePrice=null) {
     const s=SECTORS[sector];
-    return [{id:'base',name:s.product,costCents:s.cost,priceCents:basePrice??s.recommended,referenceCents:s.recommended,demand:s.demand,stockUnits:baseStock},
-      ...EXTRA_PRODUCTS[sector].map(([name,costCents,priceCents,demand],i)=>({id:`extra-${i+1}`,name,costCents,priceCents,referenceCents:priceCents,demand,stockUnits:0}))];
+    const base=(id,name,costCents,priceCents,referenceCents,demand,stockUnits)=>({id,name,costCents,priceCents,referenceCents,demand,stockUnits,
+      stockValueCents:stockUnits*costCents,reorderPoint:Math.max(5,demand*3),targetStock:Math.max(20,demand*10)});
+    return [base('base',s.product,s.cost,basePrice??s.recommended,s.recommended,s.demand,baseStock),
+      ...EXTRA_PRODUCTS[sector].map(([name,costCents,priceCents,demand],i)=>base(`extra-${i+1}`,name,costCents,priceCents,priceCents,demand,0))];
   }
+  // Migração aditiva e auditável: inventário anterior fica no valor original;
+  // ordens recebidas antes da V1.3 não geram novos créditos/debitos.
   function upgradedState(original) {
-    if(original.schemaVersion===3)return clone(original);
-    assert(original.schemaVersion===2,'Schema de save não suportado');
-    const state=clone(original);state.schemaVersion=3;
+    if(original.schemaVersion===4)return clone(original);
+    assert([2,3].includes(original.schemaVersion),'Schema de save não suportado');
+    const state=clone(original);
+    if(state.schemaVersion===2){
+      state.schemaVersion=3;
+      if(state.world.business){const b=state.world.business;
+        b.products=initialProducts(b.sector,b.stockUnits,b.unitPrice);
+        b.productSeq=0;b.saleSeq=0;b.orderSeq=0;b.sales=[];b.purchaseOrders=[];
+      }
+    }
+    state.schemaVersion=4;
     if(state.world.business){const b=state.world.business;
-      b.products=initialProducts(b.sector,b.stockUnits,b.unitPrice);
-      b.productSeq=0;b.saleSeq=0;b.orderSeq=0;b.sales=[];b.purchaseOrders=[];
+      b.products.forEach(p=>{
+        p.stockValueCents=p.stockUnits*p.costCents;
+        p.reorderPoint=Math.max(5,p.demand*3);
+        p.targetStock=Math.max(20,p.demand*10);
+      });
+      b.purchaseOrders.forEach(o=>{
+        o.status='RECEIVED';o.dueDate=o.date;o.receivedAt=o.date;
+      });
     }
     return state;
   }
   function product(b,id) {const p=b.products.find(x=>x.id===(id??'base'));assert(p,'Produto não cadastrado');return p;}
   function syncTotals(b) {b.stockUnits=b.products.reduce((n,p)=>n+p.stockUnits,0);b.unitPrice=product(b,'base').priceCents;}
-  function registerPurchase(draft,b,supplierId,items) {
-    assert(SUPPLIERS.some(x=>x.id===supplierId),'Fornecedor não cadastrado');
+  function addDays(iso,days){let result=iso;for(let i=0;i<days;i++)result=dateNext(result);return result;}
+  const supplierById=id=>SUPPLIERS.find(s=>s.id===id);
+  const pendingQuantity=(b,id)=>b.purchaseOrders.filter(o=>o.status==='PENDING').reduce((n,o)=>
+    n+o.items.reduce((sum,line)=>sum+(line.productId===id?line.quantity:0),0),0);
+  function registerPurchase(draft,b,supplierId,items){
+    const supplier=supplierById(supplierId);
+    assert(supplier,'Fornecedor não cadastrado');
     assert(Array.isArray(items)&&items.length>=1&&items.length<=40,'Informe de 1 a 40 itens');
     const used=new Set();let total=0,qtyTotal=0;
-    const lines=items.map(line=>{assert(plain(line),'Item de compra inválido');const p=product(b,line.productId),quantity=Number(line.quantity);
+    const lines=items.map(line=>{
+      assert(plain(line),'Item de compra inválido');
+      const p=product(b,line.productId),quantity=Number(line.quantity);
       assert(!used.has(p.id),'Produto repetido na mesma compra');used.add(p.id);
       assert(Number.isInteger(quantity)&&quantity>=1&&quantity<=2000,'Quantidade inválida (1–2000)');
-      assert(p.stockUnits+quantity<=100000,'Limite por produto excedido');
-      const cost=quantity*p.costCents;total+=cost;qtyTotal+=quantity;
-      return {productId:p.id,name:p.name,quantity,unitCost:p.costCents,total:cost};});
-    assert(b.stockUnits+qtyTotal<=100000,'Capacidade total de estoque excedida');
-    assert(Number.isSafeInteger(total)&&balance(draft,'CASH')>=total,`Caixa insuficiente para comprar: ${money(total)}`);
+      const boughtToday=b.purchaseOrders.filter(o=>o.date===draft.calendar.date&&o.supplierId===supplier.id)
+        .reduce((n,o)=>n+o.items.reduce((sum,x)=>sum+(x.productId===p.id?x.quantity:0),0),0);
+      assert(quantity+boughtToday<=supplier.maxDailyPerSku,`Capacidade diária de ${supplier.name}: ${supplier.maxDailyPerSku} unidades por produto`);
+      assert(p.stockUnits+pendingQuantity(b,p.id)+quantity<=100000,'Capacidade máxima do produto excedida');
+      const unitCost=Math.round(p.costCents*supplier.priceFactor/100),cost=quantity*unitCost;
+      total+=cost;qtyTotal+=quantity;
+      return {productId:p.id,name:p.name,quantity,unitCost,total:cost};
+    });
+    const allPending=b.purchaseOrders.filter(o=>o.status==='PENDING')
+      .reduce((n,o)=>n+o.items.reduce((sum,x)=>sum+x.quantity,0),0);
+    assert(b.stockUnits+allPending+qtyTotal<=100000,'Capacidade total do depósito (incluindo trânsito) excedida');
+    assert(Number.isSafeInteger(total)&&balance(draft,'CASH')>=total,`Caixa insuficiente para encomenda: ${money(total)}`);
     assert(b.purchaseOrders.length<20000,'Histórico de compras cheio');
-    for(const line of lines)product(b,line.productId).stockUnits+=line.quantity;
-    syncTotals(b);const id=`pc-${++b.orderSeq}`;
-    b.purchaseOrders.push({id,date:draft.calendar.date,supplierId,items:lines,total});
-    journal(draft,`Compra ${id}: ${lines.map(x=>`${x.quantity} ${x.name}`).join(', ')}`,[
-      {account:'INVENTORY',debit:total,credit:0},{account:'CASH',debit:0,credit:total}]);
-    event(draft,'ESTOQUE.COMPRADO',`Compra ${id} confirmada: ${qtyTotal} unidades por ${money(total)}.`,{id,total,supplierId});
+    const id=`pc-${++b.orderSeq}`,dueDate=addDays(draft.calendar.date,supplier.leadDays);
+    b.purchaseOrders.push({id,date:draft.calendar.date,supplierId,items:lines,total,status:'PENDING',dueDate,receivedAt:null});
+    journal(draft,`Encomenda ${id}: mercadorias em trânsito`,[
+      {account:'IN_TRANSIT',debit:total,credit:0},{account:'CASH',debit:0,credit:total}]);
+    event(draft,'COMPRA.ENCOMENDADA',`Pedido ${id} pago (${money(total)}); previsão ${dueDate} (${supplier.leadDays} dia(s)).`,{id,total,dueDate,supplierId});
+  }
+  function receiveDueOrders(draft){
+    const b=draft.world.business;
+    if(!b)return;
+    for(const order of b.purchaseOrders){
+      if(order.status!=='PENDING'||order.dueDate>draft.calendar.date)continue;
+      for(const line of order.items){const p=product(b,line.productId);
+        p.stockUnits+=line.quantity;p.stockValueCents+=line.total;
+      }
+      syncTotals(b);
+      order.status='RECEIVED';order.receivedAt=draft.calendar.date;
+      journal(draft,`Recebimento ${order.id} em estoque`,[
+        {account:'INVENTORY',debit:order.total,credit:0},{account:'IN_TRANSIT',debit:0,credit:order.total}]);
+      event(draft,'COMPRA.RECEBIDA',`Pedido ${order.id} recebido: ${order.items.reduce((n,l)=>n+l.quantity,0)} unidades.`,{id:order.id,total:order.total});
+    }
+  }
+  function inventoryReport(state){
+    const b=state?.world?.business;if(!b)return [];
+    const events=state.audit.events.filter(e=>e.type==='DEMANDA.SIMULADA').slice(-7);
+    return b.products.map(p=>{
+      const series=events.map(e=>e.data?.items?.find(x=>x.productId===p.id)?.estimated).filter(Number.isInteger);
+      const observedDaily=series.length?Math.round(series.reduce((n,v)=>n+v,0)/series.length*10)/10:null;
+      const fallback=Math.max(1,Math.round(p.demand*cityById(state.player.cityId).factor/100));
+      const daily=observedDaily??fallback,inTransit=pendingQuantity(b,p.id),available=p.stockUnits+inTransit;
+      return {id:p.id,name:p.name,stock:p.stockUnits,inTransit,reorderPoint:p.reorderPoint,targetStock:p.targetStock,
+        observedDaily,forecastDaily:daily,sampleDays:series.length,coverageDays:Math.round(available/daily*10)/10,
+        recommended:Math.max(0,p.targetStock-available),alert:available<=p.reorderPoint};
+    });
   }
   function registerSale(draft,b,items,kind='SIMULACAO_DIARIA') {
     assert(kind==='SIMULACAO_DIARIA','A venda só pode ser gerada pela simulação de demanda');
@@ -323,12 +406,12 @@ const CidadeCore = (() => {
       assert(!used.has(p.id),'Produto repetido na mesma venda');used.add(p.id);
       assert(Number.isInteger(quantity)&&quantity>=1&&quantity<=2000,'Quantidade de venda inválida (1–2000)');
       assert(p.stockUnits>=quantity,`Estoque insuficiente para ${p.name}`);
-      const revenue=quantity*p.priceCents,cogs=quantity*p.costCents;
+      const revenue=quantity*p.priceCents,cogs=quantity===p.stockUnits?p.stockValueCents:Math.round(p.stockValueCents*quantity/p.stockUnits);
       total+=revenue;cost+=cogs;qtyTotal+=quantity;
       return {productId:p.id,name:p.name,quantity,unitPrice:p.priceCents,unitCost:p.costCents,revenue,cogs};});
     assert(Number.isSafeInteger(total)&&Number.isSafeInteger(cost),'Valor da venda excede limite');
     assert(b.sales.length<20000,'Limite de histórico de vendas atingido');
-    for(const line of lines)product(b,line.productId).stockUnits-=line.quantity;
+    for(const line of lines){const p=product(b,line.productId);p.stockUnits-=line.quantity;p.stockValueCents-=line.cogs;}
     b.totalSold+=qtyTotal;syncTotals(b);const id=`vd-${++b.saleSeq}`;
     b.sales.push({id,date:draft.calendar.date,kind,items:lines,total,cogs:cost});
     journal(draft,`Venda ${id} (${kind}): ${lines.map(x=>`${x.quantity} ${x.name}`).join(', ')}`,[
@@ -339,9 +422,9 @@ const CidadeCore = (() => {
   function productPerformance(state) {
     const b=state?.world?.business;if(!b)return [];
     return b.products.map(p=>{const lines=b.sales.flatMap(s=>s.items).filter(x=>x.productId===p.id);
-      return {id:p.id,name:p.name,stockUnits:p.stockUnits,stockValue:p.stockUnits*p.costCents,
+      return {id:p.id,name:p.name,stockUnits:p.stockUnits,stockValue:p.stockValueCents,
         sold:lines.reduce((n,l)=>n+l.quantity,0),revenue:lines.reduce((n,l)=>n+l.revenue,0),
-        cogs:lines.reduce((n,l)=>n+l.cogs,0),priceCents:p.priceCents,costCents:p.costCents};});
+        cogs:lines.reduce((n,l)=>n+l.cogs,0),priceCents:p.priceCents,costCents:p.stockUnits?Math.round(p.stockValueCents/p.stockUnits):p.costCents};});
   }
 
   const plain = x => !!x && typeof x === 'object' && !Array.isArray(x);
@@ -365,10 +448,10 @@ const CidadeCore = (() => {
   function overview(draft) {
     if(!draft)return null;
     const revenue=balance(draft,'REVENUE'),cogs=balance(draft,'COGS'),expenses=balance(draft,'EXPENSE');
-    return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),revenue,cogs,expenses,profit:revenue-cogs-expenses,stock:draft.world.business?.stockUnits??0,unitPrice:draft.world.business?.unitPrice??null,tick:draft.calendar.tick,city:cityById(draft.player.cityId)?.name??'—'};
+    return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),inTransit:balance(draft,'IN_TRANSIT'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),revenue,cogs,expenses,profit:revenue-cogs-expenses,stock:draft.world.business?.stockUnits??0,unitPrice:draft.world.business?.unitPrice??null,tick:draft.calendar.tick,city:cityById(draft.player.cityId)?.name??'—'};
   }
   function emptyLegacy(seed) {return {
-    schemaVersion:3,worldId:`legacy-${seed}`,revision:0,
+    schemaVersion:4,worldId:`legacy-${seed}`,revision:0,
     meta:{title:'Cidade dos Negócios',version:VERSION,origin:'MIGRATED_EMPTY_CP000',mode:'DEMONSTRACAO_ECONOMICA'},
     calendar:{date:START_DATE,tick:0},rng:{seed},
     player:{name:'',companyName:'',cityId:null},world:{cities:CITIES.map(x=>x.id),business:null,competitor:{priceIndex:100}},
@@ -414,8 +497,16 @@ const CidadeCore = (() => {
       assert(int(priceCents)&&priceCents>=100&&priceCents<=1000000,'Preço do produto inválido');
       assert(!b.products.some(p=>p.name.toLowerCase()===name.toLowerCase()),'Já existe produto com este nome');
       const id=`custom-${++b.productSeq}`;
-      b.products.push({id,name,costCents,priceCents,referenceCents:priceCents,demand:6,stockUnits:0});
+      b.products.push({id,name,costCents,priceCents,referenceCents:priceCents,demand:6,stockUnits:0,stockValueCents:0,reorderPoint:18,targetStock:60});
       event(draft,'PRODUTO.CADASTRADO',`Novo produto: ${name}.`,{id});return;
+    }
+    if(type==='ESTOQUE.POLITICA_DEFINIR') {
+      assert(b,'Abra uma empresa antes de definir reposição');
+      const p=product(b,payload.productId),reorderPoint=Number(payload.reorderPoint),targetStock=Number(payload.targetStock);
+      assert(Number.isInteger(reorderPoint)&&reorderPoint>=0&&reorderPoint<=100000,'Estoque mínimo inválido');
+      assert(Number.isInteger(targetStock)&&targetStock>=1&&targetStock<=100000&&targetStock>=reorderPoint,'Meta de estoque deve ser maior ou igual ao mínimo');
+      p.reorderPoint=reorderPoint;p.targetStock=targetStock;
+      event(draft,'ESTOQUE.POLITICA',`Reposição de ${p.name}: mínimo ${reorderPoint}, meta ${targetStock}.`,{productId:p.id,reorderPoint,targetStock});return;
     }
     if(type==='ESTOQUE.COMPRAR') {
       assert(b,'Abra uma empresa antes de comprar');
@@ -457,24 +548,21 @@ const CidadeCore = (() => {
       const items=[],demandLines=[];
       let estimated=0,fulfilled=0,unmet=0,withoutStock=0;
       for(const p of b.products){
-        if(!p.stockUnits){
-          // Sem estoque, a V1 não calcula nem inventa demanda: diferencie de demanda zero.
-          withoutStock++;
-          demandLines.push({productId:p.id,name:p.name,stockBefore:0,estimated:null,fulfilled:0,unmet:null});
-          continue; // Preserva o consumo de RNG e a economia da V1.2.
-        }
         const competitorPrice=p.referenceCents*(draft.world.competitor.priceIndex/100);
         const ratio=p.priceCents/competitorPrice;
         const elasticity=clamp(1.32-(ratio-1)*1.4,0.08,1.85);
+        // Procura existe mesmo se o produto estiver esgotado; são unidades desejadas, não vendas garantidas.
         const demand=Math.max(0,Math.floor(p.demand*(city.factor/100)*elasticity*season*(0.75+random(draft)*0.55)));
-        const sold=Math.min(p.stockUnits,demand);
-        estimated+=demand;fulfilled+=sold;unmet+=demand-sold;
-        demandLines.push({productId:p.id,name:p.name,stockBefore:p.stockUnits,estimated:demand,fulfilled:sold,unmet:demand-sold});
+        const sold=Math.min(p.stockUnits,demand),lost=demand-sold;
+        estimated+=demand;fulfilled+=sold;unmet+=lost;
+        if(!p.stockUnits)withoutStock++;
+        demandLines.push({productId:p.id,name:p.name,stockBefore:p.stockUnits,estimated:demand,fulfilled:sold,unmet:lost,
+          lostPotentialCents:lost*p.priceCents});
         if(sold>0)items.push({productId:p.id,quantity:sold});
       }
       if(items.length)registerSale(draft,b,items,'SIMULACAO_DIARIA');
       event(draft,'DEMANDA.SIMULADA',`Demanda simulada: ${estimated} un. estimadas, ${fulfilled} vendidas, ${unmet} não atendidas; ${withoutStock} produto(s) sem estimativa por falta de estoque.`,
-        {estimated,fulfilled,unmet,withoutStock,items:demandLines});
+        {estimated,fulfilled,unmet,withoutStock,lostPotentialCents:demandLines.reduce((n,x)=>n+x.lostPotentialCents,0),items:demandLines});
       const cash=balance(draft,'CASH'),expense=s.dailyCost;
       // Despesa não desaparece quando não há caixa: vira obrigação a pagar.
       journal(draft,'Despesa operacional diária',[
@@ -492,6 +580,7 @@ const CidadeCore = (() => {
     event(draft,'DIA.ENCERRADO',`Dia ${finished} concluído.`,{finished});
     draft.calendar.tick++;
     draft.calendar.date=dateNext(draft.calendar.date);
+    receiveDueOrders(draft);
   }
   function dispatch(current,cmd) {
     try{
@@ -516,7 +605,7 @@ const CidadeCore = (() => {
     }catch(error){return {ok:false,status:'REJECTED',state:current?clone(current):null,error:error.message};}
   }
   function validate(state) {
-    assert(plain(state)&&(state.schemaVersion===2||state.schemaVersion===3),'Save com schema incompatível');
+    assert(plain(state)&&[2,3,4].includes(state.schemaVersion),'Save com schema incompatível');
     assert(Number.isSafeInteger(state.revision)&&state.revision>=0,'Revisão inválida');
     assert(plain(state.player)&&plain(state.calendar)&&int(state.calendar.tick),'Jogador/calendário inválidos');
     assert(/^\d{4}-\d{2}-\d{2}$/.test(state.calendar.date)&&!Number.isNaN(Date.parse(state.calendar.date+'T12:00:00Z')),'Data inválida');
@@ -551,9 +640,21 @@ const CidadeCore = (() => {
           assert(plain(p)&&typeof p.id==='string'&&!ids.has(p.id)&&typeof p.name==='string'&&p.name.trim().length>=3,'Produto inválido');ids.add(p.id);
           assert(int(p.stockUnits)&&p.stockUnits<=100000&&int(p.costCents)&&p.costCents>=100&&p.costCents<=1000000,'Estoque ou custo inválido');
           assert(int(p.priceCents)&&p.priceCents>=100&&p.priceCents<=1000000&&int(p.referenceCents)&&p.referenceCents>=100&&int(p.demand)&&p.demand<=40,'Preço ou demanda inválida');
-          stockSum+=p.stockUnits;stockValue+=p.stockUnits*p.costCents;
+          stockSum+=p.stockUnits;stockValue+=state.schemaVersion===4?p.stockValueCents:p.stockUnits*p.costCents;
         }
         assert(stockSum===b.stockUnits&&stockValue===inventory&&stockSum<=100000,'Estoque físico e contábil divergentes');
+        if(state.schemaVersion===4){
+          const transit=b.purchaseOrders.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.total,0);
+          assert(transit===balance(state,'IN_TRANSIT'),'Mercadorias em trânsito não conciliadas');
+          for(const p of b.products)assert(int(p.stockValueCents)&&p.stockValueCents<=100000000000&&
+            int(p.reorderPoint)&&p.reorderPoint<=100000&&int(p.targetStock)&&p.targetStock<=100000&&p.targetStock>=p.reorderPoint,
+            'Custo médio e política de reposição inválidos');
+          for(const o of b.purchaseOrders){
+            assert(['PENDING','RECEIVED'].includes(o.status)&&isoDate(o.dueDate)&&o.dueDate>=o.date&&
+              (o.status==='PENDING'?o.receivedAt===null:isoDate(o.receivedAt)), 'Pedido ou prazo inválido');
+            assert(o.items.reduce((n,x)=>n+x.total,0)===o.total,'Total de compra divergente');
+          }
+        }
         assert(b.unitPrice===product(b,'base').priceCents,'Preço base inconsistente');
         assert(b.sales.every(s=>s&&typeof s.id==='string'&&Array.isArray(s.items)&&int(s.total)&&int(s.cogs)),'Vendas inválidas');
         assert(b.purchaseOrders.every(o=>o&&typeof o.id==='string'&&Array.isArray(o.items)&&int(o.total)),'Compras inválidas');
@@ -611,7 +712,7 @@ const CidadeCore = (() => {
       revenue,cogs,expenses,grossProfit:revenue-cogs,profit:revenue-cogs-expenses,
       grossMarginPercent:revenue?Math.round((revenue-cogs)*10000/revenue)/100:null,
       closingCash:account(until,'CASH'),closingInventory:account(until,'INVENTORY'),
-      closingPayable:account(until,'PAYABLE'),capital:account(entries,'CAPITAL')
+      closingPayable:account(until,'PAYABLE'),closingInTransit:account(until,'IN_TRANSIT'),capital:account(entries,'CAPITAL')
     };
   }
   // O histórico persiste nos eventos existentes da V1; nenhum campo novo é adicionado ao save.
@@ -638,11 +739,11 @@ const CidadeCore = (() => {
     assert(plain(data)&&data.saveFormatVersion===1&&data.app==='Cidade dos Negócios'&&data.checksumAlgorithm==='FNV1A32'&&typeof data.checksum==='string'&&plain(data.payload),'Envelope de save incompatível');
     assert(hash(JSON.stringify(data.payload))===data.checksum,'Checksum diverge: arquivo alterado ou corrompido');
     validate(data.payload);
-    const migrated=data.payload.schemaVersion===2,state=upgradedState(data.payload);validate(state);
-    return {state,migrated,message:migrated?'Carreira da V1 migrada com estoque, caixa e histórico preservados.':'Carreira restaurada com integridade validada.'};
+    const migrated=data.payload.schemaVersion!==4,state=upgradedState(data.payload);validate(state);
+    return {state,migrated,message:migrated?'Carreira migrada para V1.3 com caixa, estoque e histórico preservados.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,CITIES,SECTORS,SUPPLIERS,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,CITIES,SECTORS,SUPPLIERS,inventoryReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();
 
@@ -672,6 +773,7 @@ const CidadeCore = (() => {
     setText('demand-fulfilled',latest?String(latest.data.fulfilled):'—');
     setText('demand-unmet',latest?String(latest.data.unmet):'—');
     setText('demand-without-stock',latest?String(latest.data.withoutStock):'—');
+    setText('demand-lost-potential',latest&&Number.isSafeInteger(latest.data.lostPotentialCents)?Core.money(latest.data.lostPotentialCents):'—');
     const rows=latest?.data?.items||[];
     $('demand-rows').innerHTML=rows.length?rows.map(p=>`<tr><td>${escape(p.name)}</td><td>${p.estimated===null?'Sem estimativa':p.estimated}</td><td>${p.fulfilled}</td><td>${p.unmet===null?'—':p.unmet}</td></tr>`).join(''):'<tr><td colspan="4">Avance pelo menos um dia com uma empresa aberta para visualizar a demanda simulada.</td></tr>';
     const daily=latest?sales.filter(s=>s.date===latest.date&&s.kind==='SIMULACAO_DIARIA'):[];
@@ -684,19 +786,30 @@ const CidadeCore = (() => {
       return `<details class="commerce-receipt"><summary>${escape(BRDate(o.date))} · ${escape(o.id)} · ${escape(name)} · ${escape(Core.money(o.total))}</summary><ul>${detail}</ul><p>CMV: ${escape(Core.money(o.cogs))} · Lucro bruto: ${escape(Core.money(o.total-o.cogs))}</p></details>`;
     }).join(''):'<p class="muted">Nenhuma venda registrada. Abasteça o estoque e avance um dia.</p>';
   }
+  function renderInventoryPlanner(){
+    const b=business(),rows=b?Core.inventoryReport(state):[];
+    $('inventory-planner-rows').innerHTML=rows.length?rows.map(p=>`<tr><td class="${p.alert?'stock-alert':'stock-ok'}">${escape(p.name)}${p.alert?' ⚠':''}</td><td>${p.stock}</td><td>${p.inTransit}</td><td>${p.forecastDaily} ${p.sampleDays?'(observada)':'(base)'}</td><td>${p.coverageDays} dias</td><td>${p.reorderPoint}</td><td>${p.targetStock}</td><td>${p.recommended}</td></tr>`).join(''):'<tr><td colspan="8">Abra a empresa para configurar a reposição.</td></tr>';
+    refillSelect('policy-product',b?.products||[]);
+    const selected=chooseProduct('policy-product');
+    if(selected&&document.activeElement!==$('policy-reorder'))$('policy-reorder').value=selected.reorderPoint;
+    if(selected&&document.activeElement!==$('policy-target'))$('policy-target').value=selected.targetStock;
+    $('stock-policy-form').querySelector('button').disabled=!b;
+  }
   function renderCommerce(){
     const b=business(),products=b?.products||[];
     for(const id of ['buy-product','price-product'])refillSelect(id,products);
     const suppliers=Core.SUPPLIERS,$supplier=$('buy-supplier'),previous=$supplier.value;
     $supplier.replaceChildren(...suppliers.map(s=>{const opt=document.createElement('option');opt.value=s.id;opt.textContent=s.name;return opt;}));
     if(suppliers.some(x=>x.id===previous))$supplier.value=previous;
+    const supplier=suppliers.find(x=>x.id===$supplier.value);
+    setText('supplier-terms',supplier?`Entrega em ${supplier.leadDays} dia(s) · custo ${supplier.priceFactor}% da referência · capacidade de ${supplier.maxDailyPerSku} un. por produto/dia.`:'Escolha um fornecedor.');
     const chosenPrice=chooseProduct('price-product');
     setText('product-count',`${products.length} produto(s)`);
     const stats=b?Core.productPerformance(state):[];
     $('catalog-rows').innerHTML=stats.length?stats.map(p=>`<tr><td>${escape(p.name)}</td><td>${p.stockUnits}</td><td>${escape(Core.money(p.costCents))}</td><td>${escape(Core.money(p.priceCents))}</td><td>${p.sold}</td><td>${escape(Core.money(p.revenue))}</td><td>${escape(Core.money(p.cogs))}</td></tr>`).join(''):'<tr><td colspan="7">Abra uma empresa para ver o catálogo.</td></tr>';
     const orders=b?.purchaseOrders||[];
-    $('recent-purchases').innerHTML=orders.length?orders.slice(-6).reverse().map(o=>`<div class="commerce-history-row">${escape(BRDate(o.date))} · ${escape(o.id)} · ${escape(o.items.map(x=>x.quantity+'× '+x.name).join(', '))} · ${escape(Core.money(o.total))}</div>`).join(''):'<p class="muted">Nenhuma compra registrada nesta edição.</p>';
-    renderSalesMonitor();
+    $('recent-purchases').innerHTML=orders.length?orders.slice(-8).reverse().map(o=>`<div class="commerce-history-row"><strong>${escape(o.status==='PENDING'?'🚚 EM TRÂNSITO':'✓ RECEBIDO')}</strong> · ${escape(BRDate(o.date))} → ${escape(BRDate(o.dueDate||o.date))} · ${escape(o.id)} · ${escape(o.items.map(x=>x.quantity+'× '+x.name).join(', '))} · ${escape(Core.money(o.total))}</div>`).join(''):'<p class="muted">Nenhum pedido realizado nesta edição.</p>';
+    renderSalesMonitor();renderInventoryPlanner();
     setText('your-current-price',chosenPrice?Core.money(chosenPrice.priceCents):'—');
     setText('competitor-price',chosenPrice?Core.money(Math.round(chosenPrice.referenceCents*state.world.competitor.priceIndex/100)):'—');
     if(chosenPrice&&document.activeElement!==$('price-value'))$('price-value').value=(chosenPrice.priceCents/100).toFixed(2);
@@ -785,7 +898,8 @@ const CidadeCore = (() => {
       ['Resultado antes dos tributos',report.profit],
       ['Caixa acumulado no encerramento',report.closingCash],
       ['Estoque contabilizado no encerramento',report.closingInventory],
-      ['Obrigações acumuladas a pagar',report.closingPayable]
+      ['Obrigações acumuladas a pagar',report.closingPayable],
+      ['Mercadorias pagas em trânsito (ativo)',report.closingInTransit]
     ];
     $('finance-summary').innerHTML=rows.map((x,i)=>`<dt class="${i===4?'emphasis':''}">${escape(x[0])}</dt><dd class="${i===4?'emphasis':''}">${escape(Core.money(x[1]))}</dd>`).join('');
     setText('journal-count',`${report.entries.length} registros`);
@@ -892,7 +1006,9 @@ const CidadeCore = (() => {
   function updateBuyPreview(){
     if(!state?.world.business)return;
     const qty=Number($('buy-quantity').value),p=chooseProduct('buy-product');
-    setText('buy-total',p&&Number.isInteger(qty)&&qty>0?`Custo unitário: ${Core.money(p.costCents)} · total: ${Core.money(qty*p.costCents)} (caixa: ${Core.money(Core.overview(state).cash)})`:'Informe uma quantidade válida.');
+    const supplier=Core.SUPPLIERS.find(s=>s.id===$('buy-supplier').value);
+    const unit=p&&supplier?Math.round(p.costCents*supplier.priceFactor/100):0;
+    setText('buy-total',p&&supplier&&Number.isInteger(qty)&&qty>0?`Encomenda: ${Core.money(unit)} por unidade · total pago hoje: ${Core.money(qty*unit)} · entrega em ${supplier.leadDays} dia(s) · caixa: ${Core.money(Core.overview(state).cash)}`:'Informe quantidade e fornecedor.');
   }
   function exportFile(){
     if(!state){notify('Crie uma carreira antes de exportar.',true);return;}
@@ -926,10 +1042,13 @@ const CidadeCore = (() => {
     $('open-form').addEventListener('submit',e=>{e.preventDefault();if(!state||viewCityId!==state.player.cityId){notify('Volte à cidade de origem para abrir o negócio.',true);return;}if(commit('EMPRESA.ABRIR',{sector:$('sector-select').value,lot:selectedLot}))goto('cidade');});
     $('buy-quantity').addEventListener('input',updateBuyPreview);
     $('buy-product').addEventListener('change',updateBuyPreview);
+    $('buy-supplier').addEventListener('change',()=>{renderCommerce();updateBuyPreview();});
+    $('policy-product').addEventListener('change',()=>{const p=chooseProduct('policy-product');if(p){$('policy-reorder').value=p.reorderPoint;$('policy-target').value=p.targetStock;}});
+    $('stock-policy-form').addEventListener('submit',e=>{e.preventDefault();const productId=$('policy-product').value;commit('ESTOQUE.POLITICA_DEFINIR',{productId,reorderPoint:Number($('policy-reorder').value),targetStock:Number($('policy-target').value)});});
     $('price-product').addEventListener('change',()=>{const p=chooseProduct('price-product');if(p)$('price-value').value=(p.priceCents/100).toFixed(2);renderCommerce();});
     $('product-form').addEventListener('submit',e=>{e.preventDefault();
       const name=$('new-product-name').value,costCents=Math.round(Number($('new-product-cost').value)*100),priceCents=Math.round(Number($('new-product-price').value)*100);
-      if(commit('PRODUTO.CADASTRAR',{name,costCents,priceCents})){$('product-form').reset();notify('Produto cadastrado. Agora você pode comprar estoque.');}
+      if(commit('PRODUTO.CADASTRAR',{name,costCents,priceCents})){$('product-form').reset();notify('Produto cadastrado. Agora configure estoque mínimo e encomende mercadorias.');}
     });
     for(const b of document.querySelectorAll('[data-buy-preset]'))b.addEventListener('click',()=>{$('buy-quantity').value=b.dataset.buyPreset;updateBuyPreview();$('buy-quantity').focus();});
     $('finance-period').addEventListener('change',e=>{ensureFinanceQuery().period=e.target.value;renderFinances();});

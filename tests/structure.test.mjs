@@ -38,6 +38,16 @@ test('Hotfix: preço próprio visível, concorrente independente e confirmação
 test('Hotfix: schema de save preservado e versão nova apenas da aplicação',()=>{
  const core=readFileSync('src/core/game.js','utf8');
  assert.match(core,/SCHEMA_VERSION = 2/);
- assert.match(core,/VERSION = '1\.0\.1-rc\.1'/);
+ assert.match(core,/VERSION = '1\.1\.0-rc\.1'/);
  assert.match(core,/function importSave\(raw\)/);
+});
+
+test('V1.1: atalhos de estoque, filtros e histórico de preços presentes no HTML',()=>{
+ const template=readFileSync('src/shell/index.template.html','utf8');
+ const ui=readFileSync('src/ui/app.js','utf8');
+ for(const n of ['10','50','100','250'])assert.ok(template.includes('data-buy-preset="'+n+'"'));
+ for(const id of ['finance-period','finance-date','finance-period-label','price-history'])
+   assert.ok(template.includes('id="'+id+'"'),id);
+ assert.match(ui,/renderPriceHistory\(\)/);
+ assert.match(ui,/renderFinances\(\)/);
 });

@@ -20,7 +20,7 @@
       <p class="hero-subtitle">Uma cidade. Uma empresa. Mil decisões.</p>
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◆ Economia simulada</span><span>◆ 30 cidades</span><span>◆ Offline</span></div>
-      <p class="fine-print">V1.3.0-rc.1 — prévia jogável. Parâmetros econômicos fictícios e legislação tributária ainda não implementada.</p>
+      <p class="fine-print">V1.4.0-rc.1 — prévia jogável. Parâmetros econômicos fictícios e legislação tributária ainda não implementada.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -67,7 +67,7 @@
       <div class="world-warning" id="other-city-warning" hidden>Você está explorando outra cidade. A empresa atual opera apenas na cidade de origem nesta versão.</div>
       <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Tributação legal não calculada nesta versão.</div>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.3.0-rc.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.4.0-rc.1</span></div>
         <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
           <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
           <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
@@ -121,6 +121,11 @@
               <p class="field-hint">* A partir da V1.3, a procura é estimada mesmo sem estoque. O faturamento potencial perdido é ilustrativo (unidades não atendidas × preço atual do dia), não receita realizada. Eventos anteriores à V1.3 não são recalculados.</p>
             </article>
           </div>
+          <article class="panel strategy-promo-panel"><div class="panel-heading"><h3>Campanhas promocionais</h3><span class="tag-soft">V1.4 · ESTRATÉGIA</span></div>
+            <p class="muted">Descontos temporários influenciam a demanda simulada. O preço de tabela permanece inalterado; somente vendas realizadas durante a campanha recebem o desconto. Não há vendas manuais extras.</p>
+            <form id="promo-form" class="promo-form"><div><label for="promo-product">Produto</label><select id="promo-product"></select></div><div><label for="promo-percent">Desconto sobre a tabela</label><select id="promo-percent"><option value="0">Sem campanha / encerrar</option><option value="5">5%</option><option value="10">10%</option><option value="15">15%</option></select></div><div><label for="promo-days">Duração (dias de jogo)</label><input type="number" id="promo-days" min="1" max="30" value="7" step="1"></div><button class="btn btn-primary" type="submit">Aplicar estratégia</button></form>
+            <p class="field-hint" id="promo-status">Nenhuma campanha ativa.</p><p class="muted">Promoções não geram gastos publicitários; esse custo não está implementado. A concorrência continua sendo simulada separadamente.</p>
+          </article>
           <article class="panel commerce-catalog"><div class="panel-heading"><h3>Catálogo e desempenho por produto</h3><span class="tag-soft" id="product-count">0 produtos</span></div>
             <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Produto</th><th>Estoque</th><th>Custo un.</th><th>Venda un.</th><th>Vendido*</th><th>Receita*</th><th>CMV*</th></tr></thead><tbody id="catalog-rows"></tbody></table></div>
             <p class="field-hint">* Desempenho por produto registrado a partir desta edição. Vendas antigas continuam preservadas no total contábil, sem distribuição fictícia entre SKUs.</p>
@@ -164,6 +169,14 @@
             <p id="finance-validation" class="finance-validation" aria-live="polite" hidden></p>
             <p id="finance-period-label" class="field-hint" aria-live="polite">Escolha a data ou competência que deseja consultar.</p>
           </article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Demonstrativo gerencial</h3><span class="tag-soft">M11 · LEDGER</span></div><dl class="finance-list" id="finance-summary"></dl><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Tributação ainda não é calculada.</p></div><p class="muted">Fluxos do período filtrado; saldos de caixa, estoque e contas a pagar são acumulados até seu encerramento, não despesas do período.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
+          <article class="panel strategy-panel"><div class="panel-heading"><h3>Gestão estratégica e equilíbrio econômico</h3><span class="tag-soft">V1.4 · ANÁLISE E PROJEÇÃO</span></div>
+            <p class="muted">Resultados realizados vêm exclusivamente do livro contábil. Projeções são cenários hipotéticos, não lançamentos, e não realizam novas compras nem liquidam obrigações existentes.</p>
+            <div class="strategy-controls"><label for="strategy-horizon">Horizonte de projeção (dias)</label><select id="strategy-horizon"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select></div>
+            <div id="strategy-metrics" class="strategy-metrics" aria-live="polite"><p class="muted">Abra uma empresa para gerar indicadores.</p></div>
+            <div class="table-scroll"><table class="strategy-table"><thead><tr><th>Tipo de custo / resultado</th><th>Realizado: últimos 30 dias encerrados</th><th>Projeção: horizonte escolhido</th></tr></thead><tbody id="strategy-cost-rows"></tbody></table></div>
+            <div id="strategy-risks" class="strategy-risks" aria-live="polite"></div>
+            <p class="field-hint">Ponto de equilíbrio estimado = despesa operacional fixa diária ÷ margem de contribuição média do mix, sem impostos. Capital de giro gerencial = caixa + estoque + trânsito + recebíveis − obrigações. A previsão respeita estoque atual e entregas já pagas; não prevê novas compras, crédito, tributos ou alterações futuras da concorrência. Saldo positivo não é promessa de liquidez.</p>
+          </article>
         </section>
         <section data-view="fiscal" class="view" hidden>
           <article class="panel fiscal-panel"><span class="fiscal-icon">§</span><div><div class="overline">MT-01 · COBERTURA NORMATIVA</div><h3>Tributação não implementada nesta versão</h3><p>O jogo simula operações econômicas fictícias, mas não calcula ICMS, ISS, PIS/Cofins, IBS, CBS, Simples Nacional ou obrigações acessórias. Ausência de cálculo <strong>não significa alíquota zero</strong>.</p><p>O calendário pode avançar até 2033 e além; isso não representa validação da legislação desses anos. Uma futura implementação exigirá bases legais identificadas, vigência por competência e testes fiscais independentes.</p><div class="tag-warning">STATUS: NOT_COVERED · MODO DEMONSTRAÇÃO</div></div></article>
@@ -174,7 +187,7 @@
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.3.0-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.4.0-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>

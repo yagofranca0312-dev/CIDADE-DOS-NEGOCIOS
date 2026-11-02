@@ -15,7 +15,7 @@ const fresh=(engine=C)=>{
  return run(engine,s,'EMPRESA.ABRIR',{sector:'mercado',lot:1});
 };
 test('V1.7: dados oficiais PIB 2023 cobrem 30 municípios com códigos únicos e unidade R$ mil',()=>{
- assert.equal(C.VERSION,'2.1.0-rc.1'); assert.equal(C.SCHEMA_VERSION,9);
+ assert.equal(C.VERSION,'2.2.0-rc.1'); assert.equal(C.SCHEMA_VERSION,9);
  assert.equal(C.CITIES.length,30);
  assert.equal(new Set(C.CITIES.map(c=>c.ibgeCode)).size,30);
  assert.ok(C.CITIES.every(c=>Number.isSafeInteger(c.gdp2023Thousand)&&c.gdp2023Thousand>0&&c.gdpYear===2023));

@@ -63,3 +63,9 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - REGIC 2018 (hierarquia e ligações) e PIB per capita continuam **não integrados** até auditoria do arquivo tabular oficial.
 - Teste preventivo da versão visual em todas as telas, corrigindo o rodapé herdado da V1.5.
 - Diretriz aprovada: **V2.0 exclusiva para consolidação de arquitetura e revisão visual de jogo**; não incluir novos sistemas de gameplay.
+
+## Estado 02/11/2026 — V1.7 HOMOLOGADA e V1.8 PLANEJADA
+
+- V1.7.0-rc.1 **homologada pelo jogador**. Snapshot preservado em `releases/v1.7.0-homologada` (commit `3c06cdbf4fcdffe379215b8bbaa57666cd4a850b`).
+- V1.8: fase de planejamento, sem implementação. Escopo de contabilidade gerencial (DRE, BP, fluxo de caixa, plano de contas, conciliação), preservando caixa global e resultados por estabelecimento. Documento: `docs/PLANO_V18.md`.
+- V1.9: tributação simulada com fontes normativas e cobertura explícita; V2.0: exclusivamente consolidação de arquitetura e UX/UI de jogo, sem novos sistemas de gameplay.

@@ -65,7 +65,7 @@
       const roof=isOwn?'#e8b55f':roofs[(num+seed)%roofs.length];
       const height=isOwn?42:14+((num*7+seed)%4)*9;
       const xx=x,yy=y,wide=49,tall=23;
-      fragments.push(`<g data-lot="${num}" tabindex="0" role="button" aria-label="Selecionar lote ${num}">`);
+      fragments.push(`<g data-lot="${num}" tabindex="0" role="button" aria-label="Selecionar lote ${num}"><title>Lote ${String(num).padStart(2,'0')} · clique para selecionar</title>`);
       if(isSelected)fragments.push(`<ellipse cx="${xx}" cy="${yy+12}" rx="65" ry="37" fill="#6dc9ff" opacity=".16" filter="url(#glow)"/>`);
       fragments.push(`<polygon points="${xx},${yy-tall} ${xx+wide},${yy} ${xx},${yy+tall} ${xx-wide},${yy}" fill="${ground}" stroke="${isSelected?'#9bdbff':'#416773'}" stroke-width="${isSelected?3:1.7}"/>`);
       if(num%5===0&&!isOwn){
@@ -77,8 +77,12 @@
         fragments.push(`<polygon points="${cx+2},${cy-height+10} ${cx+19},${cy-height} ${cx+19},${cy+2} ${cx+2},${cy+13}" fill="${isOwn?'#e2a450':'#27485e'}"/>`);
         fragments.push(`<path d="M${cx-10} ${cy-height+14}v5 M${cx-3} ${cy-height+18}v5 M${cx+8} ${cy-height+17}v6" stroke="${isOwn?'#f7d99e':'#7ba9bf'}" stroke-width="2"/>`);
       }
-      fragments.push(`<text x="${xx}" y="${yy+36}" fill="${isSelected?'#f5d89a':'#9fbac5'}" text-anchor="middle" font-size="12" font-weight="700">${String(num).padStart(2,'0')}${isOwn?' ★':''}</text></g>`);
+      fragments.push(`</g>`);
     }
+    const r=Math.floor((lot-1)/6),c=(lot-1)%6;
+    const px=392+(c-r)*57,py=91+(c+r)*26;
+    // Destaque sobreposto por último: lote legível sem 18 números concorrendo no mapa.
+    fragments.push(`<g class="selected-lot-marker" pointer-events="none" aria-hidden="true"><path d="M${px} ${py-4}L${px} ${py-39}" stroke="#f4d49a" stroke-width="2"/><rect x="${px-55}" y="${py-69}" width="110" height="30" rx="8" fill="#0c2238" stroke="#f4d49a" stroke-width="1.6"/><text x="${px}" y="${py-49}" fill="#ffe1a1" text-anchor="middle" font-size="14" font-weight="800">LOTE ${String(lot).padStart(2,'0')}</text></g>`);
     fragments.push(`<text x="208" y="40" fill="#9fbfd2" font-size="15" font-weight="700" letter-spacing="3">${escape(city.name.toUpperCase())} · ${escape(city.uf)}</text><text x="208" y="60" fill="#7eabc0" font-size="10">DISTRITO COMERCIAL FICTÍCIO</text></svg>`);
     return fragments.join('');
   }
@@ -98,7 +102,7 @@
     $('other-city-warning').hidden=visibleCity.id===ownCity.id;
     setText('map-title',`Distrito comercial de ${visibleCity.name}`);setText('map-uf',visibleCity.uf);
     $('map-canvas').innerHTML=svgMap(visibleCity,visibleCity.id===ownCity.id?b:null,selectedLot);
-    setText('selected-lot',`Lote ${String(selectedLot).padStart(2,'0')}`);
+    setText('selected-lot',`Lote ${String(selectedLot).padStart(2,'0')} de 18`);
     $('map-open-company').disabled=!!b||visibleCity.id!==ownCity.id;
     setText('city-events','');$('city-events').innerHTML=eventsHTML(state.audit.events.slice(-6).reverse());
     $('company-empty').hidden=!!b;$('company-active').hidden=!b;
@@ -106,10 +110,11 @@
     $('buy-form').querySelector('button').disabled=!b;$('price-form').querySelector('button').disabled=!b;
     if(b){const s=Core.SECTORS[b.sector];setText('company-glyph',s.glyph);setText('company-title',`${state.player.companyName} · ${s.name}`);setText('company-product',s.product);setText('company-location',`${ownCity.name} / ${ownCity.uf} · lote ${String(b.lot).padStart(2,'0')}`);setText('company-sold',b.totalSold);setText('company-price',Core.money(b.unitPrice));setText('company-payable',Core.money(info.payable));
       setText('market-product',`${s.product} · custo simulado por unidade: ${Core.money(s.cost)}`);
-      setText('competitor-price',`Preço de referência do concorrente: ${Core.money(Math.round(s.recommended*state.world.competitor.priceIndex/100))} (simulado)`);
+      setText('your-current-price',Core.money(b.unitPrice));
+      setText('competitor-price',Core.money(Math.round(s.recommended*state.world.competitor.priceIndex/100)));
       if(document.activeElement!==$('price-value'))$('price-value').value=(b.unitPrice/100).toFixed(2);
       updateBuyPreview();
-    }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('competitor-price','Concorrência: abra uma empresa para visualizar.');setText('buy-total','—');}
+    }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('your-current-price','—');setText('competitor-price','—');setText('buy-total','—');}
     const rows=[['Capital investido',Core.money(3000000)],['Receita de vendas',Core.money(info.revenue)],['(-) Custo das mercadorias',Core.money(info.cogs)],['(-) Despesas operacionais',Core.money(info.expenses)],['Resultado antes dos tributos',Core.money(info.profit)],['Caixa',Core.money(info.cash)],['Estoque contabilizado',Core.money(info.inventoryValue)],['Obrigações a pagar',Core.money(info.payable)]];
     $('finance-summary').innerHTML=rows.map((x,i)=>`<dt class="${i===4?'emphasis':''}">${escape(x[0])}</dt><dd class="${i===4?'emphasis':''}">${escape(x[1])}</dd>`).join('');
     setText('journal-count',`${state.economy.ledger.length} registros`);
@@ -158,7 +163,7 @@
     $('open-form').addEventListener('submit',e=>{e.preventDefault();if(!state||viewCityId!==state.player.cityId){notify('Volte à cidade de origem para abrir o negócio.',true);return;}if(commit('EMPRESA.ABRIR',{sector:$('sector-select').value,lot:selectedLot}))goto('cidade');});
     $('buy-quantity').addEventListener('input',updateBuyPreview);
     $('buy-form').addEventListener('submit',e=>{e.preventDefault();commit('ESTOQUE.COMPRAR',{quantity:Number($('buy-quantity').value)});});
-    $('price-form').addEventListener('submit',e=>{e.preventDefault();const value=$('price-value').value,cents=Math.round(Number(value)*100);commit('PRECO.DEFINIR',{cents});});
+    $('price-form').addEventListener('submit',e=>{e.preventDefault();const value=$('price-value').value,cents=Math.round(Number(value)*100),before=state?.world.business?.unitPrice;if(commit('PRECO.DEFINIR',{cents})){const after=state.world.business.unitPrice;const message=`Seu preço foi atualizado: ${Core.money(before)} → ${Core.money(after)}.`;setText('price-change-feedback',message);notify(message);}});
     $('next-day').addEventListener('click',()=>commit('TEMPO.AVANCAR_DIA'));
     $('next-week').addEventListener('click',()=>commit('TEMPO.AVANCAR_LOTE',{days:7}));
     $('next-month').addEventListener('click',()=>commit('TEMPO.AVANCAR_LOTE',{days:30}));
@@ -169,7 +174,7 @@
     $('start-import').addEventListener('click',()=>$('import-file').click());
     $('import-file').addEventListener('change',async e=>{const f=e.target.files?.[0];try{await importFile(f);}finally{e.target.value='';}});
     $('run-diagnostic').addEventListener('click',()=>{try{const before=JSON.stringify(state),out=Core.diagnostics(state);if(before!==JSON.stringify(state))throw Error('Diagnóstico alterou o estado');setText('diagnostic-result',out.status+' · revisão '+out.revision);notify('Verificação estrutural e contábil aprovada.');}catch(e){setText('diagnostic-result',e.message);notify(e.message,true);}});
-    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
+    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
   }
   function updateOpenPreview(){const s=Core.SECTORS[$('sector-select').value];if(s)setText('open-preview',`Investimento inicial simulado: ${Core.money(s.openCost)} · Produto: ${s.product}`);}
   function start(){

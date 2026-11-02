@@ -11,11 +11,11 @@
     1536,
     664
   ],
-  "status": "ART_QA_PENDING",
-  "notes": "Backdrop sem logica economica; composicao manual do antigo predio 03 exige aceite artistico. Sprites extraidos de estudo visual com pintura de labels ainda provisoria.",
+  "status": "PENDING_USER_VISUAL_ACCEPTANCE",
+  "notes": "Arte-base idêntica à imagem previamente aprovada; imóvel 03 é parte do cenário original e recebe placa dinâmica após abertura real. Outros ramos usam sprites. QA visual e Windows pendentes.",
   "urban-base.webp": {
-    "size": 416244,
-    "sha256": "3184f6c01f5a5d5dcb561b4be8c02632b836df49f948fbb8bedf5f43815fa94b"
+    "size": 550922,
+    "sha256": "e71547eb5962ff09ad13f8fed8c07468dd4bbcf0bf1a1e576b37d778119e9aa6"
   },
   "mercado.webp": {
     "size": 15670,
@@ -28,5 +28,6 @@
   "roupas.webp": {
     "size": 13878,
     "sha256": "df1b668ff3ef3f227de10e0339871854a41c83d35220a3f35837aff61f1c1b22"
-  }
+  },
+  "backgroundSource": "same pre-rendered art embedded in approved prototype; lot03 architectural building part of original background"
 }

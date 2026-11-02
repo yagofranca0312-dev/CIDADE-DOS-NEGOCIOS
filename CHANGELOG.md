@@ -1,5 +1,8 @@
 # Histórico de versões — Cidade dos Negócios
 
+> **V1.8 homologada em 02/11/2026** pelo jogador, sem mudança no motor: `releases/v1.8.0-homologada`, commit `66bdab08547daec1df50eca3d6b1967a2a664d2c`.
+> Próxima versão V1.9 apenas planejada: `docs/PLANO_V19.md`. V2.0 reservada à revisão técnica e visual, sem novas mecânicas.
+
 ## 1.8.0-rc.1 — demonstrações contábeis e conciliação (02/11/2026)
 
 - Plano de contas com grupos e naturezas; classificação opcional de novos journals; preservação dos anteriores.
@@ -7,7 +10,7 @@
 - Fechamento gerencial mensal somente leitura; não cria lançamentos nem altera o RNG.
 - Preserva schema 8 e compatibilidade direta com o save V1.7 homologado.
 - Cinco opções internas de leitura financeira, sem novas abas principais; revisão ampla visual reservada à V2.0.
-- Versão unificada nas telas, build e nome do pacote; homologação Windows pendente.
+- Versão unificada nas telas, build e nome do pacote; homologação posteriormente confirmada pelo jogador em 02/11/2026.
 
 
 ## 1.7.0-rc.1 — PIB oficial, comparador e versão única (02/11/2026)

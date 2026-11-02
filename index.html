@@ -707,6 +707,79 @@ button.v221-hud-cell:hover{background:#1e4254}
 .v221-city-mode.v221-tiangua-scene .v221-city-switch-trigger>*{visibility:hidden!important}
 .v221-city-mode.v221-tiangua-scene .v221-city-switch-trigger:focus-visible{outline:3px solid #ffe19a!important;outline-offset:-3px}
 .v221-city-mode.v221-tiangua-scene .map-legend{display:none!important}
+
+/* V2.2.1 — recuperação do HUD informativo e layout responsivo.
+   A informação é gerada pelo motor; não reciclar os valores DEMO da imagem. */
+.v221-trust-ribbon{margin:0;display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;padding:7px 12px;background:#092439;border-bottom:1px solid #254e64;color:#bacbd6;font-size:.71rem;line-height:1.35;text-align:center}
+.v221-trust-ribbon strong{font-size:.65rem;color:#f2c176;letter-spacing:.08em}
+.v221-trust-dot{width:7px;height:7px;background:#e4b766;border-radius:50%;flex:none}
+.v221-map-summary{display:none;gap:10px;align-items:center;justify-content:space-between;padding:9px 15px;background:#082337;border-top:1px solid #365a70;border-bottom:1px solid #365a70;color:#e0ecf3;min-width:0}
+.v221-city-mode .v221-map-summary{display:flex}
+.v221-summary-entries{display:flex;gap:14px;align-items:center;flex-wrap:wrap;min-width:0}
+.v221-summary-entries span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-size:.73rem}
+.v221-summary-entries strong{font-weight:740}
+.v221-legend-dot{width:12px;height:12px;border-radius:4px;display:inline-block;flex:none}
+.v221-free{background:#93b870}.v221-own{background:#f0bf66}.v221-sel{background:#19b5ec}
+.v221-map-zoom{display:none;min-height:34px;background:#173c53;border:1px solid #6a94a7;border-radius:8px;padding:5px 10px;color:#f3e1bc;font-size:.73rem;font-weight:750;white-space:nowrap}
+.v221-city-mode .main-pane,.v221-city-mode .content,.v221-city-mode .map-panel,.v221-city-mode .city-stage{min-width:0;max-width:100%}
+.v221-city-mode{overflow-x:hidden}
+/* Panorama padrão: nenhum terreno, banner ou informação pode começar fora da tela. */
+@media(max-width:890px){
+ .v221-city-mode .map-canvas{overflow-x:hidden;overflow-y:hidden;max-width:100%;min-width:0}
+ .v221-city-mode .map-canvas svg.v221-city-svg{width:100%!important;min-width:0!important;height:auto!important;max-width:100%!important;aspect-ratio:1536 / 664;overflow:hidden}
+ .v221-city-mode .v221-map-zoom{display:inline-flex;align-items:center;justify-content:center}
+ .v221-city-mode.v221-map-zoomed .map-canvas{overflow-x:auto;overscroll-behavior-x:contain}
+ .v221-city-mode.v221-map-zoomed .map-canvas svg.v221-city-svg{width:990px!important;min-width:990px!important;max-width:none!important}
+ .v221-city-mode .v221-city-info-trigger{top:104px;right:9px;font-size:.72rem;min-height:36px}
+ .v221-city-mode .v221-map-summary{gap:8px;padding:9px 12px}
+ .v221-summary-entries{gap:10px}
+ .v221-summary-entries span{font-size:.68rem}
+}
+@media(max-width:620px){
+ .v221-city-hud{grid-template-columns:repeat(2,minmax(0,1fr));min-height:auto}
+ .v221-hud-cell{min-height:69px;padding:9px 13px}
+ .v221-hud-cell strong{font-size:clamp(.95rem,3.6vw,1.16rem);max-width:100%;overflow:visible;text-overflow:clip;white-space:normal;overflow-wrap:anywhere}
+ .v221-hud-cell>span{font-size:.61rem}
+ .v221-hud-cell small{font-size:.62rem}
+ .v221-city-actions{grid-column:1/-1;padding:5px 10px;justify-content:flex-end;min-height:43px}
+ .v221-city-actions>button{min-width:38px;width:38px;min-height:37px}
+ .v221-city-mode .map-panel>.v221-city-switch-trigger{position:relative!important;display:flex!important;flex-direction:column!important;justify-content:center!important;top:auto!important;left:auto!important;right:auto!important;width:100%!important;height:auto!important;min-height:60px!important;padding:9px 14px!important;background:#071e32!important;border:0!important;border-bottom:1px solid #d6af67!important;border-radius:0!important;box-shadow:none!important;color:#f2c778!important}
+ .v221-city-mode.v221-tiangua-scene .v221-city-switch-trigger>*{visibility:visible!important}
+ .v221-city-mode .map-panel>.v221-city-switch-trigger strong{font-size:1.05rem}
+ .v221-city-mode .v221-city-info-trigger{top:70px;right:9px;min-height:34px;background:#082a40ed}
+ .v221-city-mode .map-canvas svg.v221-city-svg{width:100%!important;min-width:0!important}
+ .v221-summary-entries{gap:7px 10px}
+ .v221-summary-entries span{font-size:.67rem}
+ .v221-legend-dot{height:10px;width:10px;border-radius:3px}
+ .v221-city-mode .v221-map-summary{flex-wrap:wrap}
+ .v221-map-zoom{margin-left:auto}
+ .v221-city-mode .v22-lot-nav{display:flex;justify-content:space-between;gap:8px;padding:9px 12px}
+ .v221-city-mode .v22-lot-nav select{max-width:min(60vw,220px)}
+ .v221-city-mode .map-disclaimer{font-size:.64rem;padding:8px 12px}
+ .v221-city-mode .sidebar .nav-primary{gap:5px}
+ .v221-city-mode .sidebar .nav-primary .nav-item{min-width:0;padding:6px 2px;min-height:61px}
+ .v221-trust-ribbon{padding:8px 9px;font-size:.65rem;gap:5px 8px}
+ .v221-city-mode .v221-city-hud{overflow:visible}
+}
+@media(max-width:360px){
+ .v221-hud-cell{padding:8px 9px}
+ .v221-hud-cell strong{font-size:.9rem}
+ .v221-map-summary{padding:7px 8px!important}
+ .v221-summary-entries span{font-size:.63rem}
+ .v221-city-mode .sidebar .nav-primary .nav-item{font-size:.60rem}
+}
+/* Especificidade: o botão invisível do banner tem seletor reforçado no desktop.
+   Em celular ele vira uma barra própria, inteiramente visível e clicável. */
+@media(max-width:620px){
+ .v221-city-mode.v221-tiangua-scene .map-panel>.v221-city-switch-trigger{
+  position:relative!important;inset:auto!important;left:auto!important;right:auto!important;
+  display:flex!important;flex-direction:column!important;align-items:flex-start!important;
+  justify-content:center!important;width:100%!important;height:auto!important;min-height:60px!important;
+  background:#081e33!important;padding:10px 14px!important;border:0!important;
+  border-bottom:1px solid #d6af67!important;border-radius:0!important;box-shadow:none!important
+ }
+ .v221-city-mode.v221-tiangua-scene .map-panel>.v221-city-switch-trigger>*{visibility:visible!important}
+}
   </style>
 </head>
 <body>
@@ -794,6 +867,7 @@ button.v221-hud-cell:hover{background:#1e4254}
             <button type="button" class="v221-hud-cell" id="v221-hud-units" title="Gerenciar a rede de empresas"><span>▣ ESTABELECIMENTOS</span><strong id="v221-hud-count">0/5</strong><small>Unidades do grupo ▾</small></button>
             <div class="v221-city-actions"><button type="button" id="v221-event-open" title="Atividade da carreira" aria-label="Atividade da carreira">♧</button><button type="button" id="v221-help-open" title="Como jogar" aria-label="Ajuda do distrito">?</button><button type="button" id="v221-config-open" title="Backup e configurações" aria-label="Configurações e backup">⚙</button></div>
           </div>
+          <p class="v221-trust-ribbon" role="note"><span aria-hidden="true" class="v221-trust-dot"></span><strong>SIMULAÇÃO EDUCATIVA</strong><span>Valores financeiros fictícios do jogo · operações locais · não são saldos reais</span></p>
           <div class="v221-popover v221-time-menu" id="v221-time-menu" hidden><strong>Calendário e ritmo</strong><p>Controles do motor real.</p><div class="v221-time-actions"><button type="button" data-v221-time="play">▶ / ❚❚</button><button type="button" data-v221-time="1">+ 1 dia</button><button type="button" data-v221-time="7">+ 7 dias</button><button type="button" data-v221-time="30">+ 30 dias</button></div><label for="v221-time-speed">Velocidade</label><select id="v221-time-speed"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select></div>
           <div id="v221-help-panel" class="v221-popover" hidden><strong>Distrito comercial de Tianguá</strong><p>Selecione um dos 18 lotes; use Tab e Enter ou Espaço no teclado para selecioná-los. Abrir uma empresa só altera o jogo após confirmação.</p><p>Mapa ilustrativo fictício: ruas e imóveis não representam endereços reais.</p><button type="button" id="v221-help-close">Fechar</button></div>
           <div class="v221-city-pick" id="v221-city-pick" hidden><label for="v221-city-selector">Explorar município</label><select id="v221-city-selector" aria-label="Cidade a explorar"></select><button type="button" id="v221-city-pick-close">Fechar</button></div>
@@ -803,6 +877,10 @@ button.v221-hud-cell:hover{background:#1e4254}
               <div class="world-map-notice">SELECIONE UM LOTE NO MAPA OU USE O SELETOR</div>
               <div id="map-canvas" class="map-canvas" role="group" aria-label="Mapa ilustrativo clicável com 18 lotes"></div>
               <div class="map-legend"><span><i class="legend-color lot"></i> Lote disponível</span><span><i class="legend-color own"></i> Sua empresa</span><span><i class="legend-color sel"></i> Selecionado</span></div>
+              <div class="v221-map-summary" id="v221-map-summary" role="status" aria-live="polite" aria-label="Situação dos lotes e visualização do mapa">
+                <div class="v221-summary-entries"><span><i class="v221-legend-dot v221-free"></i><strong id="v221-legend-free">18 disponíveis</strong></span><span><i class="v221-legend-dot v221-own"></i><strong id="v221-legend-owned">0 empresas</strong></span><span><i class="v221-legend-dot v221-sel"></i><strong id="v221-legend-selection">Nenhuma seleção</strong></span></div>
+                <button type="button" id="v221-map-zoom" class="v221-map-zoom" aria-controls="map-canvas" aria-pressed="false" title="Ampliar o mapa para tocar nos terrenos">⊕ Ampliar mapa</button>
+              </div>
               <div class="v22-lot-nav"><label for="map-lot-picker">Escolher lote</label><select id="map-lot-picker" aria-label="Ir diretamente para um dos 18 lotes"><option value="1">Lote 01</option><option value="2">Lote 02</option><option value="3">Lote 03</option><option value="4">Lote 04</option><option value="5">Lote 05</option><option value="6">Lote 06</option><option value="7">Lote 07</option><option value="8">Lote 08</option><option value="9">Lote 09</option><option value="10">Lote 10</option><option value="11">Lote 11</option><option value="12">Lote 12</option><option value="13">Lote 13</option><option value="14">Lote 14</option><option value="15">Lote 15</option><option value="16">Lote 16</option><option value="17">Lote 17</option><option value="18">Lote 18</option></select></div>
               <p class="map-disclaimer">Mapa fictício para jogabilidade. Não representa ruas, lotes ou imóveis reais.</p>
             </article>
@@ -2240,6 +2318,7 @@ const CidadeTianguaCena=(()=>{
   const KEY='cidade-dos-negocios-save-v1';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
   let inspectorOpen=false; // interface somente, nunca persistido
+  let mapZoomed=false; // visão ampliada opcional; não altera o save
   let financeQuery=null,strategyHorizon=30,financeScope='all',statementView='summary'; // preferências de interface, independentes do GameState
   const business=()=>state?Core.activeBusiness(state):null;
   function chooseProduct(id){const b=business();return b?.products?.find(p=>p.id===$(id)?.value)||b?.products?.[0]||null;}
@@ -2600,6 +2679,15 @@ const CidadeTianguaCena=(()=>{
     $('other-city-warning').hidden=units.some(x=>x.cityId===visibleCity.id);
     setText('other-city-warning','Cidade sem unidade da sua rede. Você pode inaugurar uma unidade num lote disponível.');
     setText('map-title',`Distrito comercial de ${visibleCity.name}`);setText('map-uf',visibleCity.uf);
+    const cityUnits=units.filter(x=>x.cityId===visibleCity.id);
+    setText('v221-legend-free',`${18-cityUnits.length} disponíveis`);
+    setText('v221-legend-owned',`${cityUnits.length} ${cityUnits.length===1?'empresa':'empresas'}`);
+    setText('v221-legend-selection',inspectorOpen?`Lote ${String(selectedLot).padStart(2,'0')} selecionado`:'Nenhuma seleção');
+    document.body.classList.toggle('v221-map-zoomed',mapZoomed&&visibleCity.id==='CE-TIANGUA');
+    const zoomButton=$('v221-map-zoom');
+    zoomButton.hidden=visibleCity.id!=='CE-TIANGUA';
+    zoomButton.setAttribute('aria-pressed',String(mapZoomed));
+    zoomButton.textContent=mapZoomed?'⊖ Mostrar mapa inteiro':'⊕ Ampliar mapa';
     $('map-canvas').innerHTML=visibleCity.id==='CE-TIANGUA'
       ? CidadeTianguaCena.svgMap(visibleCity,units.filter(x=>x.cityId===visibleCity.id),inspectorOpen?selectedLot:null)
       : CidadeVisual.svgMap(visibleCity,units.filter(x=>x.cityId===visibleCity.id).map(x=>x.lot),inspectorOpen?selectedLot:null);
@@ -2687,6 +2775,12 @@ const CidadeTianguaCena=(()=>{
     $('map-canvas').addEventListener('click',e=>{const target=e.target.closest('[data-lot]');if(target){selectedLot=Number(target.dataset.lot);inspectorOpen=true;render();updateOpenPreview();}});
     $('map-canvas').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const target=e.target.closest('[data-lot]');if(target){e.preventDefault();selectedLot=Number(target.dataset.lot);inspectorOpen=true;render();$('map-canvas').querySelector(`[data-lot="${selectedLot}"]`)?.focus();}}});
   $('map-lot-picker').addEventListener('change',e=>{const next=Number(e.target.value);if(Number.isInteger(next)&&next>=1&&next<=18){selectedLot=next;inspectorOpen=true;render();$('map-lot-picker').focus();}});
+    $('v221-map-zoom').addEventListener('click',()=>{
+      mapZoomed=!mapZoomed;
+      render();
+      // No modo ampliado, a faixa do mapa pode ser deslocada horizontalmente.
+      if(mapZoomed){const el=$('map-canvas');el.scrollLeft=Math.max(0,(el.scrollWidth-el.clientWidth)/2);}
+    });
     $('v221-inspector-close').addEventListener('click',()=>{inspectorOpen=false;render();$('v221-hud-units').focus();});
     $('v221-hud-units').addEventListener('click',()=>goto('empresa'));
     $('v221-config-open').addEventListener('click',()=>goto('sistema'));

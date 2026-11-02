@@ -126,3 +126,11 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - **P01:** inventário técnico executado; capturas e protótipo visual com comparação manual pendentes. **P02–P05:** codificados, QA pendente. **P06:** build versionado e novos testes codificados, execução CI/QA Windows pendente.
 - **Critérios futuros:** `npm run check`, CI PASS, hash de build reproduzível, QA desktop/mobile, validação Windows de save/backup e homologação explícita. Não chamar versão de homologada enquanto essas evidências não existirem.
 - **Documento de execução:** [V22_IMPLANTACAO.md](V22_IMPLANTACAO.md). O plano continua em [PLANO_V22_MAPA_ATLAS_AMBIENTACAO.md](PLANO_V22_MAPA_ATLAS_AMBIENTACAO.md).
+
+## Estado 02/11/2026 — V2.2 CANDIDATA PUBLICADA NA MAIN (NÃO HOMOLOGADA)
+
+- PR #15 `feature/v2.2.0-rc.1` → `main` **integrada**; commit `1078dbaa9a582962e7de8e7ecbe97bcff5d4a92d`. Código e executável V2.2.0-rc.1 disponíveis para atualização e teste.
+- GitHub Actions PR #15 **PASS**, run ID `41489051796`, com `npm run check`: **174/174 testes PASS** e 0 FAIL.
+- Job de build do HTML único e `git diff --exit-code -- index.html` concluídos com sucesso; artefato HTML de **394.165 bytes**, SHA-256 `ac741cab5e79d13a7decb02e7331a776fcd816af08dd2ebc0bf9d7db6dc9cd9b`.
+- **Não homologada**: QA visual em navegador real, performance em hardware de referência e validação nativa no Windows (`file://`, importação/exportação e persistência após reinício) ainda dependem de evidência observável e aceite expresso do jogador.
+- V2.1 HOMOLOGADA permanece preservada na branch `releases/v2.1.0-homologada`, commit `645467b0`. V2.2 preserva schema 9 e motor de regras salvo VERSION.

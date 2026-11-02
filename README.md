@@ -1,6 +1,6 @@
 # 🏙️ Cidade dos Negócios — Edição 2.2
 
-**Versão candidata em desenvolvimento:** `2.2.0-rc.1` — IMPLEMENTADA na branch `feature/v2.2.0-rc.1` e aguardando CI, QA em navegador e homologação no Windows. **Save schema:** 9, sem migração; HTML único offline. O motor V2.1 permanece idêntico exceto identificador de versão. A V2.1 continua HOMOLOGADA e congelada na branch `releases/v2.1.0-homologada`.
+**Versão candidata publicada:** `2.2.0-rc.1` — INTEGRADA À `main` pela PR #15 (merge `1078dbaa`), com CI PASS de 174/174 testes e build HTML reproduzível. Aguardando QA visual no navegador, validação Windows e homologação de Yago. **Save schema:** 9, sem migração; HTML único offline. O motor V2.1 permanece idêntico exceto identificador de versão. A V2.1 continua HOMOLOGADA e congelada na branch `releases/v2.1.0-homologada`.
 
 ## V2.2 — Cidade viva, edifícios e ambientação (exclusivamente visual)
 
@@ -8,7 +8,7 @@
 - Lotes livres claramente disponíveis; edifícios da rede exibidos somente quando o motor registra posse; visual sem ramo, nível, atividade bancária, indústria ou economia inventados.
 - Quatro densidades artísticas de cenário (`local`, `regional`, `grande`, `metropole`) para as 30 cidades, com rótulos de cenário fictício.
 - 18 lotes 1–18 acessíveis por clique, Enter/Espaço e seletor direto para toque; HUD V2.1 e inspetor preservados.
-- 12 novos cenários de teste estrutural; build offline sincronizado para `2.2.0-rc.1`; CI/Windows devem passar antes de homologar.
+- 12 novos cenários de teste estrutural; **174/174 testes automatizados PASS** e HTML reproduzível em CI; QA visual e Windows ainda pendentes antes de homologar.
 - [Implantação V2.2 e gates](docs/V22_IMPLANTACAO.md) · [Plano original V2.2](docs/PLANO_V22_MAPA_ATLAS_AMBIENTACAO.md).
 
 ---

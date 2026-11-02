@@ -1,7 +1,7 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.0.1-rc.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.1.0-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '1.0.1-rc.1';
+  const VERSION = '1.1.0-rc.1';
   const SCHEMA_VERSION = 2;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -203,6 +203,47 @@ const CidadeCore = (() => {
     else assert(inventory===0,'Estoque sem empresa');
     return true;
   }
+  // Reportes por data/competência derivados exclusivamente do ledger já confirmado.
+  // Saldo no fim do período é acumulado; receitas, CMV e despesas são fluxos do recorte.
+  function financialReport(state,period='all',referenceDate=state.calendar.date) {
+    assert(state&&plain(state.economy)&&Array.isArray(state.economy.ledger),'Carreira inválida para relatório');
+    assert(['all','day','month','quarter','year'].includes(period),'Período financeiro desconhecido');
+    assert(typeof referenceDate==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(referenceDate)
+      &&!Number.isNaN(Date.parse(referenceDate+'T12:00:00Z')),'Data de referência inválida');
+    assert(referenceDate<=state.calendar.date,'Data futura não permitida');
+    const yy=Number(referenceDate.slice(0,4)),mm=Number(referenceDate.slice(5,7));
+    assert(mm>=1&&mm<=12&&yy>=2000,'Competência inválida');
+    const firstMonth=String(mm).padStart(2,'0'),quarter=Math.floor((mm-1)/3);
+    let from=START_DATE,to=referenceDate,label='Toda a carreira';
+    if(period==='day'){from=to=referenceDate;label=`Dia ${referenceDate.split('-').reverse().join('/')}`;}
+    if(period==='month'){from=`${yy}-${firstMonth}-01`;to=`${yy}-${firstMonth}-${String(new Date(Date.UTC(yy,mm,0)).getUTCDate()).padStart(2,'0')}`;label=`Competência ${firstMonth}/${yy}`;}
+    if(period==='quarter'){
+      const begin=quarter*3+1,end=begin+2;
+      from=`${yy}-${String(begin).padStart(2,'0')}-01`;
+      to=`${yy}-${String(end).padStart(2,'0')}-${String(new Date(Date.UTC(yy,end,0)).getUTCDate()).padStart(2,'0')}`;
+      label=`${quarter+1}º trimestre de ${yy}`;
+    }
+    if(period==='year'){from=`${yy}-01-01`;to=`${yy}-12-31`;label=`Ano ${yy}`;}
+    const effectiveEnd=to<state.calendar.date?to:state.calendar.date;
+    const entries=state.economy.ledger.filter(x=>x.date>=from&&x.date<=effectiveEnd);
+    const until=state.economy.ledger.filter(x=>x.date<=effectiveEnd);
+    const account=(journals,name)=>journals.reduce((sum,j)=>sum+j.entries.reduce((n,e)=>e.account===name?n+(['CAPITAL','REVENUE','PAYABLE'].includes(name)?e.credit-e.debit:e.debit-e.credit):n,0),0);
+    const revenue=account(entries,'REVENUE'),cogs=account(entries,'COGS'),expenses=account(entries,'EXPENSE');
+    return {
+      period,referenceDate,from,to,effectiveEnd,label,entries,
+      revenue,cogs,expenses,grossProfit:revenue-cogs,profit:revenue-cogs-expenses,
+      grossMarginPercent:revenue?Math.round((revenue-cogs)*10000/revenue)/100:null,
+      closingCash:account(until,'CASH'),closingInventory:account(until,'INVENTORY'),
+      closingPayable:account(until,'PAYABLE'),capital:account(entries,'CAPITAL')
+    };
+  }
+  // O histórico persiste nos eventos existentes da V1; nenhum campo novo é adicionado ao save.
+  function priceHistory(state) {
+    if(!state?.world?.business)return [];
+    return state.audit.events.filter(e=>e.type==='PRECO.ALTERADO')
+      .filter(e=>Number.isSafeInteger(e.data?.old)&&Number.isSafeInteger(e.data?.cents))
+      .map(e=>({id:e.id,date:e.date,old:e.data.old,cents:e.data.cents}));
+  }
   function exportSave(state) {
     validate(state);const payload=clone(state),raw=JSON.stringify(payload);
     assert(raw.length<MAX_SAVE_CHARS,'Carreira excede limite de exportação');
@@ -223,6 +264,6 @@ const CidadeCore = (() => {
     return {state:clone(data.payload),migrated:false,message:'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,CITIES,SECTORS,dispatch,validate,overview,exportSave,importSave,diagnostics,cityById,money,hash,dateNext});
+  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,CITIES,SECTORS,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,cityById,money,hash,dateNext});
   return API;
 })();

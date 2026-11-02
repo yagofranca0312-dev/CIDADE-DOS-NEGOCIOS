@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10243E">
   <meta name="description" content="Cidade dos Negócios 1, simulador empresarial brasileiro offline, em um único HTML.">
-  <title>Cidade dos Negócios 1 · v2.1.0-rc.1</title>
+  <title>Cidade dos Negócios 1 · v2.2.0-rc.1</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2080%2080%22%3E%3Crect%20width%3D%2280%22%20height%3D%2280%22%20rx%3D%2214%22%20fill%3D%22%2310243e%22%2F%3E%3Cpath%20d%3D%22M9%2069V39L24%2031V69H9ZM28%2069V20L43%2014V69H28ZM47%2069V43L62%2034V69H47Z%22%20fill%3D%22%2351a9df%22%2F%3E%3Cpath%20d%3D%22m8%2060%2022-23%2012%209L70%2013m-14%200%2015-2-2%2016%22%20stroke%3D%22%23e9ad50%22%20stroke-width%3D%226%22%20fill%3D%22none%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
   <style>
 :root{color-scheme:dark;--navy:#10243e;--deep:#091629;--panel:#142b45;--panelhi:#193451;--blue:#51a9df;--gold:#e9ad50;--green:#51bd83;--text:#f4f7fb;--muted:#b8c6d8;--stroke:#2b4860;--red:#ef7070;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:15px}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#091629;color:var(--text)}[hidden]{display:none!important}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.46;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f4d49a;outline-offset:2px}a{color:#9dcee9}h1,h2,h3,p{margin-top:0}h1,h2,h3{letter-spacing:-.025em}h3{font-size:1.12rem;margin-bottom:0}p{line-height:1.65}small,.muted,.field-hint{color:var(--muted)}.field-hint{font-size:.83rem;margin:10px 0 19px;line-height:1.45}.hint-bottom{margin-top:26px}.status-text{font-size:.87rem;margin:13px 0 0;min-height:1.25rem}.overline,.eyebrow,.card-kicker,.nav-label{font-size:.7rem;letter-spacing:.16em;font-weight:800;color:#a3b7cb}.eyebrow-dot,.online-dot{display:inline-block;background:var(--green);width:7px;height:7px;border-radius:50%;margin-right:7px}.btn{border:1px solid #466178;border-radius:10px;padding:12px 16px;background:#24415a;color:var(--text);font-size:.89rem;font-weight:750;transition:transform .15s,filter .15s;min-height:44px}.btn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px)}.btn-primary{background:linear-gradient(135deg,#e9ad50,#f3c775);color:#101d2b;border-color:#f4d49a}.btn-outline{background:#14283b;color:#f2f7fb}.btn-big{width:100%;padding:16px 20px;display:flex;justify-content:space-between;margin-top:18px}.full{width:100%}.spaced{margin-top:9px}.tag-soft,.tag-warning{display:inline-block;letter-spacing:.05em;font-weight:800;font-size:.63rem;background:#203e58;color:#a9dafa;border:1px solid #3b617b;border-radius:8px;padding:8px 10px}.tag-warning{color:#f4d49a;background:#3c301d;border-color:#906c39}.brand-icon{filter:drop-shadow(0 9px 28px #0003)}.onboarding{min-height:100vh;display:grid;grid-template-columns:minmax(390px,1fr) minmax(380px,.78fr);gap:clamp(30px,6vw,100px);align-items:center;max-width:1540px;margin:0 auto;padding:45px clamp(24px,6vw,94px);position:relative;overflow:hidden}.onboarding:before{content:"";background:radial-gradient(ellipse at center,#193e6077,transparent 70%);position:absolute;inset:0 0 0 -30%;pointer-events:none}.onboarding-art{position:absolute;inset:0;opacity:.14;pointer-events:none;overflow:hidden}.skyline{display:flex;align-items:end;gap:18px;position:absolute;bottom:0;left:-2%;height:63%;width:110%;transform:skewY(-7deg)}.skyline i{display:block;flex:1;background:linear-gradient(180deg,#7dbde3,#1d5070);height:65%;border-radius:5px 5px 0 0;box-shadow:inset 10px 0 0 #0a223a}.skyline i:nth-child(2n){height:78%}.skyline i:nth-child(3n){height:44%}.skyline i:nth-child(5n){height:95%}.intro-copy{position:relative;z-index:1}.intro-copy .eyebrow{color:#9ddfe2;margin-bottom:48px}.brand-intro{margin-bottom:15px}.intro-copy h1{font-size:clamp(3.3rem,6vw,6.8rem);line-height:.92;margin-bottom:20px;font-weight:900}.intro-copy h1 em{font-style:normal;background:linear-gradient(120deg,#f6ce82,#d89d41);background-clip:text;-webkit-background-clip:text;color:transparent}.hero-subtitle{font-size:1.55rem;font-weight:700;margin:29px 0 10px}.intro-desc{font-size:1.02rem;color:#c7d3df;max-width:540px}.intro-features{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}.intro-features span{padding:10px 12px;border:1px solid #395875;background:#12304aab;border-radius:8px;font-size:.78rem;color:#b9d6e6}.fine-print{font-size:.72rem;color:#8fa8bb;margin-top:40px}.start-card{position:relative;z-index:1;background:linear-gradient(158deg,#1a3652 0%,#102339 100%);padding:clamp(25px,4vw,42px);border:1px solid #3c5970;box-shadow:0 24px 90px #0007;border-radius:20px}.card-kicker{color:var(--gold);margin-bottom:13px}.start-card h2{font-size:2rem;line-height:1.1;margin-bottom:12px}.start-card label,.panel label{display:block;font-size:.78rem;color:#c5d6e6;font-weight:700;margin:18px 0 7px}.start-card input,.start-card select,.panel input,.panel select,.topbar select{width:100%;background:#0c2136;border:1px solid #3c5a71;color:var(--text);border-radius:9px;min-height:42px;padding:10px 13px;outline-color:var(--gold)}.text-action{border:0;color:#b7d9f5;background:transparent;font-size:.86rem;margin:15px auto 0;display:block;padding:10px}.game-shell{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:100vh}.sidebar{background:linear-gradient(175deg,#0b1b2e,#10243e);border-right:1px solid #203e59;display:flex;flex-direction:column;padding:27px 15px 18px;position:sticky;top:0;height:100vh}.sidebar-brand{display:flex;gap:10px;align-items:center;padding:0 8px 32px}.brand-mark{width:43px;height:43px;border-radius:10px;background:linear-gradient(135deg,#e2a450,#f0c77d);color:#092037;display:grid;place-items:center;font-size:2rem}.sidebar-brand strong{display:block;font-size:.9rem;letter-spacing:.065em;line-height:1.15}.sidebar-brand small{font-size:.59rem;letter-spacing:.16em;color:var(--gold)}.nav-label{padding:0 14px 12px;color:#7896b4}.nav-items{display:grid;gap:5px}.nav-item{width:100%;background:none;border:1px solid transparent;color:#b6c7d8;padding:13px 14px;border-radius:9px;text-align:left;font-weight:650;display:flex;align-items:center;gap:14px;font-size:.88rem}.nav-item span{font-size:1.17rem;width:24px;text-align:center}.nav-item.active{background:#244360;color:#fff;border-color:#3a6080;box-shadow:inset 3px 0 0 var(--gold)}.nav-item:hover{background:#1a3852}.sidebar-bottom{margin-top:auto;padding:17px 11px 0;border-top:1px solid #29425a;font-size:.69rem;letter-spacing:.1em;font-weight:800;color:#bdd4e2}.sidebar-bottom small{display:block;letter-spacing:0;font-weight:400;margin:8px 0 0 16px}.main-pane{min-width:0;display:flex;flex-direction:column}.topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px clamp(16px,3vw,39px);border-bottom:1px solid #28435c;background:#0e2035}.topbar h2{font-size:1.4rem;margin:3px 0 0}.topbar h2 span{color:#95adbf;font-weight:500}.topbar-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.compact-label{font-size:.72rem;color:var(--muted)}.topbar select{width:auto;max-width:195px;font-size:.78rem}.date-box{background:#152f47;border:1px solid #34516c;border-radius:9px;padding:7px 15px;min-width:115px}.date-box small{display:block;font-size:.57rem;letter-spacing:.1em}.date-box strong{display:block;font-size:.93rem;margin-top:3px;font-variant-numeric:tabular-nums}.world-warning{padding:10px clamp(16px,3vw,39px);border-bottom:1px solid #4b492d;background:#2e2b1d;color:#f6d69b;font-size:.76rem;font-weight:600}.legal-warning{background:#132b3a;border-color:#24485b;color:#a7c9d9}.content{padding:30px clamp(16px,3vw,39px);max-width:1720px;width:100%;margin:0 auto;flex:1}.page-title{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:25px}.page-title h1{font-size:clamp(1.5rem,2.6vw,2.2rem);margin:7px 0 2px}.page-title p{color:#a9bacb;font-size:.85rem;margin:0}.build-badge{border:1px solid #3d5a71;color:#a4cce4;padding:8px 11px;border-radius:8px;font-size:.72rem;white-space:nowrap}.stats-bar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:20px}.stat,.panel{border:1px solid #304c63;border-radius:13px;background:linear-gradient(155deg,#17314a,#10273e);box-shadow:0 10px 22px #0002}.stat{padding:21px 20px}.stat span{display:block;font-size:.67rem;letter-spacing:.085em;color:#afc0d2;font-weight:700}.stat strong{display:block;font-size:clamp(1.3rem,2vw,2rem);margin:10px 0 3px;font-variant-numeric:tabular-nums;letter-spacing:-.035em;white-space:nowrap}.stat small{font-size:.68rem}.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(280px,.83fr);gap:17px}.right-column{display:grid;gap:17px;align-content:start}.panel{padding:23px}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.map-panel{padding:0;overflow:hidden;align-self:start}.map-panel .panel-heading{padding:23px 23px 0;margin-bottom:0}.map-panel .overline{margin-bottom:6px}.map-canvas{min-height:350px;background:radial-gradient(ellipse at 55% 37%,#265372 0%,#163751 54%,#0d2436 100%);overflow:hidden}.map-canvas svg{display:block;width:100%;height:auto;min-height:320px;max-height:480px;touch-action:manipulation}.map-canvas svg [data-lot]{cursor:pointer;outline:none;transition:filter .15s}.map-canvas svg [data-lot]:hover,.map-canvas svg [data-lot]:focus{filter:brightness(1.5)}.map-legend{display:flex;gap:20px;flex-wrap:wrap;font-size:.71rem;color:#b8cadd;padding:0 23px 12px}.legend-color{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}.legend-color.lot{background:#537d69}.legend-color.own{background:#e9ad50}.legend-color.sel{background:#51a9df}.map-disclaimer{font-size:.68rem;color:#91b0c0;padding:0 23px 15px;margin:0}.big-number{font-size:2.1rem;font-weight:850;color:var(--gold);letter-spacing:-.06em;margin:12px 0}.event-list{display:grid;gap:13px;max-height:320px;overflow:auto}.event-item{border-bottom:1px solid #264259;padding-bottom:10px;display:flex;gap:10px;align-items:start}.event-item:last-child{border-bottom:0}.event-dot{background:var(--blue);width:7px;height:7px;border-radius:50%;flex:none;margin-top:7px}.event-item p{margin:0;color:#d0dde8;font-size:.81rem;line-height:1.45}.event-item small{display:block;margin-top:4px;font-size:.67rem;color:#8eabc0}.view{min-height:370px}.detail-list,.finance-list{display:grid;grid-template-columns:1fr auto;gap:15px;margin:19px 0}.detail-list dt,.finance-list dt{color:#bed0df}.detail-list dd,.finance-list dd{margin:0;text-align:right;font-weight:800;font-variant-numeric:tabular-nums}.finance-list{border-top:1px solid #3b586c;padding-top:17px}.finance-list dt,.finance-list dd{font-size:.85rem}.finance-list .emphasis{color:var(--gold);font-weight:800;font-size:1rem}.company-emblem{display:flex;align-items:center;gap:16px;background:#102c40;border:1px solid #31526b;border-radius:12px;padding:16px}.company-emblem>span{font-size:2.4rem}.company-emblem h3{margin-bottom:3px}.company-emblem p{margin:0}.button-stack{display:grid;gap:10px;margin:20px 0}.fiscal-panel{display:flex;gap:24px;max-width:920px}.fiscal-icon{font-size:3.2rem;font-weight:850;color:var(--gold)}.turnbar{margin-top:23px;background:linear-gradient(125deg,#173c58,#132b44);border:1px solid #3d6480;border-radius:13px;padding:20px 25px;display:flex;justify-content:space-between;align-items:center;gap:20px}.turnbar h3{margin:6px 0}.turnbar p{font-size:.77rem;color:#a5bfd2;margin:0}.turn-actions{display:flex;gap:8px;flex-wrap:wrap}.game-footer{padding:19px clamp(16px,3vw,39px);display:flex;justify-content:space-between;gap:10px;font-size:.63rem;letter-spacing:.08em;color:#91aabd;border-top:1px solid #213e56}.toast{position:fixed;bottom:25px;right:25px;max-width:min(90vw,460px);z-index:99;pointer-events:none;background:#1b3a52;border:1px solid #5e869e;box-shadow:0 15px 45px #0009;color:#fff;padding:14px 19px;border-radius:11px;font-size:.82rem;transform:translateY(140px);opacity:0;transition:transform .25s,opacity .25s}.toast.visible{transform:none;opacity:1}.toast.error{border-color:var(--red);background:#4c2a34}@media(max-width:1180px){.game-shell{grid-template-columns:190px minmax(0,1fr)}.dashboard-grid{grid-template-columns:1fr}.stats-bar{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar{padding-left:10px;padding-right:10px}}@media(max-width:800px){.onboarding{grid-template-columns:1fr;gap:25px;padding:24px}.intro-copy .eyebrow{margin-bottom:20px}.intro-copy h1{font-size:3.8rem}.fine-print{margin-top:14px}.game-shell{display:block}.sidebar{position:relative;height:auto;padding:14px}.sidebar-brand{padding-bottom:12px}.nav-label,.sidebar-bottom{display:none}.nav-items{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px}.nav-item{width:auto;flex:none;padding:9px 11px;font-size:.75rem;gap:6px}.nav-item span{font-size:1rem;width:18px}.topbar{align-items:flex-start;flex-wrap:wrap}.topbar-controls{width:100%}.compact-label{display:none}.page-title{align-items:start}.turnbar{flex-direction:column;align-items:stretch}.turn-actions{width:100%}.turn-actions .btn{flex:1}.game-footer{flex-direction:column}}@media(max-width:480px){.stat{padding:15px 12px}.stat strong{font-size:1.16rem}.stat small{font-size:.6rem}.stats-bar{gap:8px}.panel{padding:17px}.map-panel .panel-heading{padding:16px 16px 0}.map-legend{padding:0 16px 12px}.map-disclaimer{padding:0 16px 12px}.topbar-controls select{max-width:140px}.page-title{flex-direction:column}.game-footer{font-size:.59rem}.fiscal-panel{flex-direction:column;gap:10px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
@@ -512,6 +512,77 @@ body {background:var(--v2-void);background-image:radial-gradient(ellipse at 70% 
  .onboarding *, .v21-hud *, .v21-inspector *, .stat, .nav-item{transition:none!important;animation:none!important}
 }
 
+/* Cidade dos Negócios V2.2 — mapa urbano, atlas isométrico e controle de seleção.
+   Somente camada visual. CSS da V2.1 e motor econômico permanecem preservados. */
+.map-panel{isolation:isolate}
+.map-canvas{
+  background:radial-gradient(ellipse at 54% 15%,#356f80 0,transparent 61%),
+    linear-gradient(155deg,#1b4e62,#0b253a 88%);
+}
+.map-canvas svg.v22-city-svg{
+  display:block;width:100%;height:auto;min-height:0;
+  max-width:100%;overflow:visible;
+  filter:drop-shadow(0 9px 13px #00182555);
+}
+.v22-city-svg .v22-lot{cursor:pointer;outline:none}
+.v22-city-svg .v22-lot .v22-tile-outline{
+  transition:stroke .15s ease,stroke-width .15s ease,fill .15s ease;
+}
+.v22-city-svg .v22-lot:hover .v22-tile-outline,
+.v22-city-svg .v22-lot:focus-visible .v22-tile-outline{
+  stroke:#fff0b1;stroke-width:4.5;
+}
+.v22-city-svg .v22-lot:focus-visible .v22-selection-halo{
+  stroke:#e7fcff;stroke-width:2;
+}
+.v22-city-svg .v22-lot.is-owned .v22-tile-outline{
+  stroke:#edc16a;
+}
+.v22-city-svg .v22-lot.is-owned.is-selected .v22-tile-outline{
+  stroke:#caf5ff;stroke-width:4.6;
+}
+.v22-city-svg .v22-lot.is-selected .v22-tile-outline{
+  stroke:#caf5ff;stroke-width:4.6;
+}
+.v22-city-svg .v22-scenery,
+.v22-city-svg .v22-ambient-skyline,
+.v22-city-svg .v22-street-details,
+.v22-city-svg .v22-overlay,
+.v22-city-svg .v22-tree{
+  pointer-events:none;
+}
+.v22-city-svg .v22-lot .v22-hit{cursor:pointer}
+.v22-lot-nav{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  gap:9px 12px;padding:10px 18px 14px;background:#112d40;
+  border-top:1px solid #365b70;
+}
+.v22-lot-nav label{font-size:.76rem;font-weight:760;color:#d8e9ef}
+.v22-lot-nav select{
+  min-width:166px;min-height:44px;max-width:100%;padding:9px 12px;
+  border:1px solid #65859a;border-radius:9px;background:#0d2a3c;
+  color:#f5e1b5;font-size:.87rem;font-weight:740;
+}
+.v22-lot-nav select:focus-visible{outline:3px solid #ffe1a1;outline-offset:2px}
+.map-legend{display:flex;flex-wrap:wrap;gap:6px 13px;align-items:center;padding-bottom:12px}
+.map-legend span{white-space:nowrap}
+@media(max-width:800px){
+ .map-canvas{min-height:235px}
+ .map-canvas svg.v22-city-svg{min-height:0;max-height:none}
+ .v22-lot-nav{padding:10px 12px 13px}
+ .v22-lot-nav select{flex:1;min-width:128px}
+}
+@media(max-width:430px){
+ .map-canvas{min-height:210px}
+ .map-canvas svg.v22-city-svg{min-height:0}
+ .map-legend{padding:10px 12px;gap:7px 10px;font-size:.7rem}
+ .v22-lot-nav{gap:6px;padding-top:10px}
+ .v22-lot-nav label{font-size:.74rem}
+}
+@media(prefers-reduced-motion:reduce){
+ .v22-city-svg .v22-lot .v22-tile-outline{transition:none}
+}
+
   </style>
 </head>
 <body>
@@ -535,7 +606,7 @@ body {background:var(--v2-void);background-image:radial-gradient(ellipse at 70% 
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◈ Gestão empresarial</span><span>◈ 30 cidades brasileiras</span><span>◈ Jogue offline</span></div>
       <p class="v21-art-disclaimer">Arte promocional conceitual · As cidades e os lotes do jogo são representações fictícias.</p>
-      <p class="fine-print"><span id="intro-version">v2.1.0-rc.1</span> — simulador empresarial offline. Dados oficiais e estimativas fictícias identificados.</p>
+      <p class="fine-print"><span id="intro-version">v2.2.0-rc.1</span> — simulador empresarial offline. Dados oficiais e estimativas fictícias identificados.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -583,7 +654,7 @@ body {background:var(--v2-void);background-image:radial-gradient(ellipse at 70% 
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
       <details class="world-warning legal-warning v21-legal-note"><summary>ⓘ SIMULAÇÃO EDUCATIVA <span>Dados econômicos simulados e tributos não oficiais · ver limites</span></summary><p>Indicadores econômicos do jogo são fictícios, salvo população e PIB identificados como oficiais. Cenários tributários não são apuração legal. Regras sem cobertura não representam isenção nem imposto zero.</p></details>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v2.1.0-rc.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v2.2.0-rc.1</span></div>
         <section id="stats-bar" class="stats-bar v21-hud" aria-label="Indicadores financeiros e operacionais do grupo">
           <div class="stat stat--cash"><span><i class="v21-stat-icon" aria-hidden="true">◇</i> CAIXA DO GRUPO</span><strong id="kpi-cash">—</strong><small>Saldo disponível · não é receita</small></div>
           <div class="stat stat--revenue"><span><i class="v21-stat-icon" aria-hidden="true">↗</i> RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Vendas realizadas · toda a carreira</small></div>
@@ -595,9 +666,10 @@ body {background:var(--v2-void);background-image:radial-gradient(ellipse at 70% 
           <div class="city-stage-intro"><div><span class="stage-eyebrow">UM MUNDO DE NEGÓCIOS</span><strong>Seu próximo movimento começa na cidade.</strong></div><span class="stage-live"><span aria-hidden="true">●</span> SIMULAÇÃO LOCAL</span></div>
           <div class="dashboard-grid city-stage">
             <article class="panel map-panel"><div class="panel-heading"><div><div class="overline">MAPA URBANO · ESTILIZADO</div><h3 id="map-title">Seu distrito comercial</h3></div><span class="tag-soft" id="map-uf">CE</span></div>
-              <div class="world-map-notice">CLIQUE EM UM EDIFÍCIO PARA INSPECIONAR UM LOTE</div>
+              <div class="world-map-notice">SELECIONE UM LOTE NO MAPA OU USE O SELETOR</div>
               <div id="map-canvas" class="map-canvas" role="group" aria-label="Mapa ilustrativo clicável com 18 lotes"></div>
               <div class="map-legend"><span><i class="legend-color lot"></i> Lote disponível</span><span><i class="legend-color own"></i> Sua empresa</span><span><i class="legend-color sel"></i> Selecionado</span></div>
+              <div class="v22-lot-nav"><label for="map-lot-picker">Escolher lote</label><select id="map-lot-picker" aria-label="Ir diretamente para um dos 18 lotes"><option value="1">Lote 01</option><option value="2">Lote 02</option><option value="3">Lote 03</option><option value="4">Lote 04</option><option value="5">Lote 05</option><option value="6">Lote 06</option><option value="7">Lote 07</option><option value="8">Lote 08</option><option value="9">Lote 09</option><option value="10">Lote 10</option><option value="11">Lote 11</option><option value="12">Lote 12</option><option value="13">Lote 13</option><option value="14">Lote 14</option><option value="15">Lote 15</option><option value="16">Lote 16</option><option value="17">Lote 17</option><option value="18">Lote 18</option></select></div>
               <p class="map-disclaimer">Mapa fictício para jogabilidade. Não representa ruas, lotes ou imóveis reais.</p>
             </article>
             <div class="right-column"><article class="panel v21-inspector"><div class="panel-heading"><div><div class="overline">INSPEÇÃO DO DISTRITO</div><h3>Seu terreno selecionado</h3></div><span class="tag-soft">COMERCIAL</span></div><div class="big-number" id="selected-lot">Lote 01</div><p class="lot-status" id="map-lot-status">Escolha um lote no mapa.</p><button class="btn btn-primary full" id="map-open-company" type="button">Abrir unidade neste lote</button><details class="v21-inspector-help"><summary>Como funcionam os lotes?</summary><p class="muted">Selecione um lote no mapa para abrir uma unidade ou gerenciar uma já existente. O grupo pode ter até cinco estabelecimentos em diferentes cidades; cada lote comporta uma unidade.</p></details></article>
@@ -759,16 +831,16 @@ body {background:var(--v2-void);background-image:radial-gradient(ellipse at 70% 
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v2.1.0-rc.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v2.2.0-rc.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>
   <div class="toast" id="toast" aria-live="polite" role="status"></div>
   <script>
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.1.0-rc.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.2.0-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '2.1.0-rc.1';
+  const VERSION = '2.2.0-rc.1';
   const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -1791,51 +1863,143 @@ const CidadeCore = (() => {
   return API;
 })();
 
-/* CENA URBANA V2 — apresentação SVG, sem acesso ao estado ou RNG do jogo. */
+/* CIDADE DOS NEGÓCIOS V2.2 — cena SVG isométrica, estritamente visual.
+   Só consome city, ownedLots e lot; sem estado mutável, RNG, rede ou regras do jogo.
+   Edifícios decorativos e atlas neutro NÃO representam atividades econômicas novas. */
 const CidadeVisual=(()=>{
   'use strict';
   const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  function svgMap(city,ownedLots,lot){
-    // SVG estilizado original: cada grupo tem identificação de lote, sem dependências externas.
-    const seed=city.name.length+city.id.length;
-    const urbanSize={local:0,regional:1,grande:2,metropole:3}[city.sizeTier]??0;
-    const fragments=[`<svg viewBox="180 10 600 360" xmlns="http://www.w3.org/2000/svg" aria-label="Mapa isométrico fictício de ${escape(city.name)}">`,
-      `<defs><linearGradient id="sea" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#1e5270"/><stop offset="1" stop-color="#0b2639"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="4"/></filter></defs>`,
-      `<path d="M0 325 Q180 310 280 370 T800 340 L870 410H0Z" fill="#16516e" opacity=".42"/>`,
-      `<path d="M145 155 L436 19 L813 196 L519 366Z" fill="#102d3b" opacity=".9"/>`];
-    // Horizonte ilustrativo: escala visual relativa, sem geografia ou números oficiais.
-    for(let i=0;i<3+urbanSize*5;i++){
-      const cx=210+i*26, h=16+((i*19+seed)%24)+urbanSize*9;
-      fragments.push(`<rect x="${cx}" y="${125-h}" width="13" height="${h}" rx="2" fill="#6da0a9" opacity=".24" pointer-events="none"/>`);
-    }
-    for(let row=0;row<3;row++)for(let col=0;col<6;col++){
-      const num=row*6+col+1,x=392+(col-row)*57,y=91+(col+row)*26;
-      const isOwn=ownedLots.includes(num),isSelected=lot===num;
-      const ground=isOwn?'#9e8144':isSelected?'#3f8bb2':'#42665f';
-      const roofs=['#487d8c','#316275','#607387','#597c80','#425a6b'];
-      const roof=isOwn?'#e8b55f':roofs[(num+seed)%roofs.length];
-      const height=isOwn?42:14+((num*7+seed)%4)*9+urbanSize*7;
-      const xx=x,yy=y,wide=49,tall=23;
-      fragments.push(`<g data-lot="${num}" tabindex="0" role="button" aria-label="Selecionar lote ${num}"><title>Lote ${String(num).padStart(2,'0')} · clique para selecionar</title>`);
-      if(isSelected)fragments.push(`<ellipse cx="${xx}" cy="${yy+12}" rx="65" ry="37" fill="#6dc9ff" opacity=".16" filter="url(#glow)"/>`);
-      fragments.push(`<polygon points="${xx},${yy-tall} ${xx+wide},${yy} ${xx},${yy+tall} ${xx-wide},${yy}" fill="${ground}" stroke="${isSelected?'#9bdbff':'#416773'}" stroke-width="${isSelected?3:1.7}"/>`);
-      if((urbanSize>=2?num%11===0:num%5===0)&&!isOwn){
-        fragments.push(`<path d="M${xx-7} ${yy+5}l-6-18h12l-6 18" fill="#42745c" stroke="#8fc09c" stroke-width="2"/><circle cx="${xx-6}" cy="${yy-10}" r="11" fill="#2d8d66"/><circle cx="${xx+7}" cy="${yy-12}" r="9" fill="#419672"/>`);
-      }else{
-        const cx=xx,cy=yy-3;
-        fragments.push(`<polygon points="${cx-17},${cy-height} ${cx},${cy-height-8} ${cx+19},${cy-height} ${cx+2},${cy-height+10}" fill="${roof}" stroke="#9cc1cb" stroke-width=".7"/>`);
-        fragments.push(`<polygon points="${cx-17},${cy-height} ${cx+2},${cy-height+10} ${cx+2},${cy+13} ${cx-17},${cy+2}" fill="${isOwn?'#bb873c':'#345569'}"/>`);
-        fragments.push(`<polygon points="${cx+2},${cy-height+10} ${cx+19},${cy-height} ${cx+19},${cy+2} ${cx+2},${cy+13}" fill="${isOwn?'#e2a450':'#27485e'}"/>`);
-        fragments.push(`<path d="M${cx-10} ${cy-height+14}v5 M${cx-3} ${cy-height+18}v5 M${cx+8} ${cy-height+17}v6" stroke="${isOwn?'#f7d99e':'#7ba9bf'}" stroke-width="2"/>`);
+  const tiers=Object.freeze({local:0,regional:1,grande:2,metropole:3});
+  const roofs=Object.freeze(['#4b8295','#648d9b','#65808f','#587f79','#6f8295']);
+  // Identidade gráfica estável por cidade, sem consumir RNG nem criar dado econômico.
+  function cityHash(value){
+    let h=2166136261;
+    for(const c of String(value)){h=Math.imul(h^c.codePointAt(0),16777619);}
+    return h>>>0;
+  }
+  // Atlas geométrico ilustrativo: comércio genérico, esquina, escritório baixo,
+  // galpão neutro e construção urbana. Nenhuma forma confere funcionalidade.
+  function building(x,y,kind,owned,scale=1){
+    const h=[29,40,49,25,35][kind];
+    const w=[20,19,17,25,20][kind];
+    const roof=owned?'#edbd68':roofs[kind];
+    const face=owned?'#c28a44':'#355f73';
+    const shade=owned?'#a76a34':'#254659';
+    const glass=owned?'#ffe3a6':'#a5d3df';
+    const parts=[
+      '<g class="v22-building" aria-hidden="true" pointer-events="'+(owned?'visiblePainted':'none')+'" transform="translate('+x+' '+y+') scale('+scale+')">',
+      '<ellipse cx="2" cy="5" rx="'+(w+8)+'" ry="10" fill="#081927" opacity=".35"/>',
+      '<polygon points="'+(-w)+','+(-h)+' 0,'+(-h-10)+' '+(w+2)+','+(-h)+' 2,'+(-h+11)+'" fill="'+roof+'" stroke="#a9c6c9" stroke-width="1.1"/>',
+      '<polygon points="'+(-w)+','+(-h)+' 2,'+(-h+11)+' 2,11 '+(-w)+',1" fill="'+face+'"/>',
+      '<polygon points="2,'+(-h+11)+' '+(w+2)+','+(-h)+' '+(w+2)+',1 2,11" fill="'+shade+'"/>',
+      '<path d="M'+(-w)+' 1L2 11L'+(w+2)+' 1" fill="none" stroke="#1a3444" stroke-width="1.5"/>'
+    ];
+    if(kind===0||kind===3){
+      parts.push('<polygon points="'+(-w-2)+',-15 1,-4 '+(w+4)+',-15 1,-24" fill="'+(owned?'#ffe0a2':'#70b7c2')+'" opacity=".88"/>');
+      parts.push('<path d="M'+(-w+5)+' -13v9M'+(-w+12)+' -10v10" stroke="'+glass+'" stroke-width="2.6"/>');
+      parts.push('<path d="M7 -13v10M15 -16v10" stroke="'+glass+'" stroke-width="2.6"/>');
+    }else{
+      for(let row=0;row<Math.min(3,Math.floor(h/13));row++){
+        const cy=-h+15+row*12;
+        parts.push('<path d="M'+(-w+6)+' '+cy+'v5m8 -9v6M9 '+(cy+2)+'v5M16 '+(cy-2)+'v5" stroke="'+glass+'" stroke-width="2.9" opacity=".85"/>');
       }
-      fragments.push(`</g>`);
+      parts.push('<path d="M-8 -5v9M12 -7v9" stroke="'+glass+'" stroke-width="3"/>');
     }
-    const r=Math.floor((lot-1)/6),c=(lot-1)%6;
-    const px=392+(c-r)*57,py=91+(c+r)*26;
-    // Destaque sobreposto por último: lote legível sem 18 números concorrendo no mapa.
-    fragments.push(`<g class="selected-lot-marker" pointer-events="none" aria-hidden="true"><path d="M${px} ${py-4}L${px} ${py-39}" stroke="#f4d49a" stroke-width="2"/><rect x="${px-55}" y="${py-69}" width="110" height="30" rx="8" fill="#0c2238" stroke="#f4d49a" stroke-width="1.6"/><text x="${px}" y="${py-49}" fill="#ffe1a1" text-anchor="middle" font-size="14" font-weight="800">LOTE ${String(lot).padStart(2,'0')}</text></g>`);
-    fragments.push(`<text x="208" y="40" fill="#9fbfd2" font-size="15" font-weight="700" letter-spacing="3">${escape(city.name.toUpperCase())} · ${escape(city.uf)}</text><text x="208" y="60" fill="#7eabc0" font-size="10">DISTRITO COMERCIAL FICTÍCIO · PORTE ${escape(city.sizeTier.toUpperCase())}</text></svg>`);
-    return fragments.join('');
+    if(owned)parts.push('<path d="M'+(-w+2)+' '+(-h+6)+'v'+(h-8)+'" stroke="#ffe7b3" stroke-width="2.3" opacity=".88"/><circle cx="0" cy="'+(-h-15)+'" r="3.8" fill="#ffda85"/>');
+    parts.push('</g>');
+    return parts.join('');
+  }
+  function tree(x,y,scale=1){
+    return '<g class="v22-tree" aria-hidden="true" pointer-events="none" transform="translate('+x+' '+y+') scale('+scale+')">'+
+      '<ellipse cx="3" cy="5" rx="11" ry="4" fill="#102636" opacity=".55"/>'+
+      '<path d="M0 -3v-17" stroke="#8c7652" stroke-width="3"/>'+
+      '<circle cx="-6" cy="-19" r="9" fill="#296e65"/>'+
+      '<circle cx="5" cy="-23" r="11" fill="#3a8c77"/>'+
+      '<circle cx="9" cy="-15" r="8" fill="#246b61"/>'+
+      '</g>';
+  }
+  function svgMap(city,ownedLots,lot){
+    const name=String(city?.name??'Cidade'),uf=String(city?.uf??'');
+    const tierName=String(city?.sizeTier??'local');
+    const tier=tiers[tierName]??0;
+    const seed=cityHash(city?.id??name);
+    const owned=new Set(Array.isArray(ownedLots)?ownedLots:[]);
+    const chosen=Number.isInteger(lot)&&lot>=1&&lot<=18?lot:null;
+    const parts=[
+      '<svg class="v22-city-svg" viewBox="180 0 640 405" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Distrito comercial isométrico fictício de '+escape(name)+' com 18 lotes">',
+      '<defs>',
+      '<linearGradient id="v22-sky" x1="0" y1="0" x2=".7" y2="1"><stop stop-color="#1c516a"/><stop offset=".55" stop-color="#153d54"/><stop offset="1" stop-color="#0c273b"/></linearGradient>',
+      '<linearGradient id="v22-platform" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#406a70"/><stop offset="1" stop-color="#203e4b"/></linearGradient>',
+      '<pattern id="v22-road-dash" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M1 7H9" stroke="#b2bac0" stroke-width="1" opacity=".26"/></pattern>',
+      '</defs>',
+      '<rect x="180" y="0" width="640" height="405" fill="url(#v22-sky)"/>',
+      '<path d="M180 112Q260 76 369 112T650 108T830 105V0H180Z" fill="#33817f" opacity=".12"/>',
+      '<path d="M180 186Q293 135 398 176T820 155V405H180Z" fill="#0b2838" opacity=".42"/>',
+      '<g class="v22-scenery" aria-hidden="true" pointer-events="none">',
+      '<path d="M206 181L432 64L793 225L520 391Z" fill="#0a1f31" opacity=".65"/>',
+      '<path d="M215 173L438 71L780 230L516 375Z" fill="url(#v22-platform)" stroke="#557e89" stroke-width="3"/>',
+      '<path d="M218 182L435 78L766 232L515 363" fill="none" stroke="#749599" stroke-width="3" opacity=".4"/>',
+      '<path d="M245 187L439 94L754 232L514 350" fill="none" stroke="#162f40" stroke-width="30" stroke-linejoin="round" opacity=".68"/>',
+      '<path d="M245 187L439 94L754 232L514 350" fill="none" stroke="#d0b883" stroke-width="1.1" stroke-dasharray="6 17" opacity=".5"/>',
+      '<path d="M292 148L641 303M362 112L714 265" fill="none" stroke="#7a9b95" stroke-width="2" opacity=".2"/>',
+      '</g>',
+      '<g class="v22-ambient-skyline" aria-hidden="true" pointer-events="none">'
+    ];
+    // Densidade decorativa de 4–13 imóveis neutros, conforme porte já existente.
+    const count=4+tier*3;
+    for(let i=0;i<count;i++){
+      const x=230+i*(535/(count-1));
+      const y=104+((seed>>>((i%4)*5))%19);
+      const kind=(i+seed)%5;
+      parts.push(building(Math.round(x),y,kind,false,.54+(.07*(i%3))));
+    }
+    parts.push('</g><g class="v22-street-details" aria-hidden="true" pointer-events="none">');
+    // Vegetação, calçamento e mobiliário não são lotes nem agentes econômicos.
+    for(let i=0;i<5+tier;i++){
+      const x=220+i*109+(seed%17),y=191+i*21;
+      parts.push(tree(x,y,.48+(i%3)*.12));
+    }
+    for(let i=0;i<4;i++)parts.push(tree(754+i*12,181+i*34,.44));
+    parts.push('<path d="M210 214L484 378M706 194L768 226" stroke="#a3c4bf" stroke-width="1.7" stroke-dasharray="3 10" opacity=".34"/>');
+    parts.push('</g><g class="v22-lot-layer">');
+    // Mantém grade canônica V2.0: 3 linhas × 6 colunas e números 1–18.
+    for(let row=0;row<3;row++)for(let col=0;col<6;col++){
+      const n=row*6+col+1,x=392+(col-row)*57,y=100+(col+row)*27;
+      const isOwned=owned.has(n),isSelected=chosen===n;
+      const kind=(seed+n*13)%5;
+      const label='Lote '+n+(isOwned?', sua empresa':', disponível')+(isSelected?', selecionado':'');
+      const status=isOwned?'is-owned':'is-available';
+      parts.push('<g class="v22-lot '+status+(isSelected?' is-selected':'')+'" data-lot="'+n+'" data-owned="'+isOwned+'" tabindex="0" role="button" aria-pressed="'+isSelected+'" aria-label="'+escape(label)+'">');
+      parts.push('<title>'+escape(label)+'</title>');
+      if(isSelected)parts.push('<ellipse class="v22-selection-halo" cx="'+x+'" cy="'+(y+10)+'" rx="52" ry="30" fill="#66c5ed" opacity=".22" pointer-events="none"/>');
+      parts.push('<polygon class="v22-tile-shadow" points="'+x+','+(y-19)+' '+(x+42)+','+y+' '+x+','+(y+21)+' '+(x-42)+','+y+'" fill="#081e2b" opacity=".58"/>');
+      parts.push('<polygon class="v22-tile-outline" points="'+x+','+(y-25)+' '+(x+45)+','+y+' '+x+','+(y+25)+' '+(x-45)+','+y+'" fill="'+(isOwned?'#6b5940':'#2c565c')+'" stroke="'+(isSelected?'#a8e8ff':isOwned?'#e7b969':'#709c9d')+'" stroke-width="'+(isSelected?3.8:2)+'"/>');
+      parts.push('<polygon class="v22-plot" points="'+x+','+(y-20)+' '+(x+34)+','+y+' '+x+','+(y+20)+' '+(x-34)+','+y+'" fill="'+(isOwned?'#9b7848':'#476d70')+'" stroke="'+(isOwned?'#f5ce7b':'#8ea9a1')+'" stroke-width="1.3"/>');
+      if(isOwned)parts.push(building(x,y-1,kind,true,1));
+      else{
+        // A laje vazia informa lote disponível; edifícios de fundo são externos ao jogo.
+        parts.push('<path d="M'+(x-19)+' '+y+'l19 -10l19 10l-19 10Z" fill="#7da3a0" opacity=".23" pointer-events="none"/>');
+        parts.push('<path d="M'+(x-14)+' '+(y+3)+'l14 -7l14 7" fill="none" stroke="#bedad3" stroke-dasharray="3 4" opacity=".6" pointer-events="none"/>');
+      }
+      parts.push('<rect x="'+(x-11)+'" y="'+(y+10)+'" width="22" height="12" rx="5" fill="'+(isOwned?'#241f19':'#183444')+'" stroke="'+(isOwned?'#ffdda0':'#8bb8bb')+'" stroke-width="1"/>');
+      parts.push('<text x="'+x+'" y="'+(y+19)+'" text-anchor="middle" fill="'+(isOwned?'#ffe6b1':'#d2e9ea')+'" font-size="9" font-weight="800" pointer-events="none">'+String(n).padStart(2,'0')+'</text>');
+      // Hit-area estável por lote: maior que o terreno, mas nunca bloqueia o restante da cidade.
+      parts.push('<polygon class="v22-hit" points="'+x+','+(y-24)+' '+(x+43)+','+y+' '+x+','+(y+24)+' '+(x-43)+','+y+'" fill="transparent" pointer-events="all"/>');
+      parts.push('</g>');
+    }
+    parts.push('</g>');
+    parts.push('<g class="v22-overlay" aria-hidden="true" pointer-events="none">');
+    parts.push('<rect x="193" y="14" width="304" height="47" rx="8" fill="#071a2a" fill-opacity=".87" stroke="#5b8992" stroke-opacity=".48"/>');
+    parts.push('<text x="207" y="32" fill="#f7dfb0" font-size="15" font-weight="800" letter-spacing="1">'+escape(name.toUpperCase())+' · '+escape(uf)+'</text>');
+    parts.push('<text x="207" y="49" fill="#a6ccd5" font-size="10" letter-spacing=".8">DISTRITO ILUSTRATIVO · PORTE '+escape(tierName.toUpperCase())+'</text>');
+    if(chosen!==null){
+      const selectedOwned=owned.has(chosen);
+      parts.push('<rect x="193" y="351" width="253" height="37" rx="8" fill="#091e30" stroke="#e2b568" stroke-width="1.7"/>');
+      parts.push('<circle cx="213" cy="369" r="5" fill="'+(selectedOwned?'#efbb69':'#70c6d8')+'"/>');
+      parts.push('<text x="227" y="373" fill="#f5e4c2" font-size="12" font-weight="750">LOTE '+String(chosen).padStart(2,'0')+' · '+(selectedOwned?'SUA EMPRESA':'DISPONÍVEL')+'</text>');
+    }
+    parts.push('</g></svg>');
+    return parts.join('');
   }
   return Object.freeze({svgMap});
 })();
@@ -2204,6 +2368,7 @@ const CidadeVisual=(()=>{
     setText('other-city-warning','Cidade sem unidade da sua rede. Você pode inaugurar uma unidade num lote disponível.');
     setText('map-title',`Distrito comercial de ${visibleCity.name}`);setText('map-uf',visibleCity.uf);
     $('map-canvas').innerHTML=CidadeVisual.svgMap(visibleCity,units.filter(x=>x.cityId===visibleCity.id).map(x=>x.lot),selectedLot);
+    $('map-lot-picker').value=String(selectedLot);
     renderRegional(visibleCity);
     setText('selected-lot',`Lote ${String(selectedLot).padStart(2,'0')} de 18`);updateOpenPreview();
     const lotOwner=units.find(x=>x.cityId===visibleCity.id&&x.lot===selectedLot);
@@ -2283,7 +2448,8 @@ const CidadeVisual=(()=>{
     $('unit-rows').addEventListener('click',e=>{const btn=e.target.closest('[data-unit-activate]');if(btn)commit('EMPRESA.ATIVAR',{businessId:btn.dataset.unitActivate});});
     $('explore-city').addEventListener('change',e=>{viewCityId=e.target.value;render();updateOpenPreview();});
     $('map-canvas').addEventListener('click',e=>{const target=e.target.closest('[data-lot]');if(target){selectedLot=Number(target.dataset.lot);render();updateOpenPreview();}});
-    $('map-canvas').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const target=e.target.closest('[data-lot]');if(target){e.preventDefault();selectedLot=Number(target.dataset.lot);render();}}});
+    $('map-canvas').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const target=e.target.closest('[data-lot]');if(target){e.preventDefault();selectedLot=Number(target.dataset.lot);render();$('map-canvas').querySelector(`[data-lot="${selectedLot}"]`)?.focus();}}});
+  $('map-lot-picker').addEventListener('change',e=>{const next=Number(e.target.value);if(Number.isInteger(next)&&next>=1&&next<=18){selectedLot=next;render();$('map-lot-picker').focus();}});
     $('map-open-company').addEventListener('click',()=>{const owner=Core.businesses(state).find(x=>x.cityId===viewCityId&&x.lot===selectedLot);if(owner&&business()?.id!==owner.id)commit('EMPRESA.ATIVAR',{businessId:owner.id});goto('empresa');if(!owner)$('sector-select').focus();});
     $('sector-select').addEventListener('change',updateOpenPreview);
     $('open-form').addEventListener('submit',e=>{e.preventDefault();if(!state)return;if(commit('EMPRESA.ABRIR',{sector:$('sector-select').value,cityId:viewCityId,lot:selectedLot}))goto('cidade');});

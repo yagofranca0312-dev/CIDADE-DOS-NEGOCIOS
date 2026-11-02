@@ -9,3 +9,23 @@
 .price-tile.yours strong{color:#f4d49a}
 .price-change-feedback{margin:12px 0 5px;min-height:1.3em;font-size:.81rem;font-weight:650;color:#a8e0c7}
 @media(max-width:480px){.price-compare{grid-template-columns:1fr}}
+
+/* Patch V1.1 — ações assistidas e relatórios contábeis por período. */
+.buy-presets{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin-top:11px}
+.buy-presets span{font-size:.74rem;color:var(--muted);margin-right:4px}
+.buy-presets .btn{padding:8px 10px;min-height:36px;font-size:.75rem}
+.history-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:26px;padding-top:17px;border-top:1px solid var(--stroke)}
+.history-title h3{margin:0}
+.price-history{max-height:260px;overflow-y:auto;margin-top:12px}
+.price-history-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #28445b;font-size:.82rem}
+.price-history-row:last-child{border-bottom:0}
+.price-history-row small{color:var(--muted);font-variant-numeric:tabular-nums}
+.price-history-row strong{font-variant-numeric:tabular-nums;color:#f4d49a;text-align:right}
+.finance-filters{margin-bottom:16px}
+.filter-fields{display:grid;grid-template-columns:minmax(170px,1fr) minmax(170px,1fr);gap:15px}
+.finance-filters label{margin-top:0}
+.finance-filters .field-hint{margin:13px 0 0}
+.cmv-note{border:1px solid #37536b;border-radius:10px;padding:14px;margin:17px 0;background:#102e45}
+.cmv-note>strong{display:block;color:#f4d49a;font-size:.84rem;margin-bottom:5px}
+.cmv-note p{margin:0;color:#bdcfdd;font-size:.78rem}
+@media(max-width:540px){.filter-fields{grid-template-columns:1fr}.price-history-row{align-items:start;flex-direction:column;gap:3px}.price-history-row strong{text-align:left}}

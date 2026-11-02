@@ -71,3 +71,18 @@ O número exato de sessões depende da validação da direção artística, não
 ## 6. Estado de realização a preencher com evidência
 
 Planejamento aprovado pelo pedido do titular em 02/11/2026. A implementação do **piloto somente Tianguá** pode começar na branch; CI e testes visuais devem ser registrados depois de sua execução. Sem aceite visual, **não propagar para outras cidades**.
+
+## 7. Evidências de execução do piloto — 02/11/2026
+
+- Branch `feature/v2.2.1-piloto-tiangua` criada a partir da V2.2 atual. **Nenhum merge em `main`**.
+- PR **#16, em RASCUNHO**, para inspeção e comparação: https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/pull/16.
+- `src/visual/city-scene.js`: alteração condicionada ao ID `CE-TIANGUA`. Cenário de fachadas, praças/quadras ilustrativas, calçadas, vegetação e postes, tudo decorativo atrás dos lotes.
+- `src/shell/v22.css`: seletores do piloto isolados na classe `v221-pilot-tiangua`.
+- Fixture de regressão V2.2 original: `tests/fixtures/city-scene_v22.js`. Novo teste: `tests/visual_v221_tiangua.test.mjs`, com controle byte a byte das 29 outras cidades em múltiplas combinações de posse/seleção, 18 lotes e determinismo.
+- `index.html` único offline recompilado na branch.
+- **GitHub Actions CI PASS**, execução [41492866936](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/41492866936): **182/182 testes PASS**, 0 FAIL, `npm run check`, reconstrução de HTML idêntica ao commit e SHA-256 conferido.
+- HTML gerado com **400.027 bytes** e SHA-256 `f6fa6171b94fdf61145fddd843e4d9162097b1d19c6fe0ee54d00f4b1fb90bb6`.
+- **PENDENTES**: capturas visuais/QA no navegador, validação de toque e foco em dispositivo real, Windows `file://`, persistência após reiniciar, revisão subjetiva do mapa de Tianguá pelo titular e decisão de aceitação da direção de arte.
+- **Versão runtime ainda é `2.2.0-rc.1` na branch do piloto**, intencionalmente. Só será mudada para `2.2.1-rc.1` após aprovação do padrão e quando o lote das demais cidades for implementado e testado.
+
+**Critério para a próxima sessão:** Yago avalia o mapa de Tianguá no piloto e descreve os ajustes visuais prioritários. Não executar propagação antes desse aceite.

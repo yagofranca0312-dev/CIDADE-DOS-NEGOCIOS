@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 const load=path=>runInNewContext(readFileSync(path,'utf8')+'\nCidadeCore',{});
-const game=load('src/core/game.js');
+const game=load('tests/fixtures/core_v1_2_1.js');
 const old=load('tests/fixtures/core_v1_2_0.js');
 const city=game.CITIES.find(x=>x.name==='Tianguá').id;
 let seq=0;

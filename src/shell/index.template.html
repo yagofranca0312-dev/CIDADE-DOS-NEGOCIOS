@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10243E">
   <meta name="description" content="Cidade dos Negócios 1, simulador empresarial brasileiro offline, em um único HTML.">
-  <title>Cidade dos Negócios 1 — Simulação empresarial</title>
+  <title>Cidade dos Negócios 1 · v1.7.0-rc.1</title>
   <style>
 /* CDN_CSS */
   </style>
@@ -20,7 +20,7 @@
       <p class="hero-subtitle">Uma cidade. Uma empresa. Mil decisões.</p>
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◆ Economia simulada</span><span>◆ 30 cidades</span><span>◆ Offline</span></div>
-      <p class="fine-print">V1.4.0-rc.1 — prévia jogável. Parâmetros econômicos fictícios e legislação tributária ainda não implementada.</p>
+      <p class="fine-print"><span id="intro-version">v1.7.0-rc.1</span> — prévia jogável. Dados oficiais identificados; mercado e legislação tributária simulados ou não cobertos.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -68,7 +68,7 @@
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
       <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Tributação legal não calculada nesta versão.</div>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.6.0-rc.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v1.7.0-rc.1</span></div>
         <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
           <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
           <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
@@ -86,7 +86,12 @@
               <article class="panel regional-panel" aria-labelledby="regional-title"><div class="panel-heading"><div><div class="overline">IBGE E SIMULAÇÃO</div><h3 id="regional-title">Observatório econômico</h3></div><span class="tag-soft">OFFLINE</span></div>
                 <div class="regional-hero"><small>POPULAÇÃO ESTIMADA · IBGE 2026</small><strong id="regional-population">—</strong><span>Referência: <b id="regional-date">—</b> · código IBGE <b id="regional-code">—</b></span></div>
                 <div class="regional-indicators"><div><small>Perfil urbano do jogo</small><strong id="regional-urban-size">—</strong></div><div><small>Fator de demanda simulado</small><strong id="regional-demand-factor">—</strong></div><div><small>Referência concorrencial simulada</small><strong id="regional-competition-factor">—</strong></div></div>
-                <dl class="regional-sources"><dt>PIB municipal</dt><dd id="regional-gdp">—</dd><dt>Hierarquia urbana REGIC</dt><dd id="regional-regic">—</dd></dl>
+                <dl class="regional-sources"><dt>PIB municipal 2023 · R$ correntes</dt><dd id="regional-gdp">—</dd>
+                  <dt>Impacto do PIB no jogo</dt><dd id="regional-gdp-effect">—</dd>
+                  <dt>Hierarquia urbana REGIC</dt><dd id="regional-regic">—</dd></dl>
+                <a id="regional-gdp-source" class="regional-source-link" href="https://apisidra.ibge.gov.br/values/t/5938/n6/2313401/v/37/p/2023" target="_blank" rel="noopener noreferrer">Consultar PIB municipal no SIDRA IBGE ↗</a>
+                <div class="regional-compare-box"><label for="regional-compare-city">Comparar fator regional simulado com</label><select id="regional-compare-city" aria-label="Cidade para comparar potencial econômico"></select>
+                  <p id="regional-compare-result" class="field-hint">Selecione outra cidade para comparação.</p></div>
                 <p id="regional-model-status" class="regional-caution">Indicadores reais e parâmetros simulados identificados separadamente.</p>
                 <a id="regional-source" class="regional-source-link" target="_blank" rel="noopener noreferrer" href="https://ftp.ibge.gov.br/Estimativas_de_Populacao/Estimativas_2026/POP2026_20261029.pdf">Fonte oficial: estimativas de população IBGE 2026 ↗</a>
               </article>
@@ -203,7 +208,7 @@
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.5.0-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v1.7.0-rc.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>

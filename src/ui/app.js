@@ -246,9 +246,16 @@
     setText('regional-urban-size',p.tierLabel);
     setText('regional-demand-factor',`${p.demandFactor}%`);
     setText('regional-competition-factor',`${p.competitionFactor}%`);
-    setText('regional-gdp','Não integrado (referência 2023)');
-    setText('regional-regic','Não integrado (referência 2018)');
-    setText('regional-model-status','Modelo simulado, baseado apenas no porte populacional. Não representa renda familiar, poder de compra nem competição real.');
+    setText('regional-gdp',`R$ ${new Intl.NumberFormat('pt-BR').format(p.gdp2023Thousand * 1000)} · IBGE 2023`);
+    setText('regional-regic','Classificação municipal não integrada · REGIC 2018');
+    setText('regional-gdp-effect',`${p.gdpAdjustment>0?'+':''}${p.gdpAdjustment} p.p. (hipótese)`);
+    setText('regional-model-status','População (2026) e PIB total (2023) oficiais. Ajuste comercial é uma regra fictícia limitada; não equivale a PIB per capita, renda das famílias ou fluxo intermunicipal.');
+    $('regional-gdp-source').href=p.gdpSource;
+    const comparisonCity=Core.cityById($('regional-compare-city').value);
+    if(comparisonCity){
+      const [a,b]=Core.regionalComparison([city.id,comparisonCity.id]);
+      setText('regional-compare-result',`${a.name}: índice ${a.simulatedDemandFactor}% · ${b.name}: índice ${b.simulatedDemandFactor}%. Comparação de fatores simulados, não previsão de faturamento.`);
+    }
     $('regional-source').href=p.source;
     $('map-canvas').dataset.urbanSize=p.tier;
   }
@@ -409,6 +416,7 @@
       else {q.to=current;}
       renderFinances();
     });
+    $('regional-compare-city').addEventListener('change',()=>renderRegional(Core.cityById(viewCityId)||Core.CITIES[0]));
     $('buy-form').addEventListener('submit',e=>{e.preventDefault();commit('ESTOQUE.COMPRAR',{productId:$('buy-product').value,supplierId:$('buy-supplier').value,quantity:Number($('buy-quantity').value)});});
     $('price-form').addEventListener('submit',e=>{e.preventDefault();const p=chooseProduct('price-product'),value=$('price-value').value,cents=Math.round(Number(value)*100),before=p?.priceCents;if(commit('PRECO.DEFINIR',{productId:p?.id,cents})){const after=business().products.find(x=>x.id===p.id).priceCents;const message=`Preço de ${p.name} atualizado: ${Core.money(before)} → ${Core.money(after)}.`;setText('price-change-feedback',message);notify(message);}});
     $('next-day').addEventListener('click',()=>commit('TEMPO.AVANCAR_DIA'));
@@ -425,6 +433,14 @@
   }
   function updateOpenPreview(){const s=Core.SECTORS[$('sector-select').value],city=Core.cityById(viewCityId);if(s)setText('open-preview',`Abertura em ${city?.name||'cidade selecionada'} · lote ${String(selectedLot).padStart(2,'0')} · investimento ${Core.money(s.openCost)} do caixa compartilhado · ramo: ${s.name}.`);}
   function start(){
+    // Fonte única de versão: nunca depender de textos desatualizados no rodapé ou no topo.
+    for(const id of ['intro-version','build-version','footer-version'])setText(id,`v${Core.VERSION}`);
+    document.title=`Cidade dos Negócios 1 · v${Core.VERSION}`;
+    const comparer=$('regional-compare-city');
+    comparer.replaceChildren(...Core.CITIES.slice().sort((a,b)=>a.name.localeCompare(b.name,'pt-BR')).map(c=>{
+      const o=document.createElement('option');o.value=c.id;o.textContent=`${c.name} · ${c.uf}`;return o;
+    }));
+    comparer.value=Core.CITIES.find(c=>c.name==='Sobral').id;
     cityOptions();bind();updateOpenPreview();
     try{const raw=localStorage.getItem(KEY);if(raw){const loaded=Core.importSave(raw);state=loaded.state;viewCityId=business()?.cityId||state.player.cityId;autosaveStatus='Cópia local verificada neste navegador; mantenha backup JSON externo.';}}
     catch(e){autosaveStatus='Não foi possível recuperar o salvamento local; importe backup JSON.';notify(autosaveStatus+' '+e.message,true);}

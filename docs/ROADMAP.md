@@ -109,3 +109,11 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - V2.1: marca, abertura, HUD, inspetor contextual e coesão entre telas; sem alterar motor V2.0, salvo `VERSION`.
 - Schema 9 preservado, 162 testes locais PASS, regressão e QA nas resoluções 320, 360, 390, 768, 1280 e 1920 px.
 - Homologação Windows e CI remota exigidas antes de marcar versão homologada. Ver `docs/V21_IMPLANTACAO.md`.
+
+## Estado 02/11/2026 — V2.1 HOMOLOGADA PELO TITULAR / V2.2 EM PLANEJAMENTO
+
+- **V2.1.0-rc.1:** homologada por autorização expressa de Yago em 02/11/2026. O código funcional aprovado corresponde ao merge commit `645467b0a87d037a049976a4d75e09c008894316`, preservado na branch `releases/v2.1.0-homologada`.
+- **Evidência disponível:** 162 testes locais PASS; workflow da PR #14 concluído com sucesso; testes de renderização e fluxos no navegador e schema 9 inalterado. **Não afirmar validação `file://` no Windows nem persistência após reinício como executadas**, pois continuam sem evidência nesta sessão.
+- **Natureza do aceite:** homologação expressa de produto pelo titular com pendência técnica conhecida; não altera a identificação de versão do executável nem representa testes extras.
+- **V2.2.0-rc.1 proposta:** [Mapa, Atlas de Edifícios e Ambientação Urbana](PLANO_V22_MAPA_ATLAS_AMBIENTACAO.md). P01–P06 planejadas, nenhuma implementada. A execução depende de nova ordem expressa do titular.
+- **Fronteira permanente:** V2.x só arte/visual/UX; V3.x novas mecânicas. Core econômico-fiscal, 30 cidades, 18 lotes, cinco unidades, saves schema 9, HTML offline e navegação V2.1 preservados.

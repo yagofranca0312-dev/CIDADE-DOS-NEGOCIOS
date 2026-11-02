@@ -1,5 +1,14 @@
 # Histórico de versões — Cidade dos Negócios
 
+## 1.6.0-rc.1 — economia regional (02/11/2026)
+
+- Inclusão verificada dos códigos IBGE e população estimada 2026 dos 30 municípios, com fonte, período e versão offline.
+- Modelagem fictícia de diferenças regionais: fator de demanda de 80% a 130%, elasticidade de preços e referência concorrencial por porte.
+- Observatório econômico separa indicador oficial de parâmetro simulado; PIB 2023 e REGIC 2018 aparecem explicitamente como não integrados.
+- Distritos isométricos com skyline, altura e densidade ilustrativos por faixa de porte, mantendo 18 lotes interativos.
+- Save schema 7; preservação de filiais, estoques, RNG, saldos, ledger, eventos e históricos existentes; mudança apenas na simulação futura.
+- V1.5 homologada no Windows; snapshot de recuperação preservado. V1.6 candidata aguardando homologação.
+
 ## 1.5.0-rc.1 — expansão empresarial (02/11/2026)
 
 - Até cinco estabelecimentos em cidades, setores e lotes distintos, com caixa compartilhado e operações separadas.

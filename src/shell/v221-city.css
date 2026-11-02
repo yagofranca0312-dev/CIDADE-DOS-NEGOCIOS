@@ -105,3 +105,20 @@ button.v221-hud-cell:hover{background:#1e4254}
  .v221-popover,.v221-city-pick{position:fixed;z-index:105;left:12px;top:120px;right:12px;width:auto}
 }
 @media(prefers-reduced-motion:reduce){.v221-city-svg *, .v221-city-mode *{transition:none!important;animation:none!important}}
+
+/* Hotfix de retorno ao protótipo aprovado: SVG sem sangramento externo. */
+.v221-city-mode .map-canvas svg.v221-city-svg{overflow:hidden!important;filter:none!important}
+.v221-city-svg .v221-lot .v221-selection-line{filter:none!important;stroke-linejoin:round}
+.v221-city-svg .v221-lot:hover .v221-lot-hit,.v221-city-svg .v221-lot:focus-visible .v221-lot-hit{stroke:transparent!important}
+.v221-city-svg .v221-original-building-sign{filter:drop-shadow(0 2px 2px #07192488)}
+
+/* A arte aprovada já contém o banner Tianguá. O botão invisível usa
+   a área desse banner para abrir o seletor, evitando texto duplicado. */
+.v221-city-mode.v221-tiangua-scene .map-panel>.v221-city-switch-trigger{
+  top:0!important;left:0!important;width:min(31%,465px)!important;height:96px!important;
+  padding:0!important;background:transparent!important;border:0!important;
+  box-shadow:none!important;border-radius:0!important;min-height:0!important
+}
+.v221-city-mode.v221-tiangua-scene .v221-city-switch-trigger>*{visibility:hidden!important}
+.v221-city-mode.v221-tiangua-scene .v221-city-switch-trigger:focus-visible{outline:3px solid #ffe19a!important;outline-offset:-3px}
+.v221-city-mode.v221-tiangua-scene .map-legend{display:none!important}

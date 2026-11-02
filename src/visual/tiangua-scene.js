@@ -67,7 +67,7 @@ const CidadeTianguaCena=(()=>{
       }
       // Hit area acompanha o terreno; nenhum brilho/render pode sair desse footprint.
       parts.push('<polygon class="v221-lot-hit" points="'+p+'" fill="transparent" stroke="none" pointer-events="fill"/>');
-      if(l.number===3)parts.push('<rect x="772" y="194" width="147" height="115" fill="transparent" pointer-events="all"/>');
+      if(l.number===3)parts.push('<rect x="758" y="149" width="170" height="163" fill="transparent" pointer-events="all"/>');
       const [x,y]=l.labelAnchor;
       parts.push('<rect x="'+(x-23)+'" y="'+(y-15)+'" width="46" height="30" rx="12" fill="'+(unit?'#6c4b12':'#082e32')+'" stroke="'+(selected?'#9eeaff':unit?'#f9c263':'#87a19c')+'" stroke-width="1.6" pointer-events="none"/>');
       parts.push('<text x="'+x+'" y="'+(y+7)+'" text-anchor="middle" font-family="system-ui,Segoe UI,Arial" font-size="18" font-weight="850" fill="#fff7e8" pointer-events="none">'+String(l.number).padStart(2,'0')+'</text>');

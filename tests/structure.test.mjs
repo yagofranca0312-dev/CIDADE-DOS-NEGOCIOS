@@ -17,7 +17,13 @@ test('Build reproduzível byte a byte',()=>{
  const uiBundle=readFileSync('src/ui/app.js','utf8').replace('/* CDN_MARKET_VIEWS */',readFileSync('src/ui/market-views.part.js','utf8')).replace('/* CDN_FINANCE_VIEWS */',readFileSync('src/ui/finance-views.part.js','utf8'));
  const art='data:image/webp;base64,'+readFileSync('src/visual/keyart-v21.webp.b64','utf8').trim();
  const v21css=readFileSync('src/shell/v21.css','utf8').replace('__CDN_V21_KEYART__',art);
- const expected=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21css).replace('/* CDN_V22_CSS */',readFileSync('src/shell/v22.css','utf8')).replace('/* CDN_CORE */',core).replace('/* CDN_VISUAL */',visual).replace('/* CDN_UI */',uiBundle);
+ const scene=readFileSync('src/visual/tiangua-scene.js','utf8')
+  .replace('__CDN_TIANGUA_LOTS_JSON__',JSON.stringify(JSON.parse(readFileSync('src/visual/scenes/tiangua/lots.json','utf8'))))
+  .replace('__CDN_TIANGUA_BASE_IMAGE__','data:image/webp;base64,'+readFileSync('src/visual/scenes/tiangua/assets/urban-base.webp.b64','utf8').trim())
+  .replace('__CDN_TIANGUA_MARKET_SPRITE__','data:image/webp;base64,'+readFileSync('src/visual/scenes/tiangua/assets/mercado.webp.b64','utf8').trim())
+  .replace('__CDN_TIANGUA_BAKERY_SPRITE__','data:image/webp;base64,'+readFileSync('src/visual/scenes/tiangua/assets/padaria.webp.b64','utf8').trim())
+  .replace('__CDN_TIANGUA_CLOTHING_SPRITE__','data:image/webp;base64,'+readFileSync('src/visual/scenes/tiangua/assets/roupas.webp.b64','utf8').trim());
+ const expected=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21css).replace('/* CDN_V22_CSS */',readFileSync('src/shell/v22.css','utf8')).replace('/* CDN_V221_CSS */',readFileSync('src/shell/v221-city.css','utf8')).replace('/* CDN_CORE */',core).replace('/* CDN_VISUAL */',visual+'\n'+scene).replace('/* CDN_UI */',uiBundle);
  assert.equal(createHash('sha256').update(expected).digest('hex'),createHash('sha256').update(html).digest('hex'));
 });
 

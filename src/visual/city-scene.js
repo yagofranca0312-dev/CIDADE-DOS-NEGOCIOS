@@ -53,15 +53,82 @@ const CidadeVisual=(()=>{
       '<circle cx="9" cy="-15" r="8" fill="#246b61"/>'+
       '</g>';
   }
+
+  /* V2.2.1 — protótipo de ambientação EXCLUSIVO para CE-TIANGUA.
+     Edificações fora do terreno não têm função econômica nem representam o município real. */
+  function pilotShop(x,y,kind,scale=1){
+    const facade=['#7295a2','#78968c','#8c8490','#6b91a0','#87876f'][kind%5];
+    const side=['#375b70','#476e68','#565b6e','#456578','#65684e'][kind%5];
+    const roof=['#b67d5b','#6c8c94','#8a8478','#a17971','#728f86'][kind%5];
+    const h=22+(kind%3)*6,w=17+(kind%2)*4;
+    const front=kind%2===0?'#e7b77d':'#73b9bf';
+    return '<g class="v221-shop" aria-hidden="true" pointer-events="none" transform="translate('+x+' '+y+') scale('+scale+')">'+
+      '<ellipse cx="6" cy="8" rx="'+(w+12)+'" ry="9" fill="#071e2b" opacity=".33"/>'+
+      '<polygon points="'+(-w)+','+(-h)+' 0,'+(-h-11)+' '+(w+3)+','+(-h)+' 3,'+(-h+12)+'" fill="'+roof+'" stroke="#c0c6ae" stroke-width="1.1"/>'+
+      '<polygon points="'+(-w)+','+(-h)+' 3,'+(-h+12)+' 3,7 '+(-w)+',-4" fill="'+facade+'"/>'+
+      '<polygon points="3,'+(-h+12)+' '+(w+3)+','+(-h)+' '+(w+3)+',-4 3,7" fill="'+side+'"/>'+
+      '<polygon points="'+(-w-3)+','+(-h+17)+' 3,'+(-h+28)+' '+(w+6)+','+(-h+17)+' 3,'+(-h+7)+'" fill="'+front+'" stroke="#e3d5b8" stroke-width=".8"/>'+
+      '<path d="M'+(-w+6)+' '+(-h+20)+'v-10 M'+(-w+14)+' '+(-h+24)+'v-9 M10 '+(-h+24)+'v-9 M18 '+(-h+20)+'v-9" stroke="#ecdbba" stroke-width="2.3" opacity=".9"/>'+
+      '<path d="M-8 -3v8M12 -6v8" stroke="#d9ebd8" stroke-width="3.2"/>'+
+      '<path d="M'+(-w)+' -4L3 7L'+(w+3)+' -4" fill="none" stroke="#183849" stroke-width="1.4"/>'+
+      '</g>';
+  }
+  function pilotLamp(x,y,scale=1){
+    return '<g class="v221-lamp" aria-hidden="true" pointer-events="none" transform="translate('+x+' '+y+') scale('+scale+')">'+
+      '<ellipse cx="3" cy="3" rx="7" ry="3" fill="#051b2b" opacity=".42"/>'+
+      '<path d="M0 0V-29Q0-32 3-32H10" fill="none" stroke="#b7c0b4" stroke-width="2.2"/>'+
+      '<path d="M6 -31h10l-3 6H9Z" fill="#f5d6a4" stroke="#9eafac" stroke-width="1"/>'+
+      '</g>';
+  }
+  function pilotTianguaScenery(seed){
+    const out=[
+      '<g class="v221-tiagua-scenery" aria-hidden="true" pointer-events="none">',
+      // Faixas pavimentadas e vias públicas simuladas: atrás dos 18 lotes.
+      '<path d="M223 177L431 80L756 231L521 377L505 365L734 231L431 102L246 189Z" fill="#1a3442" opacity=".82"/>',
+      '<path d="M233 180L431 91L744 232L516 365" fill="none" stroke="#99afa8" stroke-width="5" stroke-linejoin="round" opacity=".48"/>',
+      '<path d="M244 188L432 105L730 233L514 352" fill="none" stroke="#d4c6a2" stroke-width="1.4" stroke-dasharray="5 14" opacity=".62"/>',
+      '<path d="M257 202L440 118L706 232" fill="none" stroke="#0c2836" stroke-width="6" opacity=".33"/>',
+      '<path d="M258 206L435 125L690 236" fill="none" stroke="#b5c2b6" stroke-width="1.1" stroke-dasharray="2 12" opacity=".55"/>',
+      // Quadras visualmente independentes do reticulado jogável.
+      '<polygon points="213,174 286,141 336,164 261,199" fill="#3d5c5a" stroke="#82a19a" stroke-width="1.8" opacity=".72"/>',
+      '<polygon points="688,205 756,235 756,278 701,250" fill="#385b62" stroke="#7a9c97" stroke-width="1.8" opacity=".72"/>',
+      '<polygon points="236,232 270,215 296,226 262,246" fill="#3c6864" stroke="#8caf9f" stroke-width="1.8" opacity=".66"/>',
+      '<polygon points="665,296 721,266 756,285 692,321" fill="#3a5c5a" stroke="#87a9a0" stroke-width="1.6" opacity=".52"/>'
+    ];
+    // Conjunto urbano ilustrativo: quadras de baixa altura, com lojas e casas sem funcionalidade.
+    const shops=[
+      [231,178,0,.83],[258,164,2,.86],[285,150,1,.92],[314,137,4,.88],
+      [344,122,3,.91],[372,109,0,.82],[402,104,2,.79],
+      [651,206,4,.86],[679,218,1,.84],[709,237,0,.90],[742,252,3,.88],
+      [244,226,1,.86],[252,255,4,.90],[268,283,2,.78],
+      [737,290,2,.87],[712,316,4,.84]
+    ];
+    for(let i=0;i<shops.length;i++){
+      const [x,y,k,scale]=shops[i];
+      // Desvio de cor/tamanho reprodutível; não é posição factual de uma construção.
+      out.push(pilotShop(x,y,(k+(seed%3))%5,scale));
+    }
+    // Vegetação e postes separados das áreas acionáveis, sem intercepção de eventos.
+    for(const [x,y,z] of [[220,202,.54],[296,178,.51],[337,121,.46],[476,113,.5],
+                            [756,204,.55],[760,265,.57],[681,317,.52],[309,301,.55]])
+      out.push(tree(x,y,z));
+    for(const [x,y,z] of [[277,192,.80],[338,149,.73],[594,202,.74],
+                            [728,282,.78],[270,274,.71],[617,314,.76]])
+      out.push(pilotLamp(x,y,z));
+    out.push('<path class="v221-street-highlight" d="M286 191L411 134M571 305L705 238" fill="none" stroke="#c3d4c9" stroke-width="1.1" stroke-dasharray="4 12" opacity=".58"/>');
+    out.push('</g>');
+    return out.join('');
+  }
   function svgMap(city,ownedLots,lot){
     const name=String(city?.name??'Cidade'),uf=String(city?.uf??'');
     const tierName=String(city?.sizeTier??'local');
     const tier=tiers[tierName]??0;
     const seed=cityHash(city?.id??name);
+    const pilotTiangua=city?.id==='CE-TIANGUA';
     const owned=new Set(Array.isArray(ownedLots)?ownedLots:[]);
     const chosen=Number.isInteger(lot)&&lot>=1&&lot<=18?lot:null;
     const parts=[
-      '<svg class="v22-city-svg" viewBox="180 0 640 405" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Distrito comercial isométrico fictício de '+escape(name)+' com 18 lotes">',
+      '<svg class="v22-city-svg'+(pilotTiangua?' v221-pilot-tiangua':'')+'" viewBox="180 0 640 405" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Distrito comercial isométrico fictício de '+escape(name)+' com 18 lotes">',
       '<defs>',
       '<linearGradient id="v22-sky" x1="0" y1="0" x2=".7" y2="1"><stop stop-color="#1c516a"/><stop offset=".55" stop-color="#153d54"/><stop offset="1" stop-color="#0c273b"/></linearGradient>',
       '<linearGradient id="v22-platform" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#406a70"/><stop offset="1" stop-color="#203e4b"/></linearGradient>',
@@ -96,6 +163,7 @@ const CidadeVisual=(()=>{
     }
     for(let i=0;i<4;i++)parts.push(tree(754+i*12,181+i*34,.44));
     parts.push('<path d="M210 214L484 378M706 194L768 226" stroke="#a3c4bf" stroke-width="1.7" stroke-dasharray="3 10" opacity=".34"/>');
+    if(pilotTiangua)parts.push(pilotTianguaScenery(seed));
     parts.push('</g><g class="v22-lot-layer">');
     // Mantém grade canônica V2.0: 3 linhas × 6 colunas e números 1–18.
     for(let row=0;row<3;row++)for(let col=0;col<6;col++){

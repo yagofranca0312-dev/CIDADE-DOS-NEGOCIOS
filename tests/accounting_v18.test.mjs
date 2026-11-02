@@ -13,8 +13,8 @@ const open=(s,cityId=city,lot=1,sector='mercado')=>act(s,'EMPRESA.ABRIR',{cityId
 const advance=(s,days)=>{while(days>0){const x=Math.min(30,days);s=act(s,'TEMPO.AVANCAR_LOTE',{days:x});days-=x;}return s;};
 function sample(){let s=init();s=open(s);s=act(s,'ESTOQUE.COMPRAR',{productId:'base',supplierId:'regional',quantity:160});s=advance(s,3);return s;}
 
-test('V1.8: versão visível e plano de contas com sinais, sem novo schema de save',()=>{
- assert.equal(Core.VERSION,'1.8.0-rc.1');assert.equal(Core.SCHEMA_VERSION,8);
+test('V1.8: versão visível e plano de contas com sinais, com migração de schema de save 8→9',()=>{
+ assert.equal(Core.VERSION,'1.9.0-rc.1');assert.equal(Core.SCHEMA_VERSION,9);
  assert.equal(Core.ACCOUNT_CATALOG.CASH.normal,'DEBIT');
  assert.equal(Core.ACCOUNT_CATALOG.PAYABLE.normal,'CREDIT');
  assert.equal(Core.ACCOUNT_CATALOG.COGS.group,'COST');
@@ -124,8 +124,9 @@ test('V1.8: importação do save produzido na V1.7 homologada é idêntica, sem 
  s=V17.dispatch(s,{type:'TEMPO.AVANCAR_LOTE',id:'legacy-time',payload:{days:30}}).state;
  const json=V17.exportSave(s),hash=JSON.stringify(s);
  const restored=Core.importSave(json);
- assert.equal(restored.migrated,false,'Esquema de save 8 permanece inalterado');
- assert.equal(JSON.stringify(restored.state),hash,'Bytes históricos do payload devem permanecer equivalentes');
+ assert.equal(restored.migrated,true,'Esquema do save 8 é elevado para 9 sem lançar tributos');
+ assert.equal(JSON.stringify(restored.state.economy.ledger),JSON.stringify(s.economy.ledger),'Lançamentos históricos devem permanecer equivalentes');
+ assert.equal(restored.state.fiscal.coverageStatus,'NOT_COVERED');
  assert.equal(Core.balanceSheet(restored.state).difference,0);
  assert.equal(Core.reconciliationReport(restored.state).ok,true);
  assert.equal(Core.cashFlowStatement(restored.state).closingCash,V17.overview(s).cash);
@@ -140,6 +141,6 @@ test('V1.8: uma única área financeira com demonstrativos e verificações de v
  assert.match(ui,/Core\.balanceSheet/);assert.match(ui,/Core\.cashFlowStatement/);
  assert.match(ui,/Core\.reconciliationReport/);assert.match(ui,/Core\.incomeStatement/);
  assert.match(build,/intro-version/);assert.match(build,/footer-version/);
- assert.match(tpl,/id="footer-version">v1\.8\.0-rc\.1/);
- assert.match(tpl,/<title>Cidade dos Negócios 1 · v1\.8\.0-rc\.1<\/title>/);
+ assert.match(tpl,/id="footer-version">v1\.9\.0-rc\.1/);
+ assert.match(tpl,/<title>Cidade dos Negócios 1 · v1\.9\.0-rc\.1<\/title>/);
 });

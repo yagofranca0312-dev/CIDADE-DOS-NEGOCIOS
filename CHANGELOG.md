@@ -1,7 +1,16 @@
 # Histórico de versões — Cidade dos Negócios
 
-> **V1.8 homologada em 02/11/2026** pelo jogador, sem mudança no motor: `releases/v1.8.0-homologada`, commit `66bdab08547daec1df50eca3d6b1967a2a664d2c`.
-> Próxima versão V1.9 apenas planejada: `docs/PLANO_V19.md`. V2.0 reservada à revisão técnica e visual, sem novas mecânicas.
+## 1.9.0-rc.1 — Simulação Tributária Brasileira (02/11/2026)
+
+- Modo padrão sem apuração tributária; opt-in expresso para hipótese de comércio Simples Anexo I (somente competências 2026 delimitadas e começando no mês posterior).
+- Base de alíquotas nominais/deduções da LC 123/2006, faixa e RBT12 anualizada para início de atividade, com precisão em centavos e rótulo **simulado**.
+- IBS/CBS 2026 como índices-testes meramente informativos; sem passivo automático. Competências 2027+ sinalizadas `UNSUPPORTED` para apuração efetiva.
+- Escrituração fictícia segregada: `TAX_EXPENSE`, `TAX_PAYABLE`, pagamento independente; DRE, BP e fluxo realizado conciliáveis.
+- Preserva caixa único, rede de filiais, histórico, RNG; migra saves 2–8 para schema 9 sem imposto retroativo.
+- Aba Fiscal existente agora contém resumo, ativação consciente, relatórios e pagamentos, sem adicionar navegação principal.
+- Build e versionamento verificados em título, abertura, topo, rodapé e arquivos de download. V2.0 reservada apenas à consolidação interna e visual de jogo.
+- **Status:** candidata; validação Windows/homologação pendentes.
+
 
 ## 1.8.0-rc.1 — demonstrações contábeis e conciliação (02/11/2026)
 
@@ -10,7 +19,7 @@
 - Fechamento gerencial mensal somente leitura; não cria lançamentos nem altera o RNG.
 - Preserva schema 8 e compatibilidade direta com o save V1.7 homologado.
 - Cinco opções internas de leitura financeira, sem novas abas principais; revisão ampla visual reservada à V2.0.
-- Versão unificada nas telas, build e nome do pacote; homologação posteriormente confirmada pelo jogador em 02/11/2026.
+- Versão unificada nas telas, build e nome do pacote; homologação Windows pendente.
 
 
 ## 1.7.0-rc.1 — PIB oficial, comparador e versão única (02/11/2026)

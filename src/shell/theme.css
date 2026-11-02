@@ -149,3 +149,13 @@
 .statement-switch button.active,.statement-switch button[aria-pressed="true"]{background:#153d5f;color:#fff;border-color:#153d5f;font-weight:700;}
 .statement-switch button:focus-visible{outline:3px solid #e4a645;outline-offset:2px;}
 @media(max-width:400px){.statement-switch{gap:4px}.statement-switch button{font-size:.77rem;padding:8px 9px;}}
+
+/* V1.9 fiscal didático: espaço compacto sem adicionar nova aba principal. */
+.fiscal-dashboard{margin:16px 0}
+.fiscal-check{display:flex;align-items:flex-start;gap:10px;line-height:1.55;font-size:.86rem;color:#d7e8ef;margin:16px 0}
+.fiscal-check input{width:20px;height:20px;flex:none;accent-color:#6ac9af;margin-top:3px}
+.fiscal-history{display:grid;gap:11px;max-height:390px;overflow-y:auto}
+.fiscal-history .event-item{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.fiscal-history .event-item button{flex:none;min-height:37px}
+.fiscal-panel{min-width:0}
+@media(max-width:670px){.fiscal-dashboard{grid-template-columns:minmax(0,1fr)}.fiscal-history .event-item{display:block}.fiscal-history button{margin-top:8px}}

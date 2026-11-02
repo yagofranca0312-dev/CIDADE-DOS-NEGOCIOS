@@ -1,9 +1,20 @@
 # 🏙️ Cidade dos Negócios 1
 
-**Versão:** `1.8.0-rc.1` — **demonstrações contábeis gerenciais e conciliação**, homologada pelo jogador em 02/11/2026.  
+**Versão:** `1.9.0-rc.1` — **cenários tributários educativos com contabilização hipotética**, ainda pendente de homologação.  
 **Formato:** HTML autônomo, sem internet durante a partida.  
 
-**Homologação V1.8:** aprovada pelo jogador em 02/11/2026. Snapshot preservado na branch `releases/v1.8.0-homologada` (commit `66bdab08547daec1df50eca3d6b1967a2a664d2c`). **Próxima etapa:** [planejamento V1.9](docs/PLANO_V19.md), ainda não implementada.
+## Patch V1.9.0-rc.1 — Sistema Tributário Brasileiro Simulado (02/11/2026)
+
+**Status:** candidata em desenvolvimento/testes, **não homologada**. **Base:** V1.8 homologada e preservada em `releases/v1.8.0-homologada`. **Save:** schema 9 (a V1.8 não reabre arquivos exportados pela V1.9).
+
+- **Novo motor fiscal:** modo padrão `NOT_COVERED` sem qualquer lançamento de imposto. Ativação de cenário comercial hipotético exige reconhecimento expresso do caráter educativo; passa a valer apenas no **primeiro dia do mês seguinte**. Nunca tributa meses anteriores nem transforma demonstrações de anos passados em obrigações.
+- **Simples Nacional didático em 2026:** situação de comércio Anexo I presumida, limitada a unidades dos ramos de mercado e roupas, sob **uma única UF**. Calcula faixa, alíquota efetiva aproximada e encargo **simulado**, tomando receita do grupo (só vendas realizadas) e RBT12 anualizada para início de atividade, com tabelas e fontes legais identificadas. A simulação **não consegue apurar** segregação ST, monofásicos, reduções, atividades próprias/industrialização, fatos geradores, ISS ou exigências reais. Por isso os números **não são DAS real, PGDAS-D, EFD ou guia fiscal**.
+- **Fechamento e pagamento:** no último dia da competência elegível, reconhece uma única vez `TAX_EXPENSE` contra `TAX_PAYABLE` no ledger global; pagamento posterior é **voluntário** e baixa o passivo e o caixa, sem gerar despesa adicional. O destaque IBS/CBS de teste nunca gera passivo.
+- **Reforma Tributária:** explicação temporal 2026–2033. IBS 0,1% e CBS 0,9% de 2026 aparecem como **informação do ano-teste**, não como recolhimento automático. **2027+ não possui rule pack de tributo exigível** nesta versão; mostrar `UNSUPPORTED` e nenhuma cobrança em vez de calcular alíquota futura inventada.
+- **Integração contábil:** DRE separa resultado operacional e efeito dos tributos fictícios; balanço mostra `TAX_PAYABLE`; caixa realizado segrega pagamentos, além de manter o caixa único da rede. Nenhum tributo pode ser inferido do nome de produto ou cidade sem cobertura.
+- **Interface:** reutilizada a **aba Fiscal já existente**; controles de opt-in e pagamentos, resumo e histórico de competências, sem novas abas principais. A V2.0 continua **exclusivamente dedicada a consolidar arquitetura e reestruturar a experiência visual como jogo**, sem adicionar sistemas.
+- **Compatibilidade:** migração de saves 2–8 para 9 preservando movimentos, estoques, filiais e RNG. Exportar o backup JSON da V1.8 antes de atualizar. Reversão requer backup anterior.
+- **Fontes e contrato:** [FISCAL_V19.md](docs/FISCAL_V19.md). **Não é ferramenta de uso profissional ou orientação fiscal aplicável a contribuintes reais.**
 
 ## Patch V1.8.0-rc.1 — Contabilidade Empresarial Avançada
 

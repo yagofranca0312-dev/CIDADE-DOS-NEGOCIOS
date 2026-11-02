@@ -16,7 +16,7 @@ function fresh(engine=V16,name='Tianguá',seed=88){
  return run(engine,state,'EMPRESA.ABRIR',{sector:'mercado',lot:1});
 }
 test('V1.6: versão/schema 7, 30 municípios oficiais identificados sem duplicação',()=>{
- assert.equal(V16.VERSION,'1.6.0-rc.1');assert.equal(V16.SCHEMA_VERSION,7);
+ assert.equal(V16.VERSION,'1.7.0-rc.1');assert.equal(V16.SCHEMA_VERSION,8);
  assert.equal(V16.CITIES.length,30);
  assert.equal(new Set(V16.CITIES.map(c=>c.ibgeCode)).size,30);
  assert.equal(new Set(V16.CITIES.map(c=>c.id)).size,30);
@@ -42,10 +42,10 @@ test('V1.6: cidades de capitais distintas usam dados oficiais verificados',()=>{
 });
 test('V1.6: PIB 2023 e REGIC 2018 permanecem sem dados quando não verificáveis',()=>{
  const p=V16.regionalProfile(T.id);
- assert.equal(p.gdp2023,null);assert.equal(p.regic2018,null);
- assert.equal(V16.ECONOMIC_REFERENCES.gdp.available,false);
+ assert.equal(p.gdp2023Thousand,2265253);assert.equal(p.regic2018,null);
+ assert.equal(V16.ECONOMIC_REFERENCES.gdp.available,true);
  assert.equal(V16.ECONOMIC_REFERENCES.regic.available,false);
- assert.match(p.note,/simulados/);
+ assert.match(p.note,/fictícias/);
  assert.equal(V16.regionalProfile('xx'),null);
 });
 test('V1.6: porte e calibração de mercado são limitados, monotônicos e distintos',()=>{
@@ -69,7 +69,7 @@ test('V1.6: importação V1.5 schema6 preserva matriz, filial e histórico sem r
  legacy=run(V15,legacy,'TEMPO.AVANCAR_LOTE',{days:4});
  const original=JSON.parse(JSON.stringify(legacy)),serialized=V15.exportSave(legacy);
  const converted=V16.importSave(serialized);
- assert.equal(converted.migrated,true);assert.equal(converted.state.schemaVersion,7);
+ assert.equal(converted.migrated,true);assert.equal(converted.state.schemaVersion,8);
  assert.equal(converted.state.world.regional.datasetId,'IBGE-POP2026-20261029');
  assert.equal(converted.state.world.regional.effectiveFrom,original.calendar.date);
  assert.equal(converted.state.world.activeBusinessId,original.world.activeBusinessId);
@@ -94,7 +94,7 @@ test('V1.6: adulteração de metadados regionais é rejeitada sem mutar a carrei
  let s=fresh();const old=JSON.stringify(s);s.world.regional.datasetId='fake';
  assert.throws(()=>V16.validate(s),/regional/);
  let ok=JSON.parse(old),r=V16.dispatch(ok,{type:'TEMPO.AVANCAR_DIA',id:'reject:test'});
- assert.equal(r.ok,true);assert.equal(ok.calendar.tick,0);assert.equal(ok.schemaVersion,7);
+ assert.equal(r.ok,true);assert.equal(ok.calendar.tick,0);assert.equal(ok.schemaVersion,8);
 });
 test('V1.6: não faz chamada externa para jogar e mapa diferencia porte sem fonte de rede',()=>{
  const html=readFileSync('src/shell/index.template.html','utf8');const ui=readFileSync('src/ui/app.js','utf8');

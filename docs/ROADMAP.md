@@ -56,3 +56,10 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - PIB municipal 2023, REGIC 2018 e CAGED **ainda não integrados**; não apresentar valores por município nem alegar classificação oficial para o modelo.
 - Critério de saída: CI PASS, testes multiunidade de 365 dias, saves 2–6 migráveis, testes de navegador, homologação de uso no Windows.
 - Futuro backlog: integrar PIB/REGIC com pacote verificável, preços e concorrentes verdadeiramente locais, acompanhar série histórica e efeitos da renda/comércio.
+
+## Estado 02/11/2026 — V1.7 regional
+
+- PIB total oficial de 2023 para todas as 30 cidades (R$ mil) com calibração simulada restrita.
+- REGIC 2018 (hierarquia e ligações) e PIB per capita continuam **não integrados** até auditoria do arquivo tabular oficial.
+- Teste preventivo da versão visual em todas as telas, corrigindo o rodapé herdado da V1.5.
+- Diretriz aprovada: **V2.0 exclusiva para consolidação de arquitetura e revisão visual de jogo**; não incluir novos sistemas de gameplay.

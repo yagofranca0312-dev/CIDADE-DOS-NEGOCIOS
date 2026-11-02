@@ -136,3 +136,9 @@
 .map-canvas[data-urban-size="grande"]{background:radial-gradient(ellipse at 50% 40%,#2b5075,#173b5d 65%,#0d243c)}
 .map-canvas[data-urban-size="metropole"]{background:radial-gradient(ellipse at 50% 40%,#42537d,#183459 65%,#111e3e)}
 @media(max-width:480px){.regional-hero strong{font-size:1.55rem}.regional-indicators{grid-template-columns:1fr 1fr}}
+
+/* V1.7: observatório compacto; reformulação integral da navegação reservada à V2.0. */
+.regional-compare-box { margin-top: 12px; display:grid; gap:6px; }
+.regional-compare-box label {font-size: .78rem; opacity: .87;}
+.regional-compare-box select {width:100%; max-width:100%;}
+.regional-compare-box p {margin:0; line-height:1.4;}

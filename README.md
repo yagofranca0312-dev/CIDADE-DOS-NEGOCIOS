@@ -1,8 +1,20 @@
 # 🏙️ Cidade dos Negócios 1
 
-**Versão:** `1.6.0-rc.1` — **economia regional baseada em população oficial e cidades dinâmicas**, candidata jogável aguardando homologação Windows.  
-**Formato:** um `index.html` autônomo, com CSS e JS incorporados; sem internet ou instalação obrigatória para jogar.  
-**Data-base do planejamento:** 01/11/2026.
+**Versão:** `1.7.0-rc.1` — **PIB municipal oficial, simulação regional e comparador econômico**, candidata para testes.  
+**Formato:** HTML autônomo, sem internet durante a partida.  
+
+## Patch V1.7.0-rc.1 — inteligência econômica regional (primeiro incremento)
+
+- **PIB municipal IBGE 2023:** integrou-se o PIB total de todos os 30 municípios, com referência e unidade corretas (R$ mil) e link para os registros no SIDRA.
+- **Demanda futura com contexto regional:** efeito fictício limitado a ±8 pontos percentuais sobre o fator demográfico de V1.6. Não representa renda nem comércio efetivo.
+- **Comparador compacto:** o Observatório mostra PIB, ajuste simulado e comparação do fator de demanda entre dois municípios, preservando as telas existentes.
+- **REGIC 2018 e PIB per capita:** ainda **não integrados** — a base original de hierarquia urbana não foi auditada por município. Não foram criados fluxos intermunicipais não comprovados.
+- **Migração:** saves 2–7 → esquema 8, preservando lançamentos, unidades, estoque e histórico. `gdpEffectiveFrom` marca somente os efeitos futuros.
+- **Correção de versionamento:** versão única no motor, espelhada automaticamente na tela inicial, badge superior e rodapé; `index.html` e arquivos de instalação devem identificar `V1.7.0_RC1`.
+- **Visual:** apenas ajustes mínimos neste painel. A grande revisão de UX/UI e arquitetura fica reservada à **V2.0**, conforme a diretriz do projeto.
+
+**Fontes oficiais e calibração:** [FONTES_REGIONAIS_V17.md](docs/FONTES_REGIONAIS_V17.md).  
+**Antes de atualizar:** exporte backup JSON da carreira. A V1.6 não lê saves do esquema 8.
 
 ## Patch 1.6.0-rc.1 — Economia Regional e Cidades Dinâmicas
 

@@ -20,7 +20,7 @@
       <p class="hero-subtitle">Uma cidade. Uma empresa. Mil decisões.</p>
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◆ Economia simulada</span><span>◆ 30 cidades</span><span>◆ Offline</span></div>
-      <p class="fine-print">V1.1.0-rc.1 — prévia jogável. Parâmetros econômicos fictícios e legislação tributária ainda não implementada.</p>
+      <p class="fine-print">V1.1.1-rc.1 — prévia jogável. Parâmetros econômicos fictícios e legislação tributária ainda não implementada.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -67,7 +67,7 @@
       <div class="world-warning" id="other-city-warning" hidden>Você está explorando outra cidade. A empresa atual opera apenas na cidade de origem nesta versão.</div>
       <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Tributação legal não calculada nesta versão.</div>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.1.0-rc.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.1.1-rc.1</span></div>
         <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
           <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
           <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
@@ -96,7 +96,33 @@
           <article class="panel"><div class="panel-heading"><h3>Estratégia de preços</h3><span class="tag-soft">M08 · MERCADO</span></div><form id="price-form"><label for="price-value">Preço de venda (R$)</label><input id="price-value" type="number" min="1" max="10000" step="0.01" required><div class="price-compare" aria-label="Comparação de preços simulados"><div class="price-tile yours"><small>SEU PREÇO ATUAL</small><strong id="your-current-price" aria-live="polite">—</strong></div><div class="price-tile"><small>REFERÊNCIA DO CONCORRENTE</small><strong id="competitor-price">—</strong></div></div><button type="submit" class="btn btn-outline">Atualizar preço</button></form><p class="price-change-feedback" id="price-change-feedback" role="status" aria-live="polite">Alterações de preços serão confirmadas aqui.</p><p class="muted hint-bottom">O preço do concorrente é independente do seu e pode mudar com o tempo. Preços mais altos podem reduzir a demanda.</p><div class="history-title"><h3>Histórico de preços</h3><span class="tag-soft" id="price-history-count">0 alterações</span></div><p class="muted">Alterações da sua empresa registradas na carreira, inclusive antes desta atualização.</p><div id="price-history" class="price-history" aria-label="Histórico de alterações de preços"></div></article></div>
         </section>
         <section data-view="financas" class="view" hidden>
-          <article class="panel finance-filters"><div class="panel-heading"><h3>Período do demonstrativo</h3><span class="tag-soft">M11 · CONSULTA SEM ALTERAR O SAVE</span></div><div class="filter-fields"><div><label for="finance-period">Agrupar por</label><select id="finance-period"><option value="all">Toda a carreira</option><option value="day">Dia</option><option value="month">Competência (mês)</option><option value="quarter">Trimestre</option><option value="year">Ano</option></select></div><div><label for="finance-date">Data de referência no jogo</label><input id="finance-date" type="date" min="2026-11-01"></div></div><p id="finance-period-label" class="field-hint">Selecione um período para consultar seus resultados.</p></article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Demonstrativo gerencial</h3><span class="tag-soft">M11 · LEDGER</span></div><dl class="finance-list" id="finance-summary"></dl><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Tributação ainda não é calculada.</p></div><p class="muted">Fluxos do período filtrado; saldos de caixa, estoque e contas a pagar são acumulados até seu encerramento, não despesas do período.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
+          <article class="panel finance-filters">
+            <div class="panel-heading"><h3>Consulta financeira por período</h3><span class="tag-soft">M11 · NÃO ALTERA A CARREIRA</span></div>
+            <div class="filter-fields">
+              <div><label for="finance-period">Tipo de consulta</label><select id="finance-period">
+                <option value="all">Toda a carreira até uma data</option>
+                <option value="day">Dia específico</option>
+                <option value="month">Competência (mês)</option>
+                <option value="quarter">Trimestre</option>
+                <option value="semester">Semestre</option>
+                <option value="year">Ano</option>
+                <option value="range">Intervalo personalizado</option>
+              </select></div>
+              <div data-finance-field="all"><label for="finance-date">Data de referência (corte)</label><input id="finance-date" type="date" min="2026-11-01"></div>
+              <div data-finance-field="day" hidden><label for="finance-day">Dia a consultar</label><input id="finance-day" type="date" min="2026-11-01"></div>
+              <div data-finance-field="month" hidden><label for="finance-month">Competência (mês/ano)</label><input id="finance-month" type="month" min="2026-11"></div>
+              <div data-finance-field="quarter" hidden><label for="finance-quarter">Trimestre</label><select id="finance-quarter"><option value="1">1º trimestre (jan–mar)</option><option value="2">2º trimestre (abr–jun)</option><option value="3">3º trimestre (jul–set)</option><option value="4">4º trimestre (out–dez)</option></select></div>
+              <div data-finance-field="quarter" hidden><label for="finance-quarter-year">Ano do trimestre</label><input id="finance-quarter-year" type="number" min="2026" max="9999" step="1"></div>
+              <div data-finance-field="semester" hidden><label for="finance-semester">Semestre</label><select id="finance-semester"><option value="1">1º semestre (jan–jun)</option><option value="2">2º semestre (jul–dez)</option></select></div>
+              <div data-finance-field="semester" hidden><label for="finance-semester-year">Ano do semestre</label><input id="finance-semester-year" type="number" min="2026" max="9999" step="1"></div>
+              <div data-finance-field="year" hidden><label for="finance-year">Ano de referência</label><input id="finance-year" type="number" min="2026" max="9999" step="1"></div>
+              <div data-finance-field="range" hidden><label for="finance-range-from">Data inicial</label><input id="finance-range-from" type="date" min="2026-11-01"></div>
+              <div data-finance-field="range" hidden><label for="finance-range-to">Data final</label><input id="finance-range-to" type="date" min="2026-11-01"></div>
+            </div>
+            <div class="filter-action-row"><button type="button" id="finance-current-date" class="btn btn-outline">Usar data atual do jogo</button><span class="muted">O filtro não muda quando você avança os dias.</span></div>
+            <p id="finance-validation" class="finance-validation" aria-live="polite" hidden></p>
+            <p id="finance-period-label" class="field-hint" aria-live="polite">Escolha a data ou competência que deseja consultar.</p>
+          </article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Demonstrativo gerencial</h3><span class="tag-soft">M11 · LEDGER</span></div><dl class="finance-list" id="finance-summary"></dl><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Tributação ainda não é calculada.</p></div><p class="muted">Fluxos do período filtrado; saldos de caixa, estoque e contas a pagar são acumulados até seu encerramento, não despesas do período.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
         </section>
         <section data-view="fiscal" class="view" hidden>
           <article class="panel fiscal-panel"><span class="fiscal-icon">§</span><div><div class="overline">MT-01 · COBERTURA NORMATIVA</div><h3>Tributação não implementada nesta versão</h3><p>O jogo simula operações econômicas fictícias, mas não calcula ICMS, ISS, PIS/Cofins, IBS, CBS, Simples Nacional ou obrigações acessórias. Ausência de cálculo <strong>não significa alíquota zero</strong>.</p><p>O calendário pode avançar até 2033 e além; isso não representa validação da legislação desses anos. Uma futura implementação exigirá bases legais identificadas, vigência por competência e testes fiscais independentes.</p><div class="tag-warning">STATUS: NOT_COVERED · MODO DEMONSTRAÇÃO</div></div></article>
@@ -107,7 +133,7 @@
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.1.0-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.1.1-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>

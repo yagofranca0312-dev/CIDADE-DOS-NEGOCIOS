@@ -52,3 +52,19 @@
 .cart-actions{display:flex;gap:9px;flex-wrap:wrap}
 .commerce-log{display:grid;gap:8px;margin-top:12px;font-size:.77rem;color:#c7dae7;max-height:180px;overflow-y:auto}
 .commerce-history-row{border-bottom:1px solid #34516a;padding:7px 0}
+
+/* Hotfix 1.2.1: balcão vira monitor de demanda/vendas, somente leitura. */
+.sales-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:14px 0}
+.sales-kpis>div{background:#10283b;border:1px solid #34536b;border-radius:9px;padding:12px;min-width:0}
+.sales-kpis small{display:block;color:#adc5d6;font-size:.7rem}
+.sales-kpis strong{display:block;color:#f4d49a;font-size:1.1rem;margin-top:6px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.sales-money strong{font-size:1rem}
+.demand-table{min-width:420px;margin-top:12px}
+.commerce-receipts{max-height:330px}
+.commerce-receipt{background:#10283b;border:1px solid #365670;border-radius:8px;padding:10px 12px;font-size:.78rem}
+.commerce-receipt summary{cursor:pointer;font-weight:750;line-height:1.5}
+.commerce-receipt ul{padding-left:20px;line-height:1.7}
+.commerce-receipt p{color:#bacee0;font-size:.75rem;margin:7px 0 0}
+@media(max-width:480px){.sales-kpis{grid-template-columns:1fr}}
+/* Corrige a largura minima implicita de cards em resolucoes estreitas. */
+@media(max-width:1180px){.commerce-dashboard,.commerce-history-grid{grid-template-columns:minmax(0,1fr)}.commerce-dashboard>.panel,.commerce-history-grid>.panel{min-width:0}}

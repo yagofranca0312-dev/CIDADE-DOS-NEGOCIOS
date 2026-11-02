@@ -1,0 +1,70 @@
+/* Cidade dos Negócios V2.2 — mapa urbano, atlas isométrico e controle de seleção.
+   Somente camada visual. CSS da V2.1 e motor econômico permanecem preservados. */
+.map-panel{isolation:isolate}
+.map-canvas{
+  background:radial-gradient(ellipse at 54% 15%,#356f80 0,transparent 61%),
+    linear-gradient(155deg,#1b4e62,#0b253a 88%);
+}
+.map-canvas svg.v22-city-svg{
+  display:block;width:100%;height:auto;min-height:0;
+  max-width:100%;overflow:visible;
+  filter:drop-shadow(0 9px 13px #00182555);
+}
+.v22-city-svg .v22-lot{cursor:pointer;outline:none}
+.v22-city-svg .v22-lot .v22-tile-outline{
+  transition:stroke .15s ease,stroke-width .15s ease,fill .15s ease;
+}
+.v22-city-svg .v22-lot:hover .v22-tile-outline,
+.v22-city-svg .v22-lot:focus-visible .v22-tile-outline{
+  stroke:#fff0b1;stroke-width:4.5;
+}
+.v22-city-svg .v22-lot:focus-visible .v22-selection-halo{
+  stroke:#e7fcff;stroke-width:2;
+}
+.v22-city-svg .v22-lot.is-owned .v22-tile-outline{
+  stroke:#edc16a;
+}
+.v22-city-svg .v22-lot.is-owned.is-selected .v22-tile-outline{
+  stroke:#caf5ff;stroke-width:4.6;
+}
+.v22-city-svg .v22-lot.is-selected .v22-tile-outline{
+  stroke:#caf5ff;stroke-width:4.6;
+}
+.v22-city-svg .v22-scenery,
+.v22-city-svg .v22-ambient-skyline,
+.v22-city-svg .v22-street-details,
+.v22-city-svg .v22-overlay,
+.v22-city-svg .v22-tree{
+  pointer-events:none;
+}
+.v22-city-svg .v22-lot .v22-hit{cursor:pointer}
+.v22-lot-nav{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  gap:9px 12px;padding:10px 18px 14px;background:#112d40;
+  border-top:1px solid #365b70;
+}
+.v22-lot-nav label{font-size:.76rem;font-weight:760;color:#d8e9ef}
+.v22-lot-nav select{
+  min-width:166px;min-height:44px;max-width:100%;padding:9px 12px;
+  border:1px solid #65859a;border-radius:9px;background:#0d2a3c;
+  color:#f5e1b5;font-size:.87rem;font-weight:740;
+}
+.v22-lot-nav select:focus-visible{outline:3px solid #ffe1a1;outline-offset:2px}
+.map-legend{display:flex;flex-wrap:wrap;gap:6px 13px;align-items:center;padding-bottom:12px}
+.map-legend span{white-space:nowrap}
+@media(max-width:800px){
+ .map-canvas{min-height:235px}
+ .map-canvas svg.v22-city-svg{min-height:0;max-height:none}
+ .v22-lot-nav{padding:10px 12px 13px}
+ .v22-lot-nav select{flex:1;min-width:128px}
+}
+@media(max-width:430px){
+ .map-canvas{min-height:210px}
+ .map-canvas svg.v22-city-svg{min-height:0}
+ .map-legend{padding:10px 12px;gap:7px 10px;font-size:.7rem}
+ .v22-lot-nav{gap:6px;padding-top:10px}
+ .v22-lot-nav label{font-size:.74rem}
+}
+@media(prefers-reduced-motion:reduce){
+ .v22-city-svg .v22-lot .v22-tile-outline{transition:none}
+}

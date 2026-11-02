@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10243E">
   <meta name="description" content="Cidade dos Negócios 1, simulador empresarial brasileiro offline, em um único HTML.">
-  <title>Cidade dos Negócios 1 · v1.9.0-rc.1</title>
+  <title>Cidade dos Negócios 1 · v2.0.0-rc.1</title>
   <style>
 :root{color-scheme:dark;--navy:#10243e;--deep:#091629;--panel:#142b45;--panelhi:#193451;--blue:#51a9df;--gold:#e9ad50;--green:#51bd83;--text:#f4f7fb;--muted:#b8c6d8;--stroke:#2b4860;--red:#ef7070;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:15px}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#091629;color:var(--text)}[hidden]{display:none!important}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.46;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f4d49a;outline-offset:2px}a{color:#9dcee9}h1,h2,h3,p{margin-top:0}h1,h2,h3{letter-spacing:-.025em}h3{font-size:1.12rem;margin-bottom:0}p{line-height:1.65}small,.muted,.field-hint{color:var(--muted)}.field-hint{font-size:.83rem;margin:10px 0 19px;line-height:1.45}.hint-bottom{margin-top:26px}.status-text{font-size:.87rem;margin:13px 0 0;min-height:1.25rem}.overline,.eyebrow,.card-kicker,.nav-label{font-size:.7rem;letter-spacing:.16em;font-weight:800;color:#a3b7cb}.eyebrow-dot,.online-dot{display:inline-block;background:var(--green);width:7px;height:7px;border-radius:50%;margin-right:7px}.btn{border:1px solid #466178;border-radius:10px;padding:12px 16px;background:#24415a;color:var(--text);font-size:.89rem;font-weight:750;transition:transform .15s,filter .15s;min-height:44px}.btn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px)}.btn-primary{background:linear-gradient(135deg,#e9ad50,#f3c775);color:#101d2b;border-color:#f4d49a}.btn-outline{background:#14283b;color:#f2f7fb}.btn-big{width:100%;padding:16px 20px;display:flex;justify-content:space-between;margin-top:18px}.full{width:100%}.spaced{margin-top:9px}.tag-soft,.tag-warning{display:inline-block;letter-spacing:.05em;font-weight:800;font-size:.63rem;background:#203e58;color:#a9dafa;border:1px solid #3b617b;border-radius:8px;padding:8px 10px}.tag-warning{color:#f4d49a;background:#3c301d;border-color:#906c39}.brand-icon{filter:drop-shadow(0 9px 28px #0003)}.onboarding{min-height:100vh;display:grid;grid-template-columns:minmax(390px,1fr) minmax(380px,.78fr);gap:clamp(30px,6vw,100px);align-items:center;max-width:1540px;margin:0 auto;padding:45px clamp(24px,6vw,94px);position:relative;overflow:hidden}.onboarding:before{content:"";background:radial-gradient(ellipse at center,#193e6077,transparent 70%);position:absolute;inset:0 0 0 -30%;pointer-events:none}.onboarding-art{position:absolute;inset:0;opacity:.14;pointer-events:none;overflow:hidden}.skyline{display:flex;align-items:end;gap:18px;position:absolute;bottom:0;left:-2%;height:63%;width:110%;transform:skewY(-7deg)}.skyline i{display:block;flex:1;background:linear-gradient(180deg,#7dbde3,#1d5070);height:65%;border-radius:5px 5px 0 0;box-shadow:inset 10px 0 0 #0a223a}.skyline i:nth-child(2n){height:78%}.skyline i:nth-child(3n){height:44%}.skyline i:nth-child(5n){height:95%}.intro-copy{position:relative;z-index:1}.intro-copy .eyebrow{color:#9ddfe2;margin-bottom:48px}.brand-intro{margin-bottom:15px}.intro-copy h1{font-size:clamp(3.3rem,6vw,6.8rem);line-height:.92;margin-bottom:20px;font-weight:900}.intro-copy h1 em{font-style:normal;background:linear-gradient(120deg,#f6ce82,#d89d41);background-clip:text;-webkit-background-clip:text;color:transparent}.hero-subtitle{font-size:1.55rem;font-weight:700;margin:29px 0 10px}.intro-desc{font-size:1.02rem;color:#c7d3df;max-width:540px}.intro-features{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}.intro-features span{padding:10px 12px;border:1px solid #395875;background:#12304aab;border-radius:8px;font-size:.78rem;color:#b9d6e6}.fine-print{font-size:.72rem;color:#8fa8bb;margin-top:40px}.start-card{position:relative;z-index:1;background:linear-gradient(158deg,#1a3652 0%,#102339 100%);padding:clamp(25px,4vw,42px);border:1px solid #3c5970;box-shadow:0 24px 90px #0007;border-radius:20px}.card-kicker{color:var(--gold);margin-bottom:13px}.start-card h2{font-size:2rem;line-height:1.1;margin-bottom:12px}.start-card label,.panel label{display:block;font-size:.78rem;color:#c5d6e6;font-weight:700;margin:18px 0 7px}.start-card input,.start-card select,.panel input,.panel select,.topbar select{width:100%;background:#0c2136;border:1px solid #3c5a71;color:var(--text);border-radius:9px;min-height:42px;padding:10px 13px;outline-color:var(--gold)}.text-action{border:0;color:#b7d9f5;background:transparent;font-size:.86rem;margin:15px auto 0;display:block;padding:10px}.game-shell{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:100vh}.sidebar{background:linear-gradient(175deg,#0b1b2e,#10243e);border-right:1px solid #203e59;display:flex;flex-direction:column;padding:27px 15px 18px;position:sticky;top:0;height:100vh}.sidebar-brand{display:flex;gap:10px;align-items:center;padding:0 8px 32px}.brand-mark{width:43px;height:43px;border-radius:10px;background:linear-gradient(135deg,#e2a450,#f0c77d);color:#092037;display:grid;place-items:center;font-size:2rem}.sidebar-brand strong{display:block;font-size:.9rem;letter-spacing:.065em;line-height:1.15}.sidebar-brand small{font-size:.59rem;letter-spacing:.16em;color:var(--gold)}.nav-label{padding:0 14px 12px;color:#7896b4}.nav-items{display:grid;gap:5px}.nav-item{width:100%;background:none;border:1px solid transparent;color:#b6c7d8;padding:13px 14px;border-radius:9px;text-align:left;font-weight:650;display:flex;align-items:center;gap:14px;font-size:.88rem}.nav-item span{font-size:1.17rem;width:24px;text-align:center}.nav-item.active{background:#244360;color:#fff;border-color:#3a6080;box-shadow:inset 3px 0 0 var(--gold)}.nav-item:hover{background:#1a3852}.sidebar-bottom{margin-top:auto;padding:17px 11px 0;border-top:1px solid #29425a;font-size:.69rem;letter-spacing:.1em;font-weight:800;color:#bdd4e2}.sidebar-bottom small{display:block;letter-spacing:0;font-weight:400;margin:8px 0 0 16px}.main-pane{min-width:0;display:flex;flex-direction:column}.topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px clamp(16px,3vw,39px);border-bottom:1px solid #28435c;background:#0e2035}.topbar h2{font-size:1.4rem;margin:3px 0 0}.topbar h2 span{color:#95adbf;font-weight:500}.topbar-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.compact-label{font-size:.72rem;color:var(--muted)}.topbar select{width:auto;max-width:195px;font-size:.78rem}.date-box{background:#152f47;border:1px solid #34516c;border-radius:9px;padding:7px 15px;min-width:115px}.date-box small{display:block;font-size:.57rem;letter-spacing:.1em}.date-box strong{display:block;font-size:.93rem;margin-top:3px;font-variant-numeric:tabular-nums}.world-warning{padding:10px clamp(16px,3vw,39px);border-bottom:1px solid #4b492d;background:#2e2b1d;color:#f6d69b;font-size:.76rem;font-weight:600}.legal-warning{background:#132b3a;border-color:#24485b;color:#a7c9d9}.content{padding:30px clamp(16px,3vw,39px);max-width:1720px;width:100%;margin:0 auto;flex:1}.page-title{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:25px}.page-title h1{font-size:clamp(1.5rem,2.6vw,2.2rem);margin:7px 0 2px}.page-title p{color:#a9bacb;font-size:.85rem;margin:0}.build-badge{border:1px solid #3d5a71;color:#a4cce4;padding:8px 11px;border-radius:8px;font-size:.72rem;white-space:nowrap}.stats-bar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:20px}.stat,.panel{border:1px solid #304c63;border-radius:13px;background:linear-gradient(155deg,#17314a,#10273e);box-shadow:0 10px 22px #0002}.stat{padding:21px 20px}.stat span{display:block;font-size:.67rem;letter-spacing:.085em;color:#afc0d2;font-weight:700}.stat strong{display:block;font-size:clamp(1.3rem,2vw,2rem);margin:10px 0 3px;font-variant-numeric:tabular-nums;letter-spacing:-.035em;white-space:nowrap}.stat small{font-size:.68rem}.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(280px,.83fr);gap:17px}.right-column{display:grid;gap:17px;align-content:start}.panel{padding:23px}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.map-panel{padding:0;overflow:hidden;align-self:start}.map-panel .panel-heading{padding:23px 23px 0;margin-bottom:0}.map-panel .overline{margin-bottom:6px}.map-canvas{min-height:350px;background:radial-gradient(ellipse at 55% 37%,#265372 0%,#163751 54%,#0d2436 100%);overflow:hidden}.map-canvas svg{display:block;width:100%;height:auto;min-height:320px;max-height:480px;touch-action:manipulation}.map-canvas svg [data-lot]{cursor:pointer;outline:none;transition:filter .15s}.map-canvas svg [data-lot]:hover,.map-canvas svg [data-lot]:focus{filter:brightness(1.5)}.map-legend{display:flex;gap:20px;flex-wrap:wrap;font-size:.71rem;color:#b8cadd;padding:0 23px 12px}.legend-color{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}.legend-color.lot{background:#537d69}.legend-color.own{background:#e9ad50}.legend-color.sel{background:#51a9df}.map-disclaimer{font-size:.68rem;color:#91b0c0;padding:0 23px 15px;margin:0}.big-number{font-size:2.1rem;font-weight:850;color:var(--gold);letter-spacing:-.06em;margin:12px 0}.event-list{display:grid;gap:13px;max-height:320px;overflow:auto}.event-item{border-bottom:1px solid #264259;padding-bottom:10px;display:flex;gap:10px;align-items:start}.event-item:last-child{border-bottom:0}.event-dot{background:var(--blue);width:7px;height:7px;border-radius:50%;flex:none;margin-top:7px}.event-item p{margin:0;color:#d0dde8;font-size:.81rem;line-height:1.45}.event-item small{display:block;margin-top:4px;font-size:.67rem;color:#8eabc0}.view{min-height:370px}.detail-list,.finance-list{display:grid;grid-template-columns:1fr auto;gap:15px;margin:19px 0}.detail-list dt,.finance-list dt{color:#bed0df}.detail-list dd,.finance-list dd{margin:0;text-align:right;font-weight:800;font-variant-numeric:tabular-nums}.finance-list{border-top:1px solid #3b586c;padding-top:17px}.finance-list dt,.finance-list dd{font-size:.85rem}.finance-list .emphasis{color:var(--gold);font-weight:800;font-size:1rem}.company-emblem{display:flex;align-items:center;gap:16px;background:#102c40;border:1px solid #31526b;border-radius:12px;padding:16px}.company-emblem>span{font-size:2.4rem}.company-emblem h3{margin-bottom:3px}.company-emblem p{margin:0}.button-stack{display:grid;gap:10px;margin:20px 0}.fiscal-panel{display:flex;gap:24px;max-width:920px}.fiscal-icon{font-size:3.2rem;font-weight:850;color:var(--gold)}.turnbar{margin-top:23px;background:linear-gradient(125deg,#173c58,#132b44);border:1px solid #3d6480;border-radius:13px;padding:20px 25px;display:flex;justify-content:space-between;align-items:center;gap:20px}.turnbar h3{margin:6px 0}.turnbar p{font-size:.77rem;color:#a5bfd2;margin:0}.turn-actions{display:flex;gap:8px;flex-wrap:wrap}.game-footer{padding:19px clamp(16px,3vw,39px);display:flex;justify-content:space-between;gap:10px;font-size:.63rem;letter-spacing:.08em;color:#91aabd;border-top:1px solid #213e56}.toast{position:fixed;bottom:25px;right:25px;max-width:min(90vw,460px);z-index:99;pointer-events:none;background:#1b3a52;border:1px solid #5e869e;box-shadow:0 15px 45px #0009;color:#fff;padding:14px 19px;border-radius:11px;font-size:.82rem;transform:translateY(140px);opacity:0;transition:transform .25s,opacity .25s}.toast.visible{transform:none;opacity:1}.toast.error{border-color:var(--red);background:#4c2a34}@media(max-width:1180px){.game-shell{grid-template-columns:190px minmax(0,1fr)}.dashboard-grid{grid-template-columns:1fr}.stats-bar{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar{padding-left:10px;padding-right:10px}}@media(max-width:800px){.onboarding{grid-template-columns:1fr;gap:25px;padding:24px}.intro-copy .eyebrow{margin-bottom:20px}.intro-copy h1{font-size:3.8rem}.fine-print{margin-top:14px}.game-shell{display:block}.sidebar{position:relative;height:auto;padding:14px}.sidebar-brand{padding-bottom:12px}.nav-label,.sidebar-bottom{display:none}.nav-items{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px}.nav-item{width:auto;flex:none;padding:9px 11px;font-size:.75rem;gap:6px}.nav-item span{font-size:1rem;width:18px}.topbar{align-items:flex-start;flex-wrap:wrap}.topbar-controls{width:100%}.compact-label{display:none}.page-title{align-items:start}.turnbar{flex-direction:column;align-items:stretch}.turn-actions{width:100%}.turn-actions .btn{flex:1}.game-footer{flex-direction:column}}@media(max-width:480px){.stat{padding:15px 12px}.stat strong{font-size:1.16rem}.stat small{font-size:.6rem}.stats-bar{gap:8px}.panel{padding:17px}.map-panel .panel-heading{padding:16px 16px 0}.map-legend{padding:0 16px 12px}.map-disclaimer{padding:0 16px 12px}.topbar-controls select{max-width:140px}.page-title{flex-direction:column}.game-footer{font-size:.59rem}.fiscal-panel{flex-direction:column;gap:10px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
@@ -169,19 +169,198 @@
 .fiscal-panel{min-width:0}
 @media(max-width:670px){.fiscal-dashboard{grid-template-columns:minmax(0,1fr)}.fiscal-history .event-item{display:block}.fiscal-history button{margin-top:8px}}
 
+/* Cidade dos Negócios V2.0 — Design System e composição de mundo.
+   Mudança somente de apresentação: nenhuma regra econômica ou tributária aqui. */
+:root {
+  --v2-void:#08131f;--v2-ink:#e9f2f8;--v2-panel:#142a3f;--v2-stroke:#35546c;
+  --v2-glow:#6bd7f7;--v2-gold:#f2ba67;--v2-sky:#143e54;
+  --v2-radius:16px;--v2-shadow:0 12px 32px rgba(1,10,20,.30);
+}
+html {scroll-behavior:smooth}
+body {background:var(--v2-void);background-image:radial-gradient(ellipse at 70% 0%,#123952 0,transparent 53%)}
+.game-shell{grid-template-columns:200px minmax(0,1fr);background:linear-gradient(160deg,#0d2234,#091825 60%);min-height:100vh}
+.sidebar{background:linear-gradient(185deg,#101e31,#0b1a29);border-right:1px solid #2f5062;box-shadow:6px 0 30px #04101950;z-index:10;padding:25px 14px;gap:6px}
+.sidebar-brand{margin:3px 4px 34px;padding:5px 2px 20px;border-bottom:1px solid #2b485a;align-items:center}
+.sidebar-brand strong{font-weight:900;letter-spacing:.09em;font-size:.83rem;line-height:1.25}
+.sidebar-brand small{font-weight:700;letter-spacing:.14em;color:var(--v2-gold);font-size:.60rem}
+.sidebar-brand .brand-mark{border-radius:12px;background:linear-gradient(145deg,#315e78,#162f49);border:1px solid #4e86a3;color:#ffe1a1;box-shadow:0 5px 20px #0c253e}
+.nav-label{font-size:.65rem;letter-spacing:.17em;padding:0 12px 10px;color:#8faec2}
+.nav-items{display:grid;gap:7px}
+.nav-item{min-height:52px;padding:12px 13px;border:1px solid transparent;border-radius:12px;font-size:.86rem;font-weight:750;gap:12px;transition:background .16s,border-color .16s,transform .16s}
+.nav-item span{font-size:1.35rem;width:22px;color:#93bbd0}
+.nav-item:hover{background:#1a3c51;border-color:#325977;transform:translateX(2px)}
+.nav-item.active{background:linear-gradient(102deg,#214e64,#194056);border-color:#4b8ba1;color:#fff;box-shadow:inset 4px 0 var(--v2-gold),0 6px 18px #0002}
+.nav-item.active span{color:var(--v2-gold)}
+.sidebar-tools{margin-top:30px;padding-top:17px;border-top:1px solid #2c495c}
+.utility-item{color:#accede;font-size:.8rem}
+.sidebar-bottom{border-top-color:#25435a;color:#85b6c6;line-height:1.35}
+.main-pane{min-width:0}
+.topbar{position:relative;z-index:4;background:linear-gradient(115deg,#112c40,#0b1c2f);border-bottom:1px solid #355768;box-shadow:0 10px 30px #04111d40;padding:15px clamp(18px,2.5vw,36px)}
+.topbar h2{font-size:1.34rem;color:#f5e0b1;letter-spacing:-.02em}
+.topbar-controls{gap:10px}
+.topbar select,.topbar .unit-switch select{background:#142f47;color:#eef7ff;border-color:#4c6d82;min-height:38px;border-radius:9px}
+.date-box{background:#1a3449;border-color:#46647b;box-shadow:inset 0 1px #7190a522}
+.date-box strong{color:#ffe0a8}
+.mobile-settings{display:none}
+.world-warning{font-size:.75rem;padding:8px clamp(18px,2.5vw,36px)}
+.legal-warning{background:#10293b;color:#b7d2dd;border-bottom:1px solid #28475a}
+.content{padding:22px clamp(16px,2.4vw,34px) 32px;max-width:1840px}
+.page-title{margin-bottom:16px;align-items:center}
+.page-title .overline{color:#9bc1cf}
+.page-title h1{font-size:clamp(1.45rem,2.15vw,2rem);color:#fff0d2}
+.page-title p{font-size:.80rem;color:#9cb9cb}
+.build-badge{border-radius:100px;background:#183b4d;border-color:#406c79;color:#a4d4e2;font-variant-numeric:tabular-nums;font-size:.65rem}
+.stats-bar{gap:10px;margin-bottom:18px}
+.stat{padding:14px 16px;background:linear-gradient(135deg,#19354c,#11293d);border:1px solid #35546b;border-radius:12px;box-shadow:0 7px 18px #0002;min-width:0}
+.stat span{font-size:.62rem;color:#b8d4df}
+.stat strong{font-size:clamp(1.12rem,1.6vw,1.6rem);margin:7px 0 3px;white-space:normal;overflow-wrap:anywhere;color:#f5e8c9}
+.stat:first-child{border-top:2px solid var(--v2-gold)}
+.stat:nth-child(3){border-top:2px solid #62cfa4}
+.stat small{font-size:.65rem;color:#88acbe}
+.panel{border:1px solid var(--v2-stroke);background:linear-gradient(145deg,#17374d,#10293c 72%);border-radius:var(--v2-radius);box-shadow:var(--v2-shadow)}
+.panel-heading h3{font-size:1rem;letter-spacing:0;color:#f4f7fc}
+.page-title,.panel-heading,.stat,.date-box{font-variant-numeric:tabular-nums}
+.stage-eyebrow{display:block;font-size:.65rem;font-weight:850;letter-spacing:.16em;color:#8bc8df;margin-bottom:5px}
+.city-stage-intro{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 2px 17px}
+.city-stage-intro strong{display:block;font-size:clamp(1rem,1.6vw,1.3rem);color:#f8dba6;letter-spacing:-.015em}
+.stage-live{flex:none;font-size:.65rem;font-weight:750;letter-spacing:.10em;color:#9bcbd5;background:#193746;border:1px solid #3a6a71;padding:8px 12px;border-radius:100px}
+.stage-live span{color:#73dfa8;margin-right:5px}
+.city-stage{grid-template-columns:minmax(0,2.45fr) minmax(295px,.8fr);gap:15px;align-items:start}
+.map-panel{position:relative;border:1px solid #547385;border-radius:17px;background:#102638;overflow:hidden}
+.map-panel .panel-heading{padding:17px 21px 12px;position:relative;z-index:1;background:linear-gradient(100deg,#153d54,#183247)}
+.map-panel .overline{color:#94cfe1;font-size:.63rem}
+.map-panel h3{font-size:1.05rem}
+.world-map-notice{font-weight:800;text-align:center;letter-spacing:.16em;font-size:.58rem;background:linear-gradient(90deg,#102334,#173e4b,#102334);padding:8px;color:#c7dbe1}
+.map-canvas{min-height:475px;display:grid;place-items:center;position:relative;isolation:isolate;background-color:#123b50;background-image:radial-gradient(circle at 49% 27%,#316a77 0,transparent 52%),linear-gradient(130deg,#1c4c60,#10283c 78%)}
+.map-canvas:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;background-image:linear-gradient(30deg,transparent 49.7%,#8bd5b20b 50%,transparent 50.3%),linear-gradient(150deg,transparent 49.7%,#8bd5b20b 50%,transparent 50.3%);background-size:58px 48px}
+.map-canvas:after{content:"";position:absolute;inset:auto 0 0;height:68px;background:linear-gradient(transparent,#0c2538aa);pointer-events:none}
+.map-canvas svg{width:100%;height:auto;max-height:none;min-height:405px;filter:drop-shadow(0 10px 15px #001e2c66)}
+.map-canvas svg [data-lot]{transition:filter .18s,opacity .18s;cursor:pointer}
+.map-canvas svg [data-lot]:hover,.map-canvas svg [data-lot]:focus{filter:brightness(1.36) drop-shadow(0 0 7px #ffdb88aa)}
+.map-legend{background:#112d40;border-top:1px solid #3b5e70;padding:13px 19px 8px}
+.map-disclaimer{background:#112d40;margin:0;padding:4px 19px 14px;color:#8fb3c1}
+.city-stage>.right-column{display:grid;gap:11px;align-content:start;min-width:0}
+.city-stage>.right-column>.panel:first-child{background:linear-gradient(145deg,#1b4254,#112c3d);border-top:3px solid var(--v2-gold);padding:22px}
+.city-stage .big-number{font-size:clamp(2rem,3vw,2.7rem);color:#ffdc91;line-height:1.06}
+.lot-status{font-size:.78rem;color:#a8d8cc;line-height:1.5;margin:4px 0 13px}
+.city-stage .right-column .panel>p.muted{font-size:.76rem;line-height:1.5}
+.world-drawer{border:1px solid #35566a;border-radius:12px;background:#123047;overflow:hidden}
+.world-drawer>summary{cursor:pointer;display:flex;justify-content:space-between;gap:8px;align-items:center;padding:14px 15px;color:#e8f4fa;font-weight:800;list-style:none;font-size:.83rem}
+.world-drawer>summary::-webkit-details-marker{display:none}
+.world-drawer>summary:after{content:"⌄";color:#f6cb82;font-size:1.2rem}
+.world-drawer[open]>summary:after{transform:rotate(180deg)}
+.world-drawer>summary span{font-size:.64rem;color:#88b6c6;font-weight:500;margin-left:auto}
+.world-drawer>summary:hover{background:#1c4259}
+.world-drawer>.panel{margin:0;border:0;border-top:1px solid #36576a;border-radius:0;box-shadow:none;padding:17px;background:#10283b}
+.world-drawer .regional-panel{display:grid}
+.view-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 15px;padding:10px 16px;border:1px solid #315268;border-radius:11px;background:#102b40;color:#9abfd0;font-weight:800;letter-spacing:.08em;font-size:.67rem}
+.view-toolbar .btn{font-size:.77rem;padding:9px 13px;min-height:38px;letter-spacing:0}
+.view-toolbar .toolbar-hint{font-size:.72rem;color:#abc8d7;font-weight:400;letter-spacing:0}
+.view[data-view="empresa"]>.group-panel{background:linear-gradient(150deg,#173b52,#112d3e)}
+.view[data-view="mercado"] .panel,.view[data-view="financas"] .panel,.view[data-view="fiscal"] .panel{scroll-margin-top:70px}
+.view[data-view="mercado"] .dashboard-grid,.view[data-view="financas"] .dashboard-grid,.view[data-view="fiscal"] .dashboard-grid{gap:14px}
+.view[data-view="mercado"] .panel-heading:after{border-radius:7px}
+.btn-primary{background:linear-gradient(130deg,#f7ca7b,#e8a44e);border-color:#ffd697;color:#1a2531;box-shadow:0 5px 12px #0003}
+.btn-outline{background:#173b52;border-color:#52788e;color:#e8f5fa}
+.btn:hover:not(:disabled){filter:brightness(1.11)}
+.statement-switch button{background:#163549;border:1px solid #466e82;color:#c6e4f1}
+.statement-switch button.active,.statement-switch button[aria-pressed="true"]{background:#e5a950;color:#152333;border-color:#f4ce7c}
+.event-list{scrollbar-color:#507e90 #13293c}
+.turnbar{border:1px solid #527082;background:linear-gradient(118deg,#173d50,#153048);box-shadow:var(--v2-shadow);margin-top:18px}
+.turnbar h3{color:#f7e3bf}
+.game-footer{background:#0c1e2d;border-color:#2d4a5d}
+*:focus-visible{outline:3px solid #ffe4a8!important;outline-offset:3px!important}
+/* Acessibilidade: controles sobrepostos ao mapa nunca ocultam o foco de lote. */
+@media(max-width:1180px){
+ .game-shell{grid-template-columns:170px minmax(0,1fr)}
+ .city-stage{grid-template-columns:minmax(0,1.5fr) minmax(250px,.8fr)}
+ .map-canvas{min-height:400px}.map-canvas svg{min-height:365px}
+ .sidebar{padding-inline:9px}.nav-item{padding:11px 10px;gap:8px}
+}
+@media(max-width:990px){
+ .city-stage{grid-template-columns:minmax(0,1fr)}
+ .city-stage>.right-column{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+ .city-stage>.right-column>.panel:first-child{grid-column:1/-1}
+ .map-canvas{min-height:420px}
+}
+@media(max-width:800px){
+ .game-shell{display:block;padding-bottom:74px}
+ .sidebar{position:fixed;z-index:30;bottom:0;top:auto;left:0;right:0;width:100%;height:auto;min-height:0;max-height:90px;padding:7px max(7px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(7px,env(safe-area-inset-left));background:#10263bf5;border-right:0;border-top:1px solid #45667c;box-shadow:0 -12px 35px #061321aa;backdrop-filter:blur(15px)}
+ .sidebar-brand,.sidebar .nav-label,.sidebar-tools,.sidebar-bottom{display:none}
+ .nav-items.nav-primary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:0;overflow:visible}
+ .nav-item{display:flex;flex-direction:column;gap:3px;width:100%;min-width:0;border:0;min-height:57px;justify-content:center;text-align:center;padding:6px 2px;font-size:.69rem;line-height:1.1}
+ .nav-item span{font-size:1.25rem;width:auto;line-height:1.2}
+ .nav-item.active{box-shadow:inset 0 3px var(--v2-gold);border-radius:9px;background:#24445b}
+ .nav-item:hover{transform:none}
+ .mobile-settings{display:inline-flex;align-items:center;justify-content:center;min-height:39px;min-width:39px;font-size:1.25rem}
+ .topbar{padding:12px 16px}
+ .content{padding:16px 13px 24px}
+ .city-stage-intro{padding-top:1px}
+ .stage-live{display:none}
+ .stats-bar{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .stats-bar>.stat:nth-child(n+3){display:none}
+ .map-canvas{min-height:340px}
+ .map-canvas svg{min-height:320px}
+ .game-footer{padding-bottom:16px}
+ .toast{bottom:94px}
+}
+@media(max-width:540px){
+ .city-stage>.right-column{display:grid;grid-template-columns:minmax(0,1fr)}
+ .topbar-controls{gap:7px;align-items:center;flex-wrap:wrap}
+ .topbar h2{font-size:1.13rem}
+ .topbar select{max-width:140px}
+ .topbar .unit-switch{min-width:155px;flex:1}
+ .topbar #explore-city{max-width:140px}
+ .map-panel .panel-heading{padding:14px 14px 10px}
+ .map-canvas{min-height:250px}
+ .map-canvas svg{min-height:240px}
+ .world-map-notice{font-size:.51rem;letter-spacing:.08em}
+ .stat{padding:13px 11px}
+ .stat span{font-size:.58rem}
+ .stat strong{font-size:1.11rem}
+ .panel:not(.map-panel){padding:17px 14px}
+ .city-stage>.right-column>.panel:first-child{padding:19px 15px}
+ .view-toolbar{flex-wrap:wrap;padding:12px}
+ .view-toolbar .toolbar-hint{font-size:.68rem}
+ .turnbar{padding:16px}
+ .turn-actions .btn{font-size:.74rem;padding:11px 8px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.nav-item,.map-canvas svg [data-lot]{transition:none}}
+/* Rolagem compensada para a barra inferior móvel durante navegação por teclado e testes reais. */
+@media(max-width:800px){
+ html{scroll-padding-bottom:130px;scroll-padding-top:18px}
+ .view [data-tab],.view button,.view select,.view input,.world-drawer>summary{scroll-margin-bottom:130px}
+ .content{padding-bottom:130px}
+}
+/* Organização progressiva da gestão: decisões imediatas visíveis,
+   relatórios e controles secundários acessíveis por expansão nativa. */
+.market-drawer{border:1px solid #39596c;background:#112e40;border-radius:14px;margin-top:13px;overflow:hidden}
+.market-drawer>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:14px;color:#eaf5f9;padding:16px 18px;font-weight:850;font-size:.9rem;min-height:57px}
+.market-drawer>summary::-webkit-details-marker{display:none}
+.market-drawer>summary:after{content:"⌄";font-size:1.25rem;color:#ffc983;margin-left:6px}
+.market-drawer[open]>summary:after{transform:rotate(180deg)}
+.market-drawer>summary:hover{background:#1e4659}
+.market-drawer>summary span{font-size:.72rem;font-weight:500;color:#9fc3d0;margin-left:auto}
+.market-drawer>.panel,.market-drawer>.dashboard-grid{margin:0;border:0;border-top:1px solid #3e5e70;border-radius:0;box-shadow:none}
+.market-drawer>.dashboard-grid{padding:12px;gap:12px;background:#102639}
+.market-drawer>.dashboard-grid>.panel{min-width:0}
+.market-drawer>.panel{background:#102c40;padding:20px}
+.market-drawer .strategy-panel,.market-drawer .commerce-catalog,.market-drawer .stock-planner,.market-drawer .strategy-promo-panel{margin-top:0}
+@media(max-width:540px){.market-drawer>summary{padding:14px 12px;font-size:.8rem}.market-drawer>summary span{font-size:.63rem}.market-drawer>.dashboard-grid{padding:8px}}
+
   </style>
 </head>
 <body>
   <div class="onboarding" id="onboarding">
     <div class="onboarding-art" aria-hidden="true"><div class="skyline"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
     <div class="intro-copy">
-      <p class="eyebrow"><span class="eyebrow-dot"></span> CIDADE DOS NEGÓCIOS · PRIMEIRA EDIÇÃO</p>
+      <p class="eyebrow"><span class="eyebrow-dot"></span> CIDADE DOS NEGÓCIOS · EDIÇÃO 2.0</p>
       <div class="brand-icon brand-intro" aria-hidden="true"><svg viewBox="0 0 62 62" width="60" height="60"><rect x="5" y="30" width="13" height="27" rx="2" fill="#51A9DF"/><rect x="24" y="19" width="13" height="38" rx="2" fill="#E9AD50"/><rect x="43" y="8" width="13" height="49" rx="2" fill="#51A9DF"/><path d="M8 20l15-8 12 5L51 1" fill="none" stroke="#F4D49A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <h1>CIDADE DOS<br><em>NEGÓCIOS</em></h1>
-      <p class="hero-subtitle">Uma cidade. Uma empresa. Mil decisões.</p>
+      <p class="hero-subtitle">Trinta cidades. Uma rede. Suas decisões.</p>
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◆ Economia simulada</span><span>◆ 30 cidades</span><span>◆ Offline</span></div>
-      <p class="fine-print"><span id="intro-version">v1.9.0-rc.1</span> — prévia jogável. Dados oficiais identificados; mercado e legislação tributária simulados ou não cobertos.</p>
+      <p class="fine-print"><span id="intro-version">v2.0.0-rc.1</span> — prévia jogável. Dados oficiais identificados; mercado e legislação tributária simulados ou não cobertos.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -203,16 +382,15 @@
   </div>
   <div id="game-shell" class="game-shell" hidden>
     <aside class="sidebar">
-      <div class="sidebar-brand"><div class="brand-mark" aria-hidden="true"><span>▥</span></div><div><strong>CIDADE DOS<br>NEGÓCIOS</strong><small>EDIÇÃO 01</small></div></div>
-      <div class="nav-label">VISÃO GERAL</div>
-      <nav class="nav-items" aria-label="Seções do jogo">
-        <button type="button" data-tab="cidade" class="nav-item active"><span>▦</span> Cidade</button>
-        <button type="button" data-tab="empresa" class="nav-item"><span>▣</span> Minha empresa</button>
-        <button type="button" data-tab="mercado" class="nav-item"><span>⇅</span> Mercado</button>
-        <button type="button" data-tab="financas" class="nav-item"><span>▥</span> Finanças</button>
-        <button type="button" data-tab="fiscal" class="nav-item"><span>§</span> Fiscal</button>
-        <button type="button" data-tab="sistema" class="nav-item"><span>⚙</span> Sistema</button>
+      <div class="sidebar-brand"><div class="brand-mark" aria-hidden="true"><span>▥</span></div><div><strong>CIDADE DOS<br>NEGÓCIOS</strong><small>EDIÇÃO 2.0</small></div></div>
+      <div class="nav-label">SEU MUNDO</div>
+      <nav class="nav-items nav-primary" aria-label="Navegação principal">
+        <button type="button" data-tab="cidade" class="nav-item active" aria-current="page"><span aria-hidden="true">▦</span> Cidade</button>
+        <button type="button" data-tab="empresa" class="nav-item"><span aria-hidden="true">▣</span> Empresas</button>
+        <button type="button" data-tab="mercado" class="nav-item"><span aria-hidden="true">⇅</span> Mercado</button>
+        <button type="button" data-tab="financas" class="nav-item"><span aria-hidden="true">▥</span> Finanças</button>
       </nav>
+      <div class="sidebar-tools"><div class="nav-label">FERRAMENTAS</div><button type="button" data-tab="sistema" class="nav-item utility-item"><span aria-hidden="true">⚙</span> Configurações</button></div>
       <div class="sidebar-bottom"><span class="online-dot"></span> EXECUÇÃO LOCAL <small>100% sem servidor</small></div>
     </aside>
     <div class="main-pane">
@@ -222,6 +400,7 @@
           <div id="unit-switch-container" class="unit-switch" hidden><label class="compact-label" for="unit-switch">Unidade ativa</label><select id="unit-switch" aria-label="Selecionar estabelecimento para gerenciar"></select></div>
           <label class="compact-label" for="explore-city">Explorar cidade</label><select id="explore-city" aria-label="Cidade em visualização"></select>
           <div class="date-box"><small>DATA DO MUNDO</small><strong id="date-label">—</strong></div>
+          <button type="button" class="mobile-settings btn btn-outline" data-tab="sistema" aria-label="Configurações do jogo" title="Configurações">⚙</button>
           <button type="button" id="pause-btn" class="btn btn-outline" aria-label="Iniciar ou pausar simulação">▶ Jogar</button>
           <select id="speed-select" aria-label="Velocidade da simulação"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select>
         </div>
@@ -229,7 +408,7 @@
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
       <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Cenários tributários não são apuração legal.</div>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v1.9.0-rc.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v2.0.0-rc.1</span></div>
         <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
           <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
           <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
@@ -237,14 +416,16 @@
           <div class="stat"><span>ESTOQUE DISPONÍVEL</span><strong id="kpi-stock">—</strong><small id="kpi-stock-label">Estoque físico consolidado do grupo</small></div>
         </section>
         <section data-view="cidade" class="view active">
-          <div class="dashboard-grid">
+          <div class="city-stage-intro"><div><span class="stage-eyebrow">UM MUNDO DE NEGÓCIOS</span><strong>Seu próximo movimento começa na cidade.</strong></div><span class="stage-live"><span aria-hidden="true">●</span> SIMULAÇÃO LOCAL</span></div>
+          <div class="dashboard-grid city-stage">
             <article class="panel map-panel"><div class="panel-heading"><div><div class="overline">MAPA URBANO · ESTILIZADO</div><h3 id="map-title">Seu distrito comercial</h3></div><span class="tag-soft" id="map-uf">CE</span></div>
+              <div class="world-map-notice">CLIQUE EM UM EDIFÍCIO PARA INSPECIONAR UM LOTE</div>
               <div id="map-canvas" class="map-canvas" role="group" aria-label="Mapa ilustrativo clicável com 18 lotes"></div>
               <div class="map-legend"><span><i class="legend-color lot"></i> Lote disponível</span><span><i class="legend-color own"></i> Sua empresa</span><span><i class="legend-color sel"></i> Selecionado</span></div>
               <p class="map-disclaimer">Mapa fictício para jogabilidade. Não representa ruas, lotes ou imóveis reais.</p>
             </article>
-            <div class="right-column"><article class="panel"><div class="panel-heading"><h3>Lote selecionado</h3><span class="tag-soft">COMERCIAL</span></div><div class="big-number" id="selected-lot">Lote 01</div><p class="muted">Selecione um dos lotes no mapa. O grupo pode ter até cinco estabelecimentos, em cidades diferentes. Cada lote comporta uma unidade.</p><button class="btn btn-primary full" id="map-open-company" type="button">Abrir unidade neste lote</button></article>
-              <article class="panel regional-panel" aria-labelledby="regional-title"><div class="panel-heading"><div><div class="overline">IBGE E SIMULAÇÃO</div><h3 id="regional-title">Observatório econômico</h3></div><span class="tag-soft">OFFLINE</span></div>
+            <div class="right-column"><article class="panel"><div class="panel-heading"><h3>Lote selecionado</h3><span class="tag-soft">COMERCIAL</span></div><div class="big-number" id="selected-lot">Lote 01</div><p class="lot-status" id="map-lot-status">Escolha um lote no mapa.</p><p class="muted">Selecione um dos lotes no mapa. O grupo pode ter até cinco estabelecimentos, em cidades diferentes. Cada lote comporta uma unidade.</p><button class="btn btn-primary full" id="map-open-company" type="button">Abrir unidade neste lote</button></article>
+              <details class="world-drawer"><summary>◈ Observatório econômico <span>IBGE + simulação</span></summary><article class="panel regional-panel" aria-labelledby="regional-title"><div class="panel-heading"><div><div class="overline">IBGE E SIMULAÇÃO</div><h3 id="regional-title">Observatório econômico</h3></div><span class="tag-soft">OFFLINE</span></div>
                 <div class="regional-hero"><small>POPULAÇÃO ESTIMADA · IBGE 2026</small><strong id="regional-population">—</strong><span>Referência: <b id="regional-date">—</b> · código IBGE <b id="regional-code">—</b></span></div>
                 <div class="regional-indicators"><div><small>Perfil urbano do jogo</small><strong id="regional-urban-size">—</strong></div><div><small>Fator de demanda simulado</small><strong id="regional-demand-factor">—</strong></div><div><small>Referência concorrencial simulada</small><strong id="regional-competition-factor">—</strong></div></div>
                 <dl class="regional-sources"><dt>PIB municipal 2023 · R$ correntes</dt><dd id="regional-gdp">—</dd>
@@ -255,8 +436,8 @@
                   <p id="regional-compare-result" class="field-hint">Selecione outra cidade para comparação.</p></div>
                 <p id="regional-model-status" class="regional-caution">Indicadores reais e parâmetros simulados identificados separadamente.</p>
                 <a id="regional-source" class="regional-source-link" target="_blank" rel="noopener noreferrer" href="https://ftp.ibge.gov.br/Estimativas_de_Populacao/Estimativas_2026/POP2026_20261029.pdf">Fonte oficial: estimativas de população IBGE 2026 ↗</a>
-              </article>
-              <article class="panel"><div class="panel-heading"><h3>Aconteceu na cidade</h3><span class="tag-soft">EVENTOS REAIS DO JOGO</span></div><div id="city-events" class="event-list"></div></article></div>
+              </article></details>
+              <details class="world-drawer"><summary>◷ Eventos da cidade <span>Histórico confirmado</span></summary><article class="panel"><div class="panel-heading"><h3>Aconteceu na cidade</h3><span class="tag-soft">EVENTOS REAIS DO JOGO</span></div><div id="city-events" class="event-list"></div></article></details></div>
           </div>
         </section>
         <section data-view="empresa" class="view" hidden>
@@ -273,9 +454,11 @@
             </article><article class="panel"><div class="panel-heading"><h3>Administração da rede</h3></div><p class="muted">Selecione a unidade ativa no topo. Produtos, compras, preços e vendas pertencem à unidade; o caixa e o calendário são do grupo.</p><button type="button" class="btn btn-outline full" data-go="mercado">Ir para o mercado ↗</button><button type="button" class="btn btn-outline full spaced" data-go="financas">Ver demonstrativos ↗</button></article></div>
         </section>
         <section data-view="mercado" class="view" hidden>
+          <div class="view-toolbar"><span>DECISÕES DE OPERAÇÃO</span><span class="toolbar-hint">Compre, precifique e acompanhe a demanda da unidade ativa.</span></div>
           <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Compras e estoque</h3><span class="tag-soft">M15 · SUPRIMENTOS</span></div><form id="buy-form"><label for="buy-product">Produto</label><select id="buy-product"></select><label for="buy-supplier">Fornecedor simulado</label><select id="buy-supplier"></select><p id="supplier-terms" class="field-hint" aria-live="polite">Consulte prazos e limites do fornecedor.</p><p id="market-product" class="muted">Abra uma empresa antes de comprar mercadorias.</p><label for="buy-quantity">Quantidade de unidades</label><input type="number" min="1" max="2000" value="30" id="buy-quantity" required><div class="buy-presets" aria-label="Atalhos para preencher quantidade"><span>Preencher:</span><button type="button" class="btn btn-outline" data-buy-preset="10">10 un.</button><button type="button" class="btn btn-outline" data-buy-preset="50">50 un.</button><button type="button" class="btn btn-outline" data-buy-preset="100">100 un.</button><button type="button" class="btn btn-outline" data-buy-preset="250">250 un.</button></div><p class="field-hint">O pedido é pago hoje, fica **em trânsito** e só pode gerar vendas após a entrega. Atalhos apenas preenchem a quantidade.</p><p id="buy-total" class="field-hint">—</p><button type="submit" class="btn btn-primary">Encomendar mercadorias</button></form></article>
           <article class="panel"><div class="panel-heading"><h3>Estratégia de preços</h3><span class="tag-soft">M08 · MERCADO</span></div><form id="price-form"><label for="price-product">Produto a precificar</label><select id="price-product"></select><label for="price-value">Preço de venda (R$)</label><input id="price-value" type="number" min="1" max="10000" step="0.01" required><div class="price-compare" aria-label="Comparação de preços simulados"><div class="price-tile yours"><small>SEU PREÇO ATUAL</small><strong id="your-current-price" aria-live="polite">—</strong></div><div class="price-tile"><small>REFERÊNCIA DO CONCORRENTE</small><strong id="competitor-price">—</strong></div></div><button type="submit" class="btn btn-outline">Atualizar preço</button></form><p class="price-change-feedback" id="price-change-feedback" role="status" aria-live="polite">Alterações de preços serão confirmadas aqui.</p><p class="muted hint-bottom">O preço do concorrente é independente do seu e pode mudar com o tempo. Preços mais altos podem reduzir a demanda.</p><div class="history-title"><h3>Histórico de preços</h3><span class="tag-soft" id="price-history-count">0 alterações</span></div><p class="muted">Alterações da sua empresa registradas na carreira, inclusive antes desta atualização.</p><div id="price-history" class="price-history" aria-label="Histórico de alterações de preços"></div></article></div>
 
+          <details class="market-drawer"><summary>▦ Catálogo e demanda <span>Cadastrar produtos e conferir vendas</span></summary>
           <div class="dashboard-grid commerce-dashboard">
             <article class="panel"><div class="panel-heading"><h3>Cadastrar produto</h3><span class="tag-soft">NOVO SKU</span></div>
               <form id="product-form"><label for="new-product-name">Descrição do produto</label><input id="new-product-name" maxlength="70" minlength="3" required placeholder="Ex.: Açúcar 1 kg">
@@ -301,28 +484,29 @@
               <div class="table-scroll"><table class="catalog-table demand-table"><thead><tr><th>Produto</th><th>Demanda*</th><th>Vendido</th><th>Não atendido</th></tr></thead><tbody id="demand-rows"></tbody></table></div>
               <p class="field-hint">* A partir da V1.3, a procura é estimada mesmo sem estoque. O faturamento potencial perdido é ilustrativo (unidades não atendidas × preço atual do dia), não receita realizada. Eventos anteriores à V1.3 não são recalculados.</p>
             </article>
-          </div>
-          <article class="panel strategy-promo-panel"><div class="panel-heading"><h3>Campanhas promocionais</h3><span class="tag-soft">V1.4 · ESTRATÉGIA</span></div>
+          </div></details>
+          <details class="market-drawer"><summary>◈ Promoções <span>Campanhas e preços temporários</span></summary><article class="panel strategy-promo-panel"><div class="panel-heading"><h3>Campanhas promocionais</h3><span class="tag-soft">V1.4 · ESTRATÉGIA</span></div>
             <p class="muted">Descontos temporários influenciam a demanda simulada. O preço de tabela permanece inalterado; somente vendas realizadas durante a campanha recebem o desconto. Não há vendas manuais extras.</p>
             <form id="promo-form" class="promo-form"><div><label for="promo-product">Produto</label><select id="promo-product"></select></div><div><label for="promo-percent">Desconto sobre a tabela</label><select id="promo-percent"><option value="0">Sem campanha / encerrar</option><option value="5">5%</option><option value="10">10%</option><option value="15">15%</option></select></div><div><label for="promo-days">Duração (dias de jogo)</label><input type="number" id="promo-days" min="1" max="30" value="7" step="1"></div><button class="btn btn-primary" type="submit">Aplicar estratégia</button></form>
             <p class="field-hint" id="promo-status">Nenhuma campanha ativa.</p><p class="muted">Promoções não geram gastos publicitários; esse custo não está implementado. A concorrência continua sendo simulada separadamente.</p>
-          </article>
-          <article class="panel commerce-catalog"><div class="panel-heading"><h3>Catálogo e desempenho por produto</h3><span class="tag-soft" id="product-count">0 produtos</span></div>
+          </article></details>
+          <details class="market-drawer"><summary>▥ Catálogo e desempenho <span>Relatório por produto</span></summary><article class="panel commerce-catalog"><div class="panel-heading"><h3>Catálogo e desempenho por produto</h3><span class="tag-soft" id="product-count">0 produtos</span></div>
             <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Produto</th><th>Estoque</th><th>Custo un.</th><th>Venda un.</th><th>Vendido*</th><th>Receita*</th><th>CMV*</th></tr></thead><tbody id="catalog-rows"></tbody></table></div>
             <p class="field-hint">* Desempenho por produto registrado a partir desta edição. Vendas antigas continuam preservadas no total contábil, sem distribuição fictícia entre SKUs.</p>
-          </article>
-          <article class="panel stock-planner" aria-labelledby="planner-title">
+          </article></details>
+          <details class="market-drawer"><summary>▣ Planejamento de estoque <span>Reposição e cobertura</span></summary><article class="panel stock-planner" aria-labelledby="planner-title">
             <div class="panel-heading"><h3 id="planner-title">Inteligência de estoque e abastecimento</h3><span class="tag-soft">V1.3 · PROJEÇÕES SIMULADAS</span></div>
             <p class="muted">Média de demanda observada nos últimos 7 dias (quando disponível), estoque físico, pedidos em trânsito, cobertura e sugestão de reposição. Nenhum pedido é feito automaticamente.</p>
             <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Produto</th><th>Em estoque</th><th>Em trânsito</th><th>Previsão/dia</th><th>Cobertura</th><th>Mínimo</th><th>Meta</th><th>Sugerido</th></tr></thead><tbody id="inventory-planner-rows"></tbody></table></div>
             <form id="stock-policy-form" class="stock-policy-form"><label for="policy-product">Produto</label><select id="policy-product"></select><label for="policy-reorder">Alerta: estoque mínimo (un.)</label><input id="policy-reorder" type="number" min="0" max="100000" step="1" required><label for="policy-target">Meta de estoque (un.)</label><input id="policy-target" type="number" min="1" max="100000" step="1" required><button type="submit" class="btn btn-outline">Salvar política de reposição</button></form>
-          </article>
-          <div class="dashboard-grid commerce-history-grid">
+          </article></details>
+          <details class="market-drawer"><summary>◷ Histórico operacional <span>Pedidos e comprovantes</span></summary><div class="dashboard-grid commerce-history-grid">
             <article class="panel"><h3>Pedidos e entregas</h3><p class="field-hint">Pedido pago e em trânsito não representa estoque disponível. O recebimento entra na contabilidade ao vencer o prazo.</p><div id="recent-purchases" class="commerce-log"></div></article>
             <article class="panel"><h3>Comprovantes de vendas simuladas</h3><p class="muted">Cada registro automático consolida as vendas do dia, não representa um cliente individual. Registros manuais anteriores permanecem identificados como históricos.</p><div id="recent-sales" class="commerce-log commerce-receipts"></div></article>
-          </div>
+          </div></details>
         </section>
         <section data-view="financas" class="view" hidden>
+          <div class="view-toolbar"><span>TESOURARIA E RESULTADOS</span><button type="button" class="btn btn-outline" data-tab="fiscal">§ Tributos simulados</button></div>
           <article class="panel finance-filters">
             <div class="panel-heading"><h3>Consulta financeira por período</h3><span class="tag-soft">M11 · NÃO ALTERA A CARREIRA</span></div>
             <div class="filter-fields">
@@ -351,16 +535,17 @@
             <p id="finance-validation" class="finance-validation" aria-live="polite" hidden></p>
             <p id="finance-period-label" class="field-hint" aria-live="polite">Escolha a data ou competência que deseja consultar.</p>
           </article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3 id="finance-statement-title">Resumo realizado</h3><span class="tag-soft">M11 · LEDGER</span></div><div class="statement-switch" role="group" aria-label="Demonstrativos contábeis"><button type="button" data-statement-view="summary" aria-pressed="true">Resumo</button><button type="button" data-statement-view="dre" aria-pressed="false">DRE</button><button type="button" data-statement-view="balance" aria-pressed="false">Balanço</button><button type="button" data-statement-view="cash" aria-pressed="false">Caixa</button><button type="button" data-statement-view="check" aria-pressed="false">Conferência</button></div><dl class="finance-list" id="finance-summary"></dl><p id="finance-statement-note" class="field-hint" aria-live="polite">Demonstrações gerenciais: tributos apenas quando efetivamente simulados e contabilizados.</p><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Na hipótese fiscal habilitada, a despesa simulada será apresentada separadamente.</p></div><p class="muted">Fluxos do período filtrado e separados por unidade; saldos de estoque e obrigações são acumulados até o encerramento. O caixa não é repartido artificialmente entre filiais: somente a consulta consolidada exibe o saldo compartilhado.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
-          <article class="panel strategy-panel"><div class="panel-heading"><h3>Gestão estratégica e equilíbrio econômico</h3><span class="tag-soft">V1.4 · ANÁLISE E PROJEÇÃO</span></div>
+          <details class="market-drawer finance-drawer"><summary>▥ Projeções e estratégia <span>Cenários hipotéticos, não lançamentos</span></summary><article class="panel strategy-panel"><div class="panel-heading"><h3>Gestão estratégica e equilíbrio econômico</h3><span class="tag-soft">V1.4 · ANÁLISE E PROJEÇÃO</span></div>
             <p class="muted">Resultados realizados vêm exclusivamente do livro contábil. Projeções são cenários hipotéticos, não lançamentos. A projeção estratégica considera a unidade ativa e o caixa compartilhado atual, sem projetar simultaneamente as demais unidades; não é uma projeção consolidada da rede. Esses cenários não realizam novas compras nem liquidam obrigações existentes. Não gera lançamentos.</p>
             <div class="strategy-controls"><label for="strategy-horizon">Horizonte de projeção (dias)</label><select id="strategy-horizon"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select></div>
             <div id="strategy-metrics" class="strategy-metrics" aria-live="polite"><p class="muted">Abra uma empresa para gerar indicadores.</p></div>
             <div class="table-scroll"><table class="strategy-table"><thead><tr><th>Tipo de custo / resultado</th><th>Realizado: últimos 30 dias encerrados</th><th>Projeção: horizonte escolhido</th></tr></thead><tbody id="strategy-cost-rows"></tbody></table></div>
             <div id="strategy-risks" class="strategy-risks" aria-live="polite"></div>
             <p class="field-hint">Ponto de equilíbrio estimado = despesa operacional fixa diária ÷ margem de contribuição média do mix, sem impostos. Capital de giro gerencial = caixa + estoque + trânsito + recebíveis − obrigações. A previsão respeita estoque atual e entregas já pagas; não prevê novas compras, crédito, tributos ou alterações futuras da concorrência. Saldo positivo não é promessa de liquidez.</p>
-          </article>
+          </article></details>
         </section>
         <section data-view="fiscal" class="view" hidden>
+          <div class="view-toolbar"><span>FINANÇAS / TRIBUTOS</span><button type="button" class="btn btn-outline" data-tab="financas">← Voltar às finanças</button></div>
           <article class="panel fiscal-panel"><span class="fiscal-icon">§</span><div>
             <div class="overline">V1.9 · SIMULAÇÃO TRIBUTÁRIA EDUCATIVA</div>
             <h3>Tributos da sua rede · cenários didáticos</h3>
@@ -398,16 +583,16 @@
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v1.9.0-rc.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v2.0.0-rc.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>
   <div class="toast" id="toast" aria-live="polite" role="status"></div>
   <script>
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.9.0-rc.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.0.0-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '1.9.0-rc.1';
+  const VERSION = '2.0.0-rc.1';
   const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -1430,6 +1615,55 @@ const CidadeCore = (() => {
   return API;
 })();
 
+/* CENA URBANA V2 — apresentação SVG, sem acesso ao estado ou RNG do jogo. */
+const CidadeVisual=(()=>{
+  'use strict';
+  const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function svgMap(city,ownedLots,lot){
+    // SVG estilizado original: cada grupo tem identificação de lote, sem dependências externas.
+    const seed=city.name.length+city.id.length;
+    const urbanSize={local:0,regional:1,grande:2,metropole:3}[city.sizeTier]??0;
+    const fragments=[`<svg viewBox="180 10 600 360" xmlns="http://www.w3.org/2000/svg" aria-label="Mapa isométrico fictício de ${escape(city.name)}">`,
+      `<defs><linearGradient id="sea" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#1e5270"/><stop offset="1" stop-color="#0b2639"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="4"/></filter></defs>`,
+      `<path d="M0 325 Q180 310 280 370 T800 340 L870 410H0Z" fill="#16516e" opacity=".42"/>`,
+      `<path d="M145 155 L436 19 L813 196 L519 366Z" fill="#102d3b" opacity=".9"/>`];
+    // Horizonte ilustrativo: escala visual relativa, sem geografia ou números oficiais.
+    for(let i=0;i<3+urbanSize*5;i++){
+      const cx=210+i*26, h=16+((i*19+seed)%24)+urbanSize*9;
+      fragments.push(`<rect x="${cx}" y="${125-h}" width="13" height="${h}" rx="2" fill="#6da0a9" opacity=".24" pointer-events="none"/>`);
+    }
+    for(let row=0;row<3;row++)for(let col=0;col<6;col++){
+      const num=row*6+col+1,x=392+(col-row)*57,y=91+(col+row)*26;
+      const isOwn=ownedLots.includes(num),isSelected=lot===num;
+      const ground=isOwn?'#9e8144':isSelected?'#3f8bb2':'#42665f';
+      const roofs=['#487d8c','#316275','#607387','#597c80','#425a6b'];
+      const roof=isOwn?'#e8b55f':roofs[(num+seed)%roofs.length];
+      const height=isOwn?42:14+((num*7+seed)%4)*9+urbanSize*7;
+      const xx=x,yy=y,wide=49,tall=23;
+      fragments.push(`<g data-lot="${num}" tabindex="0" role="button" aria-label="Selecionar lote ${num}"><title>Lote ${String(num).padStart(2,'0')} · clique para selecionar</title>`);
+      if(isSelected)fragments.push(`<ellipse cx="${xx}" cy="${yy+12}" rx="65" ry="37" fill="#6dc9ff" opacity=".16" filter="url(#glow)"/>`);
+      fragments.push(`<polygon points="${xx},${yy-tall} ${xx+wide},${yy} ${xx},${yy+tall} ${xx-wide},${yy}" fill="${ground}" stroke="${isSelected?'#9bdbff':'#416773'}" stroke-width="${isSelected?3:1.7}"/>`);
+      if((urbanSize>=2?num%11===0:num%5===0)&&!isOwn){
+        fragments.push(`<path d="M${xx-7} ${yy+5}l-6-18h12l-6 18" fill="#42745c" stroke="#8fc09c" stroke-width="2"/><circle cx="${xx-6}" cy="${yy-10}" r="11" fill="#2d8d66"/><circle cx="${xx+7}" cy="${yy-12}" r="9" fill="#419672"/>`);
+      }else{
+        const cx=xx,cy=yy-3;
+        fragments.push(`<polygon points="${cx-17},${cy-height} ${cx},${cy-height-8} ${cx+19},${cy-height} ${cx+2},${cy-height+10}" fill="${roof}" stroke="#9cc1cb" stroke-width=".7"/>`);
+        fragments.push(`<polygon points="${cx-17},${cy-height} ${cx+2},${cy-height+10} ${cx+2},${cy+13} ${cx-17},${cy+2}" fill="${isOwn?'#bb873c':'#345569'}"/>`);
+        fragments.push(`<polygon points="${cx+2},${cy-height+10} ${cx+19},${cy-height} ${cx+19},${cy+2} ${cx+2},${cy+13}" fill="${isOwn?'#e2a450':'#27485e'}"/>`);
+        fragments.push(`<path d="M${cx-10} ${cy-height+14}v5 M${cx-3} ${cy-height+18}v5 M${cx+8} ${cy-height+17}v6" stroke="${isOwn?'#f7d99e':'#7ba9bf'}" stroke-width="2"/>`);
+      }
+      fragments.push(`</g>`);
+    }
+    const r=Math.floor((lot-1)/6),c=(lot-1)%6;
+    const px=392+(c-r)*57,py=91+(c+r)*26;
+    // Destaque sobreposto por último: lote legível sem 18 números concorrendo no mapa.
+    fragments.push(`<g class="selected-lot-marker" pointer-events="none" aria-hidden="true"><path d="M${px} ${py-4}L${px} ${py-39}" stroke="#f4d49a" stroke-width="2"/><rect x="${px-55}" y="${py-69}" width="110" height="30" rx="8" fill="#0c2238" stroke="#f4d49a" stroke-width="1.6"/><text x="${px}" y="${py-49}" fill="#ffe1a1" text-anchor="middle" font-size="14" font-weight="800">LOTE ${String(lot).padStart(2,'0')}</text></g>`);
+    fragments.push(`<text x="208" y="40" fill="#9fbfd2" font-size="15" font-weight="700" letter-spacing="3">${escape(city.name.toUpperCase())} · ${escape(city.uf)}</text><text x="208" y="60" fill="#7eabc0" font-size="10">DISTRITO COMERCIAL FICTÍCIO · PORTE ${escape(city.sizeTier.toUpperCase())}</text></svg>`);
+    return fragments.join('');
+  }
+  return Object.freeze({svgMap});
+})();
+
 /* Cidade dos Negócios 1 — interface. Sem regras econômicas e sem RNG. */
 (() => {
   'use strict';
@@ -1447,6 +1681,7 @@ const CidadeCore = (() => {
     select.replaceChildren(...products.map(p=>{const option=document.createElement('option');option.value=p.id;option.textContent=p.name;return option;}));
     if(products.some(p=>p.id===previous))select.value=previous;
   }
+  /* V2.0: fragmento de visualização, incorporado à mesma closure pelo build. */
   function renderSalesMonitor(){
     const b=business(),sales=b?.sales||[];
     const checks=state?.audit?.events?.filter(e=>e.type==='DEMANDA.SIMULADA'&&b&&(e.businessId===b.id||(!e.businessId&&b.id===state.world.business?.id)))||[];
@@ -1507,6 +1742,7 @@ const CidadeCore = (() => {
 
   let toastTimer;
   const nextId=()=>`ui:${Date.now()}:${++sequence}`;
+
   const setText=(id,value)=>{const el=$(id);if(el)el.textContent=String(value)};
   function notify(message,isError=false){
     const n=$('toast');n.textContent=message;n.classList.toggle('error',isError);n.classList.add('visible');
@@ -1603,6 +1839,7 @@ const CidadeCore = (() => {
     if(report.recent.oneOff>0)risks.push('Abertura e outras despesas eventuais constam do realizado, mas não foram repetidas na projeção.');
     $('strategy-risks').innerHTML=risks.length?risks.map(x=>`<p>${escape(x)}</p>`).join(''):'<p>Sem alertas adicionais nos parâmetros desta projeção hipotética.</p>';
   }
+  /* V2.0: fragmento de visualização, incorporado à mesma closure pelo build. */
   function renderFinances(){
     if(!state)return;
     const q=ensureFinanceQuery();
@@ -1726,6 +1963,7 @@ const CidadeCore = (() => {
       ['Reconhecimento contábil de teste','NENHUM']].map(([k,val])=>`<dt>${escape(k)}</dt><dd>${escape(val)}</dd>`).join('');
     setText('fiscal-transition-note',e.note);
   }
+
   function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
   function commit(type,payload={}){
     if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;financeScope='all';statementView='summary';}
@@ -1735,10 +1973,11 @@ const CidadeCore = (() => {
     notify(result.message);
     return true;
   }
-  function goto(name){tab=name;document.querySelectorAll('[data-view]').forEach(el=>{const chosen=el.getAttribute('data-view')===name;el.hidden=!chosen;el.classList.toggle('active',chosen);});document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.tab===name));
+  function goto(name){tab=name;document.querySelectorAll('[data-view]').forEach(el=>{const chosen=el.getAttribute('data-view')===name;el.hidden=!chosen;el.classList.toggle('active',chosen);});document.querySelectorAll('[data-tab]').forEach(el=>{const active=el.dataset.tab===(name==='fiscal'?'financas':name);el.classList.toggle('active',active);if(el.classList.contains('nav-item')){if(active)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');}});
     const labels={cidade:['CENTRAL DE OPERAÇÕES','A sua cidade, as suas decisões.','Explore lotes comerciais e acompanhe os acontecimentos.'],empresa:['GESTÃO EMPRESARIAL','Cada escolha constrói um negócio.','Abra sua empresa e tome decisões de administração.'],mercado:['VENDAS E SUPRIMENTOS','Preço, demanda e estoque.','Compre mercadorias e encontre sua estratégia de preço.'],financas:['INDICADORES CONTÁBEIS','Os números contam sua história.','Acompanhe lançamentos e resultados rastreáveis.'],fiscal:['CENÁRIOS TRIBUTÁRIOS','A estratégia também considera tributos.','Simulação opcional com limitações e regras por competência.'],sistema:['PERSISTÊNCIA E QA','Seu progresso, sua segurança.','Faça backups e confira o estado da simulação.']};
     const info=labels[name]||labels.cidade;setText('page-kicker',info[0]);setText('page-title-text',info[1]);setText('page-subtitle',info[2]);
     if(state)render();
+    window.scrollTo({top:0,behavior:'instant'});
   }
   function cityOptions(){
     const items=Core.CITIES.slice().sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
@@ -1772,48 +2011,6 @@ const CidadeCore = (() => {
     $('regional-source').href=p.source;
     $('map-canvas').dataset.urbanSize=p.tier;
   }
-  function svgMap(city,ownedLots,lot){
-    // SVG estilizado original: cada grupo tem identificação de lote, sem dependências externas.
-    const seed=city.name.length+city.id.length;
-    const urbanSize={local:0,regional:1,grande:2,metropole:3}[city.sizeTier]??0;
-    const fragments=[`<svg viewBox="180 10 600 360" xmlns="http://www.w3.org/2000/svg" aria-label="Mapa isométrico fictício de ${escape(city.name)}">`,
-      `<defs><linearGradient id="sea" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#1e5270"/><stop offset="1" stop-color="#0b2639"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="4"/></filter></defs>`,
-      `<path d="M0 325 Q180 310 280 370 T800 340 L870 410H0Z" fill="#16516e" opacity=".42"/>`,
-      `<path d="M145 155 L436 19 L813 196 L519 366Z" fill="#102d3b" opacity=".9"/>`];
-    // Horizonte ilustrativo: escala visual relativa, sem geografia ou números oficiais.
-    for(let i=0;i<3+urbanSize*5;i++){
-      const cx=210+i*26, h=16+((i*19+seed)%24)+urbanSize*9;
-      fragments.push(`<rect x="${cx}" y="${125-h}" width="13" height="${h}" rx="2" fill="#6da0a9" opacity=".24" pointer-events="none"/>`);
-    }
-    for(let row=0;row<3;row++)for(let col=0;col<6;col++){
-      const num=row*6+col+1,x=392+(col-row)*57,y=91+(col+row)*26;
-      const isOwn=ownedLots.includes(num),isSelected=lot===num;
-      const ground=isOwn?'#9e8144':isSelected?'#3f8bb2':'#42665f';
-      const roofs=['#487d8c','#316275','#607387','#597c80','#425a6b'];
-      const roof=isOwn?'#e8b55f':roofs[(num+seed)%roofs.length];
-      const height=isOwn?42:14+((num*7+seed)%4)*9+urbanSize*7;
-      const xx=x,yy=y,wide=49,tall=23;
-      fragments.push(`<g data-lot="${num}" tabindex="0" role="button" aria-label="Selecionar lote ${num}"><title>Lote ${String(num).padStart(2,'0')} · clique para selecionar</title>`);
-      if(isSelected)fragments.push(`<ellipse cx="${xx}" cy="${yy+12}" rx="65" ry="37" fill="#6dc9ff" opacity=".16" filter="url(#glow)"/>`);
-      fragments.push(`<polygon points="${xx},${yy-tall} ${xx+wide},${yy} ${xx},${yy+tall} ${xx-wide},${yy}" fill="${ground}" stroke="${isSelected?'#9bdbff':'#416773'}" stroke-width="${isSelected?3:1.7}"/>`);
-      if((urbanSize>=2?num%11===0:num%5===0)&&!isOwn){
-        fragments.push(`<path d="M${xx-7} ${yy+5}l-6-18h12l-6 18" fill="#42745c" stroke="#8fc09c" stroke-width="2"/><circle cx="${xx-6}" cy="${yy-10}" r="11" fill="#2d8d66"/><circle cx="${xx+7}" cy="${yy-12}" r="9" fill="#419672"/>`);
-      }else{
-        const cx=xx,cy=yy-3;
-        fragments.push(`<polygon points="${cx-17},${cy-height} ${cx},${cy-height-8} ${cx+19},${cy-height} ${cx+2},${cy-height+10}" fill="${roof}" stroke="#9cc1cb" stroke-width=".7"/>`);
-        fragments.push(`<polygon points="${cx-17},${cy-height} ${cx+2},${cy-height+10} ${cx+2},${cy+13} ${cx-17},${cy+2}" fill="${isOwn?'#bb873c':'#345569'}"/>`);
-        fragments.push(`<polygon points="${cx+2},${cy-height+10} ${cx+19},${cy-height} ${cx+19},${cy+2} ${cx+2},${cy+13}" fill="${isOwn?'#e2a450':'#27485e'}"/>`);
-        fragments.push(`<path d="M${cx-10} ${cy-height+14}v5 M${cx-3} ${cy-height+18}v5 M${cx+8} ${cy-height+17}v6" stroke="${isOwn?'#f7d99e':'#7ba9bf'}" stroke-width="2"/>`);
-      }
-      fragments.push(`</g>`);
-    }
-    const r=Math.floor((lot-1)/6),c=(lot-1)%6;
-    const px=392+(c-r)*57,py=91+(c+r)*26;
-    // Destaque sobreposto por último: lote legível sem 18 números concorrendo no mapa.
-    fragments.push(`<g class="selected-lot-marker" pointer-events="none" aria-hidden="true"><path d="M${px} ${py-4}L${px} ${py-39}" stroke="#f4d49a" stroke-width="2"/><rect x="${px-55}" y="${py-69}" width="110" height="30" rx="8" fill="#0c2238" stroke="#f4d49a" stroke-width="1.6"/><text x="${px}" y="${py-49}" fill="#ffe1a1" text-anchor="middle" font-size="14" font-weight="800">LOTE ${String(lot).padStart(2,'0')}</text></g>`);
-    fragments.push(`<text x="208" y="40" fill="#9fbfd2" font-size="15" font-weight="700" letter-spacing="3">${escape(city.name.toUpperCase())} · ${escape(city.uf)}</text><text x="208" y="60" fill="#7eabc0" font-size="10">DISTRITO COMERCIAL FICTÍCIO · PORTE ${escape(city.sizeTier.toUpperCase())}</text></svg>`);
-    return fragments.join('');
-  }
   function eventsHTML(events){if(!events.length)return '<p class="muted">Nenhum evento registrado ainda.</p>';return events.map(e=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(e.text)}</p><small>${escape(e.date)} · ${escape(e.type)}</small></div></div>`).join('');}
   function render(){
     const started=!!state?.player?.cityId;
@@ -1830,10 +2027,13 @@ const CidadeCore = (() => {
     $('other-city-warning').hidden=units.some(x=>x.cityId===visibleCity.id);
     setText('other-city-warning','Cidade sem unidade da sua rede. Você pode inaugurar uma unidade num lote disponível.');
     setText('map-title',`Distrito comercial de ${visibleCity.name}`);setText('map-uf',visibleCity.uf);
-    $('map-canvas').innerHTML=svgMap(visibleCity,units.filter(x=>x.cityId===visibleCity.id).map(x=>x.lot),selectedLot);
+    $('map-canvas').innerHTML=CidadeVisual.svgMap(visibleCity,units.filter(x=>x.cityId===visibleCity.id).map(x=>x.lot),selectedLot);
     renderRegional(visibleCity);
     setText('selected-lot',`Lote ${String(selectedLot).padStart(2,'0')} de 18`);updateOpenPreview();
-    $('map-open-company').disabled=units.length>=5||units.some(x=>x.cityId===visibleCity.id&&x.lot===selectedLot);
+    const lotOwner=units.find(x=>x.cityId===visibleCity.id&&x.lot===selectedLot);
+    $('map-open-company').disabled=!lotOwner&&units.length>=5;
+    setText('map-open-company',lotOwner?'Gerenciar este estabelecimento':'Abrir unidade neste lote');
+    setText('map-lot-status',lotOwner?`Sua unidade ${lotOwner.id} está neste lote.`:(units.length>=5?'Limite de 5 estabelecimentos atingido.':'Terreno disponível para uma nova unidade.'));
     setText('city-events','');$('city-events').innerHTML=eventsHTML(state.audit.events.slice(-6).reverse());
     $('company-empty').hidden=units.length>=5;$('company-active').hidden=!b;
     renderGroup();
@@ -1900,7 +2100,7 @@ const CidadeCore = (() => {
     $('explore-city').addEventListener('change',e=>{viewCityId=e.target.value;render();updateOpenPreview();});
     $('map-canvas').addEventListener('click',e=>{const target=e.target.closest('[data-lot]');if(target){selectedLot=Number(target.dataset.lot);render();updateOpenPreview();}});
     $('map-canvas').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const target=e.target.closest('[data-lot]');if(target){e.preventDefault();selectedLot=Number(target.dataset.lot);render();}}});
-    $('map-open-company').addEventListener('click',()=>{goto('empresa');$('sector-select').focus();});
+    $('map-open-company').addEventListener('click',()=>{const owner=Core.businesses(state).find(x=>x.cityId===viewCityId&&x.lot===selectedLot);if(owner&&business()?.id!==owner.id)commit('EMPRESA.ATIVAR',{businessId:owner.id});goto('empresa');if(!owner)$('sector-select').focus();});
     $('sector-select').addEventListener('change',updateOpenPreview);
     $('open-form').addEventListener('submit',e=>{e.preventDefault();if(!state)return;if(commit('EMPRESA.ABRIR',{sector:$('sector-select').value,cityId:viewCityId,lot:selectedLot}))goto('cidade');});
     $('buy-quantity').addEventListener('input',updateBuyPreview);

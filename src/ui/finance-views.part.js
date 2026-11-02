@@ -1,0 +1,124 @@
+/* V2.0: fragmento de visualização, incorporado à mesma closure pelo build. */
+  function renderFinances(){
+    if(!state)return;
+    const q=ensureFinanceQuery();
+    $('finance-period').value=q.period;
+    for(const group of document.querySelectorAll('[data-finance-field]'))group.hidden=group.dataset.financeField!==q.period;
+    const fields={'finance-date':q.asOf,'finance-day':q.day,'finance-month':q.month,
+      'finance-quarter':q.quarter,'finance-quarter-year':q.quarterYear,
+      'finance-semester':q.semester,'finance-semester-year':q.semesterYear,
+      'finance-year':q.year,'finance-range-from':q.from,'finance-range-to':q.to};
+    for(const [id,value] of Object.entries(fields)){const el=$(id);if(document.activeElement!==el)el.value=String(value);}
+    for(const id of ['finance-date','finance-day','finance-range-from','finance-range-to'])$(id).max=state.calendar.date;
+    $('finance-month').max=state.calendar.date.slice(0,7);
+    for(const id of ['finance-year','finance-quarter-year','finance-semester-year'])$(id).max=state.calendar.date.slice(0,4);
+    let report;
+    try {
+      const params=financeQueryDate(q);
+      report=Core.financialReport(state,q.period,params.date,params.range,financeScope);
+      $('finance-validation').hidden=true;setText('finance-validation','');
+    }catch(e){
+      $('finance-validation').hidden=false;setText('finance-validation',e.message);
+      setText('finance-period-label','Corrija o período selecionado para consultar o demonstrativo.');
+      $('finance-summary').innerHTML='';setText('finance-statement-note','Selecione um período válido para consultar os demonstrativos.');setText('journal-count','—');
+      $('journal-events').innerHTML='<p class="muted">Período inválido. Nenhum dado foi alterado.</p>';
+      return;
+    }
+    setText('finance-period-label',`${report.label} · ${financeScope==='all'?'GRUPO CONSOLIDADO':`UNIDADE ${financeScope}`} · lançamentos até ${BRDate(report.effectiveEnd)}. Consulta fixa até você alterar os filtros.`);
+    // Guia de demonstrações: um único painel, sem adicionar abas principais.
+    const titles={summary:'Resumo realizado',dre:'DRE gerencial',balance:'Balanço patrimonial',cash:'Fluxo de caixa realizado',check:'Conferência do razão'};
+    setText('finance-statement-title',titles[statementView]);
+    for(const button of document.querySelectorAll('[data-statement-view]')){
+      const active=button.dataset.statementView===statementView;
+      button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
+    }
+
+    const rows=[
+      ['Receita de vendas (período)',report.revenue],
+      ['(-) Custo das mercadorias vendidas',report.cogs],
+      ['Lucro bruto (período)',report.grossProfit],
+      ['(-) Despesas operacionais',report.expenses],
+      ['Resultado antes dos tributos',report.revenue-report.cogs-report.expenses],
+      ['(-) Tributos simulados contabilizados',report.taxExpense],
+      ['Resultado após tributos simulados',report.profit],
+      ['Caixa centralizado do grupo',financeScope==='all'?report.closingCash:null],
+      ['Estoque contabilizado no encerramento',report.closingInventory],
+      ['Obrigações operacionais acumuladas',report.closingPayable],
+      ['Tributos simulados a pagar',report.closingTaxPayable],
+      ['Mercadorias pagas em trânsito (ativo)',report.closingInTransit]
+    ];
+    let note='Resultados realizados do ledger. Tributos só entram quando há cenário didático opt-in efetivamente contabilizado; não representam apuração legal.';
+    if(statementView==='dre'){
+      const x=Core.incomeStatement(state,q.period,financeQueryDate(q).date,financeQueryDate(q).range,financeScope);
+      rows.splice(0,rows.length,...[
+        ['Receita de vendas',x.revenue],['(-) CMV',x.cogs],['Lucro bruto',x.grossProfit],
+        ['(-) Despesas fixas operacionais',x.fixedExpenses],['(-) Abertura de unidades',x.openingExpenses],
+        ['(-) Outras despesas não classificadas',x.unclassifiedExpenses],['Resultado antes dos tributos',x.operatingResult],
+        ['(-) Tributos simulados lançados no período',x.taxExpense],['Resultado após tributos simulados',x.resultAfterSimulatedTax]
+      ]);
+      note='DRE do período. Tributos são apenas cenários didáticos reconhecidos após ativação e fechamento da competência; não constituem valores fiscais reais.';
+    }else if(statementView==='balance'){
+      const x=Core.balanceSheet(state,report.effectiveEnd);
+      rows.splice(0,rows.length,...[
+        ['Caixa compartilhado',x.accounts.CASH],['Estoques físicos',x.accounts.INVENTORY],
+        ['Mercadorias em trânsito',x.accounts.IN_TRANSIT],['Recebíveis',x.accounts.RECEIVABLE],
+        ['Total do ativo',x.assets],['Contas a pagar (inclui tributos simulados)',x.liabilities],['Tributos simulados a pagar',x.accounts.TAX_PAYABLE],
+        ['Capital aportado',x.paidInCapital],['Resultados acumulados após tributos simulados',x.retainedEarnings],
+        ['Patrimônio líquido gerencial',x.equity],['Diferença de conciliação',x.difference]
+      ]);
+      note=`Balanço CONSOLIDADO do grupo até ${BRDate(x.asOf)}. Nunca é atribuído caixa individual a filiais. ${x.balanced?'Ativo = Passivo + PL.':'⚠ Há divergência ou conta não mapeada.'} Tributos presentes somente quando simulados e contabilizados.`;
+    }else if(statementView==='cash'){
+      const x=Core.cashFlowStatement(state,q.period,financeQueryDate(q).date,financeQueryDate(q).range,financeScope);
+      rows.splice(0,rows.length,...[
+        ['Caixa inicial do grupo',x.openingCash],['Entradas de vendas',x.categories.sales],
+        ['Aportes ao grupo',x.categories.capital],['Outras entradas sem classificação',x.categories.unclassifiedIn],
+        ['Saídas para fornecedores',x.categories.suppliers],['Saídas operacionais',x.categories.operating],
+        ['Aberturas de unidades',x.categories.opening],['Pagamento de tributo simulado',x.categories.taxPayments],['Outras saídas sem classificação',x.categories.unclassifiedOut],
+        ['Variação líquida de caixa',x.netCash],['Caixa final do grupo',x.closingCash]
+      ]);
+      note=x.warning+' Entradas, saídas e saldos representam caixa efetivo, e não custos por competência.';
+    }else if(statementView==='check'){
+      const x=Core.reconciliationReport(state,report.effectiveEnd);
+      rows.splice(0,rows.length,...[
+        ['Diferença ativo − (passivo + PL)',x.statementDifference],
+        ['Unidades conferidas (inventário)',x.snapshotAvailable?x.unitRows.length:null],
+        ['Inconsistências identificadas',x.errors.length],
+        ['Situação do fechamento',x.ok?'CONCILIADO':'VERIFICAR']
+      ]);
+      note=x.note+' '+(x.errors.length?x.errors.join(' · '):'Partidas dobradas e balanço conferidos.');
+    }
+    $('finance-summary').innerHTML=rows.map((x,i)=>`<dt class="${i===rows.length-1?'emphasis':''}">${escape(x[0])}</dt><dd class="${i===rows.length-1?'emphasis':''}">${typeof x[1]==='string'?escape(x[1]):x[1]===null?'Compartilhado (ver grupo)':escape(Core.money(x[1]))}</dd>`).join('');
+    setText('finance-statement-note',note);
+    setText('journal-count',`${report.entries.length} registros`);
+    $('journal-events').innerHTML=report.entries.length?report.entries.slice(-8).reverse().map(j=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(j.memo)}</p><small>${escape(BRDate(j.date))} · ${escape(j.id)}</small></div></div>`).join(''):'<p class="muted">Nenhum lançamento neste período.</p>';
+    renderStrategy();
+  }
+  function renderFiscal(){
+    if(!state)return;
+    const f=Core.taxReport(state),v=f.estimate,e=f.transition;
+    setText('fiscal-status',f.mode==='SIMULACAO_SIMPLES_COMERCIO'?`${v.coverageStatus} · cenário ${v.coverageStatus==='UNSUPPORTED'?'suspenso nesta competência':'ativado'}`:'NOT_COVERED · demonstração econômica');
+    $('fiscal-optin').hidden=f.mode!=='DEMONSTRACAO_ECONOMICA';
+    $('fiscal-activate').disabled=!$('fiscal-acknowledge').checked;
+    const rows=[
+      ['Modo atual',f.mode==='DEMONSTRACAO_ECONOMICA'?'Sem cobrança ativa':'Cenário de comércio simulado'],
+      ['Início das competências',f.effectiveFrom||'Somente após confirmação'],
+      ['Competência corrente',f.currentPeriod],
+      ['Cobertura da competência',v.coverageStatus],
+      ['Receita registrada no mês',Core.money(v.revenue)],
+      ['RBT12 anualizada (didática)',v.rbt12===null?'NÃO COBERTA':Core.money(v.rbt12)],
+      ['Faixa do Anexo I',v.bracket===null?'—':`${v.bracket}ª faixa`],
+      ['Alíquota efetiva aproximada',v.rateBasisPoints===null?'—':`${(v.rateBasisPoints/100).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}%`],
+      ['Cenário mensal estimado',v.amount===null?'NÃO CALCULADO':Core.money(v.amount)],
+      ['Saldo tributário simulado a pagar',Core.money(f.taxPayable)]
+    ];
+    $('fiscal-summary').innerHTML=rows.map(([k,val])=>`<dt>${escape(k)}</dt><dd>${escape(val)}</dd>`).join('');
+    setText('fiscal-note',`${v.reason} ${f.note} Valor corrente é apenas estimativa até o fechamento; competência não suportada não é zero.`);
+    const records=f.assessments.slice(-15).reverse();
+    $('fiscal-assessments').innerHTML=records.length?records.map(a=>`<div class="event-item"><div><strong>${escape(a.period)}</strong> · ${escape(a.status)}<p>${a.status==='UNSUPPORTED'?escape(a.reason):`Valor calculado ${escape(Core.money(a.amount))} · Pago ${escape(Core.money(a.paid))}`}</p></div>${a.status==='OPEN'?`<button type="button" class="btn btn-outline" data-tax-pay="${escape(a.period)}">Pagar ${escape(Core.money(a.amount-a.paid))}</button>`:''}</div>`).join(''):'<p class="muted">Nenhuma competência encerrada no modo de simulação. Nada foi lançado retroativamente.</p>';
+    $('fiscal-transition').innerHTML=[['Ano / etapa',`${e.year} · ${e.phase}`],
+      ['Receita corrente (referência educativa)',Core.money(e.revenueCurrentMonth)],
+      ['CBS de teste 2026 — 0,9%',e.cbsTestCents===null?'Não calculada':Core.money(e.cbsTestCents)],
+      ['IBS de teste 2026 — 0,1%',e.ibsTestCents===null?'Não calculado':Core.money(e.ibsTestCents)],
+      ['Reconhecimento contábil de teste','NENHUM']].map(([k,val])=>`<dt>${escape(k)}</dt><dd>${escape(val)}</dd>`).join('');
+    setText('fiscal-transition-note',e.note);
+  }

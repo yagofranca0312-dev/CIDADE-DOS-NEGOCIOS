@@ -13,21 +13,22 @@ test('JavaScript do HTML compilado tem sintaxe válida',()=>{assert.doesNotThrow
 test('Módulos e pontos de entrada presentes',()=>{for(const token of ['const CidadeCore','dispatch(','exportSave(','importSave(','diagnostics(','svgMap('])assert.ok(scripts[0][2].includes(token),token);});
 test('Aviso de cobertura fiscal explícita',()=>{assert.match(html,/Cenários tributários não são apuração legal/);assert.match(html,/NOT_COVERED/);});
 test('Build reproduzível byte a byte',()=>{
- const template=readFileSync('src/shell/index.template.html','utf8'),css=readFileSync('src/shell/theme.css','utf8'),core=readFileSync('src/core/game.js','utf8'),ui=readFileSync('src/ui/app.js','utf8');
- const expected=template.replace('/* CDN_CSS */',css).replace('/* CDN_CORE */',core).replace('/* CDN_UI */',ui);
+ const template=readFileSync('src/shell/index.template.html','utf8'),css=readFileSync('src/shell/theme.css','utf8'),v2css=readFileSync('src/shell/v2.css','utf8'),core=readFileSync('src/core/game.js','utf8'),visual=readFileSync('src/visual/city-scene.js','utf8'),ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
+ const uiBundle=readFileSync('src/ui/app.js','utf8').replace('/* CDN_MARKET_VIEWS */',readFileSync('src/ui/market-views.part.js','utf8')).replace('/* CDN_FINANCE_VIEWS */',readFileSync('src/ui/finance-views.part.js','utf8'));
+ const expected=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_CORE */',core).replace('/* CDN_VISUAL */',visual).replace('/* CDN_UI */',uiBundle);
  assert.equal(createHash('sha256').update(expected).digest('hex'),createHash('sha256').update(html).digest('hex'));
 });
 
 test('Hotfix: lote selecionado destacado sem etiquetas de todos os lotes',()=>{
- const ui=readFileSync('src/ui/app.js','utf8');
- assert.match(ui,/selected-lot-marker/);
- assert.match(ui,/LOTE \$\{String\(lot\)/);
- assert.match(ui,/<title>Lote/);
+ const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8')),visual=readFileSync('src/visual/city-scene.js','utf8');
+ assert.match(visual,/selected-lot-marker/);
+ assert.match(visual,/LOTE \$\{String\(lot\)/);
+ assert.match(visual,/<title>Lote/);
  assert.match(ui,/Lote \$\{String\(selectedLot\)/);
 });
 test('Hotfix: preço próprio visível, concorrente independente e confirmação da mudança',()=>{
  const template=readFileSync('src/shell/index.template.html','utf8');
- const ui=readFileSync('src/ui/app.js','utf8');
+ const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
  assert.match(template,/id="your-current-price"/);
  assert.match(template,/id="competitor-price"/);
  assert.match(template,/id="price-change-feedback"/);
@@ -38,14 +39,14 @@ test('Hotfix: preço próprio visível, concorrente independente e confirmação
 test('V1.3: schema 5 com migração da V1 e formato de exportação validado',()=>{
  const core=readFileSync('src/core/game.js','utf8');
  assert.match(core,/SCHEMA_VERSION = 9/);
- assert.match(core,/VERSION = '1\.9\.0-rc\.1'/);
+ assert.match(core,/VERSION = '2\.0\.0-rc\.1'/);
  assert.match(core,/function importSave\(raw\)/);
  assert.match(core,/function upgradedState\(original\)/);
 });
 
 test('V1.1: controles de quantidade, recortes financeiros e histórico de preços presentes',()=>{
  const template=readFileSync('src/shell/index.template.html','utf8');
- const ui=readFileSync('src/ui/app.js','utf8');
+ const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
  for(const v of ['10','50','100','250'])assert.match(template,new RegExp(`data-buy-preset="${v}"`));
  for(const id of ['finance-period','finance-date','finance-period-label','price-history'])assert.ok(template.includes(`id="${id}"`));
  assert.match(ui,/renderPriceHistory\(\)/);

@@ -5,22 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10243E">
   <meta name="description" content="Cidade dos Negócios 1, simulador empresarial brasileiro offline, em um único HTML.">
-  <title>Cidade dos Negócios 1 · v1.9.0-rc.1</title>
+  <title>Cidade dos Negócios 1 · v2.0.0-rc.1</title>
   <style>
 /* CDN_CSS */
+/* CDN_V2_CSS */
   </style>
 </head>
 <body>
   <div class="onboarding" id="onboarding">
     <div class="onboarding-art" aria-hidden="true"><div class="skyline"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
     <div class="intro-copy">
-      <p class="eyebrow"><span class="eyebrow-dot"></span> CIDADE DOS NEGÓCIOS · PRIMEIRA EDIÇÃO</p>
+      <p class="eyebrow"><span class="eyebrow-dot"></span> CIDADE DOS NEGÓCIOS · EDIÇÃO 2.0</p>
       <div class="brand-icon brand-intro" aria-hidden="true"><svg viewBox="0 0 62 62" width="60" height="60"><rect x="5" y="30" width="13" height="27" rx="2" fill="#51A9DF"/><rect x="24" y="19" width="13" height="38" rx="2" fill="#E9AD50"/><rect x="43" y="8" width="13" height="49" rx="2" fill="#51A9DF"/><path d="M8 20l15-8 12 5L51 1" fill="none" stroke="#F4D49A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <h1>CIDADE DOS<br><em>NEGÓCIOS</em></h1>
-      <p class="hero-subtitle">Uma cidade. Uma empresa. Mil decisões.</p>
+      <p class="hero-subtitle">Trinta cidades. Uma rede. Suas decisões.</p>
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◆ Economia simulada</span><span>◆ 30 cidades</span><span>◆ Offline</span></div>
-      <p class="fine-print"><span id="intro-version">v1.9.0-rc.1</span> — prévia jogável. Dados oficiais identificados; mercado e legislação tributária simulados ou não cobertos.</p>
+      <p class="fine-print"><span id="intro-version">v2.0.0-rc.1</span> — prévia jogável. Dados oficiais identificados; mercado e legislação tributária simulados ou não cobertos.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -42,16 +43,15 @@
   </div>
   <div id="game-shell" class="game-shell" hidden>
     <aside class="sidebar">
-      <div class="sidebar-brand"><div class="brand-mark" aria-hidden="true"><span>▥</span></div><div><strong>CIDADE DOS<br>NEGÓCIOS</strong><small>EDIÇÃO 01</small></div></div>
-      <div class="nav-label">VISÃO GERAL</div>
-      <nav class="nav-items" aria-label="Seções do jogo">
-        <button type="button" data-tab="cidade" class="nav-item active"><span>▦</span> Cidade</button>
-        <button type="button" data-tab="empresa" class="nav-item"><span>▣</span> Minha empresa</button>
-        <button type="button" data-tab="mercado" class="nav-item"><span>⇅</span> Mercado</button>
-        <button type="button" data-tab="financas" class="nav-item"><span>▥</span> Finanças</button>
-        <button type="button" data-tab="fiscal" class="nav-item"><span>§</span> Fiscal</button>
-        <button type="button" data-tab="sistema" class="nav-item"><span>⚙</span> Sistema</button>
+      <div class="sidebar-brand"><div class="brand-mark" aria-hidden="true"><span>▥</span></div><div><strong>CIDADE DOS<br>NEGÓCIOS</strong><small>EDIÇÃO 2.0</small></div></div>
+      <div class="nav-label">SEU MUNDO</div>
+      <nav class="nav-items nav-primary" aria-label="Navegação principal">
+        <button type="button" data-tab="cidade" class="nav-item active" aria-current="page"><span aria-hidden="true">▦</span> Cidade</button>
+        <button type="button" data-tab="empresa" class="nav-item"><span aria-hidden="true">▣</span> Empresas</button>
+        <button type="button" data-tab="mercado" class="nav-item"><span aria-hidden="true">⇅</span> Mercado</button>
+        <button type="button" data-tab="financas" class="nav-item"><span aria-hidden="true">▥</span> Finanças</button>
       </nav>
+      <div class="sidebar-tools"><div class="nav-label">FERRAMENTAS</div><button type="button" data-tab="sistema" class="nav-item utility-item"><span aria-hidden="true">⚙</span> Configurações</button></div>
       <div class="sidebar-bottom"><span class="online-dot"></span> EXECUÇÃO LOCAL <small>100% sem servidor</small></div>
     </aside>
     <div class="main-pane">
@@ -61,6 +61,7 @@
           <div id="unit-switch-container" class="unit-switch" hidden><label class="compact-label" for="unit-switch">Unidade ativa</label><select id="unit-switch" aria-label="Selecionar estabelecimento para gerenciar"></select></div>
           <label class="compact-label" for="explore-city">Explorar cidade</label><select id="explore-city" aria-label="Cidade em visualização"></select>
           <div class="date-box"><small>DATA DO MUNDO</small><strong id="date-label">—</strong></div>
+          <button type="button" class="mobile-settings btn btn-outline" data-tab="sistema" aria-label="Configurações do jogo" title="Configurações">⚙</button>
           <button type="button" id="pause-btn" class="btn btn-outline" aria-label="Iniciar ou pausar simulação">▶ Jogar</button>
           <select id="speed-select" aria-label="Velocidade da simulação"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select>
         </div>
@@ -68,7 +69,7 @@
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
       <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Cenários tributários não são apuração legal.</div>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v1.9.0-rc.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v2.0.0-rc.1</span></div>
         <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
           <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
           <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
@@ -76,14 +77,16 @@
           <div class="stat"><span>ESTOQUE DISPONÍVEL</span><strong id="kpi-stock">—</strong><small id="kpi-stock-label">Estoque físico consolidado do grupo</small></div>
         </section>
         <section data-view="cidade" class="view active">
-          <div class="dashboard-grid">
+          <div class="city-stage-intro"><div><span class="stage-eyebrow">UM MUNDO DE NEGÓCIOS</span><strong>Seu próximo movimento começa na cidade.</strong></div><span class="stage-live"><span aria-hidden="true">●</span> SIMULAÇÃO LOCAL</span></div>
+          <div class="dashboard-grid city-stage">
             <article class="panel map-panel"><div class="panel-heading"><div><div class="overline">MAPA URBANO · ESTILIZADO</div><h3 id="map-title">Seu distrito comercial</h3></div><span class="tag-soft" id="map-uf">CE</span></div>
+              <div class="world-map-notice">CLIQUE EM UM EDIFÍCIO PARA INSPECIONAR UM LOTE</div>
               <div id="map-canvas" class="map-canvas" role="group" aria-label="Mapa ilustrativo clicável com 18 lotes"></div>
               <div class="map-legend"><span><i class="legend-color lot"></i> Lote disponível</span><span><i class="legend-color own"></i> Sua empresa</span><span><i class="legend-color sel"></i> Selecionado</span></div>
               <p class="map-disclaimer">Mapa fictício para jogabilidade. Não representa ruas, lotes ou imóveis reais.</p>
             </article>
-            <div class="right-column"><article class="panel"><div class="panel-heading"><h3>Lote selecionado</h3><span class="tag-soft">COMERCIAL</span></div><div class="big-number" id="selected-lot">Lote 01</div><p class="muted">Selecione um dos lotes no mapa. O grupo pode ter até cinco estabelecimentos, em cidades diferentes. Cada lote comporta uma unidade.</p><button class="btn btn-primary full" id="map-open-company" type="button">Abrir unidade neste lote</button></article>
-              <article class="panel regional-panel" aria-labelledby="regional-title"><div class="panel-heading"><div><div class="overline">IBGE E SIMULAÇÃO</div><h3 id="regional-title">Observatório econômico</h3></div><span class="tag-soft">OFFLINE</span></div>
+            <div class="right-column"><article class="panel"><div class="panel-heading"><h3>Lote selecionado</h3><span class="tag-soft">COMERCIAL</span></div><div class="big-number" id="selected-lot">Lote 01</div><p class="lot-status" id="map-lot-status">Escolha um lote no mapa.</p><p class="muted">Selecione um dos lotes no mapa. O grupo pode ter até cinco estabelecimentos, em cidades diferentes. Cada lote comporta uma unidade.</p><button class="btn btn-primary full" id="map-open-company" type="button">Abrir unidade neste lote</button></article>
+              <details class="world-drawer"><summary>◈ Observatório econômico <span>IBGE + simulação</span></summary><article class="panel regional-panel" aria-labelledby="regional-title"><div class="panel-heading"><div><div class="overline">IBGE E SIMULAÇÃO</div><h3 id="regional-title">Observatório econômico</h3></div><span class="tag-soft">OFFLINE</span></div>
                 <div class="regional-hero"><small>POPULAÇÃO ESTIMADA · IBGE 2026</small><strong id="regional-population">—</strong><span>Referência: <b id="regional-date">—</b> · código IBGE <b id="regional-code">—</b></span></div>
                 <div class="regional-indicators"><div><small>Perfil urbano do jogo</small><strong id="regional-urban-size">—</strong></div><div><small>Fator de demanda simulado</small><strong id="regional-demand-factor">—</strong></div><div><small>Referência concorrencial simulada</small><strong id="regional-competition-factor">—</strong></div></div>
                 <dl class="regional-sources"><dt>PIB municipal 2023 · R$ correntes</dt><dd id="regional-gdp">—</dd>
@@ -94,8 +97,8 @@
                   <p id="regional-compare-result" class="field-hint">Selecione outra cidade para comparação.</p></div>
                 <p id="regional-model-status" class="regional-caution">Indicadores reais e parâmetros simulados identificados separadamente.</p>
                 <a id="regional-source" class="regional-source-link" target="_blank" rel="noopener noreferrer" href="https://ftp.ibge.gov.br/Estimativas_de_Populacao/Estimativas_2026/POP2026_20261029.pdf">Fonte oficial: estimativas de população IBGE 2026 ↗</a>
-              </article>
-              <article class="panel"><div class="panel-heading"><h3>Aconteceu na cidade</h3><span class="tag-soft">EVENTOS REAIS DO JOGO</span></div><div id="city-events" class="event-list"></div></article></div>
+              </article></details>
+              <details class="world-drawer"><summary>◷ Eventos da cidade <span>Histórico confirmado</span></summary><article class="panel"><div class="panel-heading"><h3>Aconteceu na cidade</h3><span class="tag-soft">EVENTOS REAIS DO JOGO</span></div><div id="city-events" class="event-list"></div></article></details></div>
           </div>
         </section>
         <section data-view="empresa" class="view" hidden>
@@ -112,9 +115,11 @@
             </article><article class="panel"><div class="panel-heading"><h3>Administração da rede</h3></div><p class="muted">Selecione a unidade ativa no topo. Produtos, compras, preços e vendas pertencem à unidade; o caixa e o calendário são do grupo.</p><button type="button" class="btn btn-outline full" data-go="mercado">Ir para o mercado ↗</button><button type="button" class="btn btn-outline full spaced" data-go="financas">Ver demonstrativos ↗</button></article></div>
         </section>
         <section data-view="mercado" class="view" hidden>
+          <div class="view-toolbar"><span>DECISÕES DE OPERAÇÃO</span><span class="toolbar-hint">Compre, precifique e acompanhe a demanda da unidade ativa.</span></div>
           <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Compras e estoque</h3><span class="tag-soft">M15 · SUPRIMENTOS</span></div><form id="buy-form"><label for="buy-product">Produto</label><select id="buy-product"></select><label for="buy-supplier">Fornecedor simulado</label><select id="buy-supplier"></select><p id="supplier-terms" class="field-hint" aria-live="polite">Consulte prazos e limites do fornecedor.</p><p id="market-product" class="muted">Abra uma empresa antes de comprar mercadorias.</p><label for="buy-quantity">Quantidade de unidades</label><input type="number" min="1" max="2000" value="30" id="buy-quantity" required><div class="buy-presets" aria-label="Atalhos para preencher quantidade"><span>Preencher:</span><button type="button" class="btn btn-outline" data-buy-preset="10">10 un.</button><button type="button" class="btn btn-outline" data-buy-preset="50">50 un.</button><button type="button" class="btn btn-outline" data-buy-preset="100">100 un.</button><button type="button" class="btn btn-outline" data-buy-preset="250">250 un.</button></div><p class="field-hint">O pedido é pago hoje, fica **em trânsito** e só pode gerar vendas após a entrega. Atalhos apenas preenchem a quantidade.</p><p id="buy-total" class="field-hint">—</p><button type="submit" class="btn btn-primary">Encomendar mercadorias</button></form></article>
           <article class="panel"><div class="panel-heading"><h3>Estratégia de preços</h3><span class="tag-soft">M08 · MERCADO</span></div><form id="price-form"><label for="price-product">Produto a precificar</label><select id="price-product"></select><label for="price-value">Preço de venda (R$)</label><input id="price-value" type="number" min="1" max="10000" step="0.01" required><div class="price-compare" aria-label="Comparação de preços simulados"><div class="price-tile yours"><small>SEU PREÇO ATUAL</small><strong id="your-current-price" aria-live="polite">—</strong></div><div class="price-tile"><small>REFERÊNCIA DO CONCORRENTE</small><strong id="competitor-price">—</strong></div></div><button type="submit" class="btn btn-outline">Atualizar preço</button></form><p class="price-change-feedback" id="price-change-feedback" role="status" aria-live="polite">Alterações de preços serão confirmadas aqui.</p><p class="muted hint-bottom">O preço do concorrente é independente do seu e pode mudar com o tempo. Preços mais altos podem reduzir a demanda.</p><div class="history-title"><h3>Histórico de preços</h3><span class="tag-soft" id="price-history-count">0 alterações</span></div><p class="muted">Alterações da sua empresa registradas na carreira, inclusive antes desta atualização.</p><div id="price-history" class="price-history" aria-label="Histórico de alterações de preços"></div></article></div>
 
+          <details class="market-drawer"><summary>▦ Catálogo e demanda <span>Cadastrar produtos e conferir vendas</span></summary>
           <div class="dashboard-grid commerce-dashboard">
             <article class="panel"><div class="panel-heading"><h3>Cadastrar produto</h3><span class="tag-soft">NOVO SKU</span></div>
               <form id="product-form"><label for="new-product-name">Descrição do produto</label><input id="new-product-name" maxlength="70" minlength="3" required placeholder="Ex.: Açúcar 1 kg">
@@ -140,28 +145,29 @@
               <div class="table-scroll"><table class="catalog-table demand-table"><thead><tr><th>Produto</th><th>Demanda*</th><th>Vendido</th><th>Não atendido</th></tr></thead><tbody id="demand-rows"></tbody></table></div>
               <p class="field-hint">* A partir da V1.3, a procura é estimada mesmo sem estoque. O faturamento potencial perdido é ilustrativo (unidades não atendidas × preço atual do dia), não receita realizada. Eventos anteriores à V1.3 não são recalculados.</p>
             </article>
-          </div>
-          <article class="panel strategy-promo-panel"><div class="panel-heading"><h3>Campanhas promocionais</h3><span class="tag-soft">V1.4 · ESTRATÉGIA</span></div>
+          </div></details>
+          <details class="market-drawer"><summary>◈ Promoções <span>Campanhas e preços temporários</span></summary><article class="panel strategy-promo-panel"><div class="panel-heading"><h3>Campanhas promocionais</h3><span class="tag-soft">V1.4 · ESTRATÉGIA</span></div>
             <p class="muted">Descontos temporários influenciam a demanda simulada. O preço de tabela permanece inalterado; somente vendas realizadas durante a campanha recebem o desconto. Não há vendas manuais extras.</p>
             <form id="promo-form" class="promo-form"><div><label for="promo-product">Produto</label><select id="promo-product"></select></div><div><label for="promo-percent">Desconto sobre a tabela</label><select id="promo-percent"><option value="0">Sem campanha / encerrar</option><option value="5">5%</option><option value="10">10%</option><option value="15">15%</option></select></div><div><label for="promo-days">Duração (dias de jogo)</label><input type="number" id="promo-days" min="1" max="30" value="7" step="1"></div><button class="btn btn-primary" type="submit">Aplicar estratégia</button></form>
             <p class="field-hint" id="promo-status">Nenhuma campanha ativa.</p><p class="muted">Promoções não geram gastos publicitários; esse custo não está implementado. A concorrência continua sendo simulada separadamente.</p>
-          </article>
-          <article class="panel commerce-catalog"><div class="panel-heading"><h3>Catálogo e desempenho por produto</h3><span class="tag-soft" id="product-count">0 produtos</span></div>
+          </article></details>
+          <details class="market-drawer"><summary>▥ Catálogo e desempenho <span>Relatório por produto</span></summary><article class="panel commerce-catalog"><div class="panel-heading"><h3>Catálogo e desempenho por produto</h3><span class="tag-soft" id="product-count">0 produtos</span></div>
             <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Produto</th><th>Estoque</th><th>Custo un.</th><th>Venda un.</th><th>Vendido*</th><th>Receita*</th><th>CMV*</th></tr></thead><tbody id="catalog-rows"></tbody></table></div>
             <p class="field-hint">* Desempenho por produto registrado a partir desta edição. Vendas antigas continuam preservadas no total contábil, sem distribuição fictícia entre SKUs.</p>
-          </article>
-          <article class="panel stock-planner" aria-labelledby="planner-title">
+          </article></details>
+          <details class="market-drawer"><summary>▣ Planejamento de estoque <span>Reposição e cobertura</span></summary><article class="panel stock-planner" aria-labelledby="planner-title">
             <div class="panel-heading"><h3 id="planner-title">Inteligência de estoque e abastecimento</h3><span class="tag-soft">V1.3 · PROJEÇÕES SIMULADAS</span></div>
             <p class="muted">Média de demanda observada nos últimos 7 dias (quando disponível), estoque físico, pedidos em trânsito, cobertura e sugestão de reposição. Nenhum pedido é feito automaticamente.</p>
             <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Produto</th><th>Em estoque</th><th>Em trânsito</th><th>Previsão/dia</th><th>Cobertura</th><th>Mínimo</th><th>Meta</th><th>Sugerido</th></tr></thead><tbody id="inventory-planner-rows"></tbody></table></div>
             <form id="stock-policy-form" class="stock-policy-form"><label for="policy-product">Produto</label><select id="policy-product"></select><label for="policy-reorder">Alerta: estoque mínimo (un.)</label><input id="policy-reorder" type="number" min="0" max="100000" step="1" required><label for="policy-target">Meta de estoque (un.)</label><input id="policy-target" type="number" min="1" max="100000" step="1" required><button type="submit" class="btn btn-outline">Salvar política de reposição</button></form>
-          </article>
-          <div class="dashboard-grid commerce-history-grid">
+          </article></details>
+          <details class="market-drawer"><summary>◷ Histórico operacional <span>Pedidos e comprovantes</span></summary><div class="dashboard-grid commerce-history-grid">
             <article class="panel"><h3>Pedidos e entregas</h3><p class="field-hint">Pedido pago e em trânsito não representa estoque disponível. O recebimento entra na contabilidade ao vencer o prazo.</p><div id="recent-purchases" class="commerce-log"></div></article>
             <article class="panel"><h3>Comprovantes de vendas simuladas</h3><p class="muted">Cada registro automático consolida as vendas do dia, não representa um cliente individual. Registros manuais anteriores permanecem identificados como históricos.</p><div id="recent-sales" class="commerce-log commerce-receipts"></div></article>
-          </div>
+          </div></details>
         </section>
         <section data-view="financas" class="view" hidden>
+          <div class="view-toolbar"><span>TESOURARIA E RESULTADOS</span><button type="button" class="btn btn-outline" data-tab="fiscal">§ Tributos simulados</button></div>
           <article class="panel finance-filters">
             <div class="panel-heading"><h3>Consulta financeira por período</h3><span class="tag-soft">M11 · NÃO ALTERA A CARREIRA</span></div>
             <div class="filter-fields">
@@ -190,16 +196,17 @@
             <p id="finance-validation" class="finance-validation" aria-live="polite" hidden></p>
             <p id="finance-period-label" class="field-hint" aria-live="polite">Escolha a data ou competência que deseja consultar.</p>
           </article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3 id="finance-statement-title">Resumo realizado</h3><span class="tag-soft">M11 · LEDGER</span></div><div class="statement-switch" role="group" aria-label="Demonstrativos contábeis"><button type="button" data-statement-view="summary" aria-pressed="true">Resumo</button><button type="button" data-statement-view="dre" aria-pressed="false">DRE</button><button type="button" data-statement-view="balance" aria-pressed="false">Balanço</button><button type="button" data-statement-view="cash" aria-pressed="false">Caixa</button><button type="button" data-statement-view="check" aria-pressed="false">Conferência</button></div><dl class="finance-list" id="finance-summary"></dl><p id="finance-statement-note" class="field-hint" aria-live="polite">Demonstrações gerenciais: tributos apenas quando efetivamente simulados e contabilizados.</p><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Na hipótese fiscal habilitada, a despesa simulada será apresentada separadamente.</p></div><p class="muted">Fluxos do período filtrado e separados por unidade; saldos de estoque e obrigações são acumulados até o encerramento. O caixa não é repartido artificialmente entre filiais: somente a consulta consolidada exibe o saldo compartilhado.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
-          <article class="panel strategy-panel"><div class="panel-heading"><h3>Gestão estratégica e equilíbrio econômico</h3><span class="tag-soft">V1.4 · ANÁLISE E PROJEÇÃO</span></div>
+          <details class="market-drawer finance-drawer"><summary>▥ Projeções e estratégia <span>Cenários hipotéticos, não lançamentos</span></summary><article class="panel strategy-panel"><div class="panel-heading"><h3>Gestão estratégica e equilíbrio econômico</h3><span class="tag-soft">V1.4 · ANÁLISE E PROJEÇÃO</span></div>
             <p class="muted">Resultados realizados vêm exclusivamente do livro contábil. Projeções são cenários hipotéticos, não lançamentos. A projeção estratégica considera a unidade ativa e o caixa compartilhado atual, sem projetar simultaneamente as demais unidades; não é uma projeção consolidada da rede. Esses cenários não realizam novas compras nem liquidam obrigações existentes. Não gera lançamentos.</p>
             <div class="strategy-controls"><label for="strategy-horizon">Horizonte de projeção (dias)</label><select id="strategy-horizon"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select></div>
             <div id="strategy-metrics" class="strategy-metrics" aria-live="polite"><p class="muted">Abra uma empresa para gerar indicadores.</p></div>
             <div class="table-scroll"><table class="strategy-table"><thead><tr><th>Tipo de custo / resultado</th><th>Realizado: últimos 30 dias encerrados</th><th>Projeção: horizonte escolhido</th></tr></thead><tbody id="strategy-cost-rows"></tbody></table></div>
             <div id="strategy-risks" class="strategy-risks" aria-live="polite"></div>
             <p class="field-hint">Ponto de equilíbrio estimado = despesa operacional fixa diária ÷ margem de contribuição média do mix, sem impostos. Capital de giro gerencial = caixa + estoque + trânsito + recebíveis − obrigações. A previsão respeita estoque atual e entregas já pagas; não prevê novas compras, crédito, tributos ou alterações futuras da concorrência. Saldo positivo não é promessa de liquidez.</p>
-          </article>
+          </article></details>
         </section>
         <section data-view="fiscal" class="view" hidden>
+          <div class="view-toolbar"><span>FINANÇAS / TRIBUTOS</span><button type="button" class="btn btn-outline" data-tab="financas">← Voltar às finanças</button></div>
           <article class="panel fiscal-panel"><span class="fiscal-icon">§</span><div>
             <div class="overline">V1.9 · SIMULAÇÃO TRIBUTÁRIA EDUCATIVA</div>
             <h3>Tributos da sua rede · cenários didáticos</h3>
@@ -237,13 +244,14 @@
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v1.9.0-rc.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v2.0.0-rc.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>
   <div class="toast" id="toast" aria-live="polite" role="status"></div>
   <script>
 /* CDN_CORE */
+/* CDN_VISUAL */
 /* CDN_UI */
   </script>
 </body>

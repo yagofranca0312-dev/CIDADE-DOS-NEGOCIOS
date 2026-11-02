@@ -24,7 +24,7 @@ const advance=(s,days=1,engine=Core)=>cmd(engine,s,'TEMPO.AVANCAR_LOTE',{days});
 const order=(s,qty=100,id='base')=>cmd(Core,s,'ESTOQUE.COMPRAR',{supplierId:'regional',productId:id,quantity:qty});
 
 test('V1.4: nova carreira schema 5 e campanhas vazias, sem mudar contabilidade inicial',()=>{
- const s=make();assert.equal(Core.VERSION,'1.9.0-rc.1');assert.equal(s.schemaVersion,9);
+ const s=make();assert.equal(Core.VERSION,'2.0.0-rc.1');assert.equal(s.schemaVersion,9);
  assert.deepEqual(JSON.parse(JSON.stringify(s.world.business.promotions)),{});
  assert.equal(Core.overview(s).cash,2250000);
  Core.validate(s);
@@ -173,7 +173,7 @@ test('V1.4: estratégia e reabastecimento coexistem e mantêm estoque/ledger con
  assert.equal(restored.migrated,false);assert.equal(JSON.stringify(restored.state),JSON.stringify(s));
 });
 test('V1.4: UI inclui estratégias, cenários e mensagens sem prometer impostos ou fluxo garantido',()=>{
- const ui=readFileSync('src/ui/app.js','utf8'),html=readFileSync('src/shell/index.template.html','utf8');
+ const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8')),html=readFileSync('src/shell/index.template.html','utf8');
  for(const term of ['id="promo-product"','id="promo-days"','id="strategy-horizon"','id="strategy-metrics"','id="strategy-cost-rows"'])assert.ok(html.includes(term),term);
  assert.ok(ui.includes("'PROMO.DEFINIR'"));assert.ok(ui.includes('renderStrategy()'));
  assert.ok(html.includes('cenários hipotéticos'));

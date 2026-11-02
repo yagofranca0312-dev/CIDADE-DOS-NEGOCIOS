@@ -113,7 +113,7 @@ test('Hotfix: importação de save com venda manual antiga preserva histórico s
 });
 
 test('Hotfix: interface não contém venda manual e exibe demanda e comprovantes',()=>{
-  const ui=readFileSync('src/ui/app.js','utf8');
+  const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
   const template=readFileSync('src/shell/index.template.html','utf8');
   assert.doesNotMatch(template,/id="cart-(?:add|checkout|clear)"/);
   assert.doesNotMatch(template,/id="sale-quantity"|id="sale-product"/);

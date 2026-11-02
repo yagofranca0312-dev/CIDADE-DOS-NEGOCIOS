@@ -25,7 +25,7 @@ const demand=s=>s.audit.events.filter(e=>e.type==='DEMANDA.SIMULADA').at(-1).dat
 const json=x=>JSON.stringify(x);
 
 test('V1.3: nova carreira inicia com schema 4, 3 SKUs, preços e políticas default',()=>{
- const s=make();assert.equal(s.schemaVersion,9);assert.equal(Core.VERSION,'1.9.0-rc.1');
+ const s=make();assert.equal(s.schemaVersion,9);assert.equal(Core.VERSION,'2.0.0-rc.1');
  assert.equal(s.world.business.products.length,3);
  for(const p of s.world.business.products){assert.equal(p.stockValueCents,0);assert.ok(p.targetStock>=p.reorderPoint);}
  assert.equal(Core.overview(s).inTransit,0);Core.validate(s);
@@ -198,7 +198,7 @@ test('V1.3: venda manual continua bloqueada; diagnóstico não altera estado',()
  assert.equal(Core.diagnostics(s).status,'PASS (integridade estrutural e contábil)');
 });
 test('V1.3: UI contém prazos, alerta, metas e vendas perdidas sem checkout manual',()=>{
- const template=readFileSync('src/shell/index.template.html','utf8'),ui=readFileSync('src/ui/app.js','utf8');
+ const template=readFileSync('src/shell/index.template.html','utf8'),ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
  for(const id of ['supplier-terms','inventory-planner-rows','policy-product','policy-reorder','policy-target','demand-lost-potential'])assert.ok(template.includes(`id="${id}"`),id);
  assert.doesNotMatch(template,/id="cart-checkout"/);
  assert.match(ui,/renderInventoryPlanner/);

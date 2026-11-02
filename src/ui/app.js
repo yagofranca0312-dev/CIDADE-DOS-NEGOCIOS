@@ -170,6 +170,7 @@
     const b=business(),units=Core.businesses(state),info=Core.overview(state),ownCity=Core.cityById(b?.cityId||state.player.cityId);
     const visibleCity=Core.cityById(viewCityId)||ownCity;
     viewCityId=visibleCity.id;
+    document.body.classList.toggle('v221-tiangua-scene',visibleCity.id==='CE-TIANGUA');
     $('v221-city-selector').value=visibleCity.id;
     setText('top-city',`${visibleCity.name} · ${visibleCity.uf}`);
     setText('v221-map-city-title',`${visibleCity.name.toUpperCase()} · ${visibleCity.uf}`);

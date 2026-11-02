@@ -1,5 +1,15 @@
 # Histórico de versões — Cidade dos Negócios
 
+## 1.3.0-rc.1 — inteligência de mercado e abastecimento (01/11/2026)
+
+- Demanda diária estimada para todos os SKUs, inclusive sem estoque; apuração de não atendidos e potencial de faturamento perdido (sem reconhecimento contábil de receita não realizada).
+- Preços por fornecedor e prazos de entrega simulados; limite diário de fornecimento por produto.
+- Pedidos pagos contabilizados como ativo em trânsito; entregas no vencimento movimentam ativo para inventário sem movimentar caixa novamente.
+- Valoração de estoque com custo médio ponderado por SKU, CMV conciliado em centavos.
+- Estoque mínimo, meta, cobertura prevista e sugestão de reposição, sempre com confirmação manual de encomendas.
+- Schema 4 com migração conservadora de versões 2 e 3; necessidade de backup antes da atualização. Sem alteração de dados históricos de vendas e CMV.
+- Bateria de testes estruturais, contábeis, integração e interface; homologação no Windows ainda pendente.
+
 ## 1.2.1-rc.1 — hotfix de vendas automáticas (01/11/2026)
 
 - Bloqueia novas vendas manuais no motor e remove carrinho/checkout da UI.
@@ -7,7 +17,7 @@
 - Registra estimativa apenas quando há estoque, atendidas e não atendidas em eventos de auditoria.
 - Mantém registros manuais anteriores íntegros, sem alterar caixa, CMV, datas ou ledger histórico.
 - Preserva schema 3 e os números da simulação econômica anterior; novas observações não mudam o RNG.
-- Homologação no Windows pendente.
+- Validada pelo usuário em Windows; preservada na branch releases/v1.2.1-homologada.
 
 ## 1.2.0-rc.1 — gestão comercial multitem (candidata)
 

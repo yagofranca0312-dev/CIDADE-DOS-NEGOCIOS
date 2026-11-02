@@ -7,7 +7,7 @@
   const BRDate=iso=>iso.split('-').reverse().join('/');
   const KEY='cidade-dos-negocios-save-v1';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
-  let financePeriod='all',financeRefDate=null,financeDatePinned=false;
+  let financeQuery=null; // preferência de consulta da interface, independente do GameState
   let toastTimer;
   const nextId=()=>`ui:${Date.now()}:${++sequence}`;
   const setText=(id,value)=>{const el=$(id);if(el)el.textContent=String(value)};
@@ -38,13 +38,50 @@
     setText('price-history-count',`${items.length} alteração(ões)`);
     container.innerHTML=items.length?items.slice(-12).reverse().map(item=>`<div class="price-history-row"><small>${escape(BRDate(item.date))} · ${escape(item.id)}</small><strong>${escape(Core.money(item.old))} → ${escape(Core.money(item.cents))}</strong></div>`).join(''):'<p class="muted">Nenhuma alteração registrada nesta carreira.</p>';
   }
+  function initialFinanceQuery(){
+    const date=lastAvailableDate(),year=Number(date.slice(0,4)),month=Number(date.slice(5,7));
+    return {period:'all',asOf:date,day:date,month:date.slice(0,7),
+      quarter:String(Math.floor((month-1)/3)+1),quarterYear:year,
+      semester:String(Math.floor((month-1)/6)+1),semesterYear:year,
+      year,from:Core.START_DATE,to:date};
+  }
+  function ensureFinanceQuery(){if(!financeQuery)financeQuery=initialFinanceQuery();return financeQuery;}
+  function financeQueryDate(q){
+    const year=n=>String(n).padStart(4,'0');
+    if(q.period==='all')return {date:q.asOf};
+    if(q.period==='day')return {date:q.day};
+    if(q.period==='month')return {date:q.month+'-01'};
+    if(q.period==='quarter')return {date:year(q.quarterYear)+'-'+String((Number(q.quarter)-1)*3+1).padStart(2,'0')+'-01'};
+    if(q.period==='semester')return {date:year(q.semesterYear)+'-'+(q.semester==='1'?'01':'07')+'-01'};
+    if(q.period==='year')return {date:year(q.year)+'-01-01'};
+    return {date:q.to,range:{from:q.from,to:q.to}};
+  }
   function renderFinances(){
     if(!state)return;
-    if(!financeDatePinned)financeRefDate=lastAvailableDate();
-    const fdate=$('finance-date');fdate.max=state.calendar.date;fdate.value=financeRefDate;
-    $('finance-period').value=financePeriod;
-    const report=Core.financialReport(state,financePeriod,financeRefDate);
-    setText('finance-period-label',`${report.label} · movimentos registrados até ${BRDate(report.effectiveEnd)}. Saldos são acumulados até esta data.`);
+    const q=ensureFinanceQuery();
+    $('finance-period').value=q.period;
+    for(const group of document.querySelectorAll('[data-finance-field]'))group.hidden=group.dataset.financeField!==q.period;
+    const fields={'finance-date':q.asOf,'finance-day':q.day,'finance-month':q.month,
+      'finance-quarter':q.quarter,'finance-quarter-year':q.quarterYear,
+      'finance-semester':q.semester,'finance-semester-year':q.semesterYear,
+      'finance-year':q.year,'finance-range-from':q.from,'finance-range-to':q.to};
+    for(const [id,value] of Object.entries(fields)){const el=$(id);if(document.activeElement!==el)el.value=String(value);}
+    for(const id of ['finance-date','finance-day','finance-range-from','finance-range-to'])$(id).max=state.calendar.date;
+    $('finance-month').max=state.calendar.date.slice(0,7);
+    for(const id of ['finance-year','finance-quarter-year','finance-semester-year'])$(id).max=state.calendar.date.slice(0,4);
+    let report;
+    try {
+      const params=financeQueryDate(q);
+      report=Core.financialReport(state,q.period,params.date,params.range);
+      $('finance-validation').hidden=true;setText('finance-validation','');
+    }catch(e){
+      $('finance-validation').hidden=false;setText('finance-validation',e.message);
+      setText('finance-period-label','Corrija o período selecionado para consultar o demonstrativo.');
+      $('finance-summary').innerHTML='';setText('journal-count','—');
+      $('journal-events').innerHTML='<p class="muted">Período inválido. Nenhum dado foi alterado.</p>';
+      return;
+    }
+    setText('finance-period-label',`${report.label} · lançamentos até ${BRDate(report.effectiveEnd)}. Saldos acumulados no encerramento. Consulta fixa até você alterar os filtros.`);
     const rows=[
       ['Receita de vendas (período)',report.revenue],
       ['(-) Custo das mercadorias vendidas',report.cogs],
@@ -61,7 +98,7 @@
   }
   function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
   function commit(type,payload={}){
-    if(type==='CARREIRA.CRIAR'){resetTimer();financePeriod='all';financeRefDate=null;financeDatePinned=false;}
+    if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;}
     const result=Core.dispatch(state,{type,id:nextId(),payload});
     if(!result.ok){notify(result.error,true);return false;}
     if(result.status==='APPLIED'){state=result.state;viewCityId=viewCityId??state.player.cityId;saveLocal();render();}
@@ -149,7 +186,7 @@
       updateBuyPreview();
     }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('your-current-price','—');setText('competitor-price','—');setText('buy-total','—');}
     renderPriceHistory();
-    renderFinances();
+    if(tab==='financas'||financeQuery)renderFinances();
     const report=Core.diagnostics(state);
     $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Cidade ativa',ownCity.name],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal','NOT_COVERED']].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
     setText('turn-message',!b?'Abra sua primeira empresa.':b.stockUnits===0?'Seu estoque está vazio. Reabasteça.':`Sua empresa está operando há ${state.calendar.tick} dia(s).`);
@@ -174,7 +211,7 @@
     if(!file)return;
     if(file.size>25_000_000){notify('Save excede 25 MB.',true);return;}
     if(state?.player.cityId&&!confirm('Substituir a carreira atual pelo save importado? Recomendamos exportar antes.'))return;
-    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;viewCityId=state.player.cityId;selectedLot=1;financePeriod='all';financeRefDate=null;financeDatePinned=false;saveLocal();render();notify(incoming.message);}
+    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;viewCityId=state.player.cityId;selectedLot=1;financeQuery=null;saveLocal();render();notify(incoming.message);}
     catch(e){notify(`Importação rejeitada: ${e.message}. A carreira anterior foi preservada.`,true);}
   }
   function launchAuto(){
@@ -194,11 +231,25 @@
     $('open-form').addEventListener('submit',e=>{e.preventDefault();if(!state||viewCityId!==state.player.cityId){notify('Volte à cidade de origem para abrir o negócio.',true);return;}if(commit('EMPRESA.ABRIR',{sector:$('sector-select').value,lot:selectedLot}))goto('cidade');});
     $('buy-quantity').addEventListener('input',updateBuyPreview);
     for(const b of document.querySelectorAll('[data-buy-preset]'))b.addEventListener('click',()=>{$('buy-quantity').value=b.dataset.buyPreset;updateBuyPreview();$('buy-quantity').focus();});
-    $('finance-period').addEventListener('change',e=>{financePeriod=e.target.value;renderFinances();});
-    $('finance-date').addEventListener('change',e=>{
-      const date=e.target.value;
-      if(date>=Core.START_DATE&&date<=state.calendar.date){financeDatePinned=true;financeRefDate=date;renderFinances();}
-      else{notify('Escolha uma data válida até a data do mundo.',true);renderFinances();}
+    $('finance-period').addEventListener('change',e=>{ensureFinanceQuery().period=e.target.value;renderFinances();});
+    const controls=[['finance-date','asOf'],['finance-day','day'],['finance-month','month'],
+      ['finance-quarter','quarter'],['finance-quarter-year','quarterYear'],
+      ['finance-semester','semester'],['finance-semester-year','semesterYear'],
+      ['finance-year','year'],['finance-range-from','from'],['finance-range-to','to']];
+    for(const [id,field] of controls)$(id).addEventListener('change',e=>{
+      ensureFinanceQuery()[field]=field.endsWith('Year')||field==='year'?Number(e.target.value):e.target.value;
+      renderFinances();
+    });
+    $('finance-current-date').addEventListener('click',()=>{
+      const q=ensureFinanceQuery(),current=lastAvailableDate(),year=Number(current.slice(0,4)),month=Number(current.slice(5,7));
+      if(q.period==='all')q.asOf=current;
+      else if(q.period==='day')q.day=current;
+      else if(q.period==='month')q.month=current.slice(0,7);
+      else if(q.period==='quarter'){q.quarter=String(Math.floor((month-1)/3)+1);q.quarterYear=year;}
+      else if(q.period==='semester'){q.semester=String(Math.floor((month-1)/6)+1);q.semesterYear=year;}
+      else if(q.period==='year')q.year=year;
+      else {q.to=current;}
+      renderFinances();
     });
     $('buy-form').addEventListener('submit',e=>{e.preventDefault();commit('ESTOQUE.COMPRAR',{quantity:Number($('buy-quantity').value)});});
     $('price-form').addEventListener('submit',e=>{e.preventDefault();const value=$('price-value').value,cents=Math.round(Number(value)*100),before=state?.world.business?.unitPrice;if(commit('PRECO.DEFINIR',{cents})){const after=state.world.business.unitPrice;const message=`Seu preço foi atualizado: ${Core.money(before)} → ${Core.money(after)}.`;setText('price-change-feedback',message);notify(message);}});
@@ -212,7 +263,7 @@
     $('start-import').addEventListener('click',()=>$('import-file').click());
     $('import-file').addEventListener('change',async e=>{const f=e.target.files?.[0];try{await importFile(f);}finally{e.target.value='';}});
     $('run-diagnostic').addEventListener('click',()=>{try{const before=JSON.stringify(state),out=Core.diagnostics(state);if(before!==JSON.stringify(state))throw Error('Diagnóstico alterou o estado');setText('diagnostic-result',out.status+' · revisão '+out.revision);notify('Verificação estrutural e contábil aprovada.');}catch(e){setText('diagnostic-result',e.message);notify(e.message,true);}});
-    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financePeriod='all';financeRefDate=null;financeDatePinned=false;render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
+    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financeQuery=null;render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
   }
   function updateOpenPreview(){const s=Core.SECTORS[$('sector-select').value];if(s)setText('open-preview',`Investimento inicial simulado: ${Core.money(s.openCost)} · Produto: ${s.product}`);}
   function start(){

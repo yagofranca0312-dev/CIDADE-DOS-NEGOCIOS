@@ -1,8 +1,8 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.4.0-rc.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.5.0-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '1.4.0-rc.1';
-  const SCHEMA_VERSION = 5;
+  const VERSION = '1.5.0-rc.1';
+  const SCHEMA_VERSION = 6;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
   const CITIES_SOURCE = [
@@ -46,8 +46,8 @@ const CidadeCore = (() => {
   // Migração aditiva e auditável: inventário anterior fica no valor original;
   // ordens recebidas antes da V1.3 não geram novos créditos/debitos.
   function upgradedState(original) {
-    if(original.schemaVersion===5)return clone(original);
-    assert([2,3,4].includes(original.schemaVersion),'Schema de save não suportado');
+    if(original.schemaVersion===6)return clone(original);
+    assert([2,3,4,5].includes(original.schemaVersion),'Schema de save não suportado');
     const state=clone(original);
     if(state.schemaVersion===2){
       state.schemaVersion=3;
@@ -67,7 +67,27 @@ const CidadeCore = (() => {
     if(state.world.business){const b=state.world.business;
       if(!b.promotions)b.promotions={};
     }
+    state.world.branches=[];
+    state.world.branchSeq=state.world.business?1:0;
+    state.world.activeBusinessId=state.world.business?.id??null;
+    if(state.world.business)state.world.business.cityId=state.player.cityId;
+    state.schemaVersion=6;
     return state;
+  }
+  function businesses(state){
+    if(!state?.world)return [];
+    return [state.world.business,...(state.world.branches||[])].filter(Boolean);
+  }
+  function activeBusiness(state){
+    if(!state?.world)return null;
+    if(state.schemaVersion<6)return state.world.business||null;
+    return businesses(state).find(b=>b.id===state.world.activeBusinessId)||null;
+  }
+  function businessById(state,id){return businesses(state).find(b=>b.id===id)||null;}
+  // Journals antigos pertencem à matriz, exceto aporte inicial, que pertence ao grupo.
+  function journalBusinessId(state,j){
+    if(j.businessId)return j.businessId;
+    return j.memo==='Capital inicial do empreendedor'?null:state.world.business?.id??null;
   }
   function product(b,id) {const p=b.products.find(x=>x.id===(id??'base'));assert(p,'Produto não cadastrado');return p;}
   function promotionDiscount(b,p,date){
@@ -108,11 +128,10 @@ const CidadeCore = (() => {
     const id=`pc-${++b.orderSeq}`,dueDate=addDays(draft.calendar.date,supplier.leadDays);
     b.purchaseOrders.push({id,date:draft.calendar.date,supplierId,items:lines,total,status:'PENDING',dueDate,receivedAt:null});
     journal(draft,`Encomenda ${id}: mercadorias em trânsito`,[
-      {account:'IN_TRANSIT',debit:total,credit:0},{account:'CASH',debit:0,credit:total}]);
-    event(draft,'COMPRA.ENCOMENDADA',`Pedido ${id} pago (${money(total)}); previsão ${dueDate} (${supplier.leadDays} dia(s)).`,{id,total,dueDate,supplierId});
+      {account:'IN_TRANSIT',debit:total,credit:0},{account:'CASH',debit:0,credit:total}],b.id);
+    event(draft,'COMPRA.ENCOMENDADA',`Pedido ${id} pago (${money(total)}); previsão ${dueDate} (${supplier.leadDays} dia(s)).`,{id,total,dueDate,supplierId},b.id);
   }
-  function receiveDueOrders(draft){
-    const b=draft.world.business;
+  function receiveDueOrders(draft,b){
     if(!b)return;
     for(const order of b.purchaseOrders){
       if(order.status!=='PENDING'||order.dueDate>draft.calendar.date)continue;
@@ -122,17 +141,17 @@ const CidadeCore = (() => {
       syncTotals(b);
       order.status='RECEIVED';order.receivedAt=draft.calendar.date;
       journal(draft,`Recebimento ${order.id} em estoque`,[
-        {account:'INVENTORY',debit:order.total,credit:0},{account:'IN_TRANSIT',debit:0,credit:order.total}]);
-      event(draft,'COMPRA.RECEBIDA',`Pedido ${order.id} recebido: ${order.items.reduce((n,l)=>n+l.quantity,0)} unidades.`,{id:order.id,total:order.total});
+        {account:'INVENTORY',debit:order.total,credit:0},{account:'IN_TRANSIT',debit:0,credit:order.total}],b.id);
+      event(draft,'COMPRA.RECEBIDA',`Pedido ${order.id} recebido: ${order.items.reduce((n,l)=>n+l.quantity,0)} unidades.`,{id:order.id,total:order.total},b.id);
     }
   }
   function inventoryReport(state){
-    const b=state?.world?.business;if(!b)return [];
-    const events=state.audit.events.filter(e=>e.type==='DEMANDA.SIMULADA').slice(-7);
+    const b=activeBusiness(state);if(!b)return [];
+    const events=state.audit.events.filter(e=>e.type==='DEMANDA.SIMULADA'&&(e.businessId===b.id||(!e.businessId&&b.id===state.world.business?.id))).slice(-7);
     return b.products.map(p=>{
       const series=events.map(e=>e.data?.items?.find(x=>x.productId===p.id)?.estimated).filter(Number.isInteger);
       const observedDaily=series.length?Math.round(series.reduce((n,v)=>n+v,0)/series.length*10)/10:null;
-      const fallback=Math.max(1,Math.round(p.demand*cityById(state.player.cityId).factor/100));
+      const fallback=Math.max(1,Math.round(p.demand*cityById(b.cityId||state.player.cityId).factor/100));
       const daily=observedDaily??fallback,inTransit=pendingQuantity(b,p.id),available=p.stockUnits+inTransit;
       return {id:p.id,name:p.name,stock:p.stockUnits,inTransit,reorderPoint:p.reorderPoint,targetStock:p.targetStock,
         observedDaily,forecastDaily:daily,sampleDays:series.length,coverageDays:Math.round(available/daily*10)/10,
@@ -158,11 +177,11 @@ const CidadeCore = (() => {
     b.sales.push({id,date:draft.calendar.date,kind,items:lines,total,cogs:cost});
     journal(draft,`Venda ${id} (${kind}): ${lines.map(x=>`${x.quantity} ${x.name}`).join(', ')}`,[
       {account:'CASH',debit:total,credit:0},{account:'REVENUE',debit:0,credit:total},
-      {account:'COGS',debit:cost,credit:0},{account:'INVENTORY',debit:0,credit:cost}]);
-    event(draft,'VENDA.CONCLUIDA',`Vendas simuladas do dia ${id}: ${qtyTotal} unidades por ${money(total)}.`,{id,total,cost,qtyTotal});
+      {account:'COGS',debit:cost,credit:0},{account:'INVENTORY',debit:0,credit:cost}],b.id);
+    event(draft,'VENDA.CONCLUIDA',`Vendas simuladas do dia ${id}: ${qtyTotal} unidades por ${money(total)}.`,{id,total,cost,qtyTotal},b.id);
   }
   function productPerformance(state) {
-    const b=state?.world?.business;if(!b)return [];
+    const b=activeBusiness(state);if(!b)return [];
     return b.products.map(p=>{const lines=b.sales.flatMap(s=>s.items).filter(x=>x.productId===p.id);
       return {id:p.id,name:p.name,stockUnits:p.stockUnits,stockValue:p.stockValueCents,
         sold:lines.reduce((n,l)=>n+l.quantity,0),revenue:lines.reduce((n,l)=>n+l.revenue,0),
@@ -179,24 +198,27 @@ const CidadeCore = (() => {
   function assert(test,message) { if(!test) throw Error(message); }
   function dateNext(iso) { const d=new Date(`${iso}T12:00:00Z`);assert(!Number.isNaN(d.getTime()),'Data inválida');d.setUTCDate(d.getUTCDate()+1);return d.toISOString().slice(0,10); }
   function random(draft) { draft.rng.seed=(Math.imul(draft.rng.seed,1664525)+1013904223)>>>0;return draft.rng.seed/4294967296; }
-  function event(draft,type,text,data={}) { const id=`evt-${++draft.audit.eventSeq}`;draft.audit.events.push({id,type,date:draft.calendar.date,text,data}); }
-  function journal(draft,memo,entries) {
+  function event(draft,type,text,data={},businessId=null) {
+    const id=`evt-${++draft.audit.eventSeq}`;
+    draft.audit.events.push({id,type,date:draft.calendar.date,text,data,...(businessId?{businessId}:{})});
+  }
+  function journal(draft,memo,entries,businessId=null) {
     const debit=entries.reduce((n,x)=>n+x.debit,0),credit=entries.reduce((n,x)=>n+x.credit,0);
     assert(debit===credit && debit>0,'Lançamento desequilibrado');
     assert(entries.every(x=>typeof x.account==='string'&&int(x.debit)&&int(x.credit)&&!(x.debit&&x.credit)),'Linha financeira inválida');
-    draft.economy.ledger.push({id:`jnl-${++draft.economy.journalSeq}`,date:draft.calendar.date,memo,entries});
+    draft.economy.ledger.push({id:`jnl-${++draft.economy.journalSeq}`,date:draft.calendar.date,memo,entries,...(businessId?{businessId}:{})});
   }
   function balance(draft,account) {let total=0;for(const j of draft.economy.ledger)for(const e of j.entries)if(e.account===account)total+=(['CAPITAL','REVENUE','PAYABLE'].includes(account)?e.credit-e.debit:e.debit-e.credit);return total;}
   function overview(draft) {
     if(!draft)return null;
     const revenue=balance(draft,'REVENUE'),cogs=balance(draft,'COGS'),expenses=balance(draft,'EXPENSE');
-    return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),inTransit:balance(draft,'IN_TRANSIT'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),revenue,cogs,expenses,profit:revenue-cogs-expenses,stock:draft.world.business?.stockUnits??0,unitPrice:draft.world.business?.unitPrice??null,tick:draft.calendar.tick,city:cityById(draft.player.cityId)?.name??'—'};
+    return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),inTransit:balance(draft,'IN_TRANSIT'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),revenue,cogs,expenses,profit:revenue-cogs-expenses,stock:businesses(draft).reduce((n,b)=>n+b.stockUnits,0),unitPrice:activeBusiness(draft)?.unitPrice??null,units:businesses(draft).length,tick:draft.calendar.tick,city:cityById(activeBusiness(draft)?.cityId||draft.player.cityId)?.name??'—'};
   }
   function emptyLegacy(seed) {return {
-    schemaVersion:5,worldId:`legacy-${seed}`,revision:0,
+    schemaVersion:6,worldId:`legacy-${seed}`,revision:0,
     meta:{title:'Cidade dos Negócios',version:VERSION,origin:'MIGRATED_EMPTY_CP000',mode:'DEMONSTRACAO_ECONOMICA'},
     calendar:{date:START_DATE,tick:0},rng:{seed},
-    player:{name:'',companyName:'',cityId:null},world:{cities:CITIES.map(x=>x.id),business:null,competitor:{priceIndex:100}},
+    player:{name:'',companyName:'',cityId:null},world:{cities:CITIES.map(x=>x.id),business:null,branches:[],branchSeq:0,activeBusinessId:null,competitor:{priceIndex:100}},
     economy:{journalSeq:0,ledger:[]},fiscal:{mode:'DEMONSTRACAO_ECONOMICA',coverageStatus:'NOT_COVERED',rulePackId:null},
     audit:{eventSeq:0,events:[],commands:{}}
   };}
@@ -218,15 +240,26 @@ const CidadeCore = (() => {
     return state;
   }
   function handler(draft,type,payload) {
-    const b=draft.world.business;
+    const b=activeBusiness(draft);
+    if(type==='EMPRESA.ATIVAR') {
+      assert(businessById(draft,payload.businessId),'Unidade não encontrada');
+      draft.world.activeBusinessId=payload.businessId;return;
+    }
     if(type==='EMPRESA.ABRIR') {
-      assert(!b,'Uma empresa já está aberta nesta carreira');
+      assert(businesses(draft).length<5,'Limite de cinco estabelecimentos atingido');
+      const cityId=payload.cityId||draft.player.cityId;
+      assert(cityById(cityId),'Cidade inválida para a nova unidade');
       const s=SECTORS[payload.sector],lot=Number(payload.lot);
       assert(s,'Atividade comercial desconhecida');assert(Number.isInteger(lot)&&lot>=1&&lot<=18,'Selecione um lote válido (1 a 18)');
-      assert(balance(draft,'CASH')>=s.openCost,'Caixa insuficiente para abrir esta empresa');
-      draft.world.business={id:'est-1',sector:payload.sector,lot,stockUnits:0,unitPrice:s.recommended,openedAt:draft.calendar.date,totalSold:0,products:initialProducts(payload.sector),productSeq:0,saleSeq:0,orderSeq:0,sales:[],purchaseOrders:[],promotions:{}};
-      journal(draft,`Abertura: ${s.name}`,[{account:'EXPENSE',debit:s.openCost,credit:0},{account:'CASH',debit:0,credit:s.openCost}]);
-      event(draft,'EMPRESA.ABERTA',`${s.name} inaugurado no lote ${lot}.`,{lot,sector:payload.sector});
+      assert(!businesses(draft).some(x=>x.cityId===cityId&&x.lot===lot),'Lote já ocupado por uma unidade do grupo');
+      assert(balance(draft,'CASH')>=s.openCost,'Caixa compartilhado insuficiente para abrir esta unidade');
+      const id=`est-${++draft.world.branchSeq}`;
+      const newUnit={id,cityId,sector:payload.sector,lot,stockUnits:0,unitPrice:s.recommended,openedAt:draft.calendar.date,totalSold:0,products:initialProducts(payload.sector),productSeq:0,saleSeq:0,orderSeq:0,sales:[],purchaseOrders:[],promotions:{}};
+      if(!draft.world.business)draft.world.business=newUnit;
+      else draft.world.branches.push(newUnit);
+      draft.world.activeBusinessId=id;
+      journal(draft,`Abertura: ${s.name} (${id})`,[{account:'EXPENSE',debit:s.openCost,credit:0},{account:'CASH',debit:0,credit:s.openCost}],id);
+      event(draft,'EMPRESA.ABERTA',`${s.name} inaugurado em ${cityById(cityId).name}, lote ${lot}.`,{lot,sector:payload.sector,cityId},id);
       return;
     }
     if(type==='PRODUTO.CADASTRAR') {
@@ -240,7 +273,7 @@ const CidadeCore = (() => {
       assert(!b.products.some(p=>p.name.toLowerCase()===name.toLowerCase()),'Já existe produto com este nome');
       const id=`custom-${++b.productSeq}`;
       b.products.push({id,name,costCents,priceCents,referenceCents:priceCents,demand:6,stockUnits:0,stockValueCents:0,reorderPoint:18,targetStock:60});
-      event(draft,'PRODUTO.CADASTRADO',`Novo produto: ${name}.`,{id});return;
+      event(draft,'PRODUTO.CADASTRADO',`Novo produto: ${name}.`,{id},b.id);return;
     }
     if(type==='ESTOQUE.POLITICA_DEFINIR') {
       assert(b,'Abra uma empresa antes de definir reposição');
@@ -248,7 +281,7 @@ const CidadeCore = (() => {
       assert(Number.isInteger(reorderPoint)&&reorderPoint>=0&&reorderPoint<=100000,'Estoque mínimo inválido');
       assert(Number.isInteger(targetStock)&&targetStock>=1&&targetStock<=100000&&targetStock>=reorderPoint,'Meta de estoque deve ser maior ou igual ao mínimo');
       p.reorderPoint=reorderPoint;p.targetStock=targetStock;
-      event(draft,'ESTOQUE.POLITICA',`Reposição de ${p.name}: mínimo ${reorderPoint}, meta ${targetStock}.`,{productId:p.id,reorderPoint,targetStock});return;
+      event(draft,'ESTOQUE.POLITICA',`Reposição de ${p.name}: mínimo ${reorderPoint}, meta ${targetStock}.`,{productId:p.id,reorderPoint,targetStock},b.id);return;
     }
     if(type==='ESTOQUE.COMPRAR') {
       assert(b,'Abra uma empresa antes de comprar');
@@ -270,15 +303,15 @@ const CidadeCore = (() => {
       assert([0,5,10,15].includes(percent),'Desconto promocional inválido');
       assert(Number.isInteger(days)&&days>=0&&days<=30,'Prazo de promoção inválido');
       assert((percent===0&&days===0)||(percent>0&&days>=1),'Defina desconto e duração válidos');
-      if(percent===0){delete b.promotions[p.id];event(draft,'PROMO.ENCERRADA',`Promoção de ${p.name} encerrada.`,{productId:p.id});}
-      else {const until=addDays(draft.calendar.date,days-1);b.promotions[p.id]={percent,until};event(draft,'PROMO.DEFINIDA',`${p.name}: desconto de ${percent}% até ${until}.`,{productId:p.id,percent,until});}
+      if(percent===0){delete b.promotions[p.id];event(draft,'PROMO.ENCERRADA',`Promoção de ${p.name} encerrada.`,{productId:p.id},b.id);}
+      else {const until=addDays(draft.calendar.date,days-1);b.promotions[p.id]={percent,until};event(draft,'PROMO.DEFINIDA',`${p.name}: desconto de ${percent}% até ${until}.`,{productId:p.id,percent,until},b.id);}
       return;
     }
     if(type==='PRECO.DEFINIR') {
       assert(b,'Abra uma empresa antes de definir preços');
       const cents=Number(payload.cents);assert(int(cents)&&cents>=100&&cents<=1000000,'Preço deve estar entre R$ 1 e R$ 10.000');
       const p=product(b,payload.productId||'base');const old=p.priceCents;p.priceCents=cents;syncTotals(b);
-      event(draft,'PRECO.ALTERADO',`${p.name}: preço de ${money(old)} para ${money(cents)}.`,{old,cents,productId:p.id,productName:p.name});return;
+      event(draft,'PRECO.ALTERADO',`${p.name}: preço de ${money(old)} para ${money(cents)}.`,{old,cents,productId:p.id,productName:p.name},b.id);return;
     }
     if(type==='IA.AJUSTAR_PRECO') {
       assert(Number.isInteger(payload.priceIndex)&&payload.priceIndex>=70&&payload.priceIndex<=140,'Estratégia IA inválida');
@@ -294,47 +327,45 @@ const CidadeCore = (() => {
     throw Error(`Comando não implementado: ${type}`);
   }
   function day(draft) {
-    const b=draft.world.business;
-    if(b){
-      const s=SECTORS[b.sector],city=cityById(draft.player.cityId);
-      const season=1+0.13*Math.sin((draft.calendar.tick%365)/365*Math.PI*2);
+    const units=businesses(draft);
+    const season=1+0.13*Math.sin((draft.calendar.tick%365)/365*Math.PI*2);
+    for(const b of units){
+      const s=SECTORS[b.sector],city=cityById(b.cityId||draft.player.cityId);
+      // O mercado endereçável de uma cidade/ramo é compartilhado pelas lojas do jogador.
+      const rivals=units.filter(x=>x.cityId===b.cityId&&x.sector===b.sector).length;
+      const share=1/rivals;
       const items=[],demandLines=[];
       let estimated=0,fulfilled=0,unmet=0,withoutStock=0;
       for(const p of b.products){
         const competitorPrice=p.referenceCents*(draft.world.competitor.priceIndex/100);
         const price=effectivePrice(b,p,draft.calendar.date);
-        const ratio=price/competitorPrice;
-        const elasticity=clamp(1.32-(ratio-1)*1.4,0.08,1.85);
-        // Procura existe mesmo se o produto estiver esgotado; são unidades desejadas, não vendas garantidas.
-        const demand=Math.max(0,Math.floor(p.demand*(city.factor/100)*elasticity*season*(0.75+random(draft)*0.55)));
+        const elasticity=clamp(1.32-(price/competitorPrice-1)*1.4,0.08,1.85);
+        const base=p.demand*(city.factor/100)*elasticity*season*share;
+        const demand=Math.max(0,Math.floor(base*(0.75+random(draft)*0.55)));
         const sold=Math.min(p.stockUnits,demand),lost=demand-sold;
         estimated+=demand;fulfilled+=sold;unmet+=lost;
         if(!p.stockUnits)withoutStock++;
-        demandLines.push({productId:p.id,name:p.name,stockBefore:p.stockUnits,estimated:demand,fulfilled:sold,unmet:lost,
-          lostPotentialCents:lost*price});
+        demandLines.push({productId:p.id,name:p.name,stockBefore:p.stockUnits,estimated:demand,fulfilled:sold,unmet:lost,lostPotentialCents:lost*price});
         if(sold>0)items.push({productId:p.id,quantity:sold});
       }
       if(items.length)registerSale(draft,b,items,'SIMULACAO_DIARIA');
-      event(draft,'DEMANDA.SIMULADA',`Demanda simulada: ${estimated} un. estimadas, ${fulfilled} vendidas, ${unmet} não atendidas; ${withoutStock} produto(s) sem estoque.`,
-        {estimated,fulfilled,unmet,withoutStock,lostPotentialCents:demandLines.reduce((n,x)=>n+x.lostPotentialCents,0),items:demandLines});
+      event(draft,'DEMANDA.SIMULADA',`${b.id} · ${city.name}: ${estimated} un. procuradas, ${fulfilled} vendidas, ${unmet} não atendidas.`,
+        {estimated,fulfilled,unmet,withoutStock,lostPotentialCents:demandLines.reduce((n,x)=>n+x.lostPotentialCents,0),items:demandLines,marketShare:share},b.id);
       const cash=balance(draft,'CASH'),expense=s.dailyCost;
-      // Despesa não desaparece quando não há caixa: vira obrigação a pagar.
-      journal(draft,'Despesa operacional diária',[
+      journal(draft,`Despesa operacional diária · ${b.id}`,[
         {account:'EXPENSE',debit:expense,credit:0},
-        {account:cash>=expense?'CASH':'PAYABLE',debit:0,credit:expense}
-      ]);
-      if(cash<expense) event(draft,'CONTAS.A_PAGAR',`Despesa de ${money(expense)} registrada como obrigação pendente.`);
-      // A IA é uma intenção interna processada pelo mesmo handler e confirmada no mesmo tick.
-      if((draft.calendar.tick+1)%7===0){
-        const change=Math.floor(random(draft)*17)-8;
-        handler(draft,'IA.AJUSTAR_PRECO',{priceIndex:clamp(draft.world.competitor.priceIndex+change,75,125)});
-      }
+        {account:cash>=expense?'CASH':'PAYABLE',debit:0,credit:expense}],b.id);
+      if(cash<expense)event(draft,'CONTAS.A_PAGAR',`${b.id}: despesa de ${money(expense)} registrada a pagar.`,{},b.id);
+    }
+    if(units.length&&(draft.calendar.tick+1)%7===0){
+      const change=Math.floor(random(draft)*17)-8;
+      handler(draft,'IA.AJUSTAR_PRECO',{priceIndex:clamp(draft.world.competitor.priceIndex+change,75,125)});
     }
     const finished=draft.calendar.date;
     event(draft,'DIA.ENCERRADO',`Dia ${finished} concluído.`,{finished});
     draft.calendar.tick++;
     draft.calendar.date=dateNext(draft.calendar.date);
-    receiveDueOrders(draft);
+    for(const b of units)receiveDueOrders(draft,b);
   }
   function dispatch(current,cmd) {
     try{
@@ -359,7 +390,7 @@ const CidadeCore = (() => {
     }catch(error){return {ok:false,status:'REJECTED',state:current?clone(current):null,error:error.message};}
   }
   function validate(state) {
-    assert(plain(state)&&[2,3,4,5].includes(state.schemaVersion),'Save com schema incompatível');
+    assert(plain(state)&&[2,3,4,5,6].includes(state.schemaVersion),'Save com schema incompatível');
     assert(Number.isSafeInteger(state.revision)&&state.revision>=0,'Revisão inválida');
     assert(plain(state.player)&&plain(state.calendar)&&int(state.calendar.tick),'Jogador/calendário inválidos');
     assert(/^\d{4}-\d{2}-\d{2}$/.test(state.calendar.date)&&!Number.isNaN(Date.parse(state.calendar.date+'T12:00:00Z')),'Data inválida');
@@ -382,6 +413,49 @@ const CidadeCore = (() => {
     }
     const cash=balance(state,'CASH'),inventory=balance(state,'INVENTORY');
     assert(int(cash)&&int(inventory)&&int(balance(state,'PAYABLE')),'Saldos financeiros inválidos');
+    if(state.schemaVersion===6){
+      assert(Array.isArray(state.world.branches)&&state.world.branches.length<=4,'Número de filiais inválido');
+      const units=businesses(state);
+      assert(units.length<=5&&int(state.world.branchSeq)&&state.world.branchSeq<=100000,'Limite de estabelecimentos inválido');
+      const ids=new Set(),locations=new Set();let physical=0,goods=0,pending=0;
+      for(const b of units){
+        assert(plain(b)&&typeof b.id==='string'&&!ids.has(b.id)&&cityById(b.cityId),'Unidade duplicada ou cidade inválida');ids.add(b.id);
+        assert(SECTORS[b.sector]&&Number.isInteger(b.lot)&&b.lot>=1&&b.lot<=18,'Atividade ou lote inválido');
+        const loc=`${b.cityId}:${b.lot}`;assert(!locations.has(loc),'Duas unidades ocupam o mesmo lote');locations.add(loc);
+        assert(Array.isArray(b.products)&&b.products.length>=3&&b.products.length<=40&&int(b.stockUnits)&&int(b.totalSold),'Estoque comercial inválido');
+        assert(Array.isArray(b.sales)&&b.sales.length<=20000&&Array.isArray(b.purchaseOrders)&&b.purchaseOrders.length<=20000,'Histórico comercial inválido');
+        assert(int(b.productSeq)&&int(b.orderSeq)&&int(b.saleSeq)&&plain(b.promotions),'Sequências ou promoções inválidas');
+        const pids=new Set();let unitStock=0,unitGoods=0;
+        for(const p of b.products){
+          assert(plain(p)&&typeof p.id==='string'&&!pids.has(p.id)&&typeof p.name==='string'&&p.name.trim().length>=3,'Produto inválido');pids.add(p.id);
+          assert(int(p.stockUnits)&&p.stockUnits<=100000&&int(p.stockValueCents)&&p.stockValueCents<=100000000000,'Estoque físico/contábil inválido');
+          assert(int(p.costCents)&&p.costCents>=100&&p.costCents<=1000000&&int(p.priceCents)&&p.priceCents>=100&&p.priceCents<=1000000,'Custo ou preço inválido');
+          assert(int(p.referenceCents)&&p.referenceCents>=100&&int(p.demand)&&p.demand<=40,'Demanda inválida');
+          assert(int(p.reorderPoint)&&p.reorderPoint<=100000&&int(p.targetStock)&&p.targetStock>=p.reorderPoint&&p.targetStock<=100000,'Política de estoque inválida');
+          unitStock+=p.stockUnits;unitGoods+=p.stockValueCents;
+        }
+        assert(unitStock===b.stockUnits&&unitStock<=100000&&b.unitPrice===product(b,'base').priceCents,'Saldos da unidade inválidos');
+        assert(Object.keys(b.promotions).length<=40,'Excesso de promoções');
+        for(const [id,pr] of Object.entries(b.promotions))assert(pids.has(id)&&plain(pr)&&[5,10,15].includes(pr.percent)&&isoDate(pr.until),'Promoção inválida');
+        let unitTransit=0;
+        for(const o of b.purchaseOrders){
+          assert(o&&['PENDING','RECEIVED'].includes(o.status)&&isoDate(o.date)&&isoDate(o.dueDate)&&o.dueDate>=o.date,'Pedido ou prazo inválido');
+          assert(Array.isArray(o.items)&&int(o.total)&&o.items.reduce((n,l)=>n+l.total,0)===o.total,'Itens de compra inválidos');
+          if(o.status==='PENDING'){assert(o.receivedAt===null,'Pedido pendente marcado como recebido');unitTransit+=o.total;}
+          else assert(isoDate(o.receivedAt),'Pedido sem confirmação de recebimento');
+        }
+        assert(b.sales.every(x=>x&&typeof x.id==='string'&&Array.isArray(x.items)&&int(x.total)&&int(x.cogs)),'Venda inválida');
+        physical+=unitStock;goods+=unitGoods;pending+=unitTransit;
+        const journals=state.economy.ledger.filter(j=>journalBusinessId(state,j)===b.id);
+        const acc=accountName=>journals.reduce((total,j)=>total+j.entries.reduce((n,e)=>n+(e.account===accountName?e.debit-e.credit:0),0),0);
+        assert(acc('INVENTORY')===unitGoods&&acc('IN_TRANSIT')===unitTransit,'Contabilidade da filial não concilia estoque/trânsito');
+      }
+      assert(!units.length?state.world.activeBusinessId===null:ids.has(state.world.activeBusinessId),'Unidade ativa inválida');
+      assert(physical===units.reduce((n,x)=>n+x.stockUnits,0)&&goods===inventory&&pending===balance(state,'IN_TRANSIT'),'Estoque consolidado não conciliado');
+      for(const j of state.economy.ledger)if(j.businessId)assert(ids.has(j.businessId),'Lançamento aponta para unidade inexistente');
+      for(const e of state.audit.events)if(e.businessId)assert(ids.has(e.businessId),'Evento aponta para unidade inexistente');
+      return true;
+    }
     const b=state.world.business;
     if(b){assert(SECTORS[b.sector]&&Number.isInteger(b.lot)&&b.lot>=1&&b.lot<=18&&int(b.stockUnits)&&int(b.totalSold)&&int(b.unitPrice),'Empresa inválida');
       if(state.schemaVersion===2){assert(inventory===b.stockUnits*SECTORS[b.sector].cost,'Estoque físico e contábil divergentes');}
@@ -431,7 +505,7 @@ const CidadeCore = (() => {
   }
   // Reportes por data/competência derivados exclusivamente do ledger já confirmado.
   // Saldo no fim do período é acumulado; receitas, CMV e despesas são fluxos do recorte.
-  function financialReport(state,period='all',referenceDate=state.calendar.date,range=null) {
+  function financialReport(state,period='all',referenceDate=state.calendar.date,range=null,businessId='all') {
     assert(state&&plain(state.economy)&&Array.isArray(state.economy.ledger),'Carreira inválida para relatório');
     assert(['all','day','month','quarter','semester','year','range'].includes(period),'Período financeiro desconhecido');
     assert(isoDate(referenceDate),'Data de referência inválida');
@@ -463,34 +537,36 @@ const CidadeCore = (() => {
       label=`Intervalo ${from.split('-').reverse().join('/')} a ${to.split('-').reverse().join('/')}`;
     }
     const effectiveEnd=to<state.calendar.date?to:state.calendar.date;
-    const entries=state.economy.ledger.filter(x=>x.date>=from&&x.date<=effectiveEnd);
-    const until=state.economy.ledger.filter(x=>x.date<=effectiveEnd);
+    assert(businessId==='all'||!!businessById(state,businessId),'Filtro de estabelecimento inválido');
+    const inScope=j=>businessId==='all'||journalBusinessId(state,j)===businessId;
+    const entries=state.economy.ledger.filter(x=>x.date>=from&&x.date<=effectiveEnd&&inScope(x));
+    const until=state.economy.ledger.filter(x=>x.date<=effectiveEnd&&inScope(x));
     const account=(journals,name)=>journals.reduce((sum,j)=>sum+j.entries.reduce((n,e)=>e.account===name?n+(['CAPITAL','REVENUE','PAYABLE'].includes(name)?e.credit-e.debit:e.debit-e.credit):n,0),0);
     const revenue=account(entries,'REVENUE'),cogs=account(entries,'COGS'),expenses=account(entries,'EXPENSE');
     return {
-      period,referenceDate,from,to,effectiveEnd,label,entries,
+      period,referenceDate,from,to,effectiveEnd,label,entries,businessId,
       revenue,cogs,expenses,grossProfit:revenue-cogs,profit:revenue-cogs-expenses,
       grossMarginPercent:revenue?Math.round((revenue-cogs)*10000/revenue)/100:null,
-      closingCash:account(until,'CASH'),closingInventory:account(until,'INVENTORY'),
+      closingCash:businessId==='all'?account(until,'CASH'):null,closingInventory:account(until,'INVENTORY'),
       closingPayable:account(until,'PAYABLE'),closingInTransit:account(until,'IN_TRANSIT'),capital:account(entries,'CAPITAL')
     };
   }
   // Avaliação determinística da estratégia: consulta pura, sem alterar RNG, save ou contabilidade.
   function strategyReport(state,horizonDays=30){
     assert(state&&[7,30,90].includes(horizonDays),'Horizonte estratégico inválido');
-    const b=state.world.business;
+    const b=activeBusiness(state);
     if(!b)return null;
-    const sector=SECTORS[b.sector],city=cityById(state.player.cityId),current=overview(state);
+    const sector=SECTORS[b.sector],city=cityById(b.cityId),current=overview(state);
     const lastDate=new Date(state.calendar.date+'T12:00:00Z');lastDate.setUTCDate(lastDate.getUTCDate()-1);
     const endDate=lastDate.toISOString().slice(0,10);
     const firstDate=new Date(lastDate);firstDate.setUTCDate(firstDate.getUTCDate()-29);
     const beginning=firstDate.toISOString().slice(0,10);
-    const recent=state.economy.ledger.filter(j=>j.date>=beginning&&j.date<=endDate);
+    const recent=state.economy.ledger.filter(j=>j.date>=beginning&&j.date<=endDate&&journalBusinessId(state,j)===b.id);
     const valueOf=(entry,account)=>entry.entries.reduce((n,e)=>n+(e.account===account?(account==='REVENUE'?e.credit-e.debit:e.debit-e.credit):0),0);
     const recentRevenue=recent.reduce((n,j)=>n+valueOf(j,'REVENUE'),0);
     const recentCogs=recent.reduce((n,j)=>n+valueOf(j,'COGS'),0);
-    const recentFixed=recent.filter(j=>j.memo==='Despesa operacional diária').reduce((n,j)=>n+valueOf(j,'EXPENSE'),0);
-    const recentOneOff=recent.filter(j=>j.memo!=='Despesa operacional diária').reduce((n,j)=>n+valueOf(j,'EXPENSE'),0);
+    const recentFixed=recent.filter(j=>j.memo.startsWith('Despesa operacional diária')).reduce((n,j)=>n+valueOf(j,'EXPENSE'),0);
+    const recentOneOff=recent.filter(j=>!j.memo.startsWith('Despesa operacional diária')).reduce((n,j)=>n+valueOf(j,'EXPENSE'),0);
     const workingCapital=current.cash+current.inventoryValue+current.inTransit+current.receivables-current.payable;
     const fixedDaily=sector.dailyCost;
     let weightedContribution=0,weightedDemand=0;
@@ -498,7 +574,7 @@ const CidadeCore = (() => {
     for(const row of products){
       const p=row.p,unitPrice=effectivePrice(b,p,state.calendar.date),unitCost=p.stockUnits?Math.round(p.stockValueCents/p.stockUnits):p.costCents;
       const reference=p.referenceCents*state.world.competitor.priceIndex/100;
-      const demand=Math.max(0,Math.round(p.demand*city.factor/100*clamp(1.32-(unitPrice/reference-1)*1.4,.08,1.85)));
+      const demand=Math.max(0,Math.round(p.demand*city.factor/100/businesses(state).filter(x=>x.cityId===b.cityId&&x.sector===b.sector).length*clamp(1.32-(unitPrice/reference-1)*1.4,.08,1.85)));
       weightedDemand+=demand;weightedContribution+=demand*(unitPrice-unitCost);
     }
     const contributionPerUnit=weightedDemand?weightedContribution/weightedDemand:0;
@@ -513,7 +589,7 @@ const CidadeCore = (() => {
       const season=1+0.13*Math.sin(((state.calendar.tick+d)%365)/365*Math.PI*2);
       for(const row of products){const p=row.p,price=effectivePrice(b,p,date),ref=p.referenceCents*state.world.competitor.priceIndex/100;
         const elasticity=clamp(1.32-(price/ref-1)*1.4,.08,1.85);
-        const demand=Math.max(0,Math.floor(p.demand*city.factor/100*elasticity*season*1.025));
+        const demand=Math.max(0,Math.floor(p.demand*city.factor/100/businesses(state).filter(x=>x.cityId===b.cityId&&x.sector===b.sector).length*elasticity*season*1.025));
         const sold=Math.min(demand,row.stock);missed+=demand-sold;unitsSold+=sold;
         const cost=sold===row.stock?row.value:row.stock?Math.round(row.value*sold/row.stock):0;
         row.stock-=sold;row.value-=cost;projectedRevenue+=sold*price;projectedCogs+=cost;cash+=sold*price;
@@ -533,10 +609,25 @@ const CidadeCore = (() => {
   }
   // O histórico persiste nos eventos existentes da V1; nenhum campo novo é adicionado ao save.
   function priceHistory(state) {
-    if(!state?.world?.business)return [];
-    return state.audit.events.filter(e=>e.type==='PRECO.ALTERADO')
+    if(!activeBusiness(state))return [];
+    return state.audit.events.filter(e=>e.type==='PRECO.ALTERADO'&&(e.businessId===activeBusiness(state).id||(!e.businessId&&activeBusiness(state).id===state.world.business?.id)))
       .filter(e=>Number.isSafeInteger(e.data?.old)&&Number.isSafeInteger(e.data?.cents))
-      .map(e=>({id:e.id,date:e.date,old:e.data.old,cents:e.data.cents,productId:e.data.productId||'base',productName:e.data.productName||SECTORS[state.world.business.sector].product}));
+      .map(e=>({id:e.id,date:e.date,old:e.data.old,cents:e.data.cents,productId:e.data.productId||'base',productName:e.data.productName||SECTORS[activeBusiness(state).sector].product}));
+  }
+  // Retorna indicadores da empresa e de cada unidade; apenas fluxos estão atribuídos a filiais.
+  function groupReport(state){
+    const units=businesses(state);
+    const result=units.map(b=>{
+      const docs=state.economy.ledger.filter(j=>journalBusinessId(state,j)===b.id);
+      const sum=account=>docs.reduce((n,j)=>n+j.entries.reduce((v,e)=>v+(e.account===account?(account==='REVENUE'?e.credit-e.debit:e.debit-e.credit):0),0),0);
+      const revenue=sum('REVENUE'),cogs=sum('COGS'),expenses=sum('EXPENSE');
+      return {id:b.id,cityId:b.cityId,city:cityById(b.cityId).name,lot:b.lot,sector:b.sector,stock:b.stockUnits,
+        stockValue:b.products.reduce((n,p)=>n+p.stockValueCents,0),inTransit:b.purchaseOrders.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.total,0),
+        revenue,cogs,expenses,profit:revenue-cogs-expenses};
+    });
+    const total=overview(state);
+    return {units:result,count:units.length,group:{cash:total.cash,revenue:total.revenue,cogs:total.cogs,expenses:total.expenses,
+      profit:total.profit,stock:total.stock,inventoryValue:total.inventoryValue,inTransit:total.inTransit,payable:total.payable}};
   }
   function exportSave(state) {
     validate(state);const payload=clone(state),raw=JSON.stringify(payload);
@@ -555,10 +646,10 @@ const CidadeCore = (() => {
     assert(plain(data)&&data.saveFormatVersion===1&&data.app==='Cidade dos Negócios'&&data.checksumAlgorithm==='FNV1A32'&&typeof data.checksum==='string'&&plain(data.payload),'Envelope de save incompatível');
     assert(hash(JSON.stringify(data.payload))===data.checksum,'Checksum diverge: arquivo alterado ou corrompido');
     validate(data.payload);
-    const migrated=data.payload.schemaVersion!==5,state=upgradedState(data.payload);validate(state);
-    return {state,migrated,message:migrated?'Carreira migrada para V1.4 com caixa, estoque e histórico preservados.':'Carreira restaurada com integridade validada.'};
+    const migrated=data.payload.schemaVersion!==6,state=upgradedState(data.payload);validate(state);
+    return {state,migrated,message:migrated?'Carreira migrada para V1.5: matriz, caixa, estoque e histórico preservados.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,CITIES,SECTORS,SUPPLIERS,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();

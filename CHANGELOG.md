@@ -1,5 +1,14 @@
 # Histórico de versões — Cidade dos Negócios
 
+## 1.2.1-rc.1 — hotfix de vendas automáticas (01/11/2026)
+
+- Bloqueia novas vendas manuais no motor e remove carrinho/checkout da UI.
+- Apresenta painel de demanda e vendas simuladas com resultados por SKU e comprovantes consolidados do dia.
+- Registra estimativa apenas quando há estoque, atendidas e não atendidas em eventos de auditoria.
+- Mantém registros manuais anteriores íntegros, sem alterar caixa, CMV, datas ou ledger histórico.
+- Preserva schema 3 e os números da simulação econômica anterior; novas observações não mudam o RNG.
+- Homologação no Windows pendente.
+
 ## 1.2.0-rc.1 — gestão comercial multitem (candidata)
 
 - Três SKUs iniciais por ramo e cadastro de novos produtos até 40 por estabelecimento.

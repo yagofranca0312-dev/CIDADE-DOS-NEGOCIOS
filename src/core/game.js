@@ -1,7 +1,7 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.2.0-rc.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.2.1-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '1.2.0-rc.1';
+  const VERSION = '1.2.1-rc.1';
   const SCHEMA_VERSION = 3;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -69,7 +69,8 @@ const CidadeCore = (() => {
       {account:'INVENTORY',debit:total,credit:0},{account:'CASH',debit:0,credit:total}]);
     event(draft,'ESTOQUE.COMPRADO',`Compra ${id} confirmada: ${qtyTotal} unidades por ${money(total)}.`,{id,total,supplierId});
   }
-  function registerSale(draft,b,items,kind='BALCAO') {
+  function registerSale(draft,b,items,kind='SIMULACAO_DIARIA') {
+    assert(kind==='SIMULACAO_DIARIA','A venda só pode ser gerada pela simulação de demanda');
     assert(Array.isArray(items)&&items.length>=1&&items.length<=40,'Carrinho vazio ou inválido');
     const used=new Set();let total=0,cost=0,qtyTotal=0;
     const lines=items.map(line=>{assert(plain(line),'Item de venda inválido');const p=product(b,line.productId),quantity=Number(line.quantity);
@@ -87,7 +88,7 @@ const CidadeCore = (() => {
     journal(draft,`Venda ${id} (${kind}): ${lines.map(x=>`${x.quantity} ${x.name}`).join(', ')}`,[
       {account:'CASH',debit:total,credit:0},{account:'REVENUE',debit:0,credit:total},
       {account:'COGS',debit:cost,credit:0},{account:'INVENTORY',debit:0,credit:cost}]);
-    event(draft,'VENDA.CONCLUIDA',`${kind==='BALCAO'?'Venda manual':'Vendas do dia'} ${id}: ${qtyTotal} unidades por ${money(total)}.`,{id,total,cost,qtyTotal});
+    event(draft,'VENDA.CONCLUIDA',`Vendas simuladas do dia ${id}: ${qtyTotal} unidades por ${money(total)}.`,{id,total,cost,qtyTotal});
   }
   function productPerformance(state) {
     const b=state?.world?.business;if(!b)return [];
@@ -179,8 +180,9 @@ const CidadeCore = (() => {
       registerPurchase(draft,b,payload.supplierId,payload.items);return;
     }
     if(type==='VENDA.REGISTRAR') {
-      assert(b,'Abra uma empresa antes de vender');
-      registerSale(draft,b,payload.items);return;
+      // Comando legado desativado: compras reais são simuladas exclusivamente pelo motor diário.
+      // Recibos BALCAO antigos permanecem no save para auditoria, sem nova mutação do ledger.
+      throw Error('Venda manual desativada na V1.2.1: avance o dia para simular a demanda e as vendas.');
     }
     if(type==='PRECO.DEFINIR') {
       assert(b,'Abra uma empresa antes de definir preços');
@@ -206,17 +208,27 @@ const CidadeCore = (() => {
     if(b){
       const s=SECTORS[b.sector],city=cityById(draft.player.cityId);
       const season=1+0.13*Math.sin((draft.calendar.tick%365)/365*Math.PI*2);
-      const items=[];
+      const items=[],demandLines=[];
+      let estimated=0,fulfilled=0,unmet=0,withoutStock=0;
       for(const p of b.products){
-        if(!p.stockUnits)continue; // Sem consumo de RNG para produto sem estoque.
+        if(!p.stockUnits){
+          // Sem estoque, a V1 não calcula nem inventa demanda: diferencie de demanda zero.
+          withoutStock++;
+          demandLines.push({productId:p.id,name:p.name,stockBefore:0,estimated:null,fulfilled:0,unmet:null});
+          continue; // Preserva o consumo de RNG e a economia da V1.2.
+        }
         const competitorPrice=p.referenceCents*(draft.world.competitor.priceIndex/100);
         const ratio=p.priceCents/competitorPrice;
         const elasticity=clamp(1.32-(ratio-1)*1.4,0.08,1.85);
         const demand=Math.max(0,Math.floor(p.demand*(city.factor/100)*elasticity*season*(0.75+random(draft)*0.55)));
         const sold=Math.min(p.stockUnits,demand);
+        estimated+=demand;fulfilled+=sold;unmet+=demand-sold;
+        demandLines.push({productId:p.id,name:p.name,stockBefore:p.stockUnits,estimated:demand,fulfilled:sold,unmet:demand-sold});
         if(sold>0)items.push({productId:p.id,quantity:sold});
       }
       if(items.length)registerSale(draft,b,items,'SIMULACAO_DIARIA');
+      event(draft,'DEMANDA.SIMULADA',`Demanda simulada: ${estimated} un. estimadas, ${fulfilled} vendidas, ${unmet} não atendidas; ${withoutStock} produto(s) sem estimativa por falta de estoque.`,
+        {estimated,fulfilled,unmet,withoutStock,items:demandLines});
       const cash=balance(draft,'CASH'),expense=s.dailyCost;
       // Despesa não desaparece quando não há caixa: vira obrigação a pagar.
       journal(draft,'Despesa operacional diária',[

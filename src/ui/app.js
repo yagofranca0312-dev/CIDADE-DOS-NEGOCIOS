@@ -8,8 +8,6 @@
   const KEY='cidade-dos-negocios-save-v1';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
   let financeQuery=null; // preferência de consulta da interface, independente do GameState
-  // Carrinho é estado transitório da interface; apenas a venda confirmada entra no save.
-  let cart=[];
   const business=()=>state?.world?.business||null;
   function chooseProduct(id){const b=business();return b?.products?.find(p=>p.id===$(id)?.value)||b?.products?.[0]||null;}
   function refillSelect(id,products){
@@ -17,15 +15,30 @@
     select.replaceChildren(...products.map(p=>{const option=document.createElement('option');option.value=p.id;option.textContent=p.name;return option;}));
     if(products.some(p=>p.id===previous))select.value=previous;
   }
-  function renderCart(){
-    const b=business(),items=cart.map(entry=>({entry,p:b?.products.find(p=>p.id===entry.productId)})).filter(x=>x.p);
-    const total=items.reduce((n,x)=>n+x.entry.quantity*x.p.priceCents,0);
-    $('cart-items').innerHTML=items.length?items.map(({entry,p})=>`<div class="cart-row"><span>${escape(p.name)} · ${entry.quantity} × ${escape(Core.money(p.priceCents))}</span><button type="button" class="btn btn-outline" data-cart-remove="${escape(p.id)}" aria-label="Remover ${escape(p.name)}">Remover</button></div>`).join(''):'<p class="muted">Carrinho vazio.</p>';
-    setText('cart-total',Core.money(total));$('cart-checkout').disabled=!items.length;
+  function renderSalesMonitor(){
+    const b=business(),sales=b?.sales||[];
+    const checks=state?.audit?.events?.filter(e=>e.type==='DEMANDA.SIMULADA')||[];
+    const latest=checks.at(-1);
+    setText('demand-date',latest?BRDate(latest.date):'Aguardando primeiro dia simulado');
+    setText('demand-estimated',latest?String(latest.data.estimated):'—');
+    setText('demand-fulfilled',latest?String(latest.data.fulfilled):'—');
+    setText('demand-unmet',latest?String(latest.data.unmet):'—');
+    setText('demand-without-stock',latest?String(latest.data.withoutStock):'—');
+    const rows=latest?.data?.items||[];
+    $('demand-rows').innerHTML=rows.length?rows.map(p=>`<tr><td>${escape(p.name)}</td><td>${p.estimated===null?'Sem estimativa':p.estimated}</td><td>${p.fulfilled}</td><td>${p.unmet===null?'—':p.unmet}</td></tr>`).join(''):'<tr><td colspan="4">Avance pelo menos um dia com uma empresa aberta para visualizar a demanda simulada.</td></tr>';
+    const daily=latest?sales.filter(s=>s.date===latest.date&&s.kind==='SIMULACAO_DIARIA'):[];
+    const revenue=daily.reduce((n,s)=>n+s.total,0),cost=daily.reduce((n,s)=>n+s.cogs,0);
+    setText('demand-day-revenue',latest?Core.money(revenue):'—');
+    setText('demand-day-cogs',latest?Core.money(cost):'—');
+    $('recent-sales').innerHTML=sales.length?sales.slice(-12).reverse().map(o=>{
+      const name=o.kind==='SIMULACAO_DIARIA'?'Vendas automáticas':o.kind==='BALCAO'?'Venda manual histórica (V1.2)':'Venda registrada';
+      const detail=o.items.map(x=>`<li>${escape(x.name)}: ${x.quantity} un. · receita ${escape(Core.money(x.revenue))} · CMV ${escape(Core.money(x.cogs))}</li>`).join('');
+      return `<details class="commerce-receipt"><summary>${escape(BRDate(o.date))} · ${escape(o.id)} · ${escape(name)} · ${escape(Core.money(o.total))}</summary><ul>${detail}</ul><p>CMV: ${escape(Core.money(o.cogs))} · Lucro bruto: ${escape(Core.money(o.total-o.cogs))}</p></details>`;
+    }).join(''):'<p class="muted">Nenhuma venda registrada. Abasteça o estoque e avance um dia.</p>';
   }
   function renderCommerce(){
     const b=business(),products=b?.products||[];
-    for(const id of ['buy-product','price-product','sale-product'])refillSelect(id,products);
+    for(const id of ['buy-product','price-product'])refillSelect(id,products);
     const suppliers=Core.SUPPLIERS,$supplier=$('buy-supplier'),previous=$supplier.value;
     $supplier.replaceChildren(...suppliers.map(s=>{const opt=document.createElement('option');opt.value=s.id;opt.textContent=s.name;return opt;}));
     if(suppliers.some(x=>x.id===previous))$supplier.value=previous;
@@ -33,13 +46,13 @@
     setText('product-count',`${products.length} produto(s)`);
     const stats=b?Core.productPerformance(state):[];
     $('catalog-rows').innerHTML=stats.length?stats.map(p=>`<tr><td>${escape(p.name)}</td><td>${p.stockUnits}</td><td>${escape(Core.money(p.costCents))}</td><td>${escape(Core.money(p.priceCents))}</td><td>${p.sold}</td><td>${escape(Core.money(p.revenue))}</td><td>${escape(Core.money(p.cogs))}</td></tr>`).join(''):'<tr><td colspan="7">Abra uma empresa para ver o catálogo.</td></tr>';
-    const orders=b?.purchaseOrders||[],sales=b?.sales||[];
+    const orders=b?.purchaseOrders||[];
     $('recent-purchases').innerHTML=orders.length?orders.slice(-6).reverse().map(o=>`<div class="commerce-history-row">${escape(BRDate(o.date))} · ${escape(o.id)} · ${escape(o.items.map(x=>x.quantity+'× '+x.name).join(', '))} · ${escape(Core.money(o.total))}</div>`).join(''):'<p class="muted">Nenhuma compra registrada nesta edição.</p>';
-    $('recent-sales').innerHTML=sales.length?sales.slice(-6).reverse().map(o=>`<div class="commerce-history-row">${escape(BRDate(o.date))} · ${escape(o.id)} · ${escape(o.kind)} · ${escape(Core.money(o.total))} · CMV ${escape(Core.money(o.cogs))}</div>`).join(''):'<p class="muted">Nenhuma venda detalhada registrada nesta edição.</p>';
+    renderSalesMonitor();
     setText('your-current-price',chosenPrice?Core.money(chosenPrice.priceCents):'—');
     setText('competitor-price',chosenPrice?Core.money(Math.round(chosenPrice.referenceCents*state.world.competitor.priceIndex/100)):'—');
     if(chosenPrice&&document.activeElement!==$('price-value'))$('price-value').value=(chosenPrice.priceCents/100).toFixed(2);
-    updateBuyPreview();renderCart();
+    updateBuyPreview();
   }
 
   let toastTimer;
@@ -132,7 +145,7 @@
   }
   function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
   function commit(type,payload={}){
-    if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;cart=[];}
+    if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;}
     const result=Core.dispatch(state,{type,id:nextId(),payload});
     if(!result.ok){notify(result.error,true);return false;}
     if(result.status==='APPLIED'){state=result.state;viewCityId=viewCityId??state.player.cityId;saveLocal();render();}
@@ -245,7 +258,7 @@
     if(!file)return;
     if(file.size>25_000_000){notify('Save excede 25 MB.',true);return;}
     if(state?.player.cityId&&!confirm('Substituir a carreira atual pelo save importado? Recomendamos exportar antes.'))return;
-    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;viewCityId=state.player.cityId;selectedLot=1;financeQuery=null;cart=[];saveLocal();render();notify(incoming.message);}
+    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;viewCityId=state.player.cityId;selectedLot=1;financeQuery=null;saveLocal();render();notify(incoming.message);}
     catch(e){notify(`Importação rejeitada: ${e.message}. A carreira anterior foi preservada.`,true);}
   }
   function launchAuto(){
@@ -266,22 +279,10 @@
     $('buy-quantity').addEventListener('input',updateBuyPreview);
     $('buy-product').addEventListener('change',updateBuyPreview);
     $('price-product').addEventListener('change',()=>{const p=chooseProduct('price-product');if(p)$('price-value').value=(p.priceCents/100).toFixed(2);renderCommerce();});
-    $('sale-product').addEventListener('change',()=>renderCart());
     $('product-form').addEventListener('submit',e=>{e.preventDefault();
       const name=$('new-product-name').value,costCents=Math.round(Number($('new-product-cost').value)*100),priceCents=Math.round(Number($('new-product-price').value)*100);
       if(commit('PRODUTO.CADASTRAR',{name,costCents,priceCents})){$('product-form').reset();notify('Produto cadastrado. Agora você pode comprar estoque.');}
     });
-    $('cart-add').addEventListener('click',()=>{
-      const p=chooseProduct('sale-product'),quantity=Number($('sale-quantity').value);
-      if(!p||!Number.isInteger(quantity)||quantity<1||quantity>2000){notify('Informe uma quantidade válida (1–2000).',true);return;}
-      const existing=cart.find(x=>x.productId===p.id),current=existing?.quantity||0;
-      if(current+quantity>p.stockUnits){notify(`Estoque insuficiente para ${p.name}.`,true);return;}
-      if(existing)existing.quantity+=quantity;else cart.push({productId:p.id,quantity});renderCart();
-    });
-    $('cart-items').addEventListener('click',e=>{const btn=e.target.closest('[data-cart-remove]');if(btn){cart=cart.filter(x=>x.productId!==btn.dataset.cartRemove);renderCart();}});
-    $('cart-clear').addEventListener('click',()=>{cart=[];renderCart();});
-    $('cart-checkout').addEventListener('click',()=>{if(commit('VENDA.REGISTRAR',{items:cart.map(x=>({...x}))})){cart=[];renderCart();notify('Venda confirmada no caixa, na receita e no CMV.');}});
-
     for(const b of document.querySelectorAll('[data-buy-preset]'))b.addEventListener('click',()=>{$('buy-quantity').value=b.dataset.buyPreset;updateBuyPreview();$('buy-quantity').focus();});
     $('finance-period').addEventListener('change',e=>{ensureFinanceQuery().period=e.target.value;renderFinances();});
     const controls=[['finance-date','asOf'],['finance-day','day'],['finance-month','month'],
@@ -315,7 +316,7 @@
     $('start-import').addEventListener('click',()=>$('import-file').click());
     $('import-file').addEventListener('change',async e=>{const f=e.target.files?.[0];try{await importFile(f);}finally{e.target.value='';}});
     $('run-diagnostic').addEventListener('click',()=>{try{const before=JSON.stringify(state),out=Core.diagnostics(state);if(before!==JSON.stringify(state))throw Error('Diagnóstico alterou o estado');setText('diagnostic-result',out.status+' · revisão '+out.revision);notify('Verificação estrutural e contábil aprovada.');}catch(e){setText('diagnostic-result',e.message);notify(e.message,true);}});
-    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financeQuery=null;cart=[];render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
+    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financeQuery=null;render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
   }
   function updateOpenPreview(){const s=Core.SECTORS[$('sector-select').value];if(s)setText('open-preview',`Investimento inicial simulado: ${Core.money(s.openCost)} · Produto: ${s.product}`);}
   function start(){

@@ -20,7 +20,7 @@
       <p class="hero-subtitle">Uma cidade. Uma empresa. Mil decisões.</p>
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◆ Economia simulada</span><span>◆ 30 cidades</span><span>◆ Offline</span></div>
-      <p class="fine-print">V1.2.0-rc.1 — prévia jogável. Parâmetros econômicos fictícios e legislação tributária ainda não implementada.</p>
+      <p class="fine-print">V1.2.1-rc.1 — prévia jogável. Parâmetros econômicos fictícios e legislação tributária ainda não implementada.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -67,7 +67,7 @@
       <div class="world-warning" id="other-city-warning" hidden>Você está explorando outra cidade. A empresa atual opera apenas na cidade de origem nesta versão.</div>
       <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Tributação legal não calculada nesta versão.</div>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.2.0-rc.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.2.1-rc.1</span></div>
         <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
           <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
           <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
@@ -103,14 +103,22 @@
                 <p class="field-hint">Até 40 produtos por estabelecimento. Um cadastro não compra estoque.</p>
                 <button type="submit" class="btn btn-primary">Cadastrar produto</button>
               </form></article>
-            <article class="panel"><div class="panel-heading"><h3>Venda no balcão</h3><span class="tag-soft">CARRINHO</span></div>
-              <label for="sale-product">Produto para vender</label><select id="sale-product"></select>
-              <label for="sale-quantity">Quantidade</label><input id="sale-quantity" type="number" min="1" max="2000" value="1">
-              <button type="button" id="cart-add" class="btn btn-outline spaced">Adicionar ao carrinho</button>
-              <div id="cart-items" class="cart-items" aria-live="polite"></div>
-              <div class="cart-total">Total da venda: <strong id="cart-total">R$ 0,00</strong></div>
-              <div class="cart-actions"><button type="button" id="cart-clear" class="btn btn-outline">Limpar</button><button type="button" id="cart-checkout" class="btn btn-primary" disabled>Confirmar venda</button></div>
-              <p class="field-hint">Venda fictícia à vista; o checkout confirma caixa, receita e CMV simultaneamente. Não emite nota fiscal.</p>
+            <article class="panel" aria-label="Painel de vendas automáticas">
+              <div class="panel-heading"><h3>Vendas simuladas e demanda</h3><span class="tag-soft">AUTOMÁTICO</span></div>
+              <p class="muted">As vendas são geradas exclusivamente ao avançar os dias. O painel mostra a estimativa de demanda e as vendas realizadas; ele não cria vendas adicionais.</p>
+              <p class="field-hint">Último dia concluído: <strong id="demand-date">—</strong></p>
+              <div class="sales-kpis" aria-label="Resumo de demanda do último dia">
+                <div><small>Demanda estimada*</small><strong id="demand-estimated">—</strong></div>
+                <div><small>Unidades vendidas</small><strong id="demand-fulfilled">—</strong></div>
+                <div><small>Demanda não atendida</small><strong id="demand-unmet">—</strong></div>
+                <div><small>Produtos sem estoque</small><strong id="demand-without-stock">—</strong></div>
+              </div>
+              <div class="sales-kpis sales-money">
+                <div><small>Receita do dia</small><strong id="demand-day-revenue">—</strong></div>
+                <div><small>CMV do dia</small><strong id="demand-day-cogs">—</strong></div>
+              </div>
+              <div class="table-scroll"><table class="catalog-table demand-table"><thead><tr><th>Produto</th><th>Demanda*</th><th>Vendido</th><th>Não atendido</th></tr></thead><tbody id="demand-rows"></tbody></table></div>
+              <p class="field-hint">* Estimativa calculada apenas para produtos com estoque no começo do dia. Sem estoque, a demanda não é estimada, não é zero. Dados detalhados disponíveis apenas para dias simulados a partir da V1.2.1.</p>
             </article>
           </div>
           <article class="panel commerce-catalog"><div class="panel-heading"><h3>Catálogo e desempenho por produto</h3><span class="tag-soft" id="product-count">0 produtos</span></div>
@@ -119,7 +127,7 @@
           </article>
           <div class="dashboard-grid commerce-history-grid">
             <article class="panel"><h3>Últimas compras</h3><div id="recent-purchases" class="commerce-log"></div></article>
-            <article class="panel"><h3>Últimas vendas</h3><div id="recent-sales" class="commerce-log"></div></article>
+            <article class="panel"><h3>Comprovantes de vendas simuladas</h3><p class="muted">Cada registro automático consolida as vendas do dia, não representa um cliente individual. Registros manuais anteriores permanecem identificados como históricos.</p><div id="recent-sales" class="commerce-log commerce-receipts"></div></article>
           </div>
         </section>
         <section data-view="financas" class="view" hidden>
@@ -160,7 +168,7 @@
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.2.0-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.2.1-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>

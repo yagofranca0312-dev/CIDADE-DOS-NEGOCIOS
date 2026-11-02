@@ -114,3 +114,25 @@
 .group-table button{font-size:.74rem;white-space:nowrap;padding:8px 12px}
 @media(max-width:950px){.topbar-controls{flex-wrap:wrap}.unit-switch{min-width:160px;max-width:100%}}
 @media(max-width:530px){.group-highlights{grid-template-columns:1fr}.unit-switch{width:100%}}
+
+/* V1.6 — observatório regional: dados oficiais apartados da modelagem fictícia. */
+.regional-panel{display:grid;gap:11px}
+.regional-panel .panel-heading{margin-bottom:1px}
+.regional-hero{padding:14px;background:linear-gradient(120deg,#1d4352,#153149);border:1px solid #376273;border-radius:11px}
+.regional-hero small{display:block;font-size:.65rem;font-weight:800;letter-spacing:.06em;color:#c2dde5}
+.regional-hero strong{display:block;font-size:clamp(1.45rem,2.6vw,1.95rem);font-variant-numeric:tabular-nums;color:#f5d9a6;margin:5px 0}
+.regional-hero span{font-size:.7rem;color:#bdd1dd;line-height:1.5}
+.regional-indicators{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.regional-indicators div{background:#102b3f;border:1px solid #2d4c60;border-radius:8px;padding:9px;min-width:0}
+.regional-indicators small{display:block;font-size:.63rem;line-height:1.4;color:#abc3d2}
+.regional-indicators strong{display:block;font-size:.83rem;margin-top:5px;overflow-wrap:anywhere}
+.regional-sources{display:grid;grid-template-columns:1fr;gap:4px;margin:2px 0}
+.regional-sources dt{color:#a9bdce;font-size:.7rem}
+.regional-sources dd{margin:0 0 6px;font-size:.74rem;font-weight:700}
+.regional-caution{margin:0;color:#e6cda1;font-size:.72rem;line-height:1.55}
+.regional-source-link{font-size:.73rem;overflow-wrap:anywhere}
+.map-canvas[data-urban-size="local"]{background:radial-gradient(ellipse at 50% 40%,#2b5552,#14333d 65%,#112b35)}
+.map-canvas[data-urban-size="regional"]{background:radial-gradient(ellipse at 52% 40%,#275a63,#173a49 65%,#112a3e)}
+.map-canvas[data-urban-size="grande"]{background:radial-gradient(ellipse at 50% 40%,#2b5075,#173b5d 65%,#0d243c)}
+.map-canvas[data-urban-size="metropole"]{background:radial-gradient(ellipse at 50% 40%,#42537d,#183459 65%,#111e3e)}
+@media(max-width:480px){.regional-hero strong{font-size:1.55rem}.regional-indicators{grid-template-columns:1fr 1fr}}

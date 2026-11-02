@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10243E">
   <meta name="description" content="Cidade dos Negócios 1, simulador empresarial brasileiro offline, em um único HTML.">
-  <title>Cidade dos Negócios 1 · v1.7.0-rc.1</title>
+  <title>Cidade dos Negócios 1 · v1.8.0-rc.1</title>
   <style>
 :root{color-scheme:dark;--navy:#10243e;--deep:#091629;--panel:#142b45;--panelhi:#193451;--blue:#51a9df;--gold:#e9ad50;--green:#51bd83;--text:#f4f7fb;--muted:#b8c6d8;--stroke:#2b4860;--red:#ef7070;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:15px}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#091629;color:var(--text)}[hidden]{display:none!important}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.46;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f4d49a;outline-offset:2px}a{color:#9dcee9}h1,h2,h3,p{margin-top:0}h1,h2,h3{letter-spacing:-.025em}h3{font-size:1.12rem;margin-bottom:0}p{line-height:1.65}small,.muted,.field-hint{color:var(--muted)}.field-hint{font-size:.83rem;margin:10px 0 19px;line-height:1.45}.hint-bottom{margin-top:26px}.status-text{font-size:.87rem;margin:13px 0 0;min-height:1.25rem}.overline,.eyebrow,.card-kicker,.nav-label{font-size:.7rem;letter-spacing:.16em;font-weight:800;color:#a3b7cb}.eyebrow-dot,.online-dot{display:inline-block;background:var(--green);width:7px;height:7px;border-radius:50%;margin-right:7px}.btn{border:1px solid #466178;border-radius:10px;padding:12px 16px;background:#24415a;color:var(--text);font-size:.89rem;font-weight:750;transition:transform .15s,filter .15s;min-height:44px}.btn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px)}.btn-primary{background:linear-gradient(135deg,#e9ad50,#f3c775);color:#101d2b;border-color:#f4d49a}.btn-outline{background:#14283b;color:#f2f7fb}.btn-big{width:100%;padding:16px 20px;display:flex;justify-content:space-between;margin-top:18px}.full{width:100%}.spaced{margin-top:9px}.tag-soft,.tag-warning{display:inline-block;letter-spacing:.05em;font-weight:800;font-size:.63rem;background:#203e58;color:#a9dafa;border:1px solid #3b617b;border-radius:8px;padding:8px 10px}.tag-warning{color:#f4d49a;background:#3c301d;border-color:#906c39}.brand-icon{filter:drop-shadow(0 9px 28px #0003)}.onboarding{min-height:100vh;display:grid;grid-template-columns:minmax(390px,1fr) minmax(380px,.78fr);gap:clamp(30px,6vw,100px);align-items:center;max-width:1540px;margin:0 auto;padding:45px clamp(24px,6vw,94px);position:relative;overflow:hidden}.onboarding:before{content:"";background:radial-gradient(ellipse at center,#193e6077,transparent 70%);position:absolute;inset:0 0 0 -30%;pointer-events:none}.onboarding-art{position:absolute;inset:0;opacity:.14;pointer-events:none;overflow:hidden}.skyline{display:flex;align-items:end;gap:18px;position:absolute;bottom:0;left:-2%;height:63%;width:110%;transform:skewY(-7deg)}.skyline i{display:block;flex:1;background:linear-gradient(180deg,#7dbde3,#1d5070);height:65%;border-radius:5px 5px 0 0;box-shadow:inset 10px 0 0 #0a223a}.skyline i:nth-child(2n){height:78%}.skyline i:nth-child(3n){height:44%}.skyline i:nth-child(5n){height:95%}.intro-copy{position:relative;z-index:1}.intro-copy .eyebrow{color:#9ddfe2;margin-bottom:48px}.brand-intro{margin-bottom:15px}.intro-copy h1{font-size:clamp(3.3rem,6vw,6.8rem);line-height:.92;margin-bottom:20px;font-weight:900}.intro-copy h1 em{font-style:normal;background:linear-gradient(120deg,#f6ce82,#d89d41);background-clip:text;-webkit-background-clip:text;color:transparent}.hero-subtitle{font-size:1.55rem;font-weight:700;margin:29px 0 10px}.intro-desc{font-size:1.02rem;color:#c7d3df;max-width:540px}.intro-features{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}.intro-features span{padding:10px 12px;border:1px solid #395875;background:#12304aab;border-radius:8px;font-size:.78rem;color:#b9d6e6}.fine-print{font-size:.72rem;color:#8fa8bb;margin-top:40px}.start-card{position:relative;z-index:1;background:linear-gradient(158deg,#1a3652 0%,#102339 100%);padding:clamp(25px,4vw,42px);border:1px solid #3c5970;box-shadow:0 24px 90px #0007;border-radius:20px}.card-kicker{color:var(--gold);margin-bottom:13px}.start-card h2{font-size:2rem;line-height:1.1;margin-bottom:12px}.start-card label,.panel label{display:block;font-size:.78rem;color:#c5d6e6;font-weight:700;margin:18px 0 7px}.start-card input,.start-card select,.panel input,.panel select,.topbar select{width:100%;background:#0c2136;border:1px solid #3c5a71;color:var(--text);border-radius:9px;min-height:42px;padding:10px 13px;outline-color:var(--gold)}.text-action{border:0;color:#b7d9f5;background:transparent;font-size:.86rem;margin:15px auto 0;display:block;padding:10px}.game-shell{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:100vh}.sidebar{background:linear-gradient(175deg,#0b1b2e,#10243e);border-right:1px solid #203e59;display:flex;flex-direction:column;padding:27px 15px 18px;position:sticky;top:0;height:100vh}.sidebar-brand{display:flex;gap:10px;align-items:center;padding:0 8px 32px}.brand-mark{width:43px;height:43px;border-radius:10px;background:linear-gradient(135deg,#e2a450,#f0c77d);color:#092037;display:grid;place-items:center;font-size:2rem}.sidebar-brand strong{display:block;font-size:.9rem;letter-spacing:.065em;line-height:1.15}.sidebar-brand small{font-size:.59rem;letter-spacing:.16em;color:var(--gold)}.nav-label{padding:0 14px 12px;color:#7896b4}.nav-items{display:grid;gap:5px}.nav-item{width:100%;background:none;border:1px solid transparent;color:#b6c7d8;padding:13px 14px;border-radius:9px;text-align:left;font-weight:650;display:flex;align-items:center;gap:14px;font-size:.88rem}.nav-item span{font-size:1.17rem;width:24px;text-align:center}.nav-item.active{background:#244360;color:#fff;border-color:#3a6080;box-shadow:inset 3px 0 0 var(--gold)}.nav-item:hover{background:#1a3852}.sidebar-bottom{margin-top:auto;padding:17px 11px 0;border-top:1px solid #29425a;font-size:.69rem;letter-spacing:.1em;font-weight:800;color:#bdd4e2}.sidebar-bottom small{display:block;letter-spacing:0;font-weight:400;margin:8px 0 0 16px}.main-pane{min-width:0;display:flex;flex-direction:column}.topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px clamp(16px,3vw,39px);border-bottom:1px solid #28435c;background:#0e2035}.topbar h2{font-size:1.4rem;margin:3px 0 0}.topbar h2 span{color:#95adbf;font-weight:500}.topbar-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.compact-label{font-size:.72rem;color:var(--muted)}.topbar select{width:auto;max-width:195px;font-size:.78rem}.date-box{background:#152f47;border:1px solid #34516c;border-radius:9px;padding:7px 15px;min-width:115px}.date-box small{display:block;font-size:.57rem;letter-spacing:.1em}.date-box strong{display:block;font-size:.93rem;margin-top:3px;font-variant-numeric:tabular-nums}.world-warning{padding:10px clamp(16px,3vw,39px);border-bottom:1px solid #4b492d;background:#2e2b1d;color:#f6d69b;font-size:.76rem;font-weight:600}.legal-warning{background:#132b3a;border-color:#24485b;color:#a7c9d9}.content{padding:30px clamp(16px,3vw,39px);max-width:1720px;width:100%;margin:0 auto;flex:1}.page-title{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:25px}.page-title h1{font-size:clamp(1.5rem,2.6vw,2.2rem);margin:7px 0 2px}.page-title p{color:#a9bacb;font-size:.85rem;margin:0}.build-badge{border:1px solid #3d5a71;color:#a4cce4;padding:8px 11px;border-radius:8px;font-size:.72rem;white-space:nowrap}.stats-bar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:20px}.stat,.panel{border:1px solid #304c63;border-radius:13px;background:linear-gradient(155deg,#17314a,#10273e);box-shadow:0 10px 22px #0002}.stat{padding:21px 20px}.stat span{display:block;font-size:.67rem;letter-spacing:.085em;color:#afc0d2;font-weight:700}.stat strong{display:block;font-size:clamp(1.3rem,2vw,2rem);margin:10px 0 3px;font-variant-numeric:tabular-nums;letter-spacing:-.035em;white-space:nowrap}.stat small{font-size:.68rem}.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(280px,.83fr);gap:17px}.right-column{display:grid;gap:17px;align-content:start}.panel{padding:23px}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.map-panel{padding:0;overflow:hidden;align-self:start}.map-panel .panel-heading{padding:23px 23px 0;margin-bottom:0}.map-panel .overline{margin-bottom:6px}.map-canvas{min-height:350px;background:radial-gradient(ellipse at 55% 37%,#265372 0%,#163751 54%,#0d2436 100%);overflow:hidden}.map-canvas svg{display:block;width:100%;height:auto;min-height:320px;max-height:480px;touch-action:manipulation}.map-canvas svg [data-lot]{cursor:pointer;outline:none;transition:filter .15s}.map-canvas svg [data-lot]:hover,.map-canvas svg [data-lot]:focus{filter:brightness(1.5)}.map-legend{display:flex;gap:20px;flex-wrap:wrap;font-size:.71rem;color:#b8cadd;padding:0 23px 12px}.legend-color{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}.legend-color.lot{background:#537d69}.legend-color.own{background:#e9ad50}.legend-color.sel{background:#51a9df}.map-disclaimer{font-size:.68rem;color:#91b0c0;padding:0 23px 15px;margin:0}.big-number{font-size:2.1rem;font-weight:850;color:var(--gold);letter-spacing:-.06em;margin:12px 0}.event-list{display:grid;gap:13px;max-height:320px;overflow:auto}.event-item{border-bottom:1px solid #264259;padding-bottom:10px;display:flex;gap:10px;align-items:start}.event-item:last-child{border-bottom:0}.event-dot{background:var(--blue);width:7px;height:7px;border-radius:50%;flex:none;margin-top:7px}.event-item p{margin:0;color:#d0dde8;font-size:.81rem;line-height:1.45}.event-item small{display:block;margin-top:4px;font-size:.67rem;color:#8eabc0}.view{min-height:370px}.detail-list,.finance-list{display:grid;grid-template-columns:1fr auto;gap:15px;margin:19px 0}.detail-list dt,.finance-list dt{color:#bed0df}.detail-list dd,.finance-list dd{margin:0;text-align:right;font-weight:800;font-variant-numeric:tabular-nums}.finance-list{border-top:1px solid #3b586c;padding-top:17px}.finance-list dt,.finance-list dd{font-size:.85rem}.finance-list .emphasis{color:var(--gold);font-weight:800;font-size:1rem}.company-emblem{display:flex;align-items:center;gap:16px;background:#102c40;border:1px solid #31526b;border-radius:12px;padding:16px}.company-emblem>span{font-size:2.4rem}.company-emblem h3{margin-bottom:3px}.company-emblem p{margin:0}.button-stack{display:grid;gap:10px;margin:20px 0}.fiscal-panel{display:flex;gap:24px;max-width:920px}.fiscal-icon{font-size:3.2rem;font-weight:850;color:var(--gold)}.turnbar{margin-top:23px;background:linear-gradient(125deg,#173c58,#132b44);border:1px solid #3d6480;border-radius:13px;padding:20px 25px;display:flex;justify-content:space-between;align-items:center;gap:20px}.turnbar h3{margin:6px 0}.turnbar p{font-size:.77rem;color:#a5bfd2;margin:0}.turn-actions{display:flex;gap:8px;flex-wrap:wrap}.game-footer{padding:19px clamp(16px,3vw,39px);display:flex;justify-content:space-between;gap:10px;font-size:.63rem;letter-spacing:.08em;color:#91aabd;border-top:1px solid #213e56}.toast{position:fixed;bottom:25px;right:25px;max-width:min(90vw,460px);z-index:99;pointer-events:none;background:#1b3a52;border:1px solid #5e869e;box-shadow:0 15px 45px #0009;color:#fff;padding:14px 19px;border-radius:11px;font-size:.82rem;transform:translateY(140px);opacity:0;transition:transform .25s,opacity .25s}.toast.visible{transform:none;opacity:1}.toast.error{border-color:var(--red);background:#4c2a34}@media(max-width:1180px){.game-shell{grid-template-columns:190px minmax(0,1fr)}.dashboard-grid{grid-template-columns:1fr}.stats-bar{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar{padding-left:10px;padding-right:10px}}@media(max-width:800px){.onboarding{grid-template-columns:1fr;gap:25px;padding:24px}.intro-copy .eyebrow{margin-bottom:20px}.intro-copy h1{font-size:3.8rem}.fine-print{margin-top:14px}.game-shell{display:block}.sidebar{position:relative;height:auto;padding:14px}.sidebar-brand{padding-bottom:12px}.nav-label,.sidebar-bottom{display:none}.nav-items{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px}.nav-item{width:auto;flex:none;padding:9px 11px;font-size:.75rem;gap:6px}.nav-item span{font-size:1rem;width:18px}.topbar{align-items:flex-start;flex-wrap:wrap}.topbar-controls{width:100%}.compact-label{display:none}.page-title{align-items:start}.turnbar{flex-direction:column;align-items:stretch}.turn-actions{width:100%}.turn-actions .btn{flex:1}.game-footer{flex-direction:column}}@media(max-width:480px){.stat{padding:15px 12px}.stat strong{font-size:1.16rem}.stat small{font-size:.6rem}.stats-bar{gap:8px}.panel{padding:17px}.map-panel .panel-heading{padding:16px 16px 0}.map-legend{padding:0 16px 12px}.map-disclaimer{padding:0 16px 12px}.topbar-controls select{max-width:140px}.page-title{flex-direction:column}.game-footer{font-size:.59rem}.fiscal-panel{flex-direction:column;gap:10px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
@@ -152,6 +152,13 @@
 .regional-compare-box select {width:100%; max-width:100%;}
 .regional-compare-box p {margin:0; line-height:1.4;}
 
+/* V1.8 — demonstrativos internos compactos, sem aumentar a navegação principal. */
+.statement-switch{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 16px;}
+.statement-switch button{cursor:pointer;background:rgba(20,44,67,.08);border:1px solid var(--border,#b6c5ce);border-radius:9px;padding:8px 11px;color:inherit;font:inherit;font-size:.86rem;}
+.statement-switch button.active,.statement-switch button[aria-pressed="true"]{background:#153d5f;color:#fff;border-color:#153d5f;font-weight:700;}
+.statement-switch button:focus-visible{outline:3px solid #e4a645;outline-offset:2px;}
+@media(max-width:400px){.statement-switch{gap:4px}.statement-switch button{font-size:.77rem;padding:8px 9px;}}
+
   </style>
 </head>
 <body>
@@ -164,7 +171,7 @@
       <p class="hero-subtitle">Uma cidade. Uma empresa. Mil decisões.</p>
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◆ Economia simulada</span><span>◆ 30 cidades</span><span>◆ Offline</span></div>
-      <p class="fine-print"><span id="intro-version">v1.7.0-rc.1</span> — prévia jogável. Dados oficiais identificados; mercado e legislação tributária simulados ou não cobertos.</p>
+      <p class="fine-print"><span id="intro-version">v1.8.0-rc.1</span> — prévia jogável. Dados oficiais identificados; mercado e legislação tributária simulados ou não cobertos.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -212,7 +219,7 @@
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
       <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Tributação legal não calculada nesta versão.</div>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v1.7.0-rc.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v1.8.0-rc.1</span></div>
         <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
           <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
           <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
@@ -333,7 +340,7 @@
             <div class="filter-action-row"><button type="button" id="finance-current-date" class="btn btn-outline">Usar data atual do jogo</button><span class="muted">O filtro não muda quando você avança os dias.</span></div>
             <p id="finance-validation" class="finance-validation" aria-live="polite" hidden></p>
             <p id="finance-period-label" class="field-hint" aria-live="polite">Escolha a data ou competência que deseja consultar.</p>
-          </article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Demonstrativo gerencial</h3><span class="tag-soft">M11 · LEDGER</span></div><dl class="finance-list" id="finance-summary"></dl><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Tributação ainda não é calculada.</p></div><p class="muted">Fluxos do período filtrado e separados por unidade; saldos de estoque e obrigações são acumulados até o encerramento. O caixa não é repartido artificialmente entre filiais: somente a consulta consolidada exibe o saldo compartilhado.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
+          </article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3 id="finance-statement-title">Resumo realizado</h3><span class="tag-soft">M11 · LEDGER</span></div><div class="statement-switch" role="group" aria-label="Demonstrativos contábeis"><button type="button" data-statement-view="summary" aria-pressed="true">Resumo</button><button type="button" data-statement-view="dre" aria-pressed="false">DRE</button><button type="button" data-statement-view="balance" aria-pressed="false">Balanço</button><button type="button" data-statement-view="cash" aria-pressed="false">Caixa</button><button type="button" data-statement-view="check" aria-pressed="false">Conferência</button></div><dl class="finance-list" id="finance-summary"></dl><p id="finance-statement-note" class="field-hint" aria-live="polite">Todas as demonstrações são apenas gerenciais e não calculam tributos.</p><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Tributação ainda não é calculada.</p></div><p class="muted">Fluxos do período filtrado e separados por unidade; saldos de estoque e obrigações são acumulados até o encerramento. O caixa não é repartido artificialmente entre filiais: somente a consulta consolidada exibe o saldo compartilhado.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
           <article class="panel strategy-panel"><div class="panel-heading"><h3>Gestão estratégica e equilíbrio econômico</h3><span class="tag-soft">V1.4 · ANÁLISE E PROJEÇÃO</span></div>
             <p class="muted">Resultados realizados vêm exclusivamente do livro contábil. Projeções são cenários hipotéticos, não lançamentos. A projeção estratégica considera a unidade ativa e o caixa compartilhado atual, sem projetar simultaneamente as demais unidades; não é uma projeção consolidada da rede. Esses cenários não realizam novas compras nem liquidam obrigações existentes. Não gera lançamentos.</p>
             <div class="strategy-controls"><label for="strategy-horizon">Horizonte de projeção (dias)</label><select id="strategy-horizon"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select></div>
@@ -352,16 +359,16 @@
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v1.7.0-rc.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v1.8.0-rc.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>
   <div class="toast" id="toast" aria-live="polite" role="status"></div>
   <script>
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.7.0-rc.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.8.0-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '1.7.0-rc.1';
+  const VERSION = '1.8.0-rc.1';
   const SCHEMA_VERSION = 8;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -580,7 +587,7 @@ const CidadeCore = (() => {
     const id=`pc-${++b.orderSeq}`,dueDate=addDays(draft.calendar.date,supplier.leadDays);
     b.purchaseOrders.push({id,date:draft.calendar.date,supplierId,items:lines,total,status:'PENDING',dueDate,receivedAt:null});
     journal(draft,`Encomenda ${id}: mercadorias em trânsito`,[
-      {account:'IN_TRANSIT',debit:total,credit:0},{account:'CASH',debit:0,credit:total}],b.id);
+      {account:'IN_TRANSIT',debit:total,credit:0},{account:'CASH',debit:0,credit:total}],b.id,'PURCHASE');
     event(draft,'COMPRA.ENCOMENDADA',`Pedido ${id} pago (${money(total)}); previsão ${dueDate} (${supplier.leadDays} dia(s)).`,{id,total,dueDate,supplierId},b.id);
   }
   function receiveDueOrders(draft,b){
@@ -593,7 +600,7 @@ const CidadeCore = (() => {
       syncTotals(b);
       order.status='RECEIVED';order.receivedAt=draft.calendar.date;
       journal(draft,`Recebimento ${order.id} em estoque`,[
-        {account:'INVENTORY',debit:order.total,credit:0},{account:'IN_TRANSIT',debit:0,credit:order.total}],b.id);
+        {account:'INVENTORY',debit:order.total,credit:0},{account:'IN_TRANSIT',debit:0,credit:order.total}],b.id,'RECEIPT');
       event(draft,'COMPRA.RECEBIDA',`Pedido ${order.id} recebido: ${order.items.reduce((n,l)=>n+l.quantity,0)} unidades.`,{id:order.id,total:order.total},b.id);
     }
   }
@@ -629,7 +636,7 @@ const CidadeCore = (() => {
     b.sales.push({id,date:draft.calendar.date,kind,items:lines,total,cogs:cost});
     journal(draft,`Venda ${id} (${kind}): ${lines.map(x=>`${x.quantity} ${x.name}`).join(', ')}`,[
       {account:'CASH',debit:total,credit:0},{account:'REVENUE',debit:0,credit:total},
-      {account:'COGS',debit:cost,credit:0},{account:'INVENTORY',debit:0,credit:cost}],b.id);
+      {account:'COGS',debit:cost,credit:0},{account:'INVENTORY',debit:0,credit:cost}],b.id,'SALE');
     event(draft,'VENDA.CONCLUIDA',`Vendas simuladas do dia ${id}: ${qtyTotal} unidades por ${money(total)}.`,{id,total,cost,qtyTotal},b.id);
   }
   function productPerformance(state) {
@@ -654,11 +661,40 @@ const CidadeCore = (() => {
     const id=`evt-${++draft.audit.eventSeq}`;
     draft.audit.events.push({id,type,date:draft.calendar.date,text,data,...(businessId?{businessId}:{})});
   }
-  function journal(draft,memo,entries,businessId=null) {
+  // Classificação contábil/financeira, sem alterar nem supor a classificação dos journals legados.
+  // Para records antigos o reconhecimento exige prefixos efetivamente produzidos pelo jogo.
+  const ACCOUNT_CATALOG=Object.freeze({
+    CASH:Object.freeze({name:'Caixa do grupo',group:'ASSET',normal:'DEBIT'}),
+    INVENTORY:Object.freeze({name:'Mercadorias em estoque',group:'ASSET',normal:'DEBIT'}),
+    IN_TRANSIT:Object.freeze({name:'Mercadorias em trânsito',group:'ASSET',normal:'DEBIT'}),
+    RECEIVABLE:Object.freeze({name:'Contas a receber',group:'ASSET',normal:'DEBIT'}),
+    PAYABLE:Object.freeze({name:'Contas a pagar',group:'LIABILITY',normal:'CREDIT'}),
+    CAPITAL:Object.freeze({name:'Capital aportado',group:'EQUITY',normal:'CREDIT'}),
+    REVENUE:Object.freeze({name:'Receita de vendas',group:'REVENUE',normal:'CREDIT'}),
+    COGS:Object.freeze({name:'Custo das mercadorias vendidas',group:'COST',normal:'DEBIT'}),
+    EXPENSE:Object.freeze({name:'Despesas operacionais e de abertura',group:'EXPENSE',normal:'DEBIT'})
+  });
+  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','UNCLASSIFIED']);
+  function transactionKind(j){
+    if(TRANSACTION_KINDS.includes(j.kind))return j.kind;
+    if(j.memo==='Capital inicial do empreendedor')return 'CAPITAL';
+    if(/^Abertura: /.test(j.memo))return 'OPENING';
+    if(/^Venda vd-/.test(j.memo))return 'SALE';
+    if(/^Encomenda pc-/.test(j.memo))return 'PURCHASE';
+    if(/^Recebimento pc-/.test(j.memo))return 'RECEIPT';
+    if(/^Despesa operacional diária/.test(j.memo))return 'DAILY_EXPENSE';
+    return 'UNCLASSIFIED';
+  }
+  function journal(draft,memo,entries,businessId=null,kind=null) {
     const debit=entries.reduce((n,x)=>n+x.debit,0),credit=entries.reduce((n,x)=>n+x.credit,0);
     assert(debit===credit && debit>0,'Lançamento desequilibrado');
-    assert(entries.every(x=>typeof x.account==='string'&&int(x.debit)&&int(x.credit)&&!(x.debit&&x.credit)),'Linha financeira inválida');
-    draft.economy.ledger.push({id:`jnl-${++draft.economy.journalSeq}`,date:draft.calendar.date,memo,entries,...(businessId?{businessId}:{})});
+    assert(entries.every(x=>typeof x.account==='string'&&ACCOUNT_CATALOG[x.account]&&int(x.debit)&&int(x.credit)&&!(x.debit&&x.credit)),'Linha financeira inválida');
+    const record={id:`jnl-${++draft.economy.journalSeq}`,date:draft.calendar.date,memo,entries,...(businessId?{businessId}:{})};
+    const label=kind||transactionKind(record);
+    assert(TRANSACTION_KINDS.includes(label),'Classe de transação inválida');
+    // Novo metadado opcional. Schema 8 e registros históricos permanecem intocados.
+    record.kind=label;
+    draft.economy.ledger.push(record);
   }
   function balance(draft,account) {let total=0;for(const j of draft.economy.ledger)for(const e of j.entries)if(e.account===account)total+=(['CAPITAL','REVENUE','PAYABLE'].includes(account)?e.credit-e.debit:e.debit-e.credit);return total;}
   function overview(draft) {
@@ -684,7 +720,7 @@ const CidadeCore = (() => {
     state.worldId=`carreira-${seed}-${city.id}`;
     state.player={name,companyName,cityId:city.id};
     state.meta.origin='NEW_CAREER';
-    journal(state,'Capital inicial do empreendedor',[{account:'CASH',debit:3000000,credit:0},{account:'CAPITAL',debit:0,credit:3000000}]);
+    journal(state,'Capital inicial do empreendedor',[{account:'CASH',debit:3000000,credit:0},{account:'CAPITAL',debit:0,credit:3000000}],null,'CAPITAL');
     event(state,'CARREIRA.CRIADA',`Carreira iniciada em ${city.name} (${city.uf}).`);
     state.revision=1;
     state.audit.commands[commandId]=fingerprint({type:'CARREIRA.CRIAR',payload});
@@ -710,7 +746,7 @@ const CidadeCore = (() => {
       if(!draft.world.business)draft.world.business=newUnit;
       else draft.world.branches.push(newUnit);
       draft.world.activeBusinessId=id;
-      journal(draft,`Abertura: ${s.name} (${id})`,[{account:'EXPENSE',debit:s.openCost,credit:0},{account:'CASH',debit:0,credit:s.openCost}],id);
+      journal(draft,`Abertura: ${s.name} (${id})`,[{account:'EXPENSE',debit:s.openCost,credit:0},{account:'CASH',debit:0,credit:s.openCost}],id,'OPENING');
       event(draft,'EMPRESA.ABERTA',`${s.name} inaugurado em ${cityById(cityId).name}, lote ${lot}.`,{lot,sector:payload.sector,cityId},id);
       return;
     }
@@ -806,7 +842,7 @@ const CidadeCore = (() => {
       const cash=balance(draft,'CASH'),expense=s.dailyCost;
       journal(draft,`Despesa operacional diária · ${b.id}`,[
         {account:'EXPENSE',debit:expense,credit:0},
-        {account:cash>=expense?'CASH':'PAYABLE',debit:0,credit:expense}],b.id);
+        {account:cash>=expense?'CASH':'PAYABLE',debit:0,credit:expense}],b.id,'DAILY_EXPENSE');
       if(cash<expense)event(draft,'CONTAS.A_PAGAR',`${b.id}: despesa de ${money(expense)} registrada a pagar.`,{},b.id);
     }
     if(units.length&&(draft.calendar.tick+1)%7===0){
@@ -1013,6 +1049,110 @@ const CidadeCore = (() => {
       closingPayable:account(until,'PAYABLE'),closingInTransit:account(until,'IN_TRANSIT'),capital:account(entries,'CAPITAL')
     };
   }
+  // Demonstrações da V1.8: leituras puras do mesmo ledger que alimenta a V1.7.
+  // Contas corporativas não são artificialmente atribuídas a filiais.
+  function signedAccount(entries,name){
+    const normal=ACCOUNT_CATALOG[name]?.normal;
+    const amount=entries.reduce((sum,j)=>sum+j.entries.reduce((n,e)=>n+(e.account===name?e.debit-e.credit:0),0),0);
+    return normal==='CREDIT'?-amount:amount;
+  }
+  function incomeStatement(state,period='all',referenceDate=state.calendar.date,range=null,businessId='all'){
+    const base=financialReport(state,period,referenceDate,range,businessId);
+    const expenses=base.entries.filter(j=>j.entries.some(e=>e.account==='EXPENSE'));
+    const expenseOf=j=>j.entries.reduce((n,e)=>n+(e.account==='EXPENSE'?e.debit-e.credit:0),0);
+    const fixed=expenses.filter(j=>transactionKind(j)==='DAILY_EXPENSE').reduce((n,j)=>n+expenseOf(j),0);
+    const opening=expenses.filter(j=>transactionKind(j)==='OPENING').reduce((n,j)=>n+expenseOf(j),0);
+    const other=base.expenses-fixed-opening;
+    const corporateResult=base.businessId==='all'?state.economy.ledger.filter(j=>j.date>=base.from&&j.date<=base.effectiveEnd&&
+      journalBusinessId(state,j)===null).reduce((n,j)=>n+signedAccount([j],'REVENUE')-signedAccount([j],'COGS')-signedAccount([j],'EXPENSE'),0):0;
+    return {period:base.period,from:base.from,to:base.to,effectiveEnd:base.effectiveEnd,label:base.label,
+      businessId:base.businessId,revenue:base.revenue,cogs:base.cogs,grossProfit:base.grossProfit,
+      fixedExpenses:fixed,openingExpenses:opening,unclassifiedExpenses:other,
+      expenses:base.expenses,operatingResult:base.profit,corporateResult,
+      marginPercent:base.grossMarginPercent,fiscalCoverage:state.fiscal.coverageStatus};
+  }
+  function balanceSheet(state,asOf=state.calendar.date){
+    assert(state&&plain(state.economy),'Carreira inválida');
+    assert(isoDate(asOf)&&asOf>=START_DATE&&asOf<=state.calendar.date,'Data de balanço inválida');
+    const journals=state.economy.ledger.filter(j=>j.date<=asOf);
+    const amounts=Object.fromEntries(Object.keys(ACCOUNT_CATALOG).map(code=>[code,signedAccount(journals,code)]));
+    const unknown=Object.keys(ACCOUNT_CATALOG).length===0?[]:[...new Set(journals.flatMap(j=>j.entries.map(e=>e.account)))].filter(a=>!ACCOUNT_CATALOG[a]);
+    const assets=amounts.CASH+amounts.INVENTORY+amounts.IN_TRANSIT+amounts.RECEIVABLE;
+    const liabilities=amounts.PAYABLE,retainedEarnings=amounts.REVENUE-amounts.COGS-amounts.EXPENSE;
+    const equity=amounts.CAPITAL+retainedEarnings,difference=assets-liabilities-equity;
+    return {asOf,accounts:amounts,assets,liabilities,paidInCapital:amounts.CAPITAL,
+      retainedEarnings,equity,difference,balanced:difference===0&&unknown.length===0,
+      unknownAccounts:unknown,fiscalCoverage:state.fiscal.coverageStatus,
+      scope:'GROUP',warning:'Caixa e balanço pertencem ao grupo; filiais são centros de resultado, não bancos independentes.'};
+  }
+  function cashFlowStatement(state,period='all',referenceDate=state.calendar.date,range=null,businessId='all'){
+    const base=financialReport(state,period,referenceDate,range,businessId);
+    const rows={sales:0,suppliers:0,operating:0,opening:0,capital:0,unclassifiedIn:0,unclassifiedOut:0};
+    let inflows=0,outflows=0;
+    for(const j of base.entries){
+      const debit=j.entries.reduce((n,e)=>n+(e.account==='CASH'?e.debit:0),0);
+      const credit=j.entries.reduce((n,e)=>n+(e.account==='CASH'?e.credit:0),0);
+      const net=debit-credit;
+      if(net===0)continue;
+      if(net>0)inflows+=net;else outflows+=-net;
+      const kind=transactionKind(j);
+      if(kind==='SALE'&&net>0)rows.sales+=net;
+      else if(kind==='CAPITAL'&&net>0)rows.capital+=net;
+      else if(kind==='PURCHASE'&&net<0)rows.suppliers+=-net;
+      else if(kind==='DAILY_EXPENSE'&&net<0)rows.operating+=-net;
+      else if(kind==='OPENING'&&net<0)rows.opening+=-net;
+      else if(net>0)rows.unclassifiedIn+=net;
+      else rows.unclassifiedOut+=-net;
+    }
+    const netCash=inflows-outflows;
+    // Para filial há apenas fluxos atribuíveis, nunca 'saldo bancário da filial'.
+    const openingCash=businessId==='all'?signedAccount(state.economy.ledger.filter(j=>j.date<base.from),'CASH'):null;
+    const closingCash=businessId==='all'?signedAccount(state.economy.ledger.filter(j=>j.date<=base.effectiveEnd),'CASH'):null;
+    return {period:base.period,from:base.from,to:base.to,effectiveEnd:base.effectiveEnd,label:base.label,
+      businessId,inflows,outflows,netCash,openingCash,closingCash,
+      reconciled:businessId==='all'?openingCash+netCash===closingCash:null,
+      categories:rows,scope:businessId==='all'?'GROUP':'UNIT_CONTRIBUTION',
+      warning:businessId==='all'?'Fluxo de caixa realizado, não projeção.':'Contribuição da unidade para o caixa compartilhado; não existe saldo de caixa individual.'};
+  }
+  function reconciliationReport(state,asOf=state.calendar.date){
+    const sheet=balanceSheet(state,asOf),journals=state.economy.ledger.filter(j=>j.date<=asOf);
+    const errors=[],unitRows=[];
+    if(!sheet.balanced)errors.push('O balanço não fecha ou contém contas desconhecidas.');
+    for(const j of journals){
+      const debit=j.entries.reduce((n,e)=>n+e.debit,0),credit=j.entries.reduce((n,e)=>n+e.credit,0);
+      if(debit!==credit||debit<=0)errors.push(`Lançamento ${j.id} desequilibrado`);
+    }
+    const snapshotAvailable=asOf===state.calendar.date;
+    if(snapshotAvailable){
+      let physical=0,transit=0;
+      for(const b of businesses(state)){
+        const inventory=b.products.reduce((n,p)=>n+p.stockValueCents,0);
+        const inTransit=b.purchaseOrders.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.total,0);
+        const local=journals.filter(j=>journalBusinessId(state,j)===b.id);
+        const ledgerInventory=signedAccount(local,'INVENTORY'),ledgerTransit=signedAccount(local,'IN_TRANSIT');
+        const ok=inventory===ledgerInventory&&inTransit===ledgerTransit;
+        if(!ok)errors.push(`Unidade ${b.id} possui estoque/trânsito divergente do ledger`);
+        unitRows.push({id:b.id,inventory,inTransit,ledgerInventory,ledgerTransit,ok});
+        physical+=inventory;transit+=inTransit;
+      }
+      if(physical!==sheet.accounts.INVENTORY||transit!==sheet.accounts.IN_TRANSIT)errors.push('Estoque consolidado diverge do razão contábil');
+    }
+    return {asOf,balanced:sheet.balanced,statementDifference:sheet.difference,
+      snapshotAvailable,unitRows,unknownAccounts:sheet.unknownAccounts,errors,ok:errors.length===0,
+      note:snapshotAvailable?'Conciliação do estoque físico atual e pedidos em trânsito com o ledger.':'Data histórica: apenas lançamentos contábeis são conferidos; não há inventário físico retroativo.'};
+  }
+  function monthlyClose(state,month,businessId='all'){
+    assert(typeof month==='string'&&/^\d{4}-(0[1-9]|1[0-2])$/.test(month),'Competência mensal inválida');
+    assert(month<=state.calendar.date.slice(0,7),'Competência futura não permitida');
+    const referenceDate=month+'-01';
+    const dre=incomeStatement(state,'month',referenceDate,null,businessId);
+    const cash=cashFlowStatement(state,'month',referenceDate,null,businessId);
+    const balance=balanceSheet(state,dre.effectiveEnd);
+    return {month,from:dre.from,to:dre.effectiveEnd,businessId,operatingResult:dre.operatingResult,
+      netCash:cash.netCash,globalBalance:balance.balanced,
+      status:'GERENCIAL_CONSULTA',fiscalCoverage:state.fiscal.coverageStatus,
+      note:'Fechamento gerencial somente leitura. Não gera lançamentos, tributos ou bloqueio de competência.'};
+  }
   // Avaliação determinística da estratégia: consulta pura, sem alterar RNG, save ou contabilidade.
   function strategyReport(state,horizonDays=30){
     assert(state&&[7,30,90].includes(horizonDays),'Horizonte estratégico inválido');
@@ -1112,7 +1252,7 @@ const CidadeCore = (() => {
     return {state,migrated,message:migrated?'Carreira migrada para V1.7: histórico preservado e ajuste regional do PIB aplicado somente daqui em diante.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();
 
@@ -1125,7 +1265,7 @@ const CidadeCore = (() => {
   const BRDate=iso=>iso.split('-').reverse().join('/');
   const KEY='cidade-dos-negocios-save-v1';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
-  let financeQuery=null,strategyHorizon=30,financeScope='all'; // preferências de interface, independentes do GameState
+  let financeQuery=null,strategyHorizon=30,financeScope='all',statementView='summary'; // preferências de interface, independentes do GameState
   const business=()=>state?Core.activeBusiness(state):null;
   function chooseProduct(id){const b=business();return b?.products?.find(p=>p.id===$(id)?.value)||b?.products?.[0]||null;}
   function refillSelect(id,products){
@@ -1310,11 +1450,19 @@ const CidadeCore = (() => {
     }catch(e){
       $('finance-validation').hidden=false;setText('finance-validation',e.message);
       setText('finance-period-label','Corrija o período selecionado para consultar o demonstrativo.');
-      $('finance-summary').innerHTML='';setText('journal-count','—');
+      $('finance-summary').innerHTML='';setText('finance-statement-note','Selecione um período válido para consultar os demonstrativos.');setText('journal-count','—');
       $('journal-events').innerHTML='<p class="muted">Período inválido. Nenhum dado foi alterado.</p>';
       return;
     }
     setText('finance-period-label',`${report.label} · ${financeScope==='all'?'GRUPO CONSOLIDADO':`UNIDADE ${financeScope}`} · lançamentos até ${BRDate(report.effectiveEnd)}. Consulta fixa até você alterar os filtros.`);
+    // Guia de demonstrações: um único painel, sem adicionar abas principais.
+    const titles={summary:'Resumo realizado',dre:'DRE gerencial',balance:'Balanço patrimonial',cash:'Fluxo de caixa realizado',check:'Conferência do razão'};
+    setText('finance-statement-title',titles[statementView]);
+    for(const button of document.querySelectorAll('[data-statement-view]')){
+      const active=button.dataset.statementView===statementView;
+      button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
+    }
+
     const rows=[
       ['Receita de vendas (período)',report.revenue],
       ['(-) Custo das mercadorias vendidas',report.cogs],
@@ -1326,14 +1474,54 @@ const CidadeCore = (() => {
       ['Obrigações acumuladas a pagar',report.closingPayable],
       ['Mercadorias pagas em trânsito (ativo)',report.closingInTransit]
     ];
-    $('finance-summary').innerHTML=rows.map((x,i)=>`<dt class="${i===4?'emphasis':''}">${escape(x[0])}</dt><dd class="${i===4?'emphasis':''}">${x[1]===null?'Compartilhado (ver grupo)':escape(Core.money(x[1]))}</dd>`).join('');
+    let note='Todos os resultados são realizados e derivados do ledger. Impostos: NOT_COVERED (não calculados).';
+    if(statementView==='dre'){
+      const x=Core.incomeStatement(state,q.period,financeQueryDate(q).date,financeQueryDate(q).range,financeScope);
+      rows.splice(0,rows.length,...[
+        ['Receita de vendas',x.revenue],['(-) CMV',x.cogs],['Lucro bruto',x.grossProfit],
+        ['(-) Despesas fixas operacionais',x.fixedExpenses],['(-) Abertura de unidades',x.openingExpenses],
+        ['(-) Outras despesas não classificadas',x.unclassifiedExpenses],['Resultado antes dos tributos',x.operatingResult]
+      ]);
+      note='DRE do período selecionado. Aberturas são despesas reconhecidas no histórico original; tributos NÃO calculados.';
+    }else if(statementView==='balance'){
+      const x=Core.balanceSheet(state,report.effectiveEnd);
+      rows.splice(0,rows.length,...[
+        ['Caixa compartilhado',x.accounts.CASH],['Estoques físicos',x.accounts.INVENTORY],
+        ['Mercadorias em trânsito',x.accounts.IN_TRANSIT],['Recebíveis',x.accounts.RECEIVABLE],
+        ['Total do ativo',x.assets],['Contas a pagar',x.liabilities],
+        ['Capital aportado',x.paidInCapital],['Resultados acumulados antes de tributos',x.retainedEarnings],
+        ['Patrimônio líquido gerencial',x.equity],['Diferença de conciliação',x.difference]
+      ]);
+      note=`Balanço CONSOLIDADO do grupo até ${BRDate(x.asOf)}. Nunca é atribuído caixa individual a filiais. ${x.balanced?'Ativo = Passivo + PL.':'⚠ Há divergência ou conta não mapeada.'} Tributos não calculados.`;
+    }else if(statementView==='cash'){
+      const x=Core.cashFlowStatement(state,q.period,financeQueryDate(q).date,financeQueryDate(q).range,financeScope);
+      rows.splice(0,rows.length,...[
+        ['Caixa inicial do grupo',x.openingCash],['Entradas de vendas',x.categories.sales],
+        ['Aportes ao grupo',x.categories.capital],['Outras entradas sem classificação',x.categories.unclassifiedIn],
+        ['Saídas para fornecedores',x.categories.suppliers],['Saídas operacionais',x.categories.operating],
+        ['Aberturas de unidades',x.categories.opening],['Outras saídas sem classificação',x.categories.unclassifiedOut],
+        ['Variação líquida de caixa',x.netCash],['Caixa final do grupo',x.closingCash]
+      ]);
+      note=x.warning+' Entradas, saídas e saldos representam caixa efetivo, e não custos por competência.';
+    }else if(statementView==='check'){
+      const x=Core.reconciliationReport(state,report.effectiveEnd);
+      rows.splice(0,rows.length,...[
+        ['Diferença ativo − (passivo + PL)',x.statementDifference],
+        ['Unidades conferidas (inventário)',x.snapshotAvailable?x.unitRows.length:null],
+        ['Inconsistências identificadas',x.errors.length],
+        ['Situação do fechamento',x.ok?'CONCILIADO':'VERIFICAR']
+      ]);
+      note=x.note+' '+(x.errors.length?x.errors.join(' · '):'Partidas dobradas e balanço conferidos.');
+    }
+    $('finance-summary').innerHTML=rows.map((x,i)=>`<dt class="${i===rows.length-1?'emphasis':''}">${escape(x[0])}</dt><dd class="${i===rows.length-1?'emphasis':''}">${typeof x[1]==='string'?escape(x[1]):x[1]===null?'Compartilhado (ver grupo)':escape(Core.money(x[1]))}</dd>`).join('');
+    setText('finance-statement-note',note);
     setText('journal-count',`${report.entries.length} registros`);
     $('journal-events').innerHTML=report.entries.length?report.entries.slice(-8).reverse().map(j=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(j.memo)}</p><small>${escape(BRDate(j.date))} · ${escape(j.id)}</small></div></div>`).join(''):'<p class="muted">Nenhum lançamento neste período.</p>';
     renderStrategy();
   }
   function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
   function commit(type,payload={}){
-    if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;financeScope='all';}
+    if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;financeScope='all';statementView='summary';}
     const result=Core.dispatch(state,{type,id:nextId(),payload});
     if(!result.ok){notify(result.error,true);return false;}
     if(result.status==='APPLIED'){state=result.state;const chosen=business();if((type==='EMPRESA.ABRIR'||type==='EMPRESA.ATIVAR')&&chosen){viewCityId=chosen.cityId;selectedLot=chosen.lot;}else viewCityId=viewCityId??state.player.cityId;saveLocal();render();}
@@ -1479,7 +1667,7 @@ const CidadeCore = (() => {
     if(!file)return;
     if(file.size>25_000_000){notify('Save excede 25 MB.',true);return;}
     if(state?.player.cityId&&!confirm('Substituir a carreira atual pelo save importado? Recomendamos exportar antes.'))return;
-    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';saveLocal();render();notify(incoming.message);}
+    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';saveLocal();render();notify(incoming.message);}
     catch(e){notify(`Importação rejeitada: ${e.message}. A carreira anterior foi preservada.`,true);}
   }
   function launchAuto(){
@@ -1514,6 +1702,7 @@ const CidadeCore = (() => {
       if(commit('PRODUTO.CADASTRAR',{name,costCents,priceCents})){$('product-form').reset();notify('Produto cadastrado. Agora configure estoque mínimo e encomende mercadorias.');}
     });
     for(const b of document.querySelectorAll('[data-buy-preset]'))b.addEventListener('click',()=>{$('buy-quantity').value=b.dataset.buyPreset;updateBuyPreview();$('buy-quantity').focus();});
+    for(const button of document.querySelectorAll('[data-statement-view]'))button.addEventListener('click',()=>{statementView=button.dataset.statementView;renderFinances();});
     $('finance-period').addEventListener('change',e=>{ensureFinanceQuery().period=e.target.value;renderFinances();});
     const controls=[['finance-date','asOf'],['finance-day','day'],['finance-month','month'],
       ['finance-quarter','quarter'],['finance-quarter-year','quarterYear'],
@@ -1547,7 +1736,7 @@ const CidadeCore = (() => {
     $('start-import').addEventListener('click',()=>$('import-file').click());
     $('import-file').addEventListener('change',async e=>{const f=e.target.files?.[0];try{await importFile(f);}finally{e.target.value='';}});
     $('run-diagnostic').addEventListener('click',()=>{try{const before=JSON.stringify(state),out=Core.diagnostics(state);if(before!==JSON.stringify(state))throw Error('Diagnóstico alterou o estado');setText('diagnostic-result',out.status+' · revisão '+out.revision);notify('Verificação estrutural e contábil aprovada.');}catch(e){setText('diagnostic-result',e.message);notify(e.message,true);}});
-    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financeQuery=null;financeScope='all';render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
+    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financeQuery=null;financeScope='all';statementView='summary';render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
   }
   function updateOpenPreview(){const s=Core.SECTORS[$('sector-select').value],city=Core.cityById(viewCityId);if(s)setText('open-preview',`Abertura em ${city?.name||'cidade selecionada'} · lote ${String(selectedLot).padStart(2,'0')} · investimento ${Core.money(s.openCost)} do caixa compartilhado · ramo: ${s.name}.`);}
   function start(){

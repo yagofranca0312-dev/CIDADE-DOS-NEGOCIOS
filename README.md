@@ -1,6 +1,6 @@
 # 🏙️ Cidade dos Negócios — Edição 2.1
 
-**Versão atual:** `2.1.0-rc.1` — candidata visual para homologação Windows. **Schema:** 9, sem alterações econômicas. **HTML único offline.**
+**Versão atual:** `2.1.0-rc.1` — HOMOLOGADA por aceite expresso de Yago em 02/11/2026, preservada na branch `releases/v2.1.0-homologada` (commit `645467b0`). **Schema:** 9, sem alterações econômicas. **HTML único offline.** A homologação não comprova teste nativo de persistência no Windows.
 
 ## V2.1 — Marca, abertura e HUD
 
@@ -8,9 +8,9 @@
 - HUD com caixa, receita, resultado e estoque; no celular, botão acessível para consultar métricas secundárias.
 - Inspetor de lote compacto, detalhes expansíveis e identidade uniforme nas telas de Mercado, Finanças e Fiscal.
 - Motor V2.0 congelado, alterando somente `VERSION`; regressão V2.0×V2.1, schema 9 preservado.
-- **QA local:** 162 testes PASS, seis resoluções e operação em navegador. Testar persistência `file://` no Windows antes de homologar.
-- **Instalação da candidata:** extrair o ZIP e abrir `JOGAR_OFFLINE.bat`. O atualizador remoto protege contra downgrade enquanto a publicação da `main` não estiver concluída.
-- [Documentação técnica da V2.1](docs/V21_IMPLANTACAO.md) e [plano visual aprovado](docs/PLANO_V21_VISUAL.md).
+- **QA local:** 162 testes PASS; CI da PR #14 PASS; seis resoluções e operação em navegador. A persistência real em `file://` no Windows continua sem comprovação nesta sessão e deve ser verificada no uso.
+- **Instalação:** exportar backup JSON, extrair o ZIP e abrir `JOGAR_OFFLINE.bat`; confirmar importação e persistência após reinício no Windows. Snapshot de rollback V2.0 preservado; não editar a branch homologada.
+- [Registro técnico e homologação V2.1](docs/V21_IMPLANTACAO.md) · [Plano V2.1](docs/PLANO_V21_VISUAL.md) · **[Próxima V2.2 — Mapa, Atlas e Ambientação (somente planejamento)](docs/PLANO_V22_MAPA_ATLAS_AMBIENTACAO.md)**.
 
 ---
 
@@ -22,7 +22,7 @@
 
 **Homologação da V2.0:** aprovada expressamente pelo jogador em 02/11/2026. Versão preservada em `releases/v2.0.0-homologada` (commit `ac3e840b71d3551026f62cc6a04c9173f553f9d7`). A identificação técnica `2.0.0-rc.1` foi mantida para corresponder ao executável testado; não houve mudança do motor.
 
-**Próxima versão planejada:** [V2.1 — Identidade Visual, HUD e Clareza de Jogo](docs/PLANO_V21_VISUAL.md). Diretriz: **versões 2.x apenas visuais; funcionalidades novas somente em 3.x**. V2.1 não foi implementada.
+**Registro histórico da V2.0:** o plano seguinte era [V2.1 — Identidade Visual, HUD e Clareza de Jogo](docs/PLANO_V21_VISUAL.md), posteriormente implementada e homologada conforme o registro no topo deste README. Diretriz vigente: **versões 2.x apenas visuais; funcionalidades novas somente em 3.x**.
 
 ## V2.0 — Um mundo de negócios, sem mecânicas novas
 

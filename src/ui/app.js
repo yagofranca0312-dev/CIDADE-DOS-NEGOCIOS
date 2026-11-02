@@ -7,7 +7,7 @@
   const BRDate=iso=>iso.split('-').reverse().join('/');
   const KEY='cidade-dos-negocios-save-v1';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
-  let financeQuery=null,strategyHorizon=30,financeScope='all'; // preferências de interface, independentes do GameState
+  let financeQuery=null,strategyHorizon=30,financeScope='all',statementView='summary'; // preferências de interface, independentes do GameState
   const business=()=>state?Core.activeBusiness(state):null;
   function chooseProduct(id){const b=business();return b?.products?.find(p=>p.id===$(id)?.value)||b?.products?.[0]||null;}
   function refillSelect(id,products){
@@ -192,11 +192,19 @@
     }catch(e){
       $('finance-validation').hidden=false;setText('finance-validation',e.message);
       setText('finance-period-label','Corrija o período selecionado para consultar o demonstrativo.');
-      $('finance-summary').innerHTML='';setText('journal-count','—');
+      $('finance-summary').innerHTML='';setText('finance-statement-note','Selecione um período válido para consultar os demonstrativos.');setText('journal-count','—');
       $('journal-events').innerHTML='<p class="muted">Período inválido. Nenhum dado foi alterado.</p>';
       return;
     }
     setText('finance-period-label',`${report.label} · ${financeScope==='all'?'GRUPO CONSOLIDADO':`UNIDADE ${financeScope}`} · lançamentos até ${BRDate(report.effectiveEnd)}. Consulta fixa até você alterar os filtros.`);
+    // Guia de demonstrações: um único painel, sem adicionar abas principais.
+    const titles={summary:'Resumo realizado',dre:'DRE gerencial',balance:'Balanço patrimonial',cash:'Fluxo de caixa realizado',check:'Conferência do razão'};
+    setText('finance-statement-title',titles[statementView]);
+    for(const button of document.querySelectorAll('[data-statement-view]')){
+      const active=button.dataset.statementView===statementView;
+      button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
+    }
+
     const rows=[
       ['Receita de vendas (período)',report.revenue],
       ['(-) Custo das mercadorias vendidas',report.cogs],
@@ -208,14 +216,54 @@
       ['Obrigações acumuladas a pagar',report.closingPayable],
       ['Mercadorias pagas em trânsito (ativo)',report.closingInTransit]
     ];
-    $('finance-summary').innerHTML=rows.map((x,i)=>`<dt class="${i===4?'emphasis':''}">${escape(x[0])}</dt><dd class="${i===4?'emphasis':''}">${x[1]===null?'Compartilhado (ver grupo)':escape(Core.money(x[1]))}</dd>`).join('');
+    let note='Todos os resultados são realizados e derivados do ledger. Impostos: NOT_COVERED (não calculados).';
+    if(statementView==='dre'){
+      const x=Core.incomeStatement(state,q.period,financeQueryDate(q).date,financeQueryDate(q).range,financeScope);
+      rows.splice(0,rows.length,...[
+        ['Receita de vendas',x.revenue],['(-) CMV',x.cogs],['Lucro bruto',x.grossProfit],
+        ['(-) Despesas fixas operacionais',x.fixedExpenses],['(-) Abertura de unidades',x.openingExpenses],
+        ['(-) Outras despesas não classificadas',x.unclassifiedExpenses],['Resultado antes dos tributos',x.operatingResult]
+      ]);
+      note='DRE do período selecionado. Aberturas são despesas reconhecidas no histórico original; tributos NÃO calculados.';
+    }else if(statementView==='balance'){
+      const x=Core.balanceSheet(state,report.effectiveEnd);
+      rows.splice(0,rows.length,...[
+        ['Caixa compartilhado',x.accounts.CASH],['Estoques físicos',x.accounts.INVENTORY],
+        ['Mercadorias em trânsito',x.accounts.IN_TRANSIT],['Recebíveis',x.accounts.RECEIVABLE],
+        ['Total do ativo',x.assets],['Contas a pagar',x.liabilities],
+        ['Capital aportado',x.paidInCapital],['Resultados acumulados antes de tributos',x.retainedEarnings],
+        ['Patrimônio líquido gerencial',x.equity],['Diferença de conciliação',x.difference]
+      ]);
+      note=`Balanço CONSOLIDADO do grupo até ${BRDate(x.asOf)}. Nunca é atribuído caixa individual a filiais. ${x.balanced?'Ativo = Passivo + PL.':'⚠ Há divergência ou conta não mapeada.'} Tributos não calculados.`;
+    }else if(statementView==='cash'){
+      const x=Core.cashFlowStatement(state,q.period,financeQueryDate(q).date,financeQueryDate(q).range,financeScope);
+      rows.splice(0,rows.length,...[
+        ['Caixa inicial do grupo',x.openingCash],['Entradas de vendas',x.categories.sales],
+        ['Aportes ao grupo',x.categories.capital],['Outras entradas sem classificação',x.categories.unclassifiedIn],
+        ['Saídas para fornecedores',x.categories.suppliers],['Saídas operacionais',x.categories.operating],
+        ['Aberturas de unidades',x.categories.opening],['Outras saídas sem classificação',x.categories.unclassifiedOut],
+        ['Variação líquida de caixa',x.netCash],['Caixa final do grupo',x.closingCash]
+      ]);
+      note=x.warning+' Entradas, saídas e saldos representam caixa efetivo, e não custos por competência.';
+    }else if(statementView==='check'){
+      const x=Core.reconciliationReport(state,report.effectiveEnd);
+      rows.splice(0,rows.length,...[
+        ['Diferença ativo − (passivo + PL)',x.statementDifference],
+        ['Unidades conferidas (inventário)',x.snapshotAvailable?x.unitRows.length:null],
+        ['Inconsistências identificadas',x.errors.length],
+        ['Situação do fechamento',x.ok?'CONCILIADO':'VERIFICAR']
+      ]);
+      note=x.note+' '+(x.errors.length?x.errors.join(' · '):'Partidas dobradas e balanço conferidos.');
+    }
+    $('finance-summary').innerHTML=rows.map((x,i)=>`<dt class="${i===rows.length-1?'emphasis':''}">${escape(x[0])}</dt><dd class="${i===rows.length-1?'emphasis':''}">${typeof x[1]==='string'?escape(x[1]):x[1]===null?'Compartilhado (ver grupo)':escape(Core.money(x[1]))}</dd>`).join('');
+    setText('finance-statement-note',note);
     setText('journal-count',`${report.entries.length} registros`);
     $('journal-events').innerHTML=report.entries.length?report.entries.slice(-8).reverse().map(j=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(j.memo)}</p><small>${escape(BRDate(j.date))} · ${escape(j.id)}</small></div></div>`).join(''):'<p class="muted">Nenhum lançamento neste período.</p>';
     renderStrategy();
   }
   function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
   function commit(type,payload={}){
-    if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;financeScope='all';}
+    if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;financeScope='all';statementView='summary';}
     const result=Core.dispatch(state,{type,id:nextId(),payload});
     if(!result.ok){notify(result.error,true);return false;}
     if(result.status==='APPLIED'){state=result.state;const chosen=business();if((type==='EMPRESA.ABRIR'||type==='EMPRESA.ATIVAR')&&chosen){viewCityId=chosen.cityId;selectedLot=chosen.lot;}else viewCityId=viewCityId??state.player.cityId;saveLocal();render();}
@@ -361,7 +409,7 @@
     if(!file)return;
     if(file.size>25_000_000){notify('Save excede 25 MB.',true);return;}
     if(state?.player.cityId&&!confirm('Substituir a carreira atual pelo save importado? Recomendamos exportar antes.'))return;
-    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';saveLocal();render();notify(incoming.message);}
+    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';saveLocal();render();notify(incoming.message);}
     catch(e){notify(`Importação rejeitada: ${e.message}. A carreira anterior foi preservada.`,true);}
   }
   function launchAuto(){
@@ -396,6 +444,7 @@
       if(commit('PRODUTO.CADASTRAR',{name,costCents,priceCents})){$('product-form').reset();notify('Produto cadastrado. Agora configure estoque mínimo e encomende mercadorias.');}
     });
     for(const b of document.querySelectorAll('[data-buy-preset]'))b.addEventListener('click',()=>{$('buy-quantity').value=b.dataset.buyPreset;updateBuyPreview();$('buy-quantity').focus();});
+    for(const button of document.querySelectorAll('[data-statement-view]'))button.addEventListener('click',()=>{statementView=button.dataset.statementView;renderFinances();});
     $('finance-period').addEventListener('change',e=>{ensureFinanceQuery().period=e.target.value;renderFinances();});
     const controls=[['finance-date','asOf'],['finance-day','day'],['finance-month','month'],
       ['finance-quarter','quarter'],['finance-quarter-year','quarterYear'],
@@ -429,7 +478,7 @@
     $('start-import').addEventListener('click',()=>$('import-file').click());
     $('import-file').addEventListener('change',async e=>{const f=e.target.files?.[0];try{await importFile(f);}finally{e.target.value='';}});
     $('run-diagnostic').addEventListener('click',()=>{try{const before=JSON.stringify(state),out=Core.diagnostics(state);if(before!==JSON.stringify(state))throw Error('Diagnóstico alterou o estado');setText('diagnostic-result',out.status+' · revisão '+out.revision);notify('Verificação estrutural e contábil aprovada.');}catch(e){setText('diagnostic-result',e.message);notify(e.message,true);}});
-    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financeQuery=null;financeScope='all';render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
+    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financeQuery=null;financeScope='all';statementView='summary';render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
   }
   function updateOpenPreview(){const s=Core.SECTORS[$('sector-select').value],city=Core.cityById(viewCityId);if(s)setText('open-preview',`Abertura em ${city?.name||'cidade selecionada'} · lote ${String(selectedLot).padStart(2,'0')} · investimento ${Core.money(s.openCost)} do caixa compartilhado · ramo: ${s.name}.`);}
   function start(){

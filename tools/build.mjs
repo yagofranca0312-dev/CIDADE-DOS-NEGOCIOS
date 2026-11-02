@@ -6,6 +6,7 @@ const template=readFileSync(resolve(cwd,'src/shell/index.template.html'),'utf8')
 const css=readFileSync(resolve(cwd,'src/shell/theme.css'),'utf8');
 const v2css=readFileSync(resolve(cwd,'src/shell/v2.css'),'utf8');
 const v21css=readFileSync(resolve(cwd,'src/shell/v21.css'),'utf8');
+const v22css=readFileSync(resolve(cwd,'src/shell/v22.css'),'utf8');
 const keyartBase64=readFileSync(resolve(cwd,'src/visual/keyart-v21.webp.b64'),'utf8').trim();
 if (!/^[A-Za-z0-9+/]+=*$/.test(keyartBase64)) throw Error('Arte V2.1 inválida');
 const v21Inline=v21css.replace('__CDN_V21_KEYART__',`data:image/webp;base64,${keyartBase64}`);
@@ -23,8 +24,8 @@ for (const id of ['intro-version','build-version','footer-version']) {
   if (!template.includes(`id="${id}">v${coreVersion}<`)) throw Error(`Versão incorreta no ${id}; esperado v${coreVersion}`);
 }
 if (!template.includes(`<title>Cidade dos Negócios 1 · v${coreVersion}</title>`)) throw Error('Versão incorreta no título HTML');
-const html=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21Inline).replace('/* CDN_CORE */',core).replace('/* CDN_VISUAL */',visual).replace('/* CDN_UI */',ui);
-if (/\/\* CDN_(CSS|V2_CSS|V21_CSS|CORE|VISUAL|UI) \*\//.test(html)) throw Error('Build incompleto');
+const html=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21Inline).replace('/* CDN_V22_CSS */',v22css).replace('/* CDN_CORE */',core).replace('/* CDN_VISUAL */',visual).replace('/* CDN_UI */',ui);
+if (/\/\* CDN_(CSS|V2_CSS|V21_CSS|V22_CSS|CORE|VISUAL|UI) \*\//.test(html)) throw Error('Build incompleto');
 writeFileSync(resolve(cwd,'index.html'),html,'utf8');
 const hash=createHash('sha256').update(html).digest('hex');
 console.log(`HTML gerado: ${Buffer.byteLength(html)} bytes | SHA256 ${hash}`);

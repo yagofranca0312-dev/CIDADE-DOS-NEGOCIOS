@@ -99,7 +99,7 @@ test('V1.6: adulteração de metadados regionais é rejeitada sem mutar a carrei
 test('V1.6: não faz chamada externa para jogar e mapa diferencia porte sem fonte de rede',()=>{
  const html=readFileSync('src/shell/index.template.html','utf8');const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));const visual=readFileSync('src/visual/city-scene.js','utf8');
  for(const id of ['regional-population','regional-code','regional-gdp','regional-regic','regional-source','regional-demand-factor'])assert.match(html,new RegExp(`id="${id}"`));
- assert.match(ui,/function renderRegional\(city\)/);assert.match(visual,/urbanSize\*7/);
+ assert.match(ui,/function renderRegional\(city\)/);assert.match(visual,/const count=4\+tier\*3/);
  assert.doesNotMatch(ui,/\b(?:fetch|XMLHttpRequest|eval)\s*\(/);
 });
 test('V1.6: evolução de 365 dias com 3 unidades concilia lançamentos e demanda regional',()=>{

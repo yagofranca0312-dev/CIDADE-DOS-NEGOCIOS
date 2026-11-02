@@ -210,38 +210,42 @@
       ['(-) Custo das mercadorias vendidas',report.cogs],
       ['Lucro bruto (período)',report.grossProfit],
       ['(-) Despesas operacionais',report.expenses],
-      ['Resultado antes dos tributos',report.profit],
+      ['Resultado antes dos tributos',report.revenue-report.cogs-report.expenses],
+      ['(-) Tributos simulados contabilizados',report.taxExpense],
+      ['Resultado após tributos simulados',report.profit],
       ['Caixa centralizado do grupo',financeScope==='all'?report.closingCash:null],
       ['Estoque contabilizado no encerramento',report.closingInventory],
-      ['Obrigações acumuladas a pagar',report.closingPayable],
+      ['Obrigações operacionais acumuladas',report.closingPayable],
+      ['Tributos simulados a pagar',report.closingTaxPayable],
       ['Mercadorias pagas em trânsito (ativo)',report.closingInTransit]
     ];
-    let note='Todos os resultados são realizados e derivados do ledger. Impostos: NOT_COVERED (não calculados).';
+    let note='Resultados realizados do ledger. Tributos só entram quando há cenário didático opt-in efetivamente contabilizado; não representam apuração legal.';
     if(statementView==='dre'){
       const x=Core.incomeStatement(state,q.period,financeQueryDate(q).date,financeQueryDate(q).range,financeScope);
       rows.splice(0,rows.length,...[
         ['Receita de vendas',x.revenue],['(-) CMV',x.cogs],['Lucro bruto',x.grossProfit],
         ['(-) Despesas fixas operacionais',x.fixedExpenses],['(-) Abertura de unidades',x.openingExpenses],
-        ['(-) Outras despesas não classificadas',x.unclassifiedExpenses],['Resultado antes dos tributos',x.operatingResult]
+        ['(-) Outras despesas não classificadas',x.unclassifiedExpenses],['Resultado antes dos tributos',x.operatingResult],
+        ['(-) Tributos simulados lançados no período',x.taxExpense],['Resultado após tributos simulados',x.resultAfterSimulatedTax]
       ]);
-      note='DRE do período selecionado. Aberturas são despesas reconhecidas no histórico original; tributos NÃO calculados.';
+      note='DRE do período. Tributos são apenas cenários didáticos reconhecidos após ativação e fechamento da competência; não constituem valores fiscais reais.';
     }else if(statementView==='balance'){
       const x=Core.balanceSheet(state,report.effectiveEnd);
       rows.splice(0,rows.length,...[
         ['Caixa compartilhado',x.accounts.CASH],['Estoques físicos',x.accounts.INVENTORY],
         ['Mercadorias em trânsito',x.accounts.IN_TRANSIT],['Recebíveis',x.accounts.RECEIVABLE],
-        ['Total do ativo',x.assets],['Contas a pagar',x.liabilities],
-        ['Capital aportado',x.paidInCapital],['Resultados acumulados antes de tributos',x.retainedEarnings],
+        ['Total do ativo',x.assets],['Contas a pagar (inclui tributos simulados)',x.liabilities],['Tributos simulados a pagar',x.accounts.TAX_PAYABLE],
+        ['Capital aportado',x.paidInCapital],['Resultados acumulados após tributos simulados',x.retainedEarnings],
         ['Patrimônio líquido gerencial',x.equity],['Diferença de conciliação',x.difference]
       ]);
-      note=`Balanço CONSOLIDADO do grupo até ${BRDate(x.asOf)}. Nunca é atribuído caixa individual a filiais. ${x.balanced?'Ativo = Passivo + PL.':'⚠ Há divergência ou conta não mapeada.'} Tributos não calculados.`;
+      note=`Balanço CONSOLIDADO do grupo até ${BRDate(x.asOf)}. Nunca é atribuído caixa individual a filiais. ${x.balanced?'Ativo = Passivo + PL.':'⚠ Há divergência ou conta não mapeada.'} Tributos presentes somente quando simulados e contabilizados.`;
     }else if(statementView==='cash'){
       const x=Core.cashFlowStatement(state,q.period,financeQueryDate(q).date,financeQueryDate(q).range,financeScope);
       rows.splice(0,rows.length,...[
         ['Caixa inicial do grupo',x.openingCash],['Entradas de vendas',x.categories.sales],
         ['Aportes ao grupo',x.categories.capital],['Outras entradas sem classificação',x.categories.unclassifiedIn],
         ['Saídas para fornecedores',x.categories.suppliers],['Saídas operacionais',x.categories.operating],
-        ['Aberturas de unidades',x.categories.opening],['Outras saídas sem classificação',x.categories.unclassifiedOut],
+        ['Aberturas de unidades',x.categories.opening],['Pagamento de tributo simulado',x.categories.taxPayments],['Outras saídas sem classificação',x.categories.unclassifiedOut],
         ['Variação líquida de caixa',x.netCash],['Caixa final do grupo',x.closingCash]
       ]);
       note=x.warning+' Entradas, saídas e saldos representam caixa efetivo, e não custos por competência.';
@@ -261,6 +265,35 @@
     $('journal-events').innerHTML=report.entries.length?report.entries.slice(-8).reverse().map(j=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(j.memo)}</p><small>${escape(BRDate(j.date))} · ${escape(j.id)}</small></div></div>`).join(''):'<p class="muted">Nenhum lançamento neste período.</p>';
     renderStrategy();
   }
+  function renderFiscal(){
+    if(!state)return;
+    const f=Core.taxReport(state),v=f.estimate,e=f.transition;
+    setText('fiscal-status',f.mode==='SIMULACAO_SIMPLES_COMERCIO'?`${v.coverageStatus} · cenário ${v.coverageStatus==='UNSUPPORTED'?'suspenso nesta competência':'ativado'}`:'NOT_COVERED · demonstração econômica');
+    $('fiscal-optin').hidden=f.mode!=='DEMONSTRACAO_ECONOMICA';
+    $('fiscal-activate').disabled=!$('fiscal-acknowledge').checked;
+    const rows=[
+      ['Modo atual',f.mode==='DEMONSTRACAO_ECONOMICA'?'Sem cobrança ativa':'Cenário de comércio simulado'],
+      ['Início das competências',f.effectiveFrom||'Somente após confirmação'],
+      ['Competência corrente',f.currentPeriod],
+      ['Cobertura da competência',v.coverageStatus],
+      ['Receita registrada no mês',Core.money(v.revenue)],
+      ['RBT12 anualizada (didática)',v.rbt12===null?'NÃO COBERTA':Core.money(v.rbt12)],
+      ['Faixa do Anexo I',v.bracket===null?'—':`${v.bracket}ª faixa`],
+      ['Alíquota efetiva aproximada',v.rateBasisPoints===null?'—':`${(v.rateBasisPoints/100).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}%`],
+      ['Cenário mensal estimado',v.amount===null?'NÃO CALCULADO':Core.money(v.amount)],
+      ['Saldo tributário simulado a pagar',Core.money(f.taxPayable)]
+    ];
+    $('fiscal-summary').innerHTML=rows.map(([k,val])=>`<dt>${escape(k)}</dt><dd>${escape(val)}</dd>`).join('');
+    setText('fiscal-note',`${v.reason} ${f.note} Valor corrente é apenas estimativa até o fechamento; competência não suportada não é zero.`);
+    const records=f.assessments.slice(-15).reverse();
+    $('fiscal-assessments').innerHTML=records.length?records.map(a=>`<div class="event-item"><div><strong>${escape(a.period)}</strong> · ${escape(a.status)}<p>${a.status==='UNSUPPORTED'?escape(a.reason):`Valor calculado ${escape(Core.money(a.amount))} · Pago ${escape(Core.money(a.paid))}`}</p></div>${a.status==='OPEN'?`<button type="button" class="btn btn-outline" data-tax-pay="${escape(a.period)}">Pagar ${escape(Core.money(a.amount-a.paid))}</button>`:''}</div>`).join(''):'<p class="muted">Nenhuma competência encerrada no modo de simulação. Nada foi lançado retroativamente.</p>';
+    $('fiscal-transition').innerHTML=[['Ano / etapa',`${e.year} · ${e.phase}`],
+      ['Receita corrente (referência educativa)',Core.money(e.revenueCurrentMonth)],
+      ['CBS de teste 2026 — 0,9%',e.cbsTestCents===null?'Não calculada':Core.money(e.cbsTestCents)],
+      ['IBS de teste 2026 — 0,1%',e.ibsTestCents===null?'Não calculado':Core.money(e.ibsTestCents)],
+      ['Reconhecimento contábil de teste','NENHUM']].map(([k,val])=>`<dt>${escape(k)}</dt><dd>${escape(val)}</dd>`).join('');
+    setText('fiscal-transition-note',e.note);
+  }
   function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
   function commit(type,payload={}){
     if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;financeScope='all';statementView='summary';}
@@ -271,7 +304,7 @@
     return true;
   }
   function goto(name){tab=name;document.querySelectorAll('[data-view]').forEach(el=>{const chosen=el.getAttribute('data-view')===name;el.hidden=!chosen;el.classList.toggle('active',chosen);});document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.tab===name));
-    const labels={cidade:['CENTRAL DE OPERAÇÕES','A sua cidade, as suas decisões.','Explore lotes comerciais e acompanhe os acontecimentos.'],empresa:['GESTÃO EMPRESARIAL','Cada escolha constrói um negócio.','Abra sua empresa e tome decisões de administração.'],mercado:['VENDAS E SUPRIMENTOS','Preço, demanda e estoque.','Compre mercadorias e encontre sua estratégia de preço.'],financas:['INDICADORES CONTÁBEIS','Os números contam sua história.','Acompanhe lançamentos e resultados rastreáveis.'],fiscal:['REGRAS E COBERTURA','Transparência sobre os limites.','Nenhum cálculo tributário fictício será apresentado como legal.'],sistema:['PERSISTÊNCIA E QA','Seu progresso, sua segurança.','Faça backups e confira o estado da simulação.']};
+    const labels={cidade:['CENTRAL DE OPERAÇÕES','A sua cidade, as suas decisões.','Explore lotes comerciais e acompanhe os acontecimentos.'],empresa:['GESTÃO EMPRESARIAL','Cada escolha constrói um negócio.','Abra sua empresa e tome decisões de administração.'],mercado:['VENDAS E SUPRIMENTOS','Preço, demanda e estoque.','Compre mercadorias e encontre sua estratégia de preço.'],financas:['INDICADORES CONTÁBEIS','Os números contam sua história.','Acompanhe lançamentos e resultados rastreáveis.'],fiscal:['CENÁRIOS TRIBUTÁRIOS','A estratégia também considera tributos.','Simulação opcional com limitações e regras por competência.'],sistema:['PERSISTÊNCIA E QA','Seu progresso, sua segurança.','Faça backups e confira o estado da simulação.']};
     const info=labels[name]||labels.cidade;setText('page-kicker',info[0]);setText('page-title-text',info[1]);setText('page-subtitle',info[2]);
     if(state)render();
   }
@@ -383,8 +416,9 @@
     }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('your-current-price','—');setText('competitor-price','—');setText('buy-total','—');}
     renderCommerce();renderPriceHistory();
     if(tab==='financas'||financeQuery)renderFinances();
+    renderFiscal();
     const report=Core.diagnostics(state);
-    $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal','NOT_COVERED']].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
+    $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal',state.fiscal.coverageStatus]].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
     setText('turn-message',!b?'Abra sua primeira empresa.':b.stockUnits===0?'Seu estoque está vazio. Reabasteça.':`Sua empresa está operando há ${state.calendar.tick} dia(s).`);
     setText('turn-subtext',!b?'Clique em um lote para iniciar.':`${b.products.length} produtos · Estoque total ${b.stockUnits} un. · próximo dia ${BRDate(state.calendar.date)}.`);
     setText('autosave-label',autosaveStatus);
@@ -423,6 +457,13 @@
     for(const button of document.querySelectorAll('[data-go]'))button.addEventListener('click',()=>goto(button.dataset.go));
     $('unit-switch').addEventListener('change',e=>{if(e.target.value)commit('EMPRESA.ATIVAR',{businessId:e.target.value});});
     $('finance-scope').addEventListener('change',e=>{financeScope=e.target.value;renderFinances();});
+    $('fiscal-acknowledge').addEventListener('change',()=>{$('fiscal-activate').disabled=!$('fiscal-acknowledge').checked;});
+    $('fiscal-activate').addEventListener('click',()=>{if(!$('fiscal-acknowledge').checked)return;
+      if(confirm('Ativar hipótese tributária DIDÁTICA de Simples Anexo I, a partir do mês seguinte? Sem efeitos retroativos nem valor fiscal real.'))commit('FISCAL.ATIVAR_CENARIO',{acceptSimplifications:true});});
+    $('fiscal-assessments').addEventListener('click',e=>{const btn=e.target.closest('[data-tax-pay]');if(!btn)return;
+      const period=btn.dataset.taxPay;
+      if(confirm(`Confirmar pagamento apenas SIMULADO da competência ${period}? Ele diminuirá o caixa do jogo.`))commit('FISCAL.PAGAR_SIMULADO',{period});});
+
     $('unit-rows').addEventListener('click',e=>{const btn=e.target.closest('[data-unit-activate]');if(btn)commit('EMPRESA.ATIVAR',{businessId:btn.dataset.unitActivate});});
     $('explore-city').addEventListener('change',e=>{viewCityId=e.target.value;render();updateOpenPreview();});
     $('map-canvas').addEventListener('click',e=>{const target=e.target.closest('[data-lot]');if(target){selectedLot=Number(target.dataset.lot);render();updateOpenPreview();}});

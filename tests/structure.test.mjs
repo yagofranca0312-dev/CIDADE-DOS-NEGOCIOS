@@ -11,7 +11,7 @@ test('HTML único e idioma pt-BR',()=>{assert.match(html,/^<!doctype html>/i);as
 test('CSS e JS embutidos (sem dependências externas)',()=>{assert.equal(scripts.length,1);assert.equal(styles.length,1);assert.doesNotMatch(html,/<script[^>]+src=/i);assert.doesNotMatch(html,/<link[^>]+stylesheet/i);assert.doesNotMatch(html,/\b(?:fetch|XMLHttpRequest|eval)\s*\(/);assert.doesNotMatch(html,/@import\s+url\(/i);});
 test('JavaScript do HTML compilado tem sintaxe válida',()=>{assert.doesNotThrow(()=>new Script(scripts[0][2]));});
 test('Módulos e pontos de entrada presentes',()=>{for(const token of ['const CidadeCore','dispatch(','exportSave(','importSave(','diagnostics(','svgMap('])assert.ok(scripts[0][2].includes(token),token);});
-test('Aviso de cobertura fiscal explícita',()=>{assert.match(html,/Tributação legal não calculada/);assert.match(html,/NOT_COVERED/);});
+test('Aviso de cobertura fiscal explícita',()=>{assert.match(html,/Cenários tributários não são apuração legal/);assert.match(html,/NOT_COVERED/);});
 test('Build reproduzível byte a byte',()=>{
  const template=readFileSync('src/shell/index.template.html','utf8'),css=readFileSync('src/shell/theme.css','utf8'),core=readFileSync('src/core/game.js','utf8'),ui=readFileSync('src/ui/app.js','utf8');
  const expected=template.replace('/* CDN_CSS */',css).replace('/* CDN_CORE */',core).replace('/* CDN_UI */',ui);
@@ -37,8 +37,8 @@ test('Hotfix: preço próprio visível, concorrente independente e confirmação
 });
 test('V1.3: schema 5 com migração da V1 e formato de exportação validado',()=>{
  const core=readFileSync('src/core/game.js','utf8');
- assert.match(core,/SCHEMA_VERSION = 8/);
- assert.match(core,/VERSION = '1\.8\.0-rc\.1'/);
+ assert.match(core,/SCHEMA_VERSION = 9/);
+ assert.match(core,/VERSION = '1\.9\.0-rc\.1'/);
  assert.match(core,/function importSave\(raw\)/);
  assert.match(core,/function upgradedState\(original\)/);
 });

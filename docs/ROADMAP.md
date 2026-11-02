@@ -72,8 +72,10 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - V1.9 permanece dedicada a tributos brasileiros simulados; V2.0 exclusivamente a consolidação técnica e UX/UI como jogo, sem novos sistemas.
 - Gate: regressões locais e CI PASS, testes de navegador e update Windows; usuário homologa após uso real.
 
-## Estado 02/11/2026 — V1.8 HOMOLOGADA, V1.9 PLANEJADA
+## Estado 02/11/2026 — V1.9 candidata
 
-- **V1.8.0-rc.1 homologada** por confirmação expressa do jogador; snapshot preservado em `releases/v1.8.0-homologada` no commit `66bdab08547daec1df50eca3d6b1967a2a664d2c`.
-- **V1.9:** sistema tributário brasileiro **simulado, parcial e documentado**, com motor fiscal temporal, Simples comércio em hipótese delimitada, Reforma Tributária educativa e integração ao ledger somente de cálculos efetivamente cobertos; plano `docs/PLANO_V19.md`. **Ainda não implementada.**
-- **V2.0:** consolidação/refatoração da arquitetura e reformulação da UX/UI com identidade de jogo empresarial, sem introduzir novos sistemas.
+- V1.8 homologada pelo jogador; snapshot protegido em `releases/v1.8.0-homologada`.
+- V1.9 em implementação: Simples comercial didático sob hipóteses restritas e somente ano de competência 2026; teste IBS/CBS de 2026 informativo, anos seguintes sem rule pack de imposto exigível.
+- DRE/BP/DFC do jogo serão conciliados com lançamentos simulados sem transformar apuração hipotética em imposto real.
+- Gate: npm check, CI no PR, navegador e Windows com backup, aceite expresso de Yago. Sem antecipar homologação.
+- **V2.0 não criará funcionalidades novas:** auditoria e consolidação de arquitetura, dados, menus, mapas e UX/UI para conferir identidade visual de um jogo de gestão empresarial.

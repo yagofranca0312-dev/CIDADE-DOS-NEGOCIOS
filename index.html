@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10243E">
   <meta name="description" content="Cidade dos Negócios 1, simulador empresarial brasileiro offline, em um único HTML.">
-  <title>Cidade dos Negócios 1 · v1.8.0-rc.1</title>
+  <title>Cidade dos Negócios 1 · v1.9.0-rc.1</title>
   <style>
 :root{color-scheme:dark;--navy:#10243e;--deep:#091629;--panel:#142b45;--panelhi:#193451;--blue:#51a9df;--gold:#e9ad50;--green:#51bd83;--text:#f4f7fb;--muted:#b8c6d8;--stroke:#2b4860;--red:#ef7070;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:15px}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#091629;color:var(--text)}[hidden]{display:none!important}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.46;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f4d49a;outline-offset:2px}a{color:#9dcee9}h1,h2,h3,p{margin-top:0}h1,h2,h3{letter-spacing:-.025em}h3{font-size:1.12rem;margin-bottom:0}p{line-height:1.65}small,.muted,.field-hint{color:var(--muted)}.field-hint{font-size:.83rem;margin:10px 0 19px;line-height:1.45}.hint-bottom{margin-top:26px}.status-text{font-size:.87rem;margin:13px 0 0;min-height:1.25rem}.overline,.eyebrow,.card-kicker,.nav-label{font-size:.7rem;letter-spacing:.16em;font-weight:800;color:#a3b7cb}.eyebrow-dot,.online-dot{display:inline-block;background:var(--green);width:7px;height:7px;border-radius:50%;margin-right:7px}.btn{border:1px solid #466178;border-radius:10px;padding:12px 16px;background:#24415a;color:var(--text);font-size:.89rem;font-weight:750;transition:transform .15s,filter .15s;min-height:44px}.btn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px)}.btn-primary{background:linear-gradient(135deg,#e9ad50,#f3c775);color:#101d2b;border-color:#f4d49a}.btn-outline{background:#14283b;color:#f2f7fb}.btn-big{width:100%;padding:16px 20px;display:flex;justify-content:space-between;margin-top:18px}.full{width:100%}.spaced{margin-top:9px}.tag-soft,.tag-warning{display:inline-block;letter-spacing:.05em;font-weight:800;font-size:.63rem;background:#203e58;color:#a9dafa;border:1px solid #3b617b;border-radius:8px;padding:8px 10px}.tag-warning{color:#f4d49a;background:#3c301d;border-color:#906c39}.brand-icon{filter:drop-shadow(0 9px 28px #0003)}.onboarding{min-height:100vh;display:grid;grid-template-columns:minmax(390px,1fr) minmax(380px,.78fr);gap:clamp(30px,6vw,100px);align-items:center;max-width:1540px;margin:0 auto;padding:45px clamp(24px,6vw,94px);position:relative;overflow:hidden}.onboarding:before{content:"";background:radial-gradient(ellipse at center,#193e6077,transparent 70%);position:absolute;inset:0 0 0 -30%;pointer-events:none}.onboarding-art{position:absolute;inset:0;opacity:.14;pointer-events:none;overflow:hidden}.skyline{display:flex;align-items:end;gap:18px;position:absolute;bottom:0;left:-2%;height:63%;width:110%;transform:skewY(-7deg)}.skyline i{display:block;flex:1;background:linear-gradient(180deg,#7dbde3,#1d5070);height:65%;border-radius:5px 5px 0 0;box-shadow:inset 10px 0 0 #0a223a}.skyline i:nth-child(2n){height:78%}.skyline i:nth-child(3n){height:44%}.skyline i:nth-child(5n){height:95%}.intro-copy{position:relative;z-index:1}.intro-copy .eyebrow{color:#9ddfe2;margin-bottom:48px}.brand-intro{margin-bottom:15px}.intro-copy h1{font-size:clamp(3.3rem,6vw,6.8rem);line-height:.92;margin-bottom:20px;font-weight:900}.intro-copy h1 em{font-style:normal;background:linear-gradient(120deg,#f6ce82,#d89d41);background-clip:text;-webkit-background-clip:text;color:transparent}.hero-subtitle{font-size:1.55rem;font-weight:700;margin:29px 0 10px}.intro-desc{font-size:1.02rem;color:#c7d3df;max-width:540px}.intro-features{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}.intro-features span{padding:10px 12px;border:1px solid #395875;background:#12304aab;border-radius:8px;font-size:.78rem;color:#b9d6e6}.fine-print{font-size:.72rem;color:#8fa8bb;margin-top:40px}.start-card{position:relative;z-index:1;background:linear-gradient(158deg,#1a3652 0%,#102339 100%);padding:clamp(25px,4vw,42px);border:1px solid #3c5970;box-shadow:0 24px 90px #0007;border-radius:20px}.card-kicker{color:var(--gold);margin-bottom:13px}.start-card h2{font-size:2rem;line-height:1.1;margin-bottom:12px}.start-card label,.panel label{display:block;font-size:.78rem;color:#c5d6e6;font-weight:700;margin:18px 0 7px}.start-card input,.start-card select,.panel input,.panel select,.topbar select{width:100%;background:#0c2136;border:1px solid #3c5a71;color:var(--text);border-radius:9px;min-height:42px;padding:10px 13px;outline-color:var(--gold)}.text-action{border:0;color:#b7d9f5;background:transparent;font-size:.86rem;margin:15px auto 0;display:block;padding:10px}.game-shell{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:100vh}.sidebar{background:linear-gradient(175deg,#0b1b2e,#10243e);border-right:1px solid #203e59;display:flex;flex-direction:column;padding:27px 15px 18px;position:sticky;top:0;height:100vh}.sidebar-brand{display:flex;gap:10px;align-items:center;padding:0 8px 32px}.brand-mark{width:43px;height:43px;border-radius:10px;background:linear-gradient(135deg,#e2a450,#f0c77d);color:#092037;display:grid;place-items:center;font-size:2rem}.sidebar-brand strong{display:block;font-size:.9rem;letter-spacing:.065em;line-height:1.15}.sidebar-brand small{font-size:.59rem;letter-spacing:.16em;color:var(--gold)}.nav-label{padding:0 14px 12px;color:#7896b4}.nav-items{display:grid;gap:5px}.nav-item{width:100%;background:none;border:1px solid transparent;color:#b6c7d8;padding:13px 14px;border-radius:9px;text-align:left;font-weight:650;display:flex;align-items:center;gap:14px;font-size:.88rem}.nav-item span{font-size:1.17rem;width:24px;text-align:center}.nav-item.active{background:#244360;color:#fff;border-color:#3a6080;box-shadow:inset 3px 0 0 var(--gold)}.nav-item:hover{background:#1a3852}.sidebar-bottom{margin-top:auto;padding:17px 11px 0;border-top:1px solid #29425a;font-size:.69rem;letter-spacing:.1em;font-weight:800;color:#bdd4e2}.sidebar-bottom small{display:block;letter-spacing:0;font-weight:400;margin:8px 0 0 16px}.main-pane{min-width:0;display:flex;flex-direction:column}.topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px clamp(16px,3vw,39px);border-bottom:1px solid #28435c;background:#0e2035}.topbar h2{font-size:1.4rem;margin:3px 0 0}.topbar h2 span{color:#95adbf;font-weight:500}.topbar-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.compact-label{font-size:.72rem;color:var(--muted)}.topbar select{width:auto;max-width:195px;font-size:.78rem}.date-box{background:#152f47;border:1px solid #34516c;border-radius:9px;padding:7px 15px;min-width:115px}.date-box small{display:block;font-size:.57rem;letter-spacing:.1em}.date-box strong{display:block;font-size:.93rem;margin-top:3px;font-variant-numeric:tabular-nums}.world-warning{padding:10px clamp(16px,3vw,39px);border-bottom:1px solid #4b492d;background:#2e2b1d;color:#f6d69b;font-size:.76rem;font-weight:600}.legal-warning{background:#132b3a;border-color:#24485b;color:#a7c9d9}.content{padding:30px clamp(16px,3vw,39px);max-width:1720px;width:100%;margin:0 auto;flex:1}.page-title{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:25px}.page-title h1{font-size:clamp(1.5rem,2.6vw,2.2rem);margin:7px 0 2px}.page-title p{color:#a9bacb;font-size:.85rem;margin:0}.build-badge{border:1px solid #3d5a71;color:#a4cce4;padding:8px 11px;border-radius:8px;font-size:.72rem;white-space:nowrap}.stats-bar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:20px}.stat,.panel{border:1px solid #304c63;border-radius:13px;background:linear-gradient(155deg,#17314a,#10273e);box-shadow:0 10px 22px #0002}.stat{padding:21px 20px}.stat span{display:block;font-size:.67rem;letter-spacing:.085em;color:#afc0d2;font-weight:700}.stat strong{display:block;font-size:clamp(1.3rem,2vw,2rem);margin:10px 0 3px;font-variant-numeric:tabular-nums;letter-spacing:-.035em;white-space:nowrap}.stat small{font-size:.68rem}.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(280px,.83fr);gap:17px}.right-column{display:grid;gap:17px;align-content:start}.panel{padding:23px}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.map-panel{padding:0;overflow:hidden;align-self:start}.map-panel .panel-heading{padding:23px 23px 0;margin-bottom:0}.map-panel .overline{margin-bottom:6px}.map-canvas{min-height:350px;background:radial-gradient(ellipse at 55% 37%,#265372 0%,#163751 54%,#0d2436 100%);overflow:hidden}.map-canvas svg{display:block;width:100%;height:auto;min-height:320px;max-height:480px;touch-action:manipulation}.map-canvas svg [data-lot]{cursor:pointer;outline:none;transition:filter .15s}.map-canvas svg [data-lot]:hover,.map-canvas svg [data-lot]:focus{filter:brightness(1.5)}.map-legend{display:flex;gap:20px;flex-wrap:wrap;font-size:.71rem;color:#b8cadd;padding:0 23px 12px}.legend-color{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}.legend-color.lot{background:#537d69}.legend-color.own{background:#e9ad50}.legend-color.sel{background:#51a9df}.map-disclaimer{font-size:.68rem;color:#91b0c0;padding:0 23px 15px;margin:0}.big-number{font-size:2.1rem;font-weight:850;color:var(--gold);letter-spacing:-.06em;margin:12px 0}.event-list{display:grid;gap:13px;max-height:320px;overflow:auto}.event-item{border-bottom:1px solid #264259;padding-bottom:10px;display:flex;gap:10px;align-items:start}.event-item:last-child{border-bottom:0}.event-dot{background:var(--blue);width:7px;height:7px;border-radius:50%;flex:none;margin-top:7px}.event-item p{margin:0;color:#d0dde8;font-size:.81rem;line-height:1.45}.event-item small{display:block;margin-top:4px;font-size:.67rem;color:#8eabc0}.view{min-height:370px}.detail-list,.finance-list{display:grid;grid-template-columns:1fr auto;gap:15px;margin:19px 0}.detail-list dt,.finance-list dt{color:#bed0df}.detail-list dd,.finance-list dd{margin:0;text-align:right;font-weight:800;font-variant-numeric:tabular-nums}.finance-list{border-top:1px solid #3b586c;padding-top:17px}.finance-list dt,.finance-list dd{font-size:.85rem}.finance-list .emphasis{color:var(--gold);font-weight:800;font-size:1rem}.company-emblem{display:flex;align-items:center;gap:16px;background:#102c40;border:1px solid #31526b;border-radius:12px;padding:16px}.company-emblem>span{font-size:2.4rem}.company-emblem h3{margin-bottom:3px}.company-emblem p{margin:0}.button-stack{display:grid;gap:10px;margin:20px 0}.fiscal-panel{display:flex;gap:24px;max-width:920px}.fiscal-icon{font-size:3.2rem;font-weight:850;color:var(--gold)}.turnbar{margin-top:23px;background:linear-gradient(125deg,#173c58,#132b44);border:1px solid #3d6480;border-radius:13px;padding:20px 25px;display:flex;justify-content:space-between;align-items:center;gap:20px}.turnbar h3{margin:6px 0}.turnbar p{font-size:.77rem;color:#a5bfd2;margin:0}.turn-actions{display:flex;gap:8px;flex-wrap:wrap}.game-footer{padding:19px clamp(16px,3vw,39px);display:flex;justify-content:space-between;gap:10px;font-size:.63rem;letter-spacing:.08em;color:#91aabd;border-top:1px solid #213e56}.toast{position:fixed;bottom:25px;right:25px;max-width:min(90vw,460px);z-index:99;pointer-events:none;background:#1b3a52;border:1px solid #5e869e;box-shadow:0 15px 45px #0009;color:#fff;padding:14px 19px;border-radius:11px;font-size:.82rem;transform:translateY(140px);opacity:0;transition:transform .25s,opacity .25s}.toast.visible{transform:none;opacity:1}.toast.error{border-color:var(--red);background:#4c2a34}@media(max-width:1180px){.game-shell{grid-template-columns:190px minmax(0,1fr)}.dashboard-grid{grid-template-columns:1fr}.stats-bar{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar{padding-left:10px;padding-right:10px}}@media(max-width:800px){.onboarding{grid-template-columns:1fr;gap:25px;padding:24px}.intro-copy .eyebrow{margin-bottom:20px}.intro-copy h1{font-size:3.8rem}.fine-print{margin-top:14px}.game-shell{display:block}.sidebar{position:relative;height:auto;padding:14px}.sidebar-brand{padding-bottom:12px}.nav-label,.sidebar-bottom{display:none}.nav-items{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px}.nav-item{width:auto;flex:none;padding:9px 11px;font-size:.75rem;gap:6px}.nav-item span{font-size:1rem;width:18px}.topbar{align-items:flex-start;flex-wrap:wrap}.topbar-controls{width:100%}.compact-label{display:none}.page-title{align-items:start}.turnbar{flex-direction:column;align-items:stretch}.turn-actions{width:100%}.turn-actions .btn{flex:1}.game-footer{flex-direction:column}}@media(max-width:480px){.stat{padding:15px 12px}.stat strong{font-size:1.16rem}.stat small{font-size:.6rem}.stats-bar{gap:8px}.panel{padding:17px}.map-panel .panel-heading{padding:16px 16px 0}.map-legend{padding:0 16px 12px}.map-disclaimer{padding:0 16px 12px}.topbar-controls select{max-width:140px}.page-title{flex-direction:column}.game-footer{font-size:.59rem}.fiscal-panel{flex-direction:column;gap:10px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
@@ -159,6 +159,16 @@
 .statement-switch button:focus-visible{outline:3px solid #e4a645;outline-offset:2px;}
 @media(max-width:400px){.statement-switch{gap:4px}.statement-switch button{font-size:.77rem;padding:8px 9px;}}
 
+/* V1.9 fiscal didático: espaço compacto sem adicionar nova aba principal. */
+.fiscal-dashboard{margin:16px 0}
+.fiscal-check{display:flex;align-items:flex-start;gap:10px;line-height:1.55;font-size:.86rem;color:#d7e8ef;margin:16px 0}
+.fiscal-check input{width:20px;height:20px;flex:none;accent-color:#6ac9af;margin-top:3px}
+.fiscal-history{display:grid;gap:11px;max-height:390px;overflow-y:auto}
+.fiscal-history .event-item{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.fiscal-history .event-item button{flex:none;min-height:37px}
+.fiscal-panel{min-width:0}
+@media(max-width:670px){.fiscal-dashboard{grid-template-columns:minmax(0,1fr)}.fiscal-history .event-item{display:block}.fiscal-history button{margin-top:8px}}
+
   </style>
 </head>
 <body>
@@ -171,7 +181,7 @@
       <p class="hero-subtitle">Uma cidade. Uma empresa. Mil decisões.</p>
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◆ Economia simulada</span><span>◆ 30 cidades</span><span>◆ Offline</span></div>
-      <p class="fine-print"><span id="intro-version">v1.8.0-rc.1</span> — prévia jogável. Dados oficiais identificados; mercado e legislação tributária simulados ou não cobertos.</p>
+      <p class="fine-print"><span id="intro-version">v1.9.0-rc.1</span> — prévia jogável. Dados oficiais identificados; mercado e legislação tributária simulados ou não cobertos.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -217,13 +227,13 @@
         </div>
       </header>
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
-      <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Tributação legal não calculada nesta versão.</div>
+      <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Cenários tributários não são apuração legal.</div>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v1.8.0-rc.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v1.9.0-rc.1</span></div>
         <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
           <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
           <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
-          <div class="stat"><span>RESULTADO OPERACIONAL</span><strong id="kpi-profit">—</strong><small>Antes de tributos não simulados</small></div>
+          <div class="stat"><span>RESULTADO GERENCIAL</span><strong id="kpi-profit">—</strong><small>Após tributos simulados, quando ativados</small></div>
           <div class="stat"><span>ESTOQUE DISPONÍVEL</span><strong id="kpi-stock">—</strong><small id="kpi-stock-label">Estoque físico consolidado do grupo</small></div>
         </section>
         <section data-view="cidade" class="view active">
@@ -340,7 +350,7 @@
             <div class="filter-action-row"><button type="button" id="finance-current-date" class="btn btn-outline">Usar data atual do jogo</button><span class="muted">O filtro não muda quando você avança os dias.</span></div>
             <p id="finance-validation" class="finance-validation" aria-live="polite" hidden></p>
             <p id="finance-period-label" class="field-hint" aria-live="polite">Escolha a data ou competência que deseja consultar.</p>
-          </article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3 id="finance-statement-title">Resumo realizado</h3><span class="tag-soft">M11 · LEDGER</span></div><div class="statement-switch" role="group" aria-label="Demonstrativos contábeis"><button type="button" data-statement-view="summary" aria-pressed="true">Resumo</button><button type="button" data-statement-view="dre" aria-pressed="false">DRE</button><button type="button" data-statement-view="balance" aria-pressed="false">Balanço</button><button type="button" data-statement-view="cash" aria-pressed="false">Caixa</button><button type="button" data-statement-view="check" aria-pressed="false">Conferência</button></div><dl class="finance-list" id="finance-summary"></dl><p id="finance-statement-note" class="field-hint" aria-live="polite">Todas as demonstrações são apenas gerenciais e não calculam tributos.</p><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Tributação ainda não é calculada.</p></div><p class="muted">Fluxos do período filtrado e separados por unidade; saldos de estoque e obrigações são acumulados até o encerramento. O caixa não é repartido artificialmente entre filiais: somente a consulta consolidada exibe o saldo compartilhado.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
+          </article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3 id="finance-statement-title">Resumo realizado</h3><span class="tag-soft">M11 · LEDGER</span></div><div class="statement-switch" role="group" aria-label="Demonstrativos contábeis"><button type="button" data-statement-view="summary" aria-pressed="true">Resumo</button><button type="button" data-statement-view="dre" aria-pressed="false">DRE</button><button type="button" data-statement-view="balance" aria-pressed="false">Balanço</button><button type="button" data-statement-view="cash" aria-pressed="false">Caixa</button><button type="button" data-statement-view="check" aria-pressed="false">Conferência</button></div><dl class="finance-list" id="finance-summary"></dl><p id="finance-statement-note" class="field-hint" aria-live="polite">Demonstrações gerenciais: tributos apenas quando efetivamente simulados e contabilizados.</p><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Na hipótese fiscal habilitada, a despesa simulada será apresentada separadamente.</p></div><p class="muted">Fluxos do período filtrado e separados por unidade; saldos de estoque e obrigações são acumulados até o encerramento. O caixa não é repartido artificialmente entre filiais: somente a consulta consolidada exibe o saldo compartilhado.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
           <article class="panel strategy-panel"><div class="panel-heading"><h3>Gestão estratégica e equilíbrio econômico</h3><span class="tag-soft">V1.4 · ANÁLISE E PROJEÇÃO</span></div>
             <p class="muted">Resultados realizados vêm exclusivamente do livro contábil. Projeções são cenários hipotéticos, não lançamentos. A projeção estratégica considera a unidade ativa e o caixa compartilhado atual, sem projetar simultaneamente as demais unidades; não é uma projeção consolidada da rede. Esses cenários não realizam novas compras nem liquidam obrigações existentes. Não gera lançamentos.</p>
             <div class="strategy-controls"><label for="strategy-horizon">Horizonte de projeção (dias)</label><select id="strategy-horizon"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select></div>
@@ -351,7 +361,36 @@
           </article>
         </section>
         <section data-view="fiscal" class="view" hidden>
-          <article class="panel fiscal-panel"><span class="fiscal-icon">§</span><div><div class="overline">MT-01 · COBERTURA NORMATIVA</div><h3>Tributação não implementada nesta versão</h3><p>O jogo simula operações econômicas fictícias, mas não calcula ICMS, ISS, PIS/Cofins, IBS, CBS, Simples Nacional ou obrigações acessórias. Ausência de cálculo <strong>não significa alíquota zero</strong>.</p><p>O calendário pode avançar até 2033 e além; isso não representa validação da legislação desses anos. Uma futura implementação exigirá bases legais identificadas, vigência por competência e testes fiscais independentes.</p><div class="tag-warning">STATUS: NOT_COVERED · MODO DEMONSTRAÇÃO</div></div></article>
+          <article class="panel fiscal-panel"><span class="fiscal-icon">§</span><div>
+            <div class="overline">V1.9 · SIMULAÇÃO TRIBUTÁRIA EDUCATIVA</div>
+            <h3>Tributos da sua rede · cenários didáticos</h3>
+            <p>Esta carreira <strong>não tem CNPJ</strong>, classificação NCM ou apuração legal de receitas. Nenhum valor mostrado é DAS, PGDAS-D ou guia oficial. Tributos de operações com substituição tributária, monofasia, benefícios, produção própria e múltiplas UFs não estão abrangidos. <strong>Não coberto não significa alíquota zero.</strong></p>
+            <div class="tag-warning" id="fiscal-status">STATUS: NOT_COVERED</div>
+          </div></article>
+          <div class="dashboard-grid fiscal-dashboard">
+            <article class="panel">
+              <div class="panel-heading"><h3>Hipótese comercial — Simples Nacional</h3><span class="tag-soft">Anexo I · 2026</span></div>
+              <p class="field-hint">Cálculo de cenário, mediante confirmação expressa. Ativação <strong>no primeiro dia do mês seguinte</strong>, sem criar impostos retroativos. Não configura opção legal perante o fisco.</p>
+              <dl class="finance-list" id="fiscal-summary"></dl>
+              <p id="fiscal-note" class="field-hint" aria-live="polite"></p>
+              <div id="fiscal-optin">
+                <label class="fiscal-check"><input type="checkbox" id="fiscal-acknowledge"> Entendo que é um modelo fictício simplificado (comércio puro sem segregações, ST, monofasia ou benefícios). Desejo aplicar <strong>tributos simulados</strong> somente às competências futuras suportadas.</label>
+                <button type="button" id="fiscal-activate" class="btn btn-primary spaced" disabled>Ativar cenário didático de comércio</button>
+              </div>
+              <p class="field-hint">Fonte de cálculo: LC 123/2006, Anexo I; regras da competência simulada. Outras atividades, UFs e anos sem pacote são sinalizados como não suportados.</p>
+            </article>
+            <article class="panel">
+              <div class="panel-heading"><h3>Competências e pagamentos</h3><span class="tag-soft">Somente valores simulados</span></div>
+              <div class="event-list fiscal-history" id="fiscal-assessments"></div>
+              <p class="field-hint">Pagamento é voluntário, com comando confirmado. A despesa é contabilizada no fechamento; o pagamento apenas baixa o passivo e o caixa.</p>
+            </article>
+          </div>
+          <article class="panel spaced">
+            <div class="panel-heading"><h3>Reforma Tributária do Consumo — informação</h3><span class="tag-soft">EDUCATIONAL_ONLY</span></div>
+            <dl class="finance-list" id="fiscal-transition"></dl>
+            <p id="fiscal-transition-note" class="field-hint"></p>
+            <p class="field-hint">Em 2026, CBS 0,9% e IBS 0,1% são parâmetros informativos do ano-teste; não geram obrigação nem saída de caixa. Para 2027–2033, a linha do tempo é educativa e não calcula tributos exigíveis. O Simples integrado e a opção pelo recolhimento regular de IBS/CBS não são duplicados ou simulados.</p>
+          </article>
         </section>
         <section data-view="sistema" class="view" hidden>
           <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Salvamento e recuperação</h3><span class="tag-soft">M05</span></div><p class="muted">O backup JSON é o método portátil recomendado, especialmente ao atualizar o HTML no Windows.</p><div class="button-stack"><button class="btn btn-primary" type="button" id="export-btn">Exportar minha carreira (.json)</button><button class="btn btn-outline" type="button" id="import-btn">Importar carreira (.json)</button><button class="btn btn-outline" type="button" id="new-career-btn">Começar uma nova carreira</button></div><p class="field-hint" id="autosave-label">Verificando salvamento local…</p></article>
@@ -359,17 +398,17 @@
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v1.8.0-rc.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v1.9.0-rc.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>
   <div class="toast" id="toast" aria-live="polite" role="status"></div>
   <script>
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.8.0-rc.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.9.0-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '1.8.0-rc.1';
-  const SCHEMA_VERSION = 8;
+  const VERSION = '1.9.0-rc.1';
+  const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
   const CITIES_SOURCE = [
@@ -494,8 +533,8 @@ const CidadeCore = (() => {
   // Migração aditiva e auditável: inventário anterior fica no valor original;
   // ordens recebidas antes da V1.3 não geram novos créditos/debitos.
   function upgradedState(original) {
-    if(original.schemaVersion===8)return clone(original);
-    assert([2,3,4,5,6,7].includes(original.schemaVersion),'Schema de save não suportado');
+    if(original.schemaVersion===9)return clone(original);
+    assert([2,3,4,5,6,7,8].includes(original.schemaVersion),'Schema de save não suportado');
     const state=clone(original);
     if(state.schemaVersion===2){
       state.schemaVersion=3;
@@ -529,8 +568,14 @@ const CidadeCore = (() => {
       state.world.regional={datasetId:POPULATION_SOURCE.id,modelId:'REGIONAL-V1',effectiveFrom:state.calendar.date};
       state.schemaVersion=7;
     }
-    state.world.regional={...state.world.regional,modelId:'REGIONAL-V2-PIB',gdpDatasetId:GDP_SOURCE.id,gdpEffectiveFrom:state.calendar.date};
-    state.schemaVersion=8;
+    if(state.schemaVersion<8){
+      state.world.regional={...state.world.regional,modelId:'REGIONAL-V2-PIB',gdpDatasetId:GDP_SOURCE.id,gdpEffectiveFrom:state.calendar.date};
+      state.schemaVersion=8;
+    }
+    if(state.schemaVersion<9){
+      state.fiscal=initialFiscal(); // Mera inclusão de esquema; nenhum imposto retroativo.
+      state.schemaVersion=9;
+    }
     return state;
   }
   function businesses(state){
@@ -672,9 +717,11 @@ const CidadeCore = (() => {
     CAPITAL:Object.freeze({name:'Capital aportado',group:'EQUITY',normal:'CREDIT'}),
     REVENUE:Object.freeze({name:'Receita de vendas',group:'REVENUE',normal:'CREDIT'}),
     COGS:Object.freeze({name:'Custo das mercadorias vendidas',group:'COST',normal:'DEBIT'}),
-    EXPENSE:Object.freeze({name:'Despesas operacionais e de abertura',group:'EXPENSE',normal:'DEBIT'})
+    EXPENSE:Object.freeze({name:'Despesas operacionais e de abertura',group:'EXPENSE',normal:'DEBIT'}),
+    TAX_EXPENSE:Object.freeze({name:'Tributo simulado por competência',group:'EXPENSE',normal:'DEBIT'}),
+    TAX_PAYABLE:Object.freeze({name:'Tributo simulado a pagar',group:'LIABILITY',normal:'CREDIT'})
   });
-  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','UNCLASSIFIED']);
+  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','UNCLASSIFIED']);
   function transactionKind(j){
     if(TRANSACTION_KINDS.includes(j.kind))return j.kind;
     if(j.memo==='Capital inicial do empreendedor')return 'CAPITAL';
@@ -696,18 +743,99 @@ const CidadeCore = (() => {
     record.kind=label;
     draft.economy.ledger.push(record);
   }
-  function balance(draft,account) {let total=0;for(const j of draft.economy.ledger)for(const e of j.entries)if(e.account===account)total+=(['CAPITAL','REVENUE','PAYABLE'].includes(account)?e.credit-e.debit:e.debit-e.credit);return total;}
+  function balance(draft,account) {let total=0;for(const j of draft.economy.ledger)for(const e of j.entries)if(e.account===account)total+=(['CAPITAL','REVENUE','PAYABLE','TAX_PAYABLE'].includes(account)?e.credit-e.debit:e.debit-e.credit);return total;}
+
+  // V1.9: FISCAL é uma simulação didática, não software de apuração. Fonte por competência.
+  const FISCAL_RULE_PACKS=Object.freeze({
+    simples2026:Object.freeze({id:'SN-ANEXO-I-2026-EDU-1',regime:'SIMPLES_COMERCIO_HIPOTETICO',effectiveFrom:'2026-01-01',effectiveTo:'2026-12-31',
+      sourceUrls:Object.freeze(['https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp123.htm','https://normas.receita.fazenda.gov.br/sijut2consulta/link.action?idAto=92278']),
+      coverage:'SIMULATED_PARTIAL',scope:'Hipótese de comércio Anexo I puro, sem receitas segregadas, ST, monofasia, benefícios ou ICMS específico',
+      brackets:Object.freeze([[18000000,400,0],[36000000,730,594000],[72000000,950,1386000],[180000000,1070,2250000],[360000000,1430,8730000],[480000000,1900,37800000]])}),
+    transition:Object.freeze({id:'RTC-2026-2033-EDU-1',coverage:'EDUCATIONAL_ONLY',startYear:2026,endYear:2033,
+      sourceUrls:Object.freeze(['https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/reforma-tributaria-do-consumo/entenda',
+        'https://www.gov.br/receitafederal/pt-br/assuntos/noticias/2026/setembro/simples-nacional-2027-entenda-os-novos-prazos-e-faca-sua-escolha-com-consciencia-e-tranquilidade/']),
+      note:'Destaque do ano-teste 2026 não é obrigação de pagar. Fora dele, regras completas e alíquotas não cobertas.'})
+  });
+  function initialFiscal(){return {mode:'DEMONSTRACAO_ECONOMICA',coverageStatus:'NOT_COVERED',rulePackId:null,activatedAt:null,effectiveFrom:null,assessments:[]};}
+  function taxMonthNext(period){const [y,m]=period.split('-').map(Number);return m===12?`${y+1}-01`:`${y}-${String(m+1).padStart(2,'0')}`;}
+  const periodKey=date=>date.slice(0,7);
+  function revenuesInMonth(state,month){return state.economy.ledger.filter(j=>periodKey(j.date)===month).reduce((sum,j)=>sum+j.entries.reduce((n,e)=>n+(e.account==='REVENUE'?e.credit-e.debit:0),0),0);}
+  function rbt12Annualized(state,period,currentRevenue){
+    // Hipótese de início de atividade: mês inicial receita × 12; meses seguintes média de meses anteriores × 12.
+    const start=START_DATE.slice(0,7),elapsed=(+period.slice(0,4)-+start.slice(0,4))*12+(+period.slice(5,7)-+start.slice(5,7));
+    const months=Math.min(12,Math.max(0,elapsed));let sum=0;
+    const d=new Date(`${period}-01T12:00:00Z`);
+    for(let n=0;n<months;n++){d.setUTCMonth(d.getUTCMonth()-1);sum+=revenuesInMonth(state,d.toISOString().slice(0,7));}
+    return months===0?currentRevenue*12:months<12?Math.round(sum/months*12):sum;
+  }
+  function taxEligibility(state,period){
+    if(period<'2026-11'||period>'2026-12')return {supported:false,reason:'Somente competências de 2026 possuem pacote de tributação contabilizável. Reforma posterior: EDUCATIONAL_ONLY/UNSUPPORTED.'};
+    const units=businesses(state);
+    if(!units.length||units.some(b=>!['mercado','roupas'].includes(b.sector)))return {supported:false,reason:'Hipótese de comércio puro não cobre ausência de loja ou padaria/produção própria.'};
+    if(new Set(units.map(b=>cityById(b.cityId).uf)).size!==1)return {supported:false,reason:'Rede em múltiplas UFs: particularidades estaduais e segregações não cobertas.'};
+    return {supported:true,reason:'Cenário hipotético restrito: comércio Anexo I, sem benefícios, ST, monofasia e segregações de operações.'};
+  }
+  function taxEstimate(state,period){
+    assert(typeof period==='string'&&/^\d{4}-(0[1-9]|1[0-2])$/.test(period),'Competência fiscal inválida');
+    const revenue=revenuesInMonth(state,period),eligibility=taxEligibility(state,period);
+    if(!eligibility.supported)return {period,coverageStatus:'UNSUPPORTED',reason:eligibility.reason,revenue,rbt12:null,rateBasisPoints:null,amount:null,bracket:null,packId:null};
+    const pack=FISCAL_RULE_PACKS.simples2026,rbt12=rbt12Annualized(state,period,revenue);
+    if(rbt12>480000000)return {period,coverageStatus:'UNSUPPORTED',reason:'RBT12 anualizada excede limite simplificado de R$ 4,8 milhões.',revenue,rbt12,rateBasisPoints:null,amount:null,bracket:null,packId:pack.id};
+    const bracket=pack.brackets.findIndex(([limit])=>rbt12<=limit);
+    const [limit,nominal,deduction]=pack.brackets[bracket];
+    // Alíquota em pontos-base; cálculo intermediário não é documento fiscal. Arredondamento em centavos.
+    const effectiveNumerator=rbt12*nominal-deduction*10000;
+    const rateBasisPoints=rbt12===0?nominal:Math.max(0,Math.round(effectiveNumerator/rbt12*100)/100);
+    // Valor final arredondado uma única vez, sem truncar a alíquota efetiva previamente.
+    const amount=rbt12===0?0:Math.round(revenue*Math.max(0,effectiveNumerator)/rbt12/10000);
+    return {period,coverageStatus:'SIMULATED_PARTIAL',reason:eligibility.reason,revenue,rbt12,rateBasisPoints,amount,bracket:bracket+1,packId:pack.id};
+  }
+  function transitionReport(state){
+    const year=Number(state.calendar.date.slice(0,4)),y=Math.min(2033,Math.max(2026,year));
+    const period=periodKey(state.calendar.date),revenue=revenuesInMonth(state,period);
+    const phase=year===2026?'ANO_TESTE':year<=2028?'CBS_IBS_TRANSICAO':year<=2032?'TRANSICAO_ICMS_ISS':'MODELO_2033_OU_POSTERIOR';
+    return {year,phase,coverageStatus:'EDUCATIONAL_ONLY',source:FISCAL_RULE_PACKS.transition.sourceUrls[0],
+      revenueCurrentMonth:revenue,ibsTestCents:year===2026?Math.round(revenue*.001):null,
+      cbsTestCents:year===2026?Math.round(revenue*.009):null,postingToLedger:false,
+      note:year===2026?'IBS/CBS 2026: parâmetros informativos do ano-teste; obrigações acessórias e condições de recolhimento não são apuradas. Não gera caixa nem passivo.':'Reforma 2027+: cronologia educativa sem cálculo de IBS/CBS exigível; alíquotas, créditos e opções não são simulados.'};
+  }
+  function taxReport(state){
+    const f=state.fiscal,period=periodKey(state.calendar.date),estimate=taxEstimate(state,period),total=balance(state,'TAX_PAYABLE');
+    return {mode:f.mode,coverageStatus:f.coverageStatus,currentPeriodCoverage:estimate.coverageStatus,rulePackId:f.rulePackId,activatedAt:f.activatedAt,effectiveFrom:f.effectiveFrom,
+      currentPeriod:period,estimate,assessments:clone(f.assessments),taxPayable:total,
+      transition:transitionReport(state),
+      note:f.rulePackId?'Cálculo SIMULADO para decisão no jogo; não equivale ao PGDAS-D/DAS real.':'Sem apuração ativa: nenhum tributo contabilizado.'};
+  }
+  function closeTaxMonth(state,period){
+    const f=state.fiscal;
+    if(f.mode!=='SIMULACAO_SIMPLES_COMERCIO'||period<f.effectiveFrom)return;
+    assert(!f.assessments.some(a=>a.period===period),'Período já apurado');
+    const estimate=taxEstimate(state,period);
+    if(estimate.coverageStatus!=='SIMULATED_PARTIAL'){
+      f.assessments.push({period,status:'UNSUPPORTED',reason:estimate.reason,amount:0,paid:0,rulePackId:null});
+      event(state,'FISCAL.NAO_COBERTO',`${period}: regra tributária indisponível — nenhuma cobrança criada.`,{period,reason:estimate.reason});
+      return;
+    }
+    const amount=estimate.amount;
+    if(amount>0)journal(state,`Tributo simulado Simples Anexo I · ${period}`,[
+      {account:'TAX_EXPENSE',debit:amount,credit:0},{account:'TAX_PAYABLE',debit:0,credit:amount}],null,'TAX_ASSESSMENT');
+    f.assessments.push({period,status:amount?'OPEN':'ZERO_SIMULATED',amount,paid:0,rulePackId:estimate.packId,
+      revenue:estimate.revenue,rbt12:estimate.rbt12,rateBasisPoints:estimate.rateBasisPoints,bracket:estimate.bracket});
+    event(state,'FISCAL.APURADO',`Competência ${period}: tributo educativo contabilizado ${money(amount)}.`,{period,amount,packId:estimate.packId});
+  }
+
   function overview(draft) {
     if(!draft)return null;
     const revenue=balance(draft,'REVENUE'),cogs=balance(draft,'COGS'),expenses=balance(draft,'EXPENSE');
-    return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),inTransit:balance(draft,'IN_TRANSIT'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),revenue,cogs,expenses,profit:revenue-cogs-expenses,stock:businesses(draft).reduce((n,b)=>n+b.stockUnits,0),unitPrice:activeBusiness(draft)?.unitPrice??null,units:businesses(draft).length,tick:draft.calendar.tick,city:cityById(activeBusiness(draft)?.cityId||draft.player.cityId)?.name??'—'};
+    const taxExpense=balance(draft,'TAX_EXPENSE'),taxPayable=balance(draft,'TAX_PAYABLE');
+    return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),inTransit:balance(draft,'IN_TRANSIT'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),taxPayable,taxExpense,revenue,cogs,expenses,profit:revenue-cogs-expenses-taxExpense,stock:businesses(draft).reduce((n,b)=>n+b.stockUnits,0),unitPrice:activeBusiness(draft)?.unitPrice??null,units:businesses(draft).length,tick:draft.calendar.tick,city:cityById(activeBusiness(draft)?.cityId||draft.player.cityId)?.name??'—'};
   }
   function emptyLegacy(seed) {return {
-    schemaVersion:8,worldId:`legacy-${seed}`,revision:0,
+    schemaVersion:9,worldId:`legacy-${seed}`,revision:0,
     meta:{title:'Cidade dos Negócios',version:VERSION,origin:'MIGRATED_EMPTY_CP000',mode:'DEMONSTRACAO_ECONOMICA'},
     calendar:{date:START_DATE,tick:0},rng:{seed},
     player:{name:'',companyName:'',cityId:null},world:{cities:CITIES.map(x=>x.id),business:null,branches:[],branchSeq:0,activeBusinessId:null,regional:{datasetId:POPULATION_SOURCE.id,modelId:'REGIONAL-V2-PIB',effectiveFrom:START_DATE,gdpDatasetId:GDP_SOURCE.id,gdpEffectiveFrom:START_DATE},competitor:{priceIndex:100}},
-    economy:{journalSeq:0,ledger:[]},fiscal:{mode:'DEMONSTRACAO_ECONOMICA',coverageStatus:'NOT_COVERED',rulePackId:null},
+    economy:{journalSeq:0,ledger:[]},fiscal:initialFiscal(),
     audit:{eventSeq:0,events:[],commands:{}}
   };}
   function init(payload,commandId) {
@@ -729,6 +857,31 @@ const CidadeCore = (() => {
   }
   function handler(draft,type,payload) {
     const b=activeBusiness(draft);
+    if(type==='FISCAL.ATIVAR_CENARIO'){
+      assert(draft.fiscal.mode==='DEMONSTRACAO_ECONOMICA','Cenário fiscal já ativado');
+      assert(payload.acceptSimplifications===true,'Confirme que o cenário é didático e não representa apuração fiscal real');
+      const today=periodKey(draft.calendar.date),effectiveFrom=taxMonthNext(today);
+      const eligibility=taxEligibility(draft,today);
+      assert(eligibility.supported,'Cenário de comércio não elegível: '+eligibility.reason);
+      draft.fiscal={mode:'SIMULACAO_SIMPLES_COMERCIO',coverageStatus:'SIMULATED_PARTIAL',rulePackId:FISCAL_RULE_PACKS.simples2026.id,
+        activatedAt:draft.calendar.date,effectiveFrom,assessments:[]};
+      event(draft,'FISCAL.CENARIO_ATIVADO',`Simples comércio didático: início em ${effectiveFrom}; nenhum mês anterior será apurado.`,{effectiveFrom});
+      return;
+    }
+    if(type==='FISCAL.PAGAR_SIMULADO'){
+      const period=String(payload.period||'');
+      assert(draft.fiscal.mode==='SIMULACAO_SIMPLES_COMERCIO','Cenário fiscal ainda não ativado');
+      const assessment=draft.fiscal.assessments.find(x=>x.period===period&&x.status==='OPEN');
+      assert(assessment&&assessment.amount>assessment.paid,'Não há tributo simulado em aberto nesta competência');
+      const payment=assessment.amount-assessment.paid;
+      assert(balance(draft,'CASH')>=payment,'Caixa centralizado insuficiente para pagar tributo simulado');
+      assert(balance(draft,'TAX_PAYABLE')>=payment,'Saldo de tributos simulados divergente');
+      journal(draft,`Pagamento simulado · ${period}`,[{account:'TAX_PAYABLE',debit:payment,credit:0},
+        {account:'CASH',debit:0,credit:payment}],null,'TAX_PAYMENT');
+      assessment.paid+=payment;assessment.status='PAID';
+      event(draft,'FISCAL.PAGO',`Tributo simulado ${period} quitado: ${money(payment)}.`,{period,payment});
+      return;
+    }
     if(type==='EMPRESA.ATIVAR') {
       assert(businessById(draft,payload.businessId),'Unidade não encontrada');
       draft.world.activeBusinessId=payload.businessId;return;
@@ -850,6 +1003,7 @@ const CidadeCore = (() => {
       handler(draft,'IA.AJUSTAR_PRECO',{priceIndex:clamp(draft.world.competitor.priceIndex+change,75,125)});
     }
     const finished=draft.calendar.date;
+    if(dateNext(finished).slice(0,7)!==finished.slice(0,7))closeTaxMonth(draft,finished.slice(0,7));
     event(draft,'DIA.ENCERRADO',`Dia ${finished} concluído.`,{finished});
     draft.calendar.tick++;
     draft.calendar.date=dateNext(draft.calendar.date);
@@ -878,7 +1032,7 @@ const CidadeCore = (() => {
     }catch(error){return {ok:false,status:'REJECTED',state:current?clone(current):null,error:error.message};}
   }
   function validate(state) {
-    assert(plain(state)&&[2,3,4,5,6,7,8].includes(state.schemaVersion),'Save com schema incompatível');
+    assert(plain(state)&&[2,3,4,5,6,7,8,9].includes(state.schemaVersion),'Save com schema incompatível');
     assert(Number.isSafeInteger(state.revision)&&state.revision>=0,'Revisão inválida');
     assert(plain(state.player)&&plain(state.calendar)&&int(state.calendar.tick),'Jogador/calendário inválidos');
     assert(/^\d{4}-\d{2}-\d{2}$/.test(state.calendar.date)&&!Number.isNaN(Date.parse(state.calendar.date+'T12:00:00Z')),'Data inválida');
@@ -901,7 +1055,24 @@ const CidadeCore = (() => {
     assert(plain(state.audit)&&Array.isArray(state.audit.events)&&plain(state.audit.commands),'Auditoria inválida');
     assert(state.audit.events.length<=250000&&new Set(state.audit.events.map(x=>x.id)).size===state.audit.events.length,'Eventos duplicados ou excesso');
     assert(Object.keys(state.audit.commands).length<=100000,'Registro de comandos inválido');
-    assert(plain(state.fiscal)&&state.fiscal.coverageStatus==='NOT_COVERED'&&state.fiscal.rulePackId===null,'Regra fiscal da V1 inválida');
+    assert(plain(state.fiscal),'Estado fiscal inválido');
+    if(state.schemaVersion<9)assert(state.fiscal.coverageStatus==='NOT_COVERED'&&state.fiscal.rulePackId===null,'Regra fiscal legada inválida');
+    else {
+      const f=state.fiscal;
+      assert(['NOT_COVERED','SIMULATED_PARTIAL'].includes(f.coverageStatus)&&
+        ['DEMONSTRACAO_ECONOMICA','SIMULACAO_SIMPLES_COMERCIO'].includes(f.mode)&&Array.isArray(f.assessments)&&f.assessments.length<=10000,'Cobertura fiscal inválida');
+      assert(f.mode==='DEMONSTRACAO_ECONOMICA'?f.coverageStatus==='NOT_COVERED'&&f.rulePackId===null&&f.effectiveFrom===null&&f.assessments.length===0:
+        f.coverageStatus==='SIMULATED_PARTIAL'&&f.rulePackId===FISCAL_RULE_PACKS.simples2026.id&&isoDate(f.effectiveFrom+'-01')&&
+          isoDate(f.activatedAt)&&f.effectiveFrom>f.activatedAt.slice(0,7), 'Pacote fiscal, data ou cobertura incompatível');
+      const seen=new Set();let outstanding=0,expense=0;
+      for(const a of f.assessments){
+        assert(/^\d{4}-(0[1-9]|1[0-2])$/.test(a.period)&&!seen.has(a.period)&&a.period>=f.effectiveFrom&&a.period<periodKey(state.calendar.date),'Competência fiscal duplicada ou não encerrada');seen.add(a.period);
+        assert(['OPEN','PAID','ZERO_SIMULATED','UNSUPPORTED'].includes(a.status)&&int(a.amount)&&int(a.paid)&&a.paid<=a.amount,'Apuração fiscal inválida');
+        assert(a.status==='PAID'?a.paid===a.amount:a.status==='OPEN'?a.amount>a.paid:a.amount===0&&a.paid===0,'Situação de apuração contraditória');
+        outstanding+=a.amount-a.paid;expense+=a.amount;
+      }
+      assert(outstanding===balance(state,'TAX_PAYABLE')&&expense===balance(state,'TAX_EXPENSE'),'Obrigações simuladas divergem do ledger');
+    }
     const journalIds=new Set();
     for(const j of state.economy.ledger){
       assert(typeof j.id==='string'&&!journalIds.has(j.id)&&Array.isArray(j.entries)&&j.entries.length>1,'Lançamento duplicado/inválido');journalIds.add(j.id);
@@ -1039,14 +1210,14 @@ const CidadeCore = (() => {
     const inScope=j=>businessId==='all'||journalBusinessId(state,j)===businessId;
     const entries=state.economy.ledger.filter(x=>x.date>=from&&x.date<=effectiveEnd&&inScope(x));
     const until=state.economy.ledger.filter(x=>x.date<=effectiveEnd&&inScope(x));
-    const account=(journals,name)=>journals.reduce((sum,j)=>sum+j.entries.reduce((n,e)=>e.account===name?n+(['CAPITAL','REVENUE','PAYABLE'].includes(name)?e.credit-e.debit:e.debit-e.credit):n,0),0);
-    const revenue=account(entries,'REVENUE'),cogs=account(entries,'COGS'),expenses=account(entries,'EXPENSE');
+    const account=(journals,name)=>journals.reduce((sum,j)=>sum+j.entries.reduce((n,e)=>e.account===name?n+(['CAPITAL','REVENUE','PAYABLE','TAX_PAYABLE'].includes(name)?e.credit-e.debit:e.debit-e.credit):n,0),0);
+    const revenue=account(entries,'REVENUE'),cogs=account(entries,'COGS'),expenses=account(entries,'EXPENSE'),taxExpense=account(entries,'TAX_EXPENSE');
     return {
       period,referenceDate,from,to,effectiveEnd,label,entries,businessId,
-      revenue,cogs,expenses,grossProfit:revenue-cogs,profit:revenue-cogs-expenses,
+      revenue,cogs,expenses,taxExpense,grossProfit:revenue-cogs,profit:revenue-cogs-expenses-taxExpense,
       grossMarginPercent:revenue?Math.round((revenue-cogs)*10000/revenue)/100:null,
       closingCash:businessId==='all'?account(until,'CASH'):null,closingInventory:account(until,'INVENTORY'),
-      closingPayable:account(until,'PAYABLE'),closingInTransit:account(until,'IN_TRANSIT'),capital:account(entries,'CAPITAL')
+      closingPayable:account(until,'PAYABLE'),closingTaxPayable:account(until,'TAX_PAYABLE'),closingInTransit:account(until,'IN_TRANSIT'),capital:account(entries,'CAPITAL')
     };
   }
   // Demonstrações da V1.8: leituras puras do mesmo ledger que alimenta a V1.7.
@@ -1064,11 +1235,12 @@ const CidadeCore = (() => {
     const opening=expenses.filter(j=>transactionKind(j)==='OPENING').reduce((n,j)=>n+expenseOf(j),0);
     const other=base.expenses-fixed-opening;
     const corporateResult=base.businessId==='all'?state.economy.ledger.filter(j=>j.date>=base.from&&j.date<=base.effectiveEnd&&
-      journalBusinessId(state,j)===null).reduce((n,j)=>n+signedAccount([j],'REVENUE')-signedAccount([j],'COGS')-signedAccount([j],'EXPENSE'),0):0;
+      journalBusinessId(state,j)===null).reduce((n,j)=>n+signedAccount([j],'REVENUE')-signedAccount([j],'COGS')-signedAccount([j],'EXPENSE')-signedAccount([j],'TAX_EXPENSE'),0):0;
     return {period:base.period,from:base.from,to:base.to,effectiveEnd:base.effectiveEnd,label:base.label,
       businessId:base.businessId,revenue:base.revenue,cogs:base.cogs,grossProfit:base.grossProfit,
       fixedExpenses:fixed,openingExpenses:opening,unclassifiedExpenses:other,
-      expenses:base.expenses,operatingResult:base.profit,corporateResult,
+      expenses:base.expenses,operatingResult:base.revenue-base.cogs-base.expenses,taxExpense:base.taxExpense,
+      resultAfterSimulatedTax:base.profit,corporateResult,
       marginPercent:base.grossMarginPercent,fiscalCoverage:state.fiscal.coverageStatus};
   }
   function balanceSheet(state,asOf=state.calendar.date){
@@ -1078,7 +1250,7 @@ const CidadeCore = (() => {
     const amounts=Object.fromEntries(Object.keys(ACCOUNT_CATALOG).map(code=>[code,signedAccount(journals,code)]));
     const unknown=Object.keys(ACCOUNT_CATALOG).length===0?[]:[...new Set(journals.flatMap(j=>j.entries.map(e=>e.account)))].filter(a=>!ACCOUNT_CATALOG[a]);
     const assets=amounts.CASH+amounts.INVENTORY+amounts.IN_TRANSIT+amounts.RECEIVABLE;
-    const liabilities=amounts.PAYABLE,retainedEarnings=amounts.REVENUE-amounts.COGS-amounts.EXPENSE;
+    const liabilities=amounts.PAYABLE+amounts.TAX_PAYABLE,retainedEarnings=amounts.REVENUE-amounts.COGS-amounts.EXPENSE-amounts.TAX_EXPENSE;
     const equity=amounts.CAPITAL+retainedEarnings,difference=assets-liabilities-equity;
     return {asOf,accounts:amounts,assets,liabilities,paidInCapital:amounts.CAPITAL,
       retainedEarnings,equity,difference,balanced:difference===0&&unknown.length===0,
@@ -1087,7 +1259,7 @@ const CidadeCore = (() => {
   }
   function cashFlowStatement(state,period='all',referenceDate=state.calendar.date,range=null,businessId='all'){
     const base=financialReport(state,period,referenceDate,range,businessId);
-    const rows={sales:0,suppliers:0,operating:0,opening:0,capital:0,unclassifiedIn:0,unclassifiedOut:0};
+    const rows={sales:0,suppliers:0,operating:0,opening:0,taxPayments:0,capital:0,unclassifiedIn:0,unclassifiedOut:0};
     let inflows=0,outflows=0;
     for(const j of base.entries){
       const debit=j.entries.reduce((n,e)=>n+(e.account==='CASH'?e.debit:0),0);
@@ -1101,6 +1273,7 @@ const CidadeCore = (() => {
       else if(kind==='PURCHASE'&&net<0)rows.suppliers+=-net;
       else if(kind==='DAILY_EXPENSE'&&net<0)rows.operating+=-net;
       else if(kind==='OPENING'&&net<0)rows.opening+=-net;
+      else if(kind==='TAX_PAYMENT'&&net<0)rows.taxPayments+=-net;
       else if(net>0)rows.unclassifiedIn+=net;
       else rows.unclassifiedOut+=-net;
     }
@@ -1150,6 +1323,7 @@ const CidadeCore = (() => {
     const balance=balanceSheet(state,dre.effectiveEnd);
     return {month,from:dre.from,to:dre.effectiveEnd,businessId,operatingResult:dre.operatingResult,
       netCash:cash.netCash,globalBalance:balance.balanced,
+      taxExpense:dre.taxExpense,resultAfterSimulatedTax:dre.resultAfterSimulatedTax,
       status:'GERENCIAL_CONSULTA',fiscalCoverage:state.fiscal.coverageStatus,
       note:'Fechamento gerencial somente leitura. Não gera lançamentos, tributos ou bloqueio de competência.'};
   }
@@ -1229,7 +1403,7 @@ const CidadeCore = (() => {
     });
     const total=overview(state);
     return {units:result,count:units.length,group:{cash:total.cash,revenue:total.revenue,cogs:total.cogs,expenses:total.expenses,
-      profit:total.profit,stock:total.stock,inventoryValue:total.inventoryValue,inTransit:total.inTransit,payable:total.payable}};
+      taxExpense:total.taxExpense,taxPayable:total.taxPayable,profit:total.profit,stock:total.stock,inventoryValue:total.inventoryValue,inTransit:total.inTransit,payable:total.payable}};
   }
   function exportSave(state) {
     validate(state);const payload=clone(state),raw=JSON.stringify(payload);
@@ -1248,11 +1422,11 @@ const CidadeCore = (() => {
     assert(plain(data)&&data.saveFormatVersion===1&&data.app==='Cidade dos Negócios'&&data.checksumAlgorithm==='FNV1A32'&&typeof data.checksum==='string'&&plain(data.payload),'Envelope de save incompatível');
     assert(hash(JSON.stringify(data.payload))===data.checksum,'Checksum diverge: arquivo alterado ou corrompido');
     validate(data.payload);
-    const migrated=data.payload.schemaVersion!==8,state=upgradedState(data.payload);validate(state);
-    return {state,migrated,message:migrated?'Carreira migrada para V1.7: histórico preservado e ajuste regional do PIB aplicado somente daqui em diante.':'Carreira restaurada com integridade validada.'};
+    const migrated=data.payload.schemaVersion!==9,state=upgradedState(data.payload);validate(state);
+    return {state,migrated,message:migrated?'Carreira migrada para V1.9: histórico preservado; cenário tributário desativado até confirmação explícita.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();
 
@@ -1468,38 +1642,42 @@ const CidadeCore = (() => {
       ['(-) Custo das mercadorias vendidas',report.cogs],
       ['Lucro bruto (período)',report.grossProfit],
       ['(-) Despesas operacionais',report.expenses],
-      ['Resultado antes dos tributos',report.profit],
+      ['Resultado antes dos tributos',report.revenue-report.cogs-report.expenses],
+      ['(-) Tributos simulados contabilizados',report.taxExpense],
+      ['Resultado após tributos simulados',report.profit],
       ['Caixa centralizado do grupo',financeScope==='all'?report.closingCash:null],
       ['Estoque contabilizado no encerramento',report.closingInventory],
-      ['Obrigações acumuladas a pagar',report.closingPayable],
+      ['Obrigações operacionais acumuladas',report.closingPayable],
+      ['Tributos simulados a pagar',report.closingTaxPayable],
       ['Mercadorias pagas em trânsito (ativo)',report.closingInTransit]
     ];
-    let note='Todos os resultados são realizados e derivados do ledger. Impostos: NOT_COVERED (não calculados).';
+    let note='Resultados realizados do ledger. Tributos só entram quando há cenário didático opt-in efetivamente contabilizado; não representam apuração legal.';
     if(statementView==='dre'){
       const x=Core.incomeStatement(state,q.period,financeQueryDate(q).date,financeQueryDate(q).range,financeScope);
       rows.splice(0,rows.length,...[
         ['Receita de vendas',x.revenue],['(-) CMV',x.cogs],['Lucro bruto',x.grossProfit],
         ['(-) Despesas fixas operacionais',x.fixedExpenses],['(-) Abertura de unidades',x.openingExpenses],
-        ['(-) Outras despesas não classificadas',x.unclassifiedExpenses],['Resultado antes dos tributos',x.operatingResult]
+        ['(-) Outras despesas não classificadas',x.unclassifiedExpenses],['Resultado antes dos tributos',x.operatingResult],
+        ['(-) Tributos simulados lançados no período',x.taxExpense],['Resultado após tributos simulados',x.resultAfterSimulatedTax]
       ]);
-      note='DRE do período selecionado. Aberturas são despesas reconhecidas no histórico original; tributos NÃO calculados.';
+      note='DRE do período. Tributos são apenas cenários didáticos reconhecidos após ativação e fechamento da competência; não constituem valores fiscais reais.';
     }else if(statementView==='balance'){
       const x=Core.balanceSheet(state,report.effectiveEnd);
       rows.splice(0,rows.length,...[
         ['Caixa compartilhado',x.accounts.CASH],['Estoques físicos',x.accounts.INVENTORY],
         ['Mercadorias em trânsito',x.accounts.IN_TRANSIT],['Recebíveis',x.accounts.RECEIVABLE],
-        ['Total do ativo',x.assets],['Contas a pagar',x.liabilities],
-        ['Capital aportado',x.paidInCapital],['Resultados acumulados antes de tributos',x.retainedEarnings],
+        ['Total do ativo',x.assets],['Contas a pagar (inclui tributos simulados)',x.liabilities],['Tributos simulados a pagar',x.accounts.TAX_PAYABLE],
+        ['Capital aportado',x.paidInCapital],['Resultados acumulados após tributos simulados',x.retainedEarnings],
         ['Patrimônio líquido gerencial',x.equity],['Diferença de conciliação',x.difference]
       ]);
-      note=`Balanço CONSOLIDADO do grupo até ${BRDate(x.asOf)}. Nunca é atribuído caixa individual a filiais. ${x.balanced?'Ativo = Passivo + PL.':'⚠ Há divergência ou conta não mapeada.'} Tributos não calculados.`;
+      note=`Balanço CONSOLIDADO do grupo até ${BRDate(x.asOf)}. Nunca é atribuído caixa individual a filiais. ${x.balanced?'Ativo = Passivo + PL.':'⚠ Há divergência ou conta não mapeada.'} Tributos presentes somente quando simulados e contabilizados.`;
     }else if(statementView==='cash'){
       const x=Core.cashFlowStatement(state,q.period,financeQueryDate(q).date,financeQueryDate(q).range,financeScope);
       rows.splice(0,rows.length,...[
         ['Caixa inicial do grupo',x.openingCash],['Entradas de vendas',x.categories.sales],
         ['Aportes ao grupo',x.categories.capital],['Outras entradas sem classificação',x.categories.unclassifiedIn],
         ['Saídas para fornecedores',x.categories.suppliers],['Saídas operacionais',x.categories.operating],
-        ['Aberturas de unidades',x.categories.opening],['Outras saídas sem classificação',x.categories.unclassifiedOut],
+        ['Aberturas de unidades',x.categories.opening],['Pagamento de tributo simulado',x.categories.taxPayments],['Outras saídas sem classificação',x.categories.unclassifiedOut],
         ['Variação líquida de caixa',x.netCash],['Caixa final do grupo',x.closingCash]
       ]);
       note=x.warning+' Entradas, saídas e saldos representam caixa efetivo, e não custos por competência.';
@@ -1519,6 +1697,35 @@ const CidadeCore = (() => {
     $('journal-events').innerHTML=report.entries.length?report.entries.slice(-8).reverse().map(j=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(j.memo)}</p><small>${escape(BRDate(j.date))} · ${escape(j.id)}</small></div></div>`).join(''):'<p class="muted">Nenhum lançamento neste período.</p>';
     renderStrategy();
   }
+  function renderFiscal(){
+    if(!state)return;
+    const f=Core.taxReport(state),v=f.estimate,e=f.transition;
+    setText('fiscal-status',f.mode==='SIMULACAO_SIMPLES_COMERCIO'?`${v.coverageStatus} · cenário ${v.coverageStatus==='UNSUPPORTED'?'suspenso nesta competência':'ativado'}`:'NOT_COVERED · demonstração econômica');
+    $('fiscal-optin').hidden=f.mode!=='DEMONSTRACAO_ECONOMICA';
+    $('fiscal-activate').disabled=!$('fiscal-acknowledge').checked;
+    const rows=[
+      ['Modo atual',f.mode==='DEMONSTRACAO_ECONOMICA'?'Sem cobrança ativa':'Cenário de comércio simulado'],
+      ['Início das competências',f.effectiveFrom||'Somente após confirmação'],
+      ['Competência corrente',f.currentPeriod],
+      ['Cobertura da competência',v.coverageStatus],
+      ['Receita registrada no mês',Core.money(v.revenue)],
+      ['RBT12 anualizada (didática)',v.rbt12===null?'NÃO COBERTA':Core.money(v.rbt12)],
+      ['Faixa do Anexo I',v.bracket===null?'—':`${v.bracket}ª faixa`],
+      ['Alíquota efetiva aproximada',v.rateBasisPoints===null?'—':`${(v.rateBasisPoints/100).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}%`],
+      ['Cenário mensal estimado',v.amount===null?'NÃO CALCULADO':Core.money(v.amount)],
+      ['Saldo tributário simulado a pagar',Core.money(f.taxPayable)]
+    ];
+    $('fiscal-summary').innerHTML=rows.map(([k,val])=>`<dt>${escape(k)}</dt><dd>${escape(val)}</dd>`).join('');
+    setText('fiscal-note',`${v.reason} ${f.note} Valor corrente é apenas estimativa até o fechamento; competência não suportada não é zero.`);
+    const records=f.assessments.slice(-15).reverse();
+    $('fiscal-assessments').innerHTML=records.length?records.map(a=>`<div class="event-item"><div><strong>${escape(a.period)}</strong> · ${escape(a.status)}<p>${a.status==='UNSUPPORTED'?escape(a.reason):`Valor calculado ${escape(Core.money(a.amount))} · Pago ${escape(Core.money(a.paid))}`}</p></div>${a.status==='OPEN'?`<button type="button" class="btn btn-outline" data-tax-pay="${escape(a.period)}">Pagar ${escape(Core.money(a.amount-a.paid))}</button>`:''}</div>`).join(''):'<p class="muted">Nenhuma competência encerrada no modo de simulação. Nada foi lançado retroativamente.</p>';
+    $('fiscal-transition').innerHTML=[['Ano / etapa',`${e.year} · ${e.phase}`],
+      ['Receita corrente (referência educativa)',Core.money(e.revenueCurrentMonth)],
+      ['CBS de teste 2026 — 0,9%',e.cbsTestCents===null?'Não calculada':Core.money(e.cbsTestCents)],
+      ['IBS de teste 2026 — 0,1%',e.ibsTestCents===null?'Não calculado':Core.money(e.ibsTestCents)],
+      ['Reconhecimento contábil de teste','NENHUM']].map(([k,val])=>`<dt>${escape(k)}</dt><dd>${escape(val)}</dd>`).join('');
+    setText('fiscal-transition-note',e.note);
+  }
   function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
   function commit(type,payload={}){
     if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;financeScope='all';statementView='summary';}
@@ -1529,7 +1736,7 @@ const CidadeCore = (() => {
     return true;
   }
   function goto(name){tab=name;document.querySelectorAll('[data-view]').forEach(el=>{const chosen=el.getAttribute('data-view')===name;el.hidden=!chosen;el.classList.toggle('active',chosen);});document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.tab===name));
-    const labels={cidade:['CENTRAL DE OPERAÇÕES','A sua cidade, as suas decisões.','Explore lotes comerciais e acompanhe os acontecimentos.'],empresa:['GESTÃO EMPRESARIAL','Cada escolha constrói um negócio.','Abra sua empresa e tome decisões de administração.'],mercado:['VENDAS E SUPRIMENTOS','Preço, demanda e estoque.','Compre mercadorias e encontre sua estratégia de preço.'],financas:['INDICADORES CONTÁBEIS','Os números contam sua história.','Acompanhe lançamentos e resultados rastreáveis.'],fiscal:['REGRAS E COBERTURA','Transparência sobre os limites.','Nenhum cálculo tributário fictício será apresentado como legal.'],sistema:['PERSISTÊNCIA E QA','Seu progresso, sua segurança.','Faça backups e confira o estado da simulação.']};
+    const labels={cidade:['CENTRAL DE OPERAÇÕES','A sua cidade, as suas decisões.','Explore lotes comerciais e acompanhe os acontecimentos.'],empresa:['GESTÃO EMPRESARIAL','Cada escolha constrói um negócio.','Abra sua empresa e tome decisões de administração.'],mercado:['VENDAS E SUPRIMENTOS','Preço, demanda e estoque.','Compre mercadorias e encontre sua estratégia de preço.'],financas:['INDICADORES CONTÁBEIS','Os números contam sua história.','Acompanhe lançamentos e resultados rastreáveis.'],fiscal:['CENÁRIOS TRIBUTÁRIOS','A estratégia também considera tributos.','Simulação opcional com limitações e regras por competência.'],sistema:['PERSISTÊNCIA E QA','Seu progresso, sua segurança.','Faça backups e confira o estado da simulação.']};
     const info=labels[name]||labels.cidade;setText('page-kicker',info[0]);setText('page-title-text',info[1]);setText('page-subtitle',info[2]);
     if(state)render();
   }
@@ -1641,8 +1848,9 @@ const CidadeCore = (() => {
     }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('your-current-price','—');setText('competitor-price','—');setText('buy-total','—');}
     renderCommerce();renderPriceHistory();
     if(tab==='financas'||financeQuery)renderFinances();
+    renderFiscal();
     const report=Core.diagnostics(state);
-    $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal','NOT_COVERED']].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
+    $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal',state.fiscal.coverageStatus]].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
     setText('turn-message',!b?'Abra sua primeira empresa.':b.stockUnits===0?'Seu estoque está vazio. Reabasteça.':`Sua empresa está operando há ${state.calendar.tick} dia(s).`);
     setText('turn-subtext',!b?'Clique em um lote para iniciar.':`${b.products.length} produtos · Estoque total ${b.stockUnits} un. · próximo dia ${BRDate(state.calendar.date)}.`);
     setText('autosave-label',autosaveStatus);
@@ -1681,6 +1889,13 @@ const CidadeCore = (() => {
     for(const button of document.querySelectorAll('[data-go]'))button.addEventListener('click',()=>goto(button.dataset.go));
     $('unit-switch').addEventListener('change',e=>{if(e.target.value)commit('EMPRESA.ATIVAR',{businessId:e.target.value});});
     $('finance-scope').addEventListener('change',e=>{financeScope=e.target.value;renderFinances();});
+    $('fiscal-acknowledge').addEventListener('change',()=>{$('fiscal-activate').disabled=!$('fiscal-acknowledge').checked;});
+    $('fiscal-activate').addEventListener('click',()=>{if(!$('fiscal-acknowledge').checked)return;
+      if(confirm('Ativar hipótese tributária DIDÁTICA de Simples Anexo I, a partir do mês seguinte? Sem efeitos retroativos nem valor fiscal real.'))commit('FISCAL.ATIVAR_CENARIO',{acceptSimplifications:true});});
+    $('fiscal-assessments').addEventListener('click',e=>{const btn=e.target.closest('[data-tax-pay]');if(!btn)return;
+      const period=btn.dataset.taxPay;
+      if(confirm(`Confirmar pagamento apenas SIMULADO da competência ${period}? Ele diminuirá o caixa do jogo.`))commit('FISCAL.PAGAR_SIMULADO',{period});});
+
     $('unit-rows').addEventListener('click',e=>{const btn=e.target.closest('[data-unit-activate]');if(btn)commit('EMPRESA.ATIVAR',{businessId:btn.dataset.unitActivate});});
     $('explore-city').addEventListener('change',e=>{viewCityId=e.target.value;render();updateOpenPreview();});
     $('map-canvas').addEventListener('click',e=>{const target=e.target.closest('[data-lot]');if(target){selectedLot=Number(target.dataset.lot);render();updateOpenPreview();}});

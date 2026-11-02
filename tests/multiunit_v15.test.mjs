@@ -23,7 +23,7 @@ function openSecond(s,{sector='padaria',cityId=S,lot=1}={}){
   return cmd(C,s,'EMPRESA.ABRIR',{sector,cityId,lot});
 }
 test('V1.5: nova carreira com matriz, identidade estável e caixa central sem aporte nas filiais',()=>{
-  let s=fresh();assert.equal(C.VERSION,'1.8.0-rc.1');assert.equal(s.schemaVersion,8);
+  let s=fresh();assert.equal(C.VERSION,'1.9.0-rc.1');assert.equal(s.schemaVersion,9);
   assert.equal(C.activeBusiness(s).id,'est-1');assert.equal(s.world.business.cityId,T);
   const cash=C.overview(s).cash;
   s=openSecond(s);assert.equal(C.activeBusiness(s).id,'est-2');
@@ -118,7 +118,7 @@ test('V1.5: save v1.4 em schema5 importa com estoque, ledger e vendas originais 
   old=cmd(Old,old,'TEMPO.AVANCAR_LOTE',{days:3});
   old=cmd(Old,old,'PROMO.DEFINIR',{productId:'base',percent:5,days:5});
   const saved=Old.exportSave(old),loaded=C.importSave(saved),s=loaded.state;
-  assert.equal(loaded.migrated,true);assert.equal(s.schemaVersion,8);
+  assert.equal(loaded.migrated,true);assert.equal(s.schemaVersion,9);
   assert.equal(JSON.stringify(s.economy.ledger),JSON.stringify(old.economy.ledger));
   assert.equal(JSON.stringify(s.world.business.products),JSON.stringify(old.world.business.products));
   assert.equal(JSON.stringify(s.world.business.sales),JSON.stringify(old.world.business.sales));
@@ -133,7 +133,7 @@ test('V1.5: save v1.4 em schema5 importa com estoque, ledger e vendas originais 
 test('V1.5: importação também migra save antigo sem empresa, conservando capital inicial',()=>{
   let old=cmd(Old,null,'CARREIRA.CRIAR',{name:'Yago',companyName:'Sem unidade',cityId:T,seed:95});
   const saved=Old.exportSave(old);let s=C.importSave(saved).state;
-  assert.equal(s.schemaVersion,8);assert.equal(C.businesses(s).length,0);assert.equal(C.activeBusiness(s),null);
+  assert.equal(s.schemaVersion,9);assert.equal(C.businesses(s).length,0);assert.equal(C.activeBusiness(s),null);
   assert.equal(C.overview(s).cash,3000000);C.validate(s);
   s=cmd(C,s,'EMPRESA.ABRIR',{sector:'roupas',cityId:S,lot:8});
   assert.equal(C.activeBusiness(s).cityId,S);C.validate(s);

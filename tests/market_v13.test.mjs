@@ -25,7 +25,7 @@ const demand=s=>s.audit.events.filter(e=>e.type==='DEMANDA.SIMULADA').at(-1).dat
 const json=x=>JSON.stringify(x);
 
 test('V1.3: nova carreira inicia com schema 4, 3 SKUs, preços e políticas default',()=>{
- const s=make();assert.equal(s.schemaVersion,8);assert.equal(Core.VERSION,'1.8.0-rc.1');
+ const s=make();assert.equal(s.schemaVersion,9);assert.equal(Core.VERSION,'1.9.0-rc.1');
  assert.equal(s.world.business.products.length,3);
  for(const p of s.world.business.products){assert.equal(p.stockValueCents,0);assert.ok(p.targetStock>=p.reorderPoint);}
  assert.equal(Core.overview(s).inTransit,0);Core.validate(s);
@@ -164,7 +164,7 @@ test('V1.3: importação schema 3 mantém caixa, RNG, vendas manuais históricas
  const originalLedger=json(original.economy.ledger),oldRng=original.rng.seed;
  const imported=Core.importSave(oldSales.exportSave(original));
  assert.equal(imported.migrated,true);const s=imported.state;
- assert.equal(s.schemaVersion,8);assert.equal(s.rng.seed,oldRng);
+ assert.equal(s.schemaVersion,9);assert.equal(s.rng.seed,oldRng);
  assert.equal(json(s.economy.ledger),originalLedger);
  assert.equal(s.world.business.sales[0].kind,'BALCAO');
  assert.equal(s.world.business.purchaseOrders[0].status,'RECEIVED');
@@ -176,7 +176,7 @@ test('V1.3: importação schema 3 mantém caixa, RNG, vendas manuais históricas
 test('V1.3: importação schema 2 preserva estoque e histórico contábil',()=>{
  let old=make(Oldest);old=command(Oldest,old,'ESTOQUE.COMPRAR',{quantity:25});old=command(Oldest,old,'TEMPO.AVANCAR_DIA');
  const v=Core.importSave(Oldest.exportSave(old));assert.equal(v.migrated,true);
- assert.equal(v.state.schemaVersion,8);
+ assert.equal(v.state.schemaVersion,9);
  assert.equal(v.state.world.business.products[0].stockUnits,old.world.business.stockUnits);
  assert.equal(json(v.state.economy.ledger),json(old.economy.ledger));
  assert.equal(Core.overview(v.state).inventoryValue,Oldest.overview(old).inventoryValue);

@@ -1,5 +1,7 @@
 # Histórico de versões — Cidade dos Negócios
 
+> **V2.0 homologada pelo jogador em 02/11/2026**, snapshot `releases/v2.0.0-homologada`, commit `ac3e840b71d3551026f62cc6a04c9173f553f9d7`. O jogo mantém a identificação técnica `2.0.0-rc.1`.
+
 ## 2.0.0-rc.1 — consolidação, cidade protagonista e UX (02/11/2026)
 
 - Quatro áreas de navegação; Fiscal como subseção de Finanças; Configurações isoladas.
@@ -9,7 +11,7 @@
 - Motor congelado salvo número de versão; schema 9 mantido, saves e histórico V1.9 íntegros.
 - Testes golden V1.9×V2.0, regressões, interface em cinco larguras e fluxo de operações em navegador.
 - V1.9 homologada por aprovação do jogador, snapshot `releases/v1.9.0-homologada` no commit `575c54c6`.
-- V2.0 candidata, exige CI e homologação Windows. Sem novos sistemas de gameplay.
+- Homologação prática da V2.0 confirmada posteriormente pelo jogador em 02/11/2026. Sem novos sistemas de gameplay.
 
 
 ## 1.9.0-rc.1 — Simulação Tributária Brasileira (02/11/2026)

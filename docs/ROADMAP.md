@@ -89,3 +89,8 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - Gates locais: `npm run check` e navegadores/fluxos de interface. Gates remotos: GitHub PR/CI e validação Windows antes de homologar.
 - Direção artística consultada na especificação `INTERFACE.md`: cidade em primeiro plano, informações contextuais, sem apresentar funcionalidades planejadas como existentes.
 - Documento técnico: `docs/V20_CONSOLIDACAO.md`.
+
+## Estado 02/11/2026 — V2.0 HOMOLOGADA
+
+- **V2.0.0-rc.1 homologada** pelo jogador, com aprovação expressa da reorganização visual. Snapshot recuperável `releases/v2.0.0-homologada` (commit `ac3e840b71d3551026f62cc6a04c9173f553f9d7`). A confirmação não altera os bytes do executável.
+- Próxima etapa **sugerida, ainda não aprovada:** V2.1 de polimento de jogabilidade, ritmo de decisões, feedback do resultado e avaliação de partidas longas; priorizar clareza, diversão e evidências de teste antes de adicionar sistemas pesados.

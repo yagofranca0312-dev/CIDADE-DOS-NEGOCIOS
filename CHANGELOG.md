@@ -1,5 +1,13 @@
 # Histórico de versões — Cidade dos Negócios
 
+## 2.1.0-rc.1 — identidade visual e clareza de jogo (02/11/2026)
+
+- Logotipo SVG, favicon offline e arte da referência KEYART otimizada e incorporada.
+- HUD de quatro indicadores reais, com expansão acessível das métricas no celular.
+- Inspetor contextual mais claro e painéis de Mercado, Finanças e Fiscal uniformizados.
+- Simulação, contabilidade, fiscal e schema 9 preservados sem novas mecânicas.
+- 162 testes locais PASS e QA em seis resoluções. Candidata pendente de homologação prática.
+
 > **V2.0 homologada pelo jogador em 02/11/2026**, snapshot `releases/v2.0.0-homologada`, commit `ac3e840b71d3551026f62cc6a04c9173f553f9d7`. O jogo mantém a identificação técnica `2.0.0-rc.1`.
 
 ## 2.0.0-rc.1 — consolidação, cidade protagonista e UX (02/11/2026)

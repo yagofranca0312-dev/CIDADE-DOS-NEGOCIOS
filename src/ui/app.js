@@ -233,6 +233,14 @@
     timer=setInterval(()=>{if(!commit('TEMPO.AVANCAR_DIA'))resetTimer();},Math.round(1900/speed));setText('pause-btn','Ⅱ Pausar');
   }
   function bind(){
+    // Somente estado de apresentação; não grava em save nem executa comandos econômicos.
+    const hudToggle=$('stats-more-toggle');
+    hudToggle.addEventListener('click',()=>{
+      const expanded=hudToggle.getAttribute('aria-expanded')!=='true';
+      $('stats-bar').classList.toggle('is-expanded',expanded);
+      hudToggle.setAttribute('aria-expanded',String(expanded));
+      hudToggle.firstChild.textContent=expanded?'Mostrar apenas os principais ':'Mostrar resultado e estoque ';
+    });
     $('career-form').addEventListener('submit',e=>{e.preventDefault();const name=$('player-name').value,companyName=$('company-name').value,cityId=$('start-city').value;commit('CARREIRA.CRIAR',{name,companyName,cityId,seed:(Date.now()>>>0)});});
     for(const button of document.querySelectorAll('[data-tab]'))button.addEventListener('click',()=>goto(button.dataset.tab));
     for(const button of document.querySelectorAll('[data-go]'))button.addEventListener('click',()=>goto(button.dataset.go));

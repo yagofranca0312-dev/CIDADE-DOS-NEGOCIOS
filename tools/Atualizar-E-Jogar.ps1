@@ -1,4 +1,4 @@
-# Cidade dos Negocios - atualizador local (Windows PowerShell 5.1+)
+﻿# Cidade dos Negocios - atualizador local (Windows PowerShell 5.1+)
 # Repo publico: download do snapshot de um commit especifico no GitHub.
 # Nao faz upload nem altera salvamentos pessoais, .git, node_modules ou backups.
 $ErrorActionPreference = 'Stop'
@@ -61,6 +61,20 @@ try {
         $Source = $Dirs[0].FullName
         if (-not (Test-Path -LiteralPath (Join-Path $Source 'index.html') -PathType Leaf)) {
             throw 'O download nao contem index.html. Atualizacao cancelada.'
+        }
+        # Nunca sobrescrever um executavel mais novo por um snapshot antigo do GitHub.
+        $LocalPackage = Join-Path $Root 'package.json'
+        $RemotePackage = Join-Path $Source 'package.json'
+        if ((Test-Path -LiteralPath $LocalPackage) -and (Test-Path -LiteralPath $RemotePackage)) {
+            $LocalRelease = (Get-Content -LiteralPath $LocalPackage -Raw | ConvertFrom-Json).version
+            $RemoteRelease = (Get-Content -LiteralPath $RemotePackage -Raw | ConvertFrom-Json).version
+            $LocalMatch = [regex]::Match([string]$LocalRelease, '^\d+\.\d+\.\d+')
+            $RemoteMatch = [regex]::Match([string]$RemoteRelease, '^\d+\.\d+\.\d+')
+            if ($LocalMatch.Success -and $RemoteMatch.Success) {
+                if ([version]$RemoteMatch.Value -lt [version]$LocalMatch.Value) {
+                    throw ('A versao no GitHub (' + $RemoteRelease + ') e anterior a instalada (' + $LocalRelease + '). A instalacao local foi preservada; use JOGAR_OFFLINE.bat.')
+                }
+            }
         }
         $Files = @(Get-ChildItem -LiteralPath $Source -Recurse -File | Where-Object {
             $Rel = $_.FullName.Substring($Source.Length + 1)

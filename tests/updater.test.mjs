@@ -38,3 +38,11 @@ test('publicador tem lista de arquivos e nunca faz force push', () => {
   assert.doesNotMatch(p, /git push[^\n]*--force|git push[^\n]*\s-f\b/);
   assert.match(p, /PUBLICO/);
 });
+
+import {readFileSync as readPsFile} from 'node:fs';
+test('V2.1: atualizador rejeita downgrade da release local',()=>{
+ const ps=readPsFile('tools/Atualizar-E-Jogar.ps1','utf8');
+ assert.match(ps,/RemoteRelease/);assert.match(ps,/LocalRelease/);
+ assert.match(ps,/\[version\]\$RemoteMatch\.Value -lt \[version\]\$LocalMatch\.Value/);
+ assert.match(ps,/A instalacao local foi preservada/);
+});

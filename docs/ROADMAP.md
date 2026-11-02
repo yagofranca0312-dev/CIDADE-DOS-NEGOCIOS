@@ -101,3 +101,11 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - **V2.1:** marca/abertura, HUD, painéis contextuais, coesão entre telas, acessibilidade e empacotamento; zero novas mecânicas. Fonte principal `INTERFACE.md` v0.1.0 e quatro imagens REF-01 a REF-04.
 - **Documento aprovado para planejamento, não implementação:** [PLANO_V21_VISUAL.md](PLANO_V21_VISUAL.md). A V2.2 poderá aprofundar arte e mapa; V2.3 efeitos visuais; **V3.x** inicia funcionalidades novas.
 - Gates: motor V2.0 preservado (schema 9), regressão determinística, build HTML único offline, testes de navegador e homologação explícita do jogador.
+
+## Estado 02/11/2026 — V2.1 CANDIDATA VISUAL
+
+- Linha **2.x exclusivamente visual**; futuras mecânicas somente na linha **3.x**.
+- V2.0 homologada e preservada na branch `releases/v2.0.0-homologada`, commit `ac3e840b`.
+- V2.1: marca, abertura, HUD, inspetor contextual e coesão entre telas; sem alterar motor V2.0, salvo `VERSION`.
+- Schema 9 preservado, 162 testes locais PASS, regressão e QA nas resoluções 320, 360, 390, 768, 1280 e 1920 px.
+- Homologação Windows e CI remota exigidas antes de marcar versão homologada. Ver `docs/V21_IMPLANTACAO.md`.

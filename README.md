@@ -1,4 +1,20 @@
-# 🏙️ Cidade dos Negócios — Edição 2.0
+# 🏙️ Cidade dos Negócios — Edição 2.1
+
+**Versão atual:** `2.1.0-rc.1` — candidata visual para homologação Windows. **Schema:** 9, sem alterações econômicas. **HTML único offline.**
+
+## V2.1 — Marca, abertura e HUD
+
+- Arte conceitual de referência otimizada, logotipo e favicon vetoriais incorporados no jogo offline.
+- HUD com caixa, receita, resultado e estoque; no celular, botão acessível para consultar métricas secundárias.
+- Inspetor de lote compacto, detalhes expansíveis e identidade uniforme nas telas de Mercado, Finanças e Fiscal.
+- Motor V2.0 congelado, alterando somente `VERSION`; regressão V2.0×V2.1, schema 9 preservado.
+- **QA local:** 162 testes PASS, seis resoluções e operação em navegador. Testar persistência `file://` no Windows antes de homologar.
+- **Instalação da candidata:** extrair o ZIP e abrir `JOGAR_OFFLINE.bat`. O atualizador remoto protege contra downgrade enquanto a publicação da `main` não estiver concluída.
+- [Documentação técnica da V2.1](docs/V21_IMPLANTACAO.md) e [plano visual aprovado](docs/PLANO_V21_VISUAL.md).
+
+---
+
+## Histórico da V2.0 homologada
 
 **Versão jogável:** `2.0.0-rc.1` — **consolidação da arquitetura de apresentação e reformulação visual de jogo**, homologada pelo jogador em 02/11/2026.  
 **Distribuição:** único `index.html` completo e offline. **Schema de save:** 9, igual ao da V1.9.  

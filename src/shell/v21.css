@@ -1,0 +1,162 @@
+/* Cidade dos Negócios V2.1 — Identidade, onboarding, HUD e clareza operacional.
+   Apresentação apenas; as regras econômicas e fiscais não são alteradas.
+   REF-01 logo · REF-02 HUD · REF-04 arte de ambientação. */
+:root{
+  --brand-navy-950:#091629;--brand-navy-900:#10243e;--brand-navy-800:#193451;
+  --brand-blue:#51a9df;--brand-gold:#e9ad50;--brand-gold-soft:#f4d49a;
+  --brand-ink:#f4f7fb;--brand-muted:#b8c6d8;--brand-success:#51bd83;--brand-danger:#ef7070;
+  --v21-keyart:url("__CDN_V21_KEYART__");
+}
+.v21-sprite{position:absolute;overflow:hidden;pointer-events:none}
+/* Abertura: referência original com uma única área de gestão, sem HUD fictício sobreposto. */
+.onboarding{
+  max-width:none;min-height:100svh;grid-template-columns:minmax(0,1.17fr) minmax(360px,460px);
+  gap:clamp(26px,4.2vw,94px);padding:clamp(30px,5vw,86px) clamp(28px,6vw,110px);
+  isolation:isolate;overflow:hidden;align-items:center;background:#071521;
+}
+.onboarding:before{
+  content:"";position:absolute;inset:0;z-index:-2;
+  background-image:linear-gradient(90deg,rgba(5,17,31,.97) 1%,rgba(5,17,31,.84) 25%,rgba(7,20,33,.36) 62%,rgba(5,14,25,.82) 100%),
+   linear-gradient(0deg,rgba(6,15,26,.92),transparent 36%),var(--v21-keyart);
+  background-position:center,center,center;background-size:cover;opacity:1;
+}
+.onboarding:after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 27% 58%,#316b8026,transparent 49%),linear-gradient(0deg,#08182777,transparent 65%)}
+.onboarding-art{display:none}
+.intro-copy{position:relative;z-index:1;padding:0;max-width:720px;text-shadow:0 4px 26px #020911b8}
+.v21-hero-eyebrow{display:inline-flex;align-items:center;background:#17374ac4;padding:9px 13px;border:1px solid #61839a71;border-radius:100px;color:#c5dbe8;font-size:.67rem;letter-spacing:.14em}
+.v21-hero-brand{display:flex;align-items:center;gap:clamp(13px,2.6vw,30px);margin:30px 0 20px}
+.v21-hero-mark{width:clamp(85px,11vw,144px);height:clamp(85px,11vw,144px);display:grid;place-items:center;flex:none;border-radius:27px;background:linear-gradient(145deg,#1d425cde,#081b31e6);border:1px solid #96acc055;box-shadow:0 14px 44px #030b19a8,inset 0 1px #fff3}
+.v21-hero-mark svg{display:block;width:82%;height:82%;filter:drop-shadow(0 8px 9px #020b1baa)}
+.v21-hero-brand h1{margin:0;color:#f4f7fb;line-height:.98;letter-spacing:.035em;font-size:clamp(2.2rem,5vw,5rem);font-weight:950;text-transform:uppercase;text-shadow:0 3px 20px #07121f99}
+.v21-hero-brand h1 span{color:#e9ecf3;font-weight:600;font-size:.66em;letter-spacing:.02em}
+.v21-hero-brand h1 em{font-style:normal;background:linear-gradient(125deg,#fff2c4,#e9ad50 50%,#ffd898);background-clip:text;-webkit-background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.intro-copy .hero-subtitle{font-size:clamp(1.12rem,1.75vw,1.6rem);line-height:1.3;color:#ffdda7;margin-bottom:13px;font-weight:760}
+.intro-copy .intro-desc{max-width:570px;font-size:.99rem;color:#d6e5eb;line-height:1.6;text-wrap:pretty}
+.intro-features{display:flex;flex-wrap:wrap;gap:7px;margin-top:24px}
+.intro-features span{border:1px solid #6386a47c;background:#102941d6;border-radius:100px;padding:9px 11px;font-size:.73rem;color:#dfedf5}
+.v21-art-disclaimer{font-size:.71rem;color:#bdd1dd;max-width:480px;margin-top:28px;line-height:1.45}
+.intro-copy .fine-print{color:#c0d2df;font-size:.7rem;max-width:570px}
+.start-card{position:relative;z-index:1;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);background:linear-gradient(155deg,#153149f0,#0c2238f4);border:1px solid #6590a783;border-radius:22px;box-shadow:0 24px 75px #010d1dd9,0 0 0 1px #e9ad5017;padding:clamp(24px,2.5vw,38px)}
+.start-card:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;border-radius:22px 0 0 22px;background:linear-gradient(#ffdc93,#d99a43 65%,transparent);pointer-events:none}
+.start-card h2{font-size:clamp(1.5rem,2.15vw,2.1rem);line-height:1.14;margin:12px 0 10px;color:#fff2d2}
+.start-card .muted{color:#c6d9e4;font-size:.86rem;line-height:1.5}
+.start-card label{color:#ddebf3}
+.start-card :is(input,select){border-color:#5a849c;background:#0e283d;color:#f4f7fb;border-radius:11px;min-height:46px}
+.start-card .btn-big{min-height:54px;box-shadow:0 8px 24px #0005}
+.start-card .text-action{color:#b9dff3}
+/* Marca reutilizável e HUD: uma única navegação e dados efetivamente consultados. */
+.sidebar-brand{gap:11px}
+.sidebar-brand strong{color:#f3f7fb;font-weight:850;letter-spacing:.07em}
+.sidebar-brand strong span{color:#f3cb83}
+.sidebar-brand .v21-sidebar-mark{width:45px;height:45px;min-width:45px;padding:4px;display:grid;place-items:center;background:linear-gradient(145deg,#1e455e,#122a42)}
+.v21-sidebar-mark svg{width:100%;height:100%;filter:drop-shadow(0 3px 5px #030b15)}
+.topbar{background:linear-gradient(100deg,#11283a,#10283e 45%,#132d41);border-bottom:1px solid #547085;box-shadow:0 8px 25px #0003}
+.topbar h2{font-weight:850;color:#f4d49a}
+.date-box{border-color:#6a7992}
+.date-box strong{font-variant-numeric:tabular-nums}
+.page-title{border-bottom:1px solid #294457;padding-bottom:12px;margin-bottom:16px}
+.page-title h1{font-size:clamp(1.35rem,1.85vw,1.85rem);font-weight:860}
+.page-title p{margin-bottom:0}
+.v21-legal-note{padding:0!important;background:#0d2638;color:#c1d5e0;border-bottom:1px solid #2a4b60}
+.v21-legal-note>summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:8px clamp(16px,2.4vw,34px);font-weight:750;list-style:none;font-size:.68rem;letter-spacing:.05em}
+.v21-legal-note>summary::-webkit-details-marker{display:none}
+.v21-legal-note>summary span{font-weight:450;letter-spacing:0;color:#b5cad8;text-align:right}
+.v21-legal-note>summary:after{content:"⌄";color:#f4d49a}
+.v21-legal-note[open]>summary:after{transform:rotate(180deg)}
+.v21-legal-note>p{padding:0 clamp(16px,2.4vw,34px) 10px;margin:0;line-height:1.55;max-width:1120px}
+.stats-bar.v21-hud{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:22px}
+.v21-hud>.stat{position:relative;overflow:hidden;border:1px solid #486378;background:linear-gradient(135deg,#193a50,#11293d);padding:17px 16px 15px;box-shadow:0 8px 24px #0002;min-height:113px}
+.v21-hud>.stat:before{content:"";position:absolute;inset:0 0 auto;height:3px;background:#669fb9}
+.v21-hud>.stat--cash:before{background:#e9ad50}
+.v21-hud>.stat--profit:before{background:#51bd83}
+.v21-hud>.stat--stock:before{background:#89a8c4}
+.v21-hud .stat>span{display:flex;align-items:center;gap:7px;letter-spacing:.075em;font-size:.64rem;font-weight:850;color:#c5dbe6}
+.v21-stat-icon{display:grid;place-items:center;width:23px;height:23px;flex:none;font-style:normal;background:#21475b;border:1px solid #52758a;border-radius:7px;color:#f4d49a;font-size:.89rem}
+.v21-hud .stat strong{display:block;color:#f5f7fd;font-size:clamp(1.18rem,1.62vw,1.75rem);line-height:1.22;margin:10px 0 6px;font-variant-numeric:tabular-nums}
+.v21-hud .stat--cash strong{color:#ffdf9d}
+.v21-hud .stat--profit strong{color:#a9edcb}
+.v21-hud .stat small{font-size:.69rem;color:#a9c4d1;line-height:1.4;display:block}
+.v21-hud .v21-stats-toggle{display:none}
+/* Cidade, seleção e ação contextual: hierarquia de cenário de jogo. */
+.city-stage{gap:15px}
+.city-stage .map-panel{box-shadow:0 18px 44px #020e1fc2;border-color:#60849a}
+.map-panel .panel-heading{border-bottom:1px solid #446378}
+.map-canvas{background-color:#103547;background-image:radial-gradient(circle at 55% 22%,#32728b 0,transparent 58%),linear-gradient(150deg,#153b52,#0e273c 82%)}
+.map-canvas:after{height:120px;background:linear-gradient(transparent,#0e293ea6)}
+.map-legend{border-top:1px solid #4a6c7c}
+.v21-inspector{border:1px solid #6b8492!important;border-top:3px solid #e9ad50!important;background:linear-gradient(155deg,#214156,#142d43)!important}
+.v21-inspector .panel-heading{align-items:flex-start}
+.v21-inspector .overline{font-size:.62rem;color:#97c7d8;margin-bottom:4px}
+.v21-inspector .big-number{font-size:clamp(1.55rem,2.3vw,2.45rem);letter-spacing:-.04em;margin:16px 0 8px;line-height:1.13}
+.v21-inspector .lot-status{padding:10px 12px;background:#103548;border:1px solid #456d7d;border-radius:10px;color:#d4ebe6;font-size:.83rem}
+.v21-inspector .btn{min-height:50px;margin-top:10px}
+.v21-inspector-help{border-top:1px solid #426378;margin-top:18px;padding-top:10px}
+.v21-inspector-help>summary{color:#bcd7e6;cursor:pointer;list-style:none;font-size:.78rem;padding:7px 0}
+.v21-inspector-help>summary:before{content:'ⓘ ';color:#f4d49a}
+.v21-inspector-help>p{font-size:.78rem;line-height:1.5;margin:9px 0 3px}
+/* Consistência de gestão e leitura de formulários. */
+.view[data-view] .panel:not(.map-panel){scroll-margin-top:18px}
+.view[data-view] :is(.market-drawer,.world-drawer){border-color:#4a677c}
+.view[data-view] :is(.market-drawer,.world-drawer)>summary{min-height:50px}
+.view[data-view] .panel-heading h3{font-weight:830}
+.view :is(input:not([type="checkbox"]),select){accent-color:#f4d49a}
+.view :is(.catalog-table,.strategy-table,.group-table) th{background:#173a50;color:#d7eaf3;font-size:.72rem}
+.view :is(.catalog-table,.strategy-table,.group-table) td{border-bottom-color:#305066}
+.statement-switch{display:flex;flex-wrap:wrap;gap:7px}
+.statement-switch button{min-height:43px;padding:9px 12px;background:#16384f;color:#d4e7ef;border-color:#4c7187}
+.statement-switch button[aria-pressed="true"]{background:#efbc6a;color:#122638;border-color:#f5d5a0;box-shadow:0 4px 13px #0004}
+.turnbar{border-top:3px solid #e9ad50;background:linear-gradient(120deg,#224459,#153247);padding:20px}
+.turnbar h3{font-weight:830}
+.turn-actions .btn{min-height:44px}
+.nav-item:focus-visible,.v21-stats-toggle:focus-visible,.v21-inspector-help>summary:focus-visible{outline:3px solid #ffe3a4!important;outline-offset:2px}
+/* Larguras e pontos de decisão. */
+@media(max-width:1090px){
+ .stats-bar.v21-hud{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .v21-hud>.stat{min-height:98px}
+}
+@media(max-width:800px){
+ .onboarding{grid-template-columns:minmax(0,1fr);min-height:100svh;padding:35px 22px 44px;gap:24px;background-position:center}
+ .onboarding:before{background-image:linear-gradient(180deg,#07182792,#071827df 55%,#071827ed),var(--v21-keyart);background-position:center top;background-size:cover,auto 65%;background-repeat:no-repeat;background-color:#081622}
+ .intro-copy{max-width:680px}
+ .v21-hero-brand{margin:20px 0 10px}
+ .v21-hero-mark{height:86px;width:86px;border-radius:18px}
+ .v21-hero-brand h1{font-size:clamp(2.1rem,7.3vw,3.7rem)}
+ .intro-copy .intro-desc{font-size:.90rem}
+ .start-card{width:100%;max-width:610px;justify-self:center}
+ .v21-hud>.stat:nth-child(n+3){display:none}
+ .stats-bar.v21-hud{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .v21-hud .v21-stats-toggle{display:flex;grid-column:1/-1;align-items:center;justify-content:center;gap:8px;min-height:44px;background:#16384e;color:#d9eaf3;border:1px solid #4c7185;border-radius:10px;font-size:.80rem;font-weight:700;cursor:pointer}
+ .v21-hud.is-expanded>.stat:nth-child(n+3){display:block}
+ .v21-hud.is-expanded .v21-stats-toggle span{transform:rotate(180deg)}
+ .v21-hud>.stat{padding:12px 11px;min-height:95px}
+ .v21-hud .stat strong{font-size:clamp(1rem,3.7vw,1.4rem);overflow-wrap:anywhere}
+ .v21-hud .stat>span{font-size:.57rem;letter-spacing:.02em}
+ .v21-hud .stat small{font-size:.62rem}
+ .v21-legal-note>summary{font-size:.63rem}
+ .v21-legal-note>summary span{display:none}
+ .v21-legal-note>summary:after{margin-left:auto}
+ .game-shell{padding-bottom:calc(75px + env(safe-area-inset-bottom))}
+ .content{padding-bottom:calc(128px + env(safe-area-inset-bottom))}
+ .sidebar{min-height:71px}
+ .map-canvas{min-height:280px}
+ .map-canvas svg{min-height:255px}
+}
+@media(max-width:430px){
+ .onboarding{padding:25px 15px 38px;gap:15px}
+ .v21-hero-brand{gap:11px}
+ .v21-hero-mark{width:69px;height:69px;border-radius:16px}
+ .v21-hero-brand h1{font-size:clamp(1.85rem,8.0vw,2.3rem)}
+ .v21-hero-eyebrow{font-size:.57rem;letter-spacing:.065em}
+ .intro-copy .hero-subtitle{font-size:1.05rem}
+ .intro-features span{font-size:.63rem;padding:7px 8px}
+ .v21-art-disclaimer{font-size:.62rem;margin-top:15px}
+ .start-card{padding:21px 18px}
+ .start-card h2{font-size:1.55rem}
+ .v21-hud>.stat{min-width:0}
+ .v21-hud .stat strong{font-size:1.02rem}
+ .v21-hud .stat>span{font-size:.54rem}
+ .v21-legal-note>summary{padding:8px 14px}
+}
+@media(prefers-reduced-motion:reduce){
+ .onboarding *, .v21-hud *, .v21-inspector *, .stat, .nav-item{transition:none!important;animation:none!important}
+}

@@ -43,3 +43,19 @@
 ## Cautela de segurança
 
 Execute somente uma cópia separada do protótipo/jogo candidato. **Exporte o backup JSON da instalação atual antes de experimentar**. Não copie o `index.html` candidato por cima da instalação homologada sem aceite final. Atualizador automático pode sobrescrever uma candidata com o que estiver publicado em `main`.
+
+## Correção de retomada do protótipo aprovado (02/11/2026)
+
+**Objetivo estrito:** restaurar a imagem aprovada, eliminar o contorno de seleção que atravessava a fachada do lote 03 e conectar os estados de propriedade aos recursos gráficos, sem redesenhar o mapa ou alterar o motor.
+
+- A imagem `urban-base.webp.b64` agora é extraída **exatamente** do `<img id="map-art">` do protótipo previamente aprovado. Não há inpainting, retoco nem cenário substituto.
+- **Observação importante:** a própria imagem aprovada tem um prédio comercial pré-renderizado no lote 03 e uma legenda ilustrativa embutida. São elementos do cenário, **não comprovantes de que o jogador possui uma unidade**.
+- Para o lote 03, a abertura real `EMPRESA.ABRIR` ativa uma placa dinâmica `MERCADO`, `PADARIA` ou `ROUPAS` na fachada existente; a seleção realça somente o marcador `03` e não desenha polígonos sobre fachada/ruas.
+- Para os lotes restantes, só se renderizam sprites de unidades retornadas pelo Core. Os sprites ficaram menores para reduzir a invasão de ruas e de lotes adjacentes. Ainda há limitação artística de oclusão, a ser verificada pelo titular.
+- A legenda do canto inferior esquerdo foi substituída por uma **legenda SVG dinâmica dentro do mesmo viewBox**, que cobre os números fixos da imagem e reflete `unitMap.size` (0–5 no grupo); isso evita informações visuais conflitantes.
+- O título de Tianguá pré-impresso na arte continua exatamente como aprovado. O botão para trocar de município é uma região clicável transparente sobre o mesmo título, sem duplicar o banner.
+- A seleção de demais lotes usa um polígono **interno** ao footprint, com espessura contida, sem halo externo.
+
+**Verificação:** `npm run check` com 186 testes após o hotfix; smoke Playwright/Chromium com 0, 1 e 3 unidades e abertura por ramo; viewport móvel 390×844; nenhum erro JavaScript nos fluxos exercitados.
+
+**Pendências antes de homologar:** revisão visual pelo usuário, validação nativa Windows `file://`, persistência de save e acessibilidade com zoom. O PR permanece draft e a `main` não deve ser alterada.

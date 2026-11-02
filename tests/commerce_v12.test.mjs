@@ -23,15 +23,17 @@ test('V1.2: compra por fornecedor e por produto aumenta estoque e ativo, não CM
  assert.equal(Core.overview(t).cash,cash-expectedCost);assert.equal(Core.overview(t).cogs,0);
  assert.equal(b.purchaseOrders[0].supplierId,'atacado');Core.validate(t);
 });
-test('V1.2: venda multitem reconhece receita, CMV por SKU e caixa atomicamente',()=>{
+test('V1.2.1: a simulação diária reconhece receita, CMV e caixa por SKU atomicamente',()=>{
  let s=opened();s=act(s,'COMPRAS.REGISTRAR',{supplierId:'regional',items:[{productId:'base',quantity:10},{productId:'extra-1',quantity:5}]});
- const before=Core.overview(s);s=act(s,'VENDA.REGISTRAR',{items:[{productId:'base',quantity:3},{productId:'extra-1',quantity:2}]});
- const info=Core.overview(s),revenue=3*4900+2*3400,cogs=3*3200+2*2200;
- assert.equal(info.cash,before.cash+revenue);assert.equal(info.inventoryValue,before.inventoryValue-cogs);
- assert.equal(info.revenue,revenue);assert.equal(info.cogs,cogs);assert.equal(s.world.business.stockUnits,10);
- assert.equal(s.world.business.sales[0].items.length,2);
- const perf=Core.productPerformance(s);assert.equal(perf.find(x=>x.id==='base').cogs,3*3200);
- assert.equal(perf.find(x=>x.id==='extra-1').revenue,2*3400);Core.validate(s);
+ const before=Core.overview(s);s=act(s,'TEMPO.AVANCAR_DIA');
+ const info=Core.overview(s),sales=s.world.business.sales;
+ assert.equal(sales.length,1);assert.equal(sales[0].kind,'SIMULACAO_DIARIA');
+ assert.equal(sales[0].items.length,2);
+ const revenue=sales[0].items.reduce((n,x)=>n+x.revenue,0),cogs=sales[0].items.reduce((n,x)=>n+x.cogs,0);
+ assert.equal(info.cash,before.cash+revenue-Core.SECTORS.mercado.dailyCost);
+ assert.equal(info.inventoryValue,before.inventoryValue-cogs);
+ assert.equal(info.revenue,revenue);assert.equal(info.cogs,cogs);
+ assert.equal(Core.productPerformance(s).reduce((n,x)=>n+x.cogs,0),cogs);Core.validate(s);
 });
 test('V1.2: venda rejeitada não remove saldo, não gera evento nem avança RNG',()=>{
  let s=opened();s=act(s,'ESTOQUE.COMPRAR',{productId:'extra-2',supplierId:'regional',quantity:2});const baseline=JSON.stringify(s);
@@ -53,8 +55,9 @@ test('V1.2: novo produto tem preço, custo e histórico; não inventa compras',(
  s=act(s,'PRECO.DEFINIR',{productId:p.id,cents:790});assert.equal(s.world.business.products.at(-1).priceCents,790);
  assert.equal(Core.priceHistory(s).at(-1).productName,'Açúcar 1 kg');
  s=act(s,'ESTOQUE.COMPRAR',{productId:p.id,quantity:10,supplierId:'regional'});
- s=act(s,'VENDA.REGISTRAR',{items:[{productId:p.id,quantity:3}]});
- assert.equal(Core.productPerformance(s).at(-1).cogs,3*425);Core.validate(s);
+ s=act(s,'TEMPO.AVANCAR_DIA');
+ const sold=Core.productPerformance(s).at(-1).sold;assert.ok(sold>0);
+ assert.equal(Core.productPerformance(s).at(-1).cogs,sold*425);Core.validate(s);
 });
 test('V1.2: save legado v2 migra sem inventar venda e preserva caixa, CMV, RNG e comandos',()=>{
  const c=(s,type,payload,id)=>{const r=old.dispatch(s,{type,id,payload});assert.equal(r.ok,true,r.error);return r.state};
@@ -71,8 +74,8 @@ test('V1.2: save legado v2 migra sem inventar venda e preserva caixa, CMV, RNG e
  assert.equal(JSON.stringify(imported.state.economy.ledger),JSON.stringify(legacy.economy.ledger));
  assert.equal(Core.productPerformance(imported.state)[0].sold,0); // histórico antigo permanece agregado
  const stocked=act(imported.state,'ESTOQUE.COMPRAR',{productId:'base',quantity:2});
- const s=act(stocked,'VENDA.REGISTRAR',{items:[{productId:'base',quantity:1}]});
- assert.equal(s.world.business.totalSold,legacy.world.business.totalSold+1);
+ const s=act(stocked,'TEMPO.AVANCAR_DIA');
+ assert.ok(s.world.business.totalSold>legacy.world.business.totalSold);
  const repacked=Core.importSave(Core.exportSave(s));assert.equal(repacked.migrated,false);
  assert.equal(JSON.stringify(repacked.state),JSON.stringify(s));Core.validate(s);
 });
@@ -85,9 +88,12 @@ test('V1.2: regras diárias conciliam três produtos, estoque e resultado, e sã
  assert.equal(Core.productPerformance(a).reduce((n,x)=>n+x.stockValue,0),Core.overview(a).inventoryValue);
  Core.validate(a);
 });
-test('V1.2: o relatório financeiro mantém filtros e concilia o checkout',()=>{
- let s=opened();s=act(s,'ESTOQUE.COMPRAR',{productId:'base',quantity:10});s=act(s,'VENDA.REGISTRAR',{items:[{productId:'base',quantity:2}]});
- const report=Core.financialReport(s,'day','2026-11-01');assert.equal(report.revenue,9800);assert.equal(report.cogs,6400);
- assert.equal(report.grossProfit,3400);assert.equal(report.closingInventory,8*3200);
+test('V1.2.1: o relatório financeiro mantém filtros e concilia as vendas diárias',()=>{
+ let s=opened();s=act(s,'ESTOQUE.COMPRAR',{productId:'base',quantity:10});s=act(s,'TEMPO.AVANCAR_DIA');
+ const sold=s.world.business.sales[0].items[0].quantity;
+ const report=Core.financialReport(s,'day','2026-11-01');
+ assert.equal(report.revenue,sold*4900);assert.equal(report.cogs,sold*3200);
+ assert.equal(report.grossProfit,sold*(4900-3200));assert.equal(report.closingInventory,(10-sold)*3200);
  assert.equal(s.fiscal.coverageStatus,'NOT_COVERED');
 });
+

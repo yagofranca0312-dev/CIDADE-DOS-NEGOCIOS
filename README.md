@@ -1,8 +1,15 @@
 # 🏙️ Cidade dos Negócios 1
 
-**Versão:** `1.0.0-rc.1` — **primeira candidata jogável**, não homologação estável.  
+**Versão:** `1.0.1-rc.1` — **hotfix de usabilidade da candidata jogável**, homologação estável ainda pendente.  
 **Formato:** um `index.html` autônomo, com CSS e JS incorporados; sem internet ou instalação obrigatória para jogar.  
 **Data-base do planejamento:** 01/11/2026.
+
+## Hotfix 1.0.1-rc.1
+
+- O lote selecionado aparece em uma etiqueta destacada sobre o mapa, sem sobrecarregar a cidade com 18 rótulos permanentes; cada lote preserva sua identificação acessível.
+- A aba Mercado exibe lado a lado **seu preço atual** e a **referência independente do concorrente**.
+- Após atualizar o preço, uma mensagem mostra o valor anterior e o novo; o evento já era auditável.
+- Não foram alterados economia, formato de save (`schemaVersion: 2`), RNG, regras fiscais ou comportamento do atualizador.
 
 ## O que já funciona
 

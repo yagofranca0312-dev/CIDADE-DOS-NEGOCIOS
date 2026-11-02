@@ -1,9 +1,20 @@
 # 🏙️ Cidade dos Negócios 1
 
-**Versão:** `1.7.0-rc.1` — **PIB municipal oficial, simulação regional e comparador econômico**, homologada pelo jogador em 02/11/2026.  
+**Versão:** `1.8.0-rc.1` — **demonstrações contábeis gerenciais e conciliação**, candidata a homologação Windows.  
 **Formato:** HTML autônomo, sem internet durante a partida.  
 
-**Homologação:** validação expressa do jogador em 02/11/2026. Snapshot: `releases/v1.7.0-homologada`. Planejamento V1.8: [docs/PLANO_V18.md](docs/PLANO_V18.md).
+## Patch V1.8.0-rc.1 — Contabilidade Empresarial Avançada
+
+- **Plano de contas e classificação:** contas de ativo, passivo, capital, receita, CMV e despesa, com sinal contábil definido. Novos lançamentos recebem uma classe `kind` opcional. Históricos sem classificação são identificados por padrões exatos de memos legados; origem desconhecida fica **não classificada**.
+- **DRE gerencial:** receita, CMV, lucro bruto, despesas fixas, gastos de abertura e outras despesas; resultado **antes dos tributos**. Disponível para grupo e cada unidade nos mesmos períodos já existentes.
+- **Balanço patrimonial:** somente **consolidado**, com caixa do grupo, estoques, bens em trânsito, recebíveis, obrigações, capital aportado e lucros/prejuízos acumulados. Identidade Ativo = Passivo + Patrimônio é conferida a cada corte.
+- **Fluxo de caixa REALIZADO:** entradas/saídas, saldo inicial e final reconciliados. Para filiais, exibe apenas **contribuição ao caixa global**; não inventa saldo de caixa próprio.
+- **Conferência e fechamento gerencial:** validação do balanço e estoques/pedidos **somente na data atual**; corte histórico confere o ledger, sem inventar posições físicas passadas. Fechamento mensal de leitura, sem lançar ou travar períodos.
+- **UI compacta:** cinco visualizações internas em Finanças (Resumo, DRE, Balanço, Caixa, Conferência). Nenhuma nova aba principal; remodelação de UX/UI reservada para V2.0.
+- **Saves:** permanece `schemaVersion: 8` (não se exige migração do save V1.7). IDs, históricos, RNG, ledger e estoques antigos ficam intocados; a V1.7 antiga pode ler o save desde que ignore o campo opcional `kind` criado em registros futuros. Exporte backup JSON antes de atualizar mesmo assim.
+- **Fiscal:** `NOT_COVERED`; não existem créditos tributários, cálculo de impostos, DRE após impostos ou demonstrações legais. Não substitui escrituração contábil real.
+- **Garantia de versionamento:** título, abertura, cabeçalho, rodapé, `package.json` e nome da distribuição obrigatoriamente V1.8.0-rc.1. Build falha se divergirem.
+- **Status:** candidata técnica, aguardando homologação funcional do jogador no Windows.
 
 ## Patch V1.7.0-rc.1 — inteligência econômica regional (primeiro incremento)
 

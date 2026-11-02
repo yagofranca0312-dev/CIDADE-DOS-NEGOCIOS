@@ -142,3 +142,10 @@
 .regional-compare-box label {font-size: .78rem; opacity: .87;}
 .regional-compare-box select {width:100%; max-width:100%;}
 .regional-compare-box p {margin:0; line-height:1.4;}
+
+/* V1.8 — demonstrativos internos compactos, sem aumentar a navegação principal. */
+.statement-switch{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 16px;}
+.statement-switch button{cursor:pointer;background:rgba(20,44,67,.08);border:1px solid var(--border,#b6c5ce);border-radius:9px;padding:8px 11px;color:inherit;font:inherit;font-size:.86rem;}
+.statement-switch button.active,.statement-switch button[aria-pressed="true"]{background:#153d5f;color:#fff;border-color:#153d5f;font-weight:700;}
+.statement-switch button:focus-visible{outline:3px solid #e4a645;outline-offset:2px;}
+@media(max-width:400px){.statement-switch{gap:4px}.statement-switch button{font-size:.77rem;padding:8px 9px;}}

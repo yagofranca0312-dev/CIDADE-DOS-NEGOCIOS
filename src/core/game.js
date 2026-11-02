@@ -1,7 +1,7 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.7.0-rc.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.8.0-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '1.7.0-rc.1';
+  const VERSION = '1.8.0-rc.1';
   const SCHEMA_VERSION = 8;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -220,7 +220,7 @@ const CidadeCore = (() => {
     const id=`pc-${++b.orderSeq}`,dueDate=addDays(draft.calendar.date,supplier.leadDays);
     b.purchaseOrders.push({id,date:draft.calendar.date,supplierId,items:lines,total,status:'PENDING',dueDate,receivedAt:null});
     journal(draft,`Encomenda ${id}: mercadorias em trânsito`,[
-      {account:'IN_TRANSIT',debit:total,credit:0},{account:'CASH',debit:0,credit:total}],b.id);
+      {account:'IN_TRANSIT',debit:total,credit:0},{account:'CASH',debit:0,credit:total}],b.id,'PURCHASE');
     event(draft,'COMPRA.ENCOMENDADA',`Pedido ${id} pago (${money(total)}); previsão ${dueDate} (${supplier.leadDays} dia(s)).`,{id,total,dueDate,supplierId},b.id);
   }
   function receiveDueOrders(draft,b){
@@ -233,7 +233,7 @@ const CidadeCore = (() => {
       syncTotals(b);
       order.status='RECEIVED';order.receivedAt=draft.calendar.date;
       journal(draft,`Recebimento ${order.id} em estoque`,[
-        {account:'INVENTORY',debit:order.total,credit:0},{account:'IN_TRANSIT',debit:0,credit:order.total}],b.id);
+        {account:'INVENTORY',debit:order.total,credit:0},{account:'IN_TRANSIT',debit:0,credit:order.total}],b.id,'RECEIPT');
       event(draft,'COMPRA.RECEBIDA',`Pedido ${order.id} recebido: ${order.items.reduce((n,l)=>n+l.quantity,0)} unidades.`,{id:order.id,total:order.total},b.id);
     }
   }
@@ -269,7 +269,7 @@ const CidadeCore = (() => {
     b.sales.push({id,date:draft.calendar.date,kind,items:lines,total,cogs:cost});
     journal(draft,`Venda ${id} (${kind}): ${lines.map(x=>`${x.quantity} ${x.name}`).join(', ')}`,[
       {account:'CASH',debit:total,credit:0},{account:'REVENUE',debit:0,credit:total},
-      {account:'COGS',debit:cost,credit:0},{account:'INVENTORY',debit:0,credit:cost}],b.id);
+      {account:'COGS',debit:cost,credit:0},{account:'INVENTORY',debit:0,credit:cost}],b.id,'SALE');
     event(draft,'VENDA.CONCLUIDA',`Vendas simuladas do dia ${id}: ${qtyTotal} unidades por ${money(total)}.`,{id,total,cost,qtyTotal},b.id);
   }
   function productPerformance(state) {
@@ -294,11 +294,40 @@ const CidadeCore = (() => {
     const id=`evt-${++draft.audit.eventSeq}`;
     draft.audit.events.push({id,type,date:draft.calendar.date,text,data,...(businessId?{businessId}:{})});
   }
-  function journal(draft,memo,entries,businessId=null) {
+  // Classificação contábil/financeira, sem alterar nem supor a classificação dos journals legados.
+  // Para records antigos o reconhecimento exige prefixos efetivamente produzidos pelo jogo.
+  const ACCOUNT_CATALOG=Object.freeze({
+    CASH:Object.freeze({name:'Caixa do grupo',group:'ASSET',normal:'DEBIT'}),
+    INVENTORY:Object.freeze({name:'Mercadorias em estoque',group:'ASSET',normal:'DEBIT'}),
+    IN_TRANSIT:Object.freeze({name:'Mercadorias em trânsito',group:'ASSET',normal:'DEBIT'}),
+    RECEIVABLE:Object.freeze({name:'Contas a receber',group:'ASSET',normal:'DEBIT'}),
+    PAYABLE:Object.freeze({name:'Contas a pagar',group:'LIABILITY',normal:'CREDIT'}),
+    CAPITAL:Object.freeze({name:'Capital aportado',group:'EQUITY',normal:'CREDIT'}),
+    REVENUE:Object.freeze({name:'Receita de vendas',group:'REVENUE',normal:'CREDIT'}),
+    COGS:Object.freeze({name:'Custo das mercadorias vendidas',group:'COST',normal:'DEBIT'}),
+    EXPENSE:Object.freeze({name:'Despesas operacionais e de abertura',group:'EXPENSE',normal:'DEBIT'})
+  });
+  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','UNCLASSIFIED']);
+  function transactionKind(j){
+    if(TRANSACTION_KINDS.includes(j.kind))return j.kind;
+    if(j.memo==='Capital inicial do empreendedor')return 'CAPITAL';
+    if(/^Abertura: /.test(j.memo))return 'OPENING';
+    if(/^Venda vd-/.test(j.memo))return 'SALE';
+    if(/^Encomenda pc-/.test(j.memo))return 'PURCHASE';
+    if(/^Recebimento pc-/.test(j.memo))return 'RECEIPT';
+    if(/^Despesa operacional diária/.test(j.memo))return 'DAILY_EXPENSE';
+    return 'UNCLASSIFIED';
+  }
+  function journal(draft,memo,entries,businessId=null,kind=null) {
     const debit=entries.reduce((n,x)=>n+x.debit,0),credit=entries.reduce((n,x)=>n+x.credit,0);
     assert(debit===credit && debit>0,'Lançamento desequilibrado');
-    assert(entries.every(x=>typeof x.account==='string'&&int(x.debit)&&int(x.credit)&&!(x.debit&&x.credit)),'Linha financeira inválida');
-    draft.economy.ledger.push({id:`jnl-${++draft.economy.journalSeq}`,date:draft.calendar.date,memo,entries,...(businessId?{businessId}:{})});
+    assert(entries.every(x=>typeof x.account==='string'&&ACCOUNT_CATALOG[x.account]&&int(x.debit)&&int(x.credit)&&!(x.debit&&x.credit)),'Linha financeira inválida');
+    const record={id:`jnl-${++draft.economy.journalSeq}`,date:draft.calendar.date,memo,entries,...(businessId?{businessId}:{})};
+    const label=kind||transactionKind(record);
+    assert(TRANSACTION_KINDS.includes(label),'Classe de transação inválida');
+    // Novo metadado opcional. Schema 8 e registros históricos permanecem intocados.
+    record.kind=label;
+    draft.economy.ledger.push(record);
   }
   function balance(draft,account) {let total=0;for(const j of draft.economy.ledger)for(const e of j.entries)if(e.account===account)total+=(['CAPITAL','REVENUE','PAYABLE'].includes(account)?e.credit-e.debit:e.debit-e.credit);return total;}
   function overview(draft) {
@@ -324,7 +353,7 @@ const CidadeCore = (() => {
     state.worldId=`carreira-${seed}-${city.id}`;
     state.player={name,companyName,cityId:city.id};
     state.meta.origin='NEW_CAREER';
-    journal(state,'Capital inicial do empreendedor',[{account:'CASH',debit:3000000,credit:0},{account:'CAPITAL',debit:0,credit:3000000}]);
+    journal(state,'Capital inicial do empreendedor',[{account:'CASH',debit:3000000,credit:0},{account:'CAPITAL',debit:0,credit:3000000}],null,'CAPITAL');
     event(state,'CARREIRA.CRIADA',`Carreira iniciada em ${city.name} (${city.uf}).`);
     state.revision=1;
     state.audit.commands[commandId]=fingerprint({type:'CARREIRA.CRIAR',payload});
@@ -350,7 +379,7 @@ const CidadeCore = (() => {
       if(!draft.world.business)draft.world.business=newUnit;
       else draft.world.branches.push(newUnit);
       draft.world.activeBusinessId=id;
-      journal(draft,`Abertura: ${s.name} (${id})`,[{account:'EXPENSE',debit:s.openCost,credit:0},{account:'CASH',debit:0,credit:s.openCost}],id);
+      journal(draft,`Abertura: ${s.name} (${id})`,[{account:'EXPENSE',debit:s.openCost,credit:0},{account:'CASH',debit:0,credit:s.openCost}],id,'OPENING');
       event(draft,'EMPRESA.ABERTA',`${s.name} inaugurado em ${cityById(cityId).name}, lote ${lot}.`,{lot,sector:payload.sector,cityId},id);
       return;
     }
@@ -446,7 +475,7 @@ const CidadeCore = (() => {
       const cash=balance(draft,'CASH'),expense=s.dailyCost;
       journal(draft,`Despesa operacional diária · ${b.id}`,[
         {account:'EXPENSE',debit:expense,credit:0},
-        {account:cash>=expense?'CASH':'PAYABLE',debit:0,credit:expense}],b.id);
+        {account:cash>=expense?'CASH':'PAYABLE',debit:0,credit:expense}],b.id,'DAILY_EXPENSE');
       if(cash<expense)event(draft,'CONTAS.A_PAGAR',`${b.id}: despesa de ${money(expense)} registrada a pagar.`,{},b.id);
     }
     if(units.length&&(draft.calendar.tick+1)%7===0){
@@ -653,6 +682,110 @@ const CidadeCore = (() => {
       closingPayable:account(until,'PAYABLE'),closingInTransit:account(until,'IN_TRANSIT'),capital:account(entries,'CAPITAL')
     };
   }
+  // Demonstrações da V1.8: leituras puras do mesmo ledger que alimenta a V1.7.
+  // Contas corporativas não são artificialmente atribuídas a filiais.
+  function signedAccount(entries,name){
+    const normal=ACCOUNT_CATALOG[name]?.normal;
+    const amount=entries.reduce((sum,j)=>sum+j.entries.reduce((n,e)=>n+(e.account===name?e.debit-e.credit:0),0),0);
+    return normal==='CREDIT'?-amount:amount;
+  }
+  function incomeStatement(state,period='all',referenceDate=state.calendar.date,range=null,businessId='all'){
+    const base=financialReport(state,period,referenceDate,range,businessId);
+    const expenses=base.entries.filter(j=>j.entries.some(e=>e.account==='EXPENSE'));
+    const expenseOf=j=>j.entries.reduce((n,e)=>n+(e.account==='EXPENSE'?e.debit-e.credit:0),0);
+    const fixed=expenses.filter(j=>transactionKind(j)==='DAILY_EXPENSE').reduce((n,j)=>n+expenseOf(j),0);
+    const opening=expenses.filter(j=>transactionKind(j)==='OPENING').reduce((n,j)=>n+expenseOf(j),0);
+    const other=base.expenses-fixed-opening;
+    const corporateResult=base.businessId==='all'?state.economy.ledger.filter(j=>j.date>=base.from&&j.date<=base.effectiveEnd&&
+      journalBusinessId(state,j)===null).reduce((n,j)=>n+signedAccount([j],'REVENUE')-signedAccount([j],'COGS')-signedAccount([j],'EXPENSE'),0):0;
+    return {period:base.period,from:base.from,to:base.to,effectiveEnd:base.effectiveEnd,label:base.label,
+      businessId:base.businessId,revenue:base.revenue,cogs:base.cogs,grossProfit:base.grossProfit,
+      fixedExpenses:fixed,openingExpenses:opening,unclassifiedExpenses:other,
+      expenses:base.expenses,operatingResult:base.profit,corporateResult,
+      marginPercent:base.grossMarginPercent,fiscalCoverage:state.fiscal.coverageStatus};
+  }
+  function balanceSheet(state,asOf=state.calendar.date){
+    assert(state&&plain(state.economy),'Carreira inválida');
+    assert(isoDate(asOf)&&asOf>=START_DATE&&asOf<=state.calendar.date,'Data de balanço inválida');
+    const journals=state.economy.ledger.filter(j=>j.date<=asOf);
+    const amounts=Object.fromEntries(Object.keys(ACCOUNT_CATALOG).map(code=>[code,signedAccount(journals,code)]));
+    const unknown=Object.keys(ACCOUNT_CATALOG).length===0?[]:[...new Set(journals.flatMap(j=>j.entries.map(e=>e.account)))].filter(a=>!ACCOUNT_CATALOG[a]);
+    const assets=amounts.CASH+amounts.INVENTORY+amounts.IN_TRANSIT+amounts.RECEIVABLE;
+    const liabilities=amounts.PAYABLE,retainedEarnings=amounts.REVENUE-amounts.COGS-amounts.EXPENSE;
+    const equity=amounts.CAPITAL+retainedEarnings,difference=assets-liabilities-equity;
+    return {asOf,accounts:amounts,assets,liabilities,paidInCapital:amounts.CAPITAL,
+      retainedEarnings,equity,difference,balanced:difference===0&&unknown.length===0,
+      unknownAccounts:unknown,fiscalCoverage:state.fiscal.coverageStatus,
+      scope:'GROUP',warning:'Caixa e balanço pertencem ao grupo; filiais são centros de resultado, não bancos independentes.'};
+  }
+  function cashFlowStatement(state,period='all',referenceDate=state.calendar.date,range=null,businessId='all'){
+    const base=financialReport(state,period,referenceDate,range,businessId);
+    const rows={sales:0,suppliers:0,operating:0,opening:0,capital:0,unclassifiedIn:0,unclassifiedOut:0};
+    let inflows=0,outflows=0;
+    for(const j of base.entries){
+      const debit=j.entries.reduce((n,e)=>n+(e.account==='CASH'?e.debit:0),0);
+      const credit=j.entries.reduce((n,e)=>n+(e.account==='CASH'?e.credit:0),0);
+      const net=debit-credit;
+      if(net===0)continue;
+      if(net>0)inflows+=net;else outflows+=-net;
+      const kind=transactionKind(j);
+      if(kind==='SALE'&&net>0)rows.sales+=net;
+      else if(kind==='CAPITAL'&&net>0)rows.capital+=net;
+      else if(kind==='PURCHASE'&&net<0)rows.suppliers+=-net;
+      else if(kind==='DAILY_EXPENSE'&&net<0)rows.operating+=-net;
+      else if(kind==='OPENING'&&net<0)rows.opening+=-net;
+      else if(net>0)rows.unclassifiedIn+=net;
+      else rows.unclassifiedOut+=-net;
+    }
+    const netCash=inflows-outflows;
+    // Para filial há apenas fluxos atribuíveis, nunca 'saldo bancário da filial'.
+    const openingCash=businessId==='all'?signedAccount(state.economy.ledger.filter(j=>j.date<base.from),'CASH'):null;
+    const closingCash=businessId==='all'?signedAccount(state.economy.ledger.filter(j=>j.date<=base.effectiveEnd),'CASH'):null;
+    return {period:base.period,from:base.from,to:base.to,effectiveEnd:base.effectiveEnd,label:base.label,
+      businessId,inflows,outflows,netCash,openingCash,closingCash,
+      reconciled:businessId==='all'?openingCash+netCash===closingCash:null,
+      categories:rows,scope:businessId==='all'?'GROUP':'UNIT_CONTRIBUTION',
+      warning:businessId==='all'?'Fluxo de caixa realizado, não projeção.':'Contribuição da unidade para o caixa compartilhado; não existe saldo de caixa individual.'};
+  }
+  function reconciliationReport(state,asOf=state.calendar.date){
+    const sheet=balanceSheet(state,asOf),journals=state.economy.ledger.filter(j=>j.date<=asOf);
+    const errors=[],unitRows=[];
+    if(!sheet.balanced)errors.push('O balanço não fecha ou contém contas desconhecidas.');
+    for(const j of journals){
+      const debit=j.entries.reduce((n,e)=>n+e.debit,0),credit=j.entries.reduce((n,e)=>n+e.credit,0);
+      if(debit!==credit||debit<=0)errors.push(`Lançamento ${j.id} desequilibrado`);
+    }
+    const snapshotAvailable=asOf===state.calendar.date;
+    if(snapshotAvailable){
+      let physical=0,transit=0;
+      for(const b of businesses(state)){
+        const inventory=b.products.reduce((n,p)=>n+p.stockValueCents,0);
+        const inTransit=b.purchaseOrders.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.total,0);
+        const local=journals.filter(j=>journalBusinessId(state,j)===b.id);
+        const ledgerInventory=signedAccount(local,'INVENTORY'),ledgerTransit=signedAccount(local,'IN_TRANSIT');
+        const ok=inventory===ledgerInventory&&inTransit===ledgerTransit;
+        if(!ok)errors.push(`Unidade ${b.id} possui estoque/trânsito divergente do ledger`);
+        unitRows.push({id:b.id,inventory,inTransit,ledgerInventory,ledgerTransit,ok});
+        physical+=inventory;transit+=inTransit;
+      }
+      if(physical!==sheet.accounts.INVENTORY||transit!==sheet.accounts.IN_TRANSIT)errors.push('Estoque consolidado diverge do razão contábil');
+    }
+    return {asOf,balanced:sheet.balanced,statementDifference:sheet.difference,
+      snapshotAvailable,unitRows,unknownAccounts:sheet.unknownAccounts,errors,ok:errors.length===0,
+      note:snapshotAvailable?'Conciliação do estoque físico atual e pedidos em trânsito com o ledger.':'Data histórica: apenas lançamentos contábeis são conferidos; não há inventário físico retroativo.'};
+  }
+  function monthlyClose(state,month,businessId='all'){
+    assert(typeof month==='string'&&/^\d{4}-(0[1-9]|1[0-2])$/.test(month),'Competência mensal inválida');
+    assert(month<=state.calendar.date.slice(0,7),'Competência futura não permitida');
+    const referenceDate=month+'-01';
+    const dre=incomeStatement(state,'month',referenceDate,null,businessId);
+    const cash=cashFlowStatement(state,'month',referenceDate,null,businessId);
+    const balance=balanceSheet(state,dre.effectiveEnd);
+    return {month,from:dre.from,to:dre.effectiveEnd,businessId,operatingResult:dre.operatingResult,
+      netCash:cash.netCash,globalBalance:balance.balanced,
+      status:'GERENCIAL_CONSULTA',fiscalCoverage:state.fiscal.coverageStatus,
+      note:'Fechamento gerencial somente leitura. Não gera lançamentos, tributos ou bloqueio de competência.'};
+  }
   // Avaliação determinística da estratégia: consulta pura, sem alterar RNG, save ou contabilidade.
   function strategyReport(state,horizonDays=30){
     assert(state&&[7,30,90].includes(horizonDays),'Horizonte estratégico inválido');
@@ -752,6 +885,6 @@ const CidadeCore = (() => {
     return {state,migrated,message:migrated?'Carreira migrada para V1.7: histórico preservado e ajuste regional do PIB aplicado somente daqui em diante.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();

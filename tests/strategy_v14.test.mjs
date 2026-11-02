@@ -24,7 +24,7 @@ const advance=(s,days=1,engine=Core)=>cmd(engine,s,'TEMPO.AVANCAR_LOTE',{days});
 const order=(s,qty=100,id='base')=>cmd(Core,s,'ESTOQUE.COMPRAR',{supplierId:'regional',productId:id,quantity:qty});
 
 test('V1.4: nova carreira schema 5 e campanhas vazias, sem mudar contabilidade inicial',()=>{
- const s=make();assert.equal(Core.VERSION,'1.7.0-rc.1');assert.equal(s.schemaVersion,8);
+ const s=make();assert.equal(Core.VERSION,'1.8.0-rc.1');assert.equal(s.schemaVersion,8);
  assert.deepEqual(JSON.parse(JSON.stringify(s.world.business.promotions)),{});
  assert.equal(Core.overview(s).cash,2250000);
  Core.validate(s);

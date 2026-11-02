@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10243E">
   <meta name="description" content="Cidade dos Negócios 1, simulador empresarial brasileiro offline, em um único HTML.">
-  <title>Cidade dos Negócios 1 · v1.7.0-rc.1</title>
+  <title>Cidade dos Negócios 1 · v1.8.0-rc.1</title>
   <style>
 /* CDN_CSS */
   </style>
@@ -20,7 +20,7 @@
       <p class="hero-subtitle">Uma cidade. Uma empresa. Mil decisões.</p>
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◆ Economia simulada</span><span>◆ 30 cidades</span><span>◆ Offline</span></div>
-      <p class="fine-print"><span id="intro-version">v1.7.0-rc.1</span> — prévia jogável. Dados oficiais identificados; mercado e legislação tributária simulados ou não cobertos.</p>
+      <p class="fine-print"><span id="intro-version">v1.8.0-rc.1</span> — prévia jogável. Dados oficiais identificados; mercado e legislação tributária simulados ou não cobertos.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -68,7 +68,7 @@
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
       <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Tributação legal não calculada nesta versão.</div>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v1.7.0-rc.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v1.8.0-rc.1</span></div>
         <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
           <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
           <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
@@ -189,7 +189,7 @@
             <div class="filter-action-row"><button type="button" id="finance-current-date" class="btn btn-outline">Usar data atual do jogo</button><span class="muted">O filtro não muda quando você avança os dias.</span></div>
             <p id="finance-validation" class="finance-validation" aria-live="polite" hidden></p>
             <p id="finance-period-label" class="field-hint" aria-live="polite">Escolha a data ou competência que deseja consultar.</p>
-          </article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Demonstrativo gerencial</h3><span class="tag-soft">M11 · LEDGER</span></div><dl class="finance-list" id="finance-summary"></dl><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Tributação ainda não é calculada.</p></div><p class="muted">Fluxos do período filtrado e separados por unidade; saldos de estoque e obrigações são acumulados até o encerramento. O caixa não é repartido artificialmente entre filiais: somente a consulta consolidada exibe o saldo compartilhado.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
+          </article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3 id="finance-statement-title">Resumo realizado</h3><span class="tag-soft">M11 · LEDGER</span></div><div class="statement-switch" role="group" aria-label="Demonstrativos contábeis"><button type="button" data-statement-view="summary" aria-pressed="true">Resumo</button><button type="button" data-statement-view="dre" aria-pressed="false">DRE</button><button type="button" data-statement-view="balance" aria-pressed="false">Balanço</button><button type="button" data-statement-view="cash" aria-pressed="false">Caixa</button><button type="button" data-statement-view="check" aria-pressed="false">Conferência</button></div><dl class="finance-list" id="finance-summary"></dl><p id="finance-statement-note" class="field-hint" aria-live="polite">Todas as demonstrações são apenas gerenciais e não calculam tributos.</p><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Tributação ainda não é calculada.</p></div><p class="muted">Fluxos do período filtrado e separados por unidade; saldos de estoque e obrigações são acumulados até o encerramento. O caixa não é repartido artificialmente entre filiais: somente a consulta consolidada exibe o saldo compartilhado.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
           <article class="panel strategy-panel"><div class="panel-heading"><h3>Gestão estratégica e equilíbrio econômico</h3><span class="tag-soft">V1.4 · ANÁLISE E PROJEÇÃO</span></div>
             <p class="muted">Resultados realizados vêm exclusivamente do livro contábil. Projeções são cenários hipotéticos, não lançamentos. A projeção estratégica considera a unidade ativa e o caixa compartilhado atual, sem projetar simultaneamente as demais unidades; não é uma projeção consolidada da rede. Esses cenários não realizam novas compras nem liquidam obrigações existentes. Não gera lançamentos.</p>
             <div class="strategy-controls"><label for="strategy-horizon">Horizonte de projeção (dias)</label><select id="strategy-horizon"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select></div>
@@ -208,7 +208,7 @@
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v1.7.0-rc.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v1.8.0-rc.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>

@@ -1,6 +1,14 @@
 # Histórico de versões — Cidade dos Negócios
 
-> **Homologada pelo jogador em 02/11/2026.** Snapshot imutável: `releases/v1.7.0-homologada` no commit `3c06cdbf4fcdffe379215b8bbaa57666cd4a850b`. A versão técnica continua `1.7.0-rc.1`; o registro de homologação não altera o binário.
+## 1.8.0-rc.1 — demonstrações contábeis e conciliação (02/11/2026)
+
+- Plano de contas com grupos e naturezas; classificação opcional de novos journals; preservação dos anteriores.
+- DRE por período/unidade/grupo, balanço consolidado com identidade patrimonial, fluxo de caixa realizado e reconciliação.
+- Fechamento gerencial mensal somente leitura; não cria lançamentos nem altera o RNG.
+- Preserva schema 8 e compatibilidade direta com o save V1.7 homologado.
+- Cinco opções internas de leitura financeira, sem novas abas principais; revisão ampla visual reservada à V2.0.
+- Versão unificada nas telas, build e nome do pacote; homologação Windows pendente.
+
 
 ## 1.7.0-rc.1 — PIB oficial, comparador e versão única (02/11/2026)
 
@@ -10,7 +18,7 @@
 - Migração schema 2–7 para 8, preservação de saldos, inventário, histórico e RNG.
 - Corrige rodapé antigo `V1.5.0-RC.1` e referência da introdução; versão sincronizada entre motor, tela inicial, badge, rodapé, pacote e arquivo.
 - V2.0 permanece dedicada à consolidação técnica e visual — sem novas mecânicas.
-- Status histórico da candidata: a homologação prática foi confirmada posteriormente pelo jogador (02/11/2026).
+- Candidata: necessita CI e homologação real em Windows.
 
 
 ## 1.6.0-rc.1 — economia regional (02/11/2026)

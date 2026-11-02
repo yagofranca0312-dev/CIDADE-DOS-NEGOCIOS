@@ -11,6 +11,18 @@ const keyartBase64=readFileSync(resolve(cwd,'src/visual/keyart-v21.webp.b64'),'u
 if (!/^[A-Za-z0-9+/]+=*$/.test(keyartBase64)) throw Error('Arte V2.1 inválida');
 const v21Inline=v21css.replace('__CDN_V21_KEYART__',`data:image/webp;base64,${keyartBase64}`);
 const visual=readFileSync(resolve(cwd,'src/visual/city-scene.js'),'utf8');
+const tianguaBase=readFileSync(resolve(cwd,'src/visual/scenes/tiangua/assets/urban-base.webp.b64'),'utf8').trim();
+const tianguaSprites=Object.fromEntries(['mercado','padaria','roupas'].map(sector=>[sector,readFileSync(resolve(cwd,`src/visual/scenes/tiangua/assets/${sector}.webp.b64`),'utf8').trim()]));
+const tianguaLots=JSON.parse(readFileSync(resolve(cwd,'src/visual/scenes/tiangua/lots.json'),'utf8'));
+if(tianguaLots.lots.length!==18 || new Set(tianguaLots.lots.map(x=>x.number)).size!==18)throw Error('Geometria Tianguá não contém 18 lotes únicos');
+const tianguaVisual=readFileSync(resolve(cwd,'src/visual/tiangua-scene.js'),'utf8')
+ .replace('__CDN_TIANGUA_LOTS_JSON__',JSON.stringify(tianguaLots))
+ .replace('__CDN_TIANGUA_BASE_IMAGE__','data:image/webp;base64,'+tianguaBase)
+ .replace('__CDN_TIANGUA_MARKET_SPRITE__','data:image/webp;base64,'+tianguaSprites.mercado)
+ .replace('__CDN_TIANGUA_BAKERY_SPRITE__','data:image/webp;base64,'+tianguaSprites.padaria)
+ .replace('__CDN_TIANGUA_CLOTHING_SPRITE__','data:image/webp;base64,'+tianguaSprites.roupas);
+if(tianguaVisual.includes('__CDN_TIANGUA_'))throw Error('Ativos visuais Tianguá incompletos');
+const v221css=readFileSync(resolve(cwd,'src/shell/v221-city.css'),'utf8');
 const core=readFileSync(resolve(cwd,'src/core/game.js'),'utf8');
 const uiShell=readFileSync(resolve(cwd,'src/ui/app.js'),'utf8');
 const marketViews=readFileSync(resolve(cwd,'src/ui/market-views.part.js'),'utf8');
@@ -24,8 +36,8 @@ for (const id of ['intro-version','build-version','footer-version']) {
   if (!template.includes(`id="${id}">v${coreVersion}<`)) throw Error(`Versão incorreta no ${id}; esperado v${coreVersion}`);
 }
 if (!template.includes(`<title>Cidade dos Negócios 1 · v${coreVersion}</title>`)) throw Error('Versão incorreta no título HTML');
-const html=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21Inline).replace('/* CDN_V22_CSS */',v22css).replace('/* CDN_CORE */',core).replace('/* CDN_VISUAL */',visual).replace('/* CDN_UI */',ui);
-if (/\/\* CDN_(CSS|V2_CSS|V21_CSS|V22_CSS|CORE|VISUAL|UI) \*\//.test(html)) throw Error('Build incompleto');
+const html=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21Inline).replace('/* CDN_V22_CSS */',v22css).replace('/* CDN_V221_CSS */',v221css).replace('/* CDN_CORE */',core).replace('/* CDN_VISUAL */',visual+'\n'+tianguaVisual).replace('/* CDN_UI */',ui);
+if (/\/\* CDN_(CSS|V2_CSS|V21_CSS|V22_CSS|V221_CSS|CORE|VISUAL|UI) \*\//.test(html)) throw Error('Build incompleto');
 writeFileSync(resolve(cwd,'index.html'),html,'utf8');
 const hash=createHash('sha256').update(html).digest('hex');
 console.log(`HTML gerado: ${Buffer.byteLength(html)} bytes | SHA256 ${hash}`);

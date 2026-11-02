@@ -92,6 +92,23 @@
 @media(max-width:900px){.stock-policy-form{grid-template-columns:repeat(2,minmax(0,1fr))}.stock-policy-form button{grid-column:1/-1}}
 @media(max-width:480px){.stock-policy-form{grid-template-columns:1fr}}
 
+/* V1.4 — Estratégia promocional e indicadores gerenciais. */
+.strategy-promo-panel,.strategy-panel{margin-top:19px}
+.promo-form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:end;margin:15px 0 10px}
+.promo-form>div{min-width:0}.promo-form label{margin-top:0}.promo-form>.btn{grid-column:1/-1;justify-self:start}
+.strategy-controls{display:flex;align-items:center;gap:14px;margin:18px 0;flex-wrap:wrap}
+.strategy-controls label{margin:0}.strategy-controls select{min-width:130px;max-width:220px}
+.strategy-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.strategy-metric{border:1px solid #355069;border-radius:10px;background:#10283c;padding:13px;min-width:0}
+.strategy-metric small{color:#abc8d7;display:block;font-size:.72rem}
+.strategy-metric strong{display:block;color:#f3d399;font-size:clamp(.94rem,1.7vw,1.26rem);margin-top:7px;overflow-wrap:anywhere}
+.strategy-table{width:100%;border-collapse:collapse;min-width:620px;font-size:.78rem}
+.strategy-table th,.strategy-table td{text-align:left;padding:11px 10px;border-bottom:1px solid #36526a}
+.strategy-table th{color:#a5c8da}.strategy-table td{font-variant-numeric:tabular-nums}
+.strategy-risks{margin-top:14px;font-size:.81rem;color:#ccdae4}.strategy-risks p{margin:7px 0}
+@media(max-width:850px){.strategy-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.promo-form{grid-template-columns:1fr}.strategy-metrics{grid-template-columns:1fr}}
+
   </style>
 </head>
 <body>
@@ -104,7 +121,7 @@
       <p class="hero-subtitle">Uma cidade. Uma empresa. Mil decisões.</p>
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◆ Economia simulada</span><span>◆ 30 cidades</span><span>◆ Offline</span></div>
-      <p class="fine-print">V1.3.0-rc.1 — prévia jogável. Parâmetros econômicos fictícios e legislação tributária ainda não implementada.</p>
+      <p class="fine-print">V1.4.0-rc.1 — prévia jogável. Parâmetros econômicos fictícios e legislação tributária ainda não implementada.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -151,7 +168,7 @@
       <div class="world-warning" id="other-city-warning" hidden>Você está explorando outra cidade. A empresa atual opera apenas na cidade de origem nesta versão.</div>
       <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Tributação legal não calculada nesta versão.</div>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.3.0-rc.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.4.0-rc.1</span></div>
         <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
           <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
           <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
@@ -205,6 +222,11 @@
               <p class="field-hint">* A partir da V1.3, a procura é estimada mesmo sem estoque. O faturamento potencial perdido é ilustrativo (unidades não atendidas × preço atual do dia), não receita realizada. Eventos anteriores à V1.3 não são recalculados.</p>
             </article>
           </div>
+          <article class="panel strategy-promo-panel"><div class="panel-heading"><h3>Campanhas promocionais</h3><span class="tag-soft">V1.4 · ESTRATÉGIA</span></div>
+            <p class="muted">Descontos temporários influenciam a demanda simulada. O preço de tabela permanece inalterado; somente vendas realizadas durante a campanha recebem o desconto. Não há vendas manuais extras.</p>
+            <form id="promo-form" class="promo-form"><div><label for="promo-product">Produto</label><select id="promo-product"></select></div><div><label for="promo-percent">Desconto sobre a tabela</label><select id="promo-percent"><option value="0">Sem campanha / encerrar</option><option value="5">5%</option><option value="10">10%</option><option value="15">15%</option></select></div><div><label for="promo-days">Duração (dias de jogo)</label><input type="number" id="promo-days" min="1" max="30" value="7" step="1"></div><button class="btn btn-primary" type="submit">Aplicar estratégia</button></form>
+            <p class="field-hint" id="promo-status">Nenhuma campanha ativa.</p><p class="muted">Promoções não geram gastos publicitários; esse custo não está implementado. A concorrência continua sendo simulada separadamente.</p>
+          </article>
           <article class="panel commerce-catalog"><div class="panel-heading"><h3>Catálogo e desempenho por produto</h3><span class="tag-soft" id="product-count">0 produtos</span></div>
             <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Produto</th><th>Estoque</th><th>Custo un.</th><th>Venda un.</th><th>Vendido*</th><th>Receita*</th><th>CMV*</th></tr></thead><tbody id="catalog-rows"></tbody></table></div>
             <p class="field-hint">* Desempenho por produto registrado a partir desta edição. Vendas antigas continuam preservadas no total contábil, sem distribuição fictícia entre SKUs.</p>
@@ -248,6 +270,14 @@
             <p id="finance-validation" class="finance-validation" aria-live="polite" hidden></p>
             <p id="finance-period-label" class="field-hint" aria-live="polite">Escolha a data ou competência que deseja consultar.</p>
           </article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Demonstrativo gerencial</h3><span class="tag-soft">M11 · LEDGER</span></div><dl class="finance-list" id="finance-summary"></dl><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Tributação ainda não é calculada.</p></div><p class="muted">Fluxos do período filtrado; saldos de caixa, estoque e contas a pagar são acumulados até seu encerramento, não despesas do período.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
+          <article class="panel strategy-panel"><div class="panel-heading"><h3>Gestão estratégica e equilíbrio econômico</h3><span class="tag-soft">V1.4 · ANÁLISE E PROJEÇÃO</span></div>
+            <p class="muted">Resultados realizados vêm exclusivamente do livro contábil. Projeções são cenários hipotéticos, não lançamentos, e não realizam novas compras nem liquidam obrigações existentes.</p>
+            <div class="strategy-controls"><label for="strategy-horizon">Horizonte de projeção (dias)</label><select id="strategy-horizon"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select></div>
+            <div id="strategy-metrics" class="strategy-metrics" aria-live="polite"><p class="muted">Abra uma empresa para gerar indicadores.</p></div>
+            <div class="table-scroll"><table class="strategy-table"><thead><tr><th>Tipo de custo / resultado</th><th>Realizado: últimos 30 dias encerrados</th><th>Projeção: horizonte escolhido</th></tr></thead><tbody id="strategy-cost-rows"></tbody></table></div>
+            <div id="strategy-risks" class="strategy-risks" aria-live="polite"></div>
+            <p class="field-hint">Ponto de equilíbrio estimado = despesa operacional fixa diária ÷ margem de contribuição média do mix, sem impostos. Capital de giro gerencial = caixa + estoque + trânsito + recebíveis − obrigações. A previsão respeita estoque atual e entregas já pagas; não prevê novas compras, crédito, tributos ou alterações futuras da concorrência. Saldo positivo não é promessa de liquidez.</p>
+          </article>
         </section>
         <section data-view="fiscal" class="view" hidden>
           <article class="panel fiscal-panel"><span class="fiscal-icon">§</span><div><div class="overline">MT-01 · COBERTURA NORMATIVA</div><h3>Tributação não implementada nesta versão</h3><p>O jogo simula operações econômicas fictícias, mas não calcula ICMS, ISS, PIS/Cofins, IBS, CBS, Simples Nacional ou obrigações acessórias. Ausência de cálculo <strong>não significa alíquota zero</strong>.</p><p>O calendário pode avançar até 2033 e além; isso não representa validação da legislação desses anos. Uma futura implementação exigirá bases legais identificadas, vigência por competência e testes fiscais independentes.</p><div class="tag-warning">STATUS: NOT_COVERED · MODO DEMONSTRAÇÃO</div></div></article>
@@ -258,17 +288,17 @@
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.3.0-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.4.0-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>
   <div class="toast" id="toast" aria-live="polite" role="status"></div>
   <script>
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.3.0-rc.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.4.0-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '1.3.0-rc.1';
-  const SCHEMA_VERSION = 4;
+  const VERSION = '1.4.0-rc.1';
+  const SCHEMA_VERSION = 5;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
   const CITIES_SOURCE = [
@@ -312,8 +342,8 @@ const CidadeCore = (() => {
   // Migração aditiva e auditável: inventário anterior fica no valor original;
   // ordens recebidas antes da V1.3 não geram novos créditos/debitos.
   function upgradedState(original) {
-    if(original.schemaVersion===4)return clone(original);
-    assert([2,3].includes(original.schemaVersion),'Schema de save não suportado');
+    if(original.schemaVersion===5)return clone(original);
+    assert([2,3,4].includes(original.schemaVersion),'Schema de save não suportado');
     const state=clone(original);
     if(state.schemaVersion===2){
       state.schemaVersion=3;
@@ -322,20 +352,27 @@ const CidadeCore = (() => {
         b.productSeq=0;b.saleSeq=0;b.orderSeq=0;b.sales=[];b.purchaseOrders=[];
       }
     }
-    state.schemaVersion=4;
+    if(state.schemaVersion<4){
+      state.schemaVersion=4;
+      if(state.world.business){const b=state.world.business;
+        b.products.forEach(p=>{p.stockValueCents=p.stockUnits*p.costCents;p.reorderPoint=Math.max(5,p.demand*3);p.targetStock=Math.max(20,p.demand*10);});
+        b.purchaseOrders.forEach(o=>{o.status='RECEIVED';o.dueDate=o.date;o.receivedAt=o.date;});
+      }
+    }
+    state.schemaVersion=5;
     if(state.world.business){const b=state.world.business;
-      b.products.forEach(p=>{
-        p.stockValueCents=p.stockUnits*p.costCents;
-        p.reorderPoint=Math.max(5,p.demand*3);
-        p.targetStock=Math.max(20,p.demand*10);
-      });
-      b.purchaseOrders.forEach(o=>{
-        o.status='RECEIVED';o.dueDate=o.date;o.receivedAt=o.date;
-      });
+      if(!b.promotions)b.promotions={};
     }
     return state;
   }
   function product(b,id) {const p=b.products.find(x=>x.id===(id??'base'));assert(p,'Produto não cadastrado');return p;}
+  function promotionDiscount(b,p,date){
+    const promotion=b.promotions?.[p.id];
+    return promotion&&date<=promotion.until?promotion.percent:0;
+  }
+  function effectivePrice(b,p,date){
+    return Math.round(p.priceCents*(100-promotionDiscount(b,p,date))/100);
+  }
   function syncTotals(b) {b.stockUnits=b.products.reduce((n,p)=>n+p.stockUnits,0);b.unitPrice=product(b,'base').priceCents;}
   function addDays(iso,days){let result=iso;for(let i=0;i<days;i++)result=dateNext(result);return result;}
   const supplierById=id=>SUPPLIERS.find(s=>s.id===id);
@@ -406,9 +443,10 @@ const CidadeCore = (() => {
       assert(!used.has(p.id),'Produto repetido na mesma venda');used.add(p.id);
       assert(Number.isInteger(quantity)&&quantity>=1&&quantity<=2000,'Quantidade de venda inválida (1–2000)');
       assert(p.stockUnits>=quantity,`Estoque insuficiente para ${p.name}`);
-      const revenue=quantity*p.priceCents,cogs=quantity===p.stockUnits?p.stockValueCents:Math.round(p.stockValueCents*quantity/p.stockUnits);
+      const unitPrice=effectivePrice(b,p,draft.calendar.date);
+      const revenue=quantity*unitPrice,cogs=quantity===p.stockUnits?p.stockValueCents:Math.round(p.stockValueCents*quantity/p.stockUnits);
       total+=revenue;cost+=cogs;qtyTotal+=quantity;
-      return {productId:p.id,name:p.name,quantity,unitPrice:p.priceCents,unitCost:p.costCents,revenue,cogs};});
+      return {productId:p.id,name:p.name,quantity,unitPrice,unitCost:p.costCents,revenue,cogs};});
     assert(Number.isSafeInteger(total)&&Number.isSafeInteger(cost),'Valor da venda excede limite');
     assert(b.sales.length<20000,'Limite de histórico de vendas atingido');
     for(const line of lines){const p=product(b,line.productId);p.stockUnits-=line.quantity;p.stockValueCents-=line.cogs;}
@@ -451,7 +489,7 @@ const CidadeCore = (() => {
     return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),inTransit:balance(draft,'IN_TRANSIT'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),revenue,cogs,expenses,profit:revenue-cogs-expenses,stock:draft.world.business?.stockUnits??0,unitPrice:draft.world.business?.unitPrice??null,tick:draft.calendar.tick,city:cityById(draft.player.cityId)?.name??'—'};
   }
   function emptyLegacy(seed) {return {
-    schemaVersion:4,worldId:`legacy-${seed}`,revision:0,
+    schemaVersion:5,worldId:`legacy-${seed}`,revision:0,
     meta:{title:'Cidade dos Negócios',version:VERSION,origin:'MIGRATED_EMPTY_CP000',mode:'DEMONSTRACAO_ECONOMICA'},
     calendar:{date:START_DATE,tick:0},rng:{seed},
     player:{name:'',companyName:'',cityId:null},world:{cities:CITIES.map(x=>x.id),business:null,competitor:{priceIndex:100}},
@@ -482,7 +520,7 @@ const CidadeCore = (() => {
       const s=SECTORS[payload.sector],lot=Number(payload.lot);
       assert(s,'Atividade comercial desconhecida');assert(Number.isInteger(lot)&&lot>=1&&lot<=18,'Selecione um lote válido (1 a 18)');
       assert(balance(draft,'CASH')>=s.openCost,'Caixa insuficiente para abrir esta empresa');
-      draft.world.business={id:'est-1',sector:payload.sector,lot,stockUnits:0,unitPrice:s.recommended,openedAt:draft.calendar.date,totalSold:0,products:initialProducts(payload.sector),productSeq:0,saleSeq:0,orderSeq:0,sales:[],purchaseOrders:[]};
+      draft.world.business={id:'est-1',sector:payload.sector,lot,stockUnits:0,unitPrice:s.recommended,openedAt:draft.calendar.date,totalSold:0,products:initialProducts(payload.sector),productSeq:0,saleSeq:0,orderSeq:0,sales:[],purchaseOrders:[],promotions:{}};
       journal(draft,`Abertura: ${s.name}`,[{account:'EXPENSE',debit:s.openCost,credit:0},{account:'CASH',debit:0,credit:s.openCost}]);
       event(draft,'EMPRESA.ABERTA',`${s.name} inaugurado no lote ${lot}.`,{lot,sector:payload.sector});
       return;
@@ -521,6 +559,17 @@ const CidadeCore = (() => {
       // Recibos BALCAO antigos permanecem no save para auditoria, sem nova mutação do ledger.
       throw Error('Venda manual desativada na V1.2.1: avance o dia para simular a demanda e as vendas.');
     }
+    if(type==='PROMO.DEFINIR') {
+      assert(b,'Abra uma empresa antes de configurar promoções');
+      const p=product(b,payload.productId);
+      const percent=Number(payload.percent),days=Number(payload.days);
+      assert([0,5,10,15].includes(percent),'Desconto promocional inválido');
+      assert(Number.isInteger(days)&&days>=0&&days<=30,'Prazo de promoção inválido');
+      assert((percent===0&&days===0)||(percent>0&&days>=1),'Defina desconto e duração válidos');
+      if(percent===0){delete b.promotions[p.id];event(draft,'PROMO.ENCERRADA',`Promoção de ${p.name} encerrada.`,{productId:p.id});}
+      else {const until=addDays(draft.calendar.date,days-1);b.promotions[p.id]={percent,until};event(draft,'PROMO.DEFINIDA',`${p.name}: desconto de ${percent}% até ${until}.`,{productId:p.id,percent,until});}
+      return;
+    }
     if(type==='PRECO.DEFINIR') {
       assert(b,'Abra uma empresa antes de definir preços');
       const cents=Number(payload.cents);assert(int(cents)&&cents>=100&&cents<=1000000,'Preço deve estar entre R$ 1 e R$ 10.000');
@@ -549,7 +598,8 @@ const CidadeCore = (() => {
       let estimated=0,fulfilled=0,unmet=0,withoutStock=0;
       for(const p of b.products){
         const competitorPrice=p.referenceCents*(draft.world.competitor.priceIndex/100);
-        const ratio=p.priceCents/competitorPrice;
+        const price=effectivePrice(b,p,draft.calendar.date);
+        const ratio=price/competitorPrice;
         const elasticity=clamp(1.32-(ratio-1)*1.4,0.08,1.85);
         // Procura existe mesmo se o produto estiver esgotado; são unidades desejadas, não vendas garantidas.
         const demand=Math.max(0,Math.floor(p.demand*(city.factor/100)*elasticity*season*(0.75+random(draft)*0.55)));
@@ -557,11 +607,11 @@ const CidadeCore = (() => {
         estimated+=demand;fulfilled+=sold;unmet+=lost;
         if(!p.stockUnits)withoutStock++;
         demandLines.push({productId:p.id,name:p.name,stockBefore:p.stockUnits,estimated:demand,fulfilled:sold,unmet:lost,
-          lostPotentialCents:lost*p.priceCents});
+          lostPotentialCents:lost*price});
         if(sold>0)items.push({productId:p.id,quantity:sold});
       }
       if(items.length)registerSale(draft,b,items,'SIMULACAO_DIARIA');
-      event(draft,'DEMANDA.SIMULADA',`Demanda simulada: ${estimated} un. estimadas, ${fulfilled} vendidas, ${unmet} não atendidas; ${withoutStock} produto(s) sem estimativa por falta de estoque.`,
+      event(draft,'DEMANDA.SIMULADA',`Demanda simulada: ${estimated} un. estimadas, ${fulfilled} vendidas, ${unmet} não atendidas; ${withoutStock} produto(s) sem estoque.`,
         {estimated,fulfilled,unmet,withoutStock,lostPotentialCents:demandLines.reduce((n,x)=>n+x.lostPotentialCents,0),items:demandLines});
       const cash=balance(draft,'CASH'),expense=s.dailyCost;
       // Despesa não desaparece quando não há caixa: vira obrigação a pagar.
@@ -605,7 +655,7 @@ const CidadeCore = (() => {
     }catch(error){return {ok:false,status:'REJECTED',state:current?clone(current):null,error:error.message};}
   }
   function validate(state) {
-    assert(plain(state)&&[2,3,4].includes(state.schemaVersion),'Save com schema incompatível');
+    assert(plain(state)&&[2,3,4,5].includes(state.schemaVersion),'Save com schema incompatível');
     assert(Number.isSafeInteger(state.revision)&&state.revision>=0,'Revisão inválida');
     assert(plain(state.player)&&plain(state.calendar)&&int(state.calendar.tick),'Jogador/calendário inválidos');
     assert(/^\d{4}-\d{2}-\d{2}$/.test(state.calendar.date)&&!Number.isNaN(Date.parse(state.calendar.date+'T12:00:00Z')),'Data inválida');
@@ -640,10 +690,10 @@ const CidadeCore = (() => {
           assert(plain(p)&&typeof p.id==='string'&&!ids.has(p.id)&&typeof p.name==='string'&&p.name.trim().length>=3,'Produto inválido');ids.add(p.id);
           assert(int(p.stockUnits)&&p.stockUnits<=100000&&int(p.costCents)&&p.costCents>=100&&p.costCents<=1000000,'Estoque ou custo inválido');
           assert(int(p.priceCents)&&p.priceCents>=100&&p.priceCents<=1000000&&int(p.referenceCents)&&p.referenceCents>=100&&int(p.demand)&&p.demand<=40,'Preço ou demanda inválida');
-          stockSum+=p.stockUnits;stockValue+=state.schemaVersion===4?p.stockValueCents:p.stockUnits*p.costCents;
+          stockSum+=p.stockUnits;stockValue+=state.schemaVersion>=4?p.stockValueCents:p.stockUnits*p.costCents;
         }
         assert(stockSum===b.stockUnits&&stockValue===inventory&&stockSum<=100000,'Estoque físico e contábil divergentes');
-        if(state.schemaVersion===4){
+        if(state.schemaVersion>=4){
           const transit=b.purchaseOrders.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.total,0);
           assert(transit===balance(state,'IN_TRANSIT'),'Mercadorias em trânsito não conciliadas');
           for(const p of b.products)assert(int(p.stockValueCents)&&p.stockValueCents<=100000000000&&
@@ -653,6 +703,12 @@ const CidadeCore = (() => {
             assert(['PENDING','RECEIVED'].includes(o.status)&&isoDate(o.dueDate)&&o.dueDate>=o.date&&
               (o.status==='PENDING'?o.receivedAt===null:isoDate(o.receivedAt)), 'Pedido ou prazo inválido');
             assert(o.items.reduce((n,x)=>n+x.total,0)===o.total,'Total de compra divergente');
+          }
+        }
+        if(state.schemaVersion===5){
+          assert(plain(b.promotions)&&Object.keys(b.promotions).length<=40,'Promoções inválidas');
+          for(const [id,promo] of Object.entries(b.promotions)){
+            assert(ids.has(id)&&plain(promo)&&[5,10,15].includes(promo.percent)&&isoDate(promo.until),'Promoção inválida no save');
           }
         }
         assert(b.unitPrice===product(b,'base').priceCents,'Preço base inconsistente');
@@ -715,6 +771,62 @@ const CidadeCore = (() => {
       closingPayable:account(until,'PAYABLE'),closingInTransit:account(until,'IN_TRANSIT'),capital:account(entries,'CAPITAL')
     };
   }
+  // Avaliação determinística da estratégia: consulta pura, sem alterar RNG, save ou contabilidade.
+  function strategyReport(state,horizonDays=30){
+    assert(state&&[7,30,90].includes(horizonDays),'Horizonte estratégico inválido');
+    const b=state.world.business;
+    if(!b)return null;
+    const sector=SECTORS[b.sector],city=cityById(state.player.cityId),current=overview(state);
+    const lastDate=new Date(state.calendar.date+'T12:00:00Z');lastDate.setUTCDate(lastDate.getUTCDate()-1);
+    const endDate=lastDate.toISOString().slice(0,10);
+    const firstDate=new Date(lastDate);firstDate.setUTCDate(firstDate.getUTCDate()-29);
+    const beginning=firstDate.toISOString().slice(0,10);
+    const recent=state.economy.ledger.filter(j=>j.date>=beginning&&j.date<=endDate);
+    const valueOf=(entry,account)=>entry.entries.reduce((n,e)=>n+(e.account===account?(account==='REVENUE'?e.credit-e.debit:e.debit-e.credit):0),0);
+    const recentRevenue=recent.reduce((n,j)=>n+valueOf(j,'REVENUE'),0);
+    const recentCogs=recent.reduce((n,j)=>n+valueOf(j,'COGS'),0);
+    const recentFixed=recent.filter(j=>j.memo==='Despesa operacional diária').reduce((n,j)=>n+valueOf(j,'EXPENSE'),0);
+    const recentOneOff=recent.filter(j=>j.memo!=='Despesa operacional diária').reduce((n,j)=>n+valueOf(j,'EXPENSE'),0);
+    const workingCapital=current.cash+current.inventoryValue+current.inTransit+current.receivables-current.payable;
+    const fixedDaily=sector.dailyCost;
+    let weightedContribution=0,weightedDemand=0;
+    const products=b.products.map(p=>({p,stock:p.stockUnits,value:p.stockValueCents}));
+    for(const row of products){
+      const p=row.p,unitPrice=effectivePrice(b,p,state.calendar.date),unitCost=p.stockUnits?Math.round(p.stockValueCents/p.stockUnits):p.costCents;
+      const reference=p.referenceCents*state.world.competitor.priceIndex/100;
+      const demand=Math.max(0,Math.round(p.demand*city.factor/100*clamp(1.32-(unitPrice/reference-1)*1.4,.08,1.85)));
+      weightedDemand+=demand;weightedContribution+=demand*(unitPrice-unitCost);
+    }
+    const contributionPerUnit=weightedDemand?weightedContribution/weightedDemand:0;
+    const breakEvenUnits=contributionPerUnit>0?Math.ceil(fixedDaily/contributionPerUnit):null;
+    let cash=current.cash,creditors=current.payable,projectedRevenue=0,projectedCogs=0,unitsSold=0,missed=0,lowestCash=cash;
+    let date=state.calendar.date;
+    for(let d=0;d<horizonDays;d++){
+      // Encomendas anteriores já estão pagas; entrega futura não provoca segunda saída de caixa.
+      for(const order of b.purchaseOrders){if(order.status!=='PENDING'||order.dueDate!==date)continue;
+        for(const line of order.items){const row=products.find(x=>x.p.id===line.productId);row.stock+=line.quantity;row.value+=line.total;}
+      }
+      const season=1+0.13*Math.sin(((state.calendar.tick+d)%365)/365*Math.PI*2);
+      for(const row of products){const p=row.p,price=effectivePrice(b,p,date),ref=p.referenceCents*state.world.competitor.priceIndex/100;
+        const elasticity=clamp(1.32-(price/ref-1)*1.4,.08,1.85);
+        const demand=Math.max(0,Math.floor(p.demand*city.factor/100*elasticity*season*1.025));
+        const sold=Math.min(demand,row.stock);missed+=demand-sold;unitsSold+=sold;
+        const cost=sold===row.stock?row.value:row.stock?Math.round(row.value*sold/row.stock):0;
+        row.stock-=sold;row.value-=cost;projectedRevenue+=sold*price;projectedCogs+=cost;cash+=sold*price;
+      }
+      if(cash>=fixedDaily)cash-=fixedDaily;
+      else creditors+=fixedDaily;
+      lowestCash=Math.min(lowestCash,cash);
+      date=dateNext(date);
+    }
+    const profit=projectedRevenue-projectedCogs-fixedDaily*horizonDays;
+    return {horizonDays,projectedRevenue,projectedCogs,projectedFixed:fixedDaily*horizonDays,
+      projectedProfit:profit,projectedCash:cash,projectedPayable:creditors,lowestCash,estimatedLostUnits:missed,estimatedSoldUnits:unitsSold,
+      workingCapital,cashCoverageDays:fixedDaily?Math.floor(current.cash/fixedDaily):null,
+      dailyFixed:fixedDaily,breakEvenUnits,contributionPerUnit,projectionEnd:date,
+      recent:{from:beginning,to:endDate,revenue:recentRevenue,cogs:recentCogs,fixed:recentFixed,oneOff:recentOneOff,
+        grossProfit:recentRevenue-recentCogs,operatingResult:recentRevenue-recentCogs-recentFixed-recentOneOff}};
+  }
   // O histórico persiste nos eventos existentes da V1; nenhum campo novo é adicionado ao save.
   function priceHistory(state) {
     if(!state?.world?.business)return [];
@@ -739,11 +851,11 @@ const CidadeCore = (() => {
     assert(plain(data)&&data.saveFormatVersion===1&&data.app==='Cidade dos Negócios'&&data.checksumAlgorithm==='FNV1A32'&&typeof data.checksum==='string'&&plain(data.payload),'Envelope de save incompatível');
     assert(hash(JSON.stringify(data.payload))===data.checksum,'Checksum diverge: arquivo alterado ou corrompido');
     validate(data.payload);
-    const migrated=data.payload.schemaVersion!==4,state=upgradedState(data.payload);validate(state);
-    return {state,migrated,message:migrated?'Carreira migrada para V1.3 com caixa, estoque e histórico preservados.':'Carreira restaurada com integridade validada.'};
+    const migrated=data.payload.schemaVersion!==5,state=upgradedState(data.payload);validate(state);
+    return {state,migrated,message:migrated?'Carreira migrada para V1.4 com caixa, estoque e histórico preservados.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,CITIES,SECTORS,SUPPLIERS,inventoryReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,CITIES,SECTORS,SUPPLIERS,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();
 
@@ -756,7 +868,7 @@ const CidadeCore = (() => {
   const BRDate=iso=>iso.split('-').reverse().join('/');
   const KEY='cidade-dos-negocios-save-v1';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
-  let financeQuery=null; // preferência de consulta da interface, independente do GameState
+  let financeQuery=null,strategyHorizon=30; // preferências de interface, independentes do GameState
   const business=()=>state?.world?.business||null;
   function chooseProduct(id){const b=business();return b?.products?.find(p=>p.id===$(id)?.value)||b?.products?.[0]||null;}
   function refillSelect(id,products){
@@ -797,7 +909,7 @@ const CidadeCore = (() => {
   }
   function renderCommerce(){
     const b=business(),products=b?.products||[];
-    for(const id of ['buy-product','price-product'])refillSelect(id,products);
+    for(const id of ['buy-product','price-product','promo-product'])refillSelect(id,products);
     const suppliers=Core.SUPPLIERS,$supplier=$('buy-supplier'),previous=$supplier.value;
     $supplier.replaceChildren(...suppliers.map(s=>{const opt=document.createElement('option');opt.value=s.id;opt.textContent=s.name;return opt;}));
     if(suppliers.some(x=>x.id===previous))$supplier.value=previous;
@@ -810,7 +922,13 @@ const CidadeCore = (() => {
     const orders=b?.purchaseOrders||[];
     $('recent-purchases').innerHTML=orders.length?orders.slice(-8).reverse().map(o=>`<div class="commerce-history-row"><strong>${escape(o.status==='PENDING'?'🚚 EM TRÂNSITO':'✓ RECEBIDO')}</strong> · ${escape(BRDate(o.date))} → ${escape(BRDate(o.dueDate||o.date))} · ${escape(o.id)} · ${escape(o.items.map(x=>x.quantity+'× '+x.name).join(', '))} · ${escape(Core.money(o.total))}</div>`).join(''):'<p class="muted">Nenhum pedido realizado nesta edição.</p>';
     renderSalesMonitor();renderInventoryPlanner();
-    setText('your-current-price',chosenPrice?Core.money(chosenPrice.priceCents):'—');
+    const promoProduct=chooseProduct('promo-product');
+    const promo=promoProduct&&b?.promotions?.[promoProduct.id];
+    const active=promo&&state.calendar.date<=promo.until;
+    setText('promo-status',promoProduct?(active?`Campanha vigente: ${promo.percent}% até ${BRDate(promo.until)} · preço efetivo ${Core.money(Core.effectivePrice(b,promoProduct,state.calendar.date))}.`:'Sem campanha ativa para este produto.'):'Abra sua empresa para configurar campanhas.');
+    $('promo-form').querySelector('button').disabled=!b;
+    if(promoProduct&&document.activeElement!==$('promo-percent'))$('promo-percent').value=active?String(promo.percent):'0';
+        setText('your-current-price',chosenPrice?Core.money(Core.effectivePrice(b,chosenPrice,state.calendar.date)):'—');
     setText('competitor-price',chosenPrice?Core.money(Math.round(chosenPrice.referenceCents*state.world.competitor.priceIndex/100)):'—');
     if(chosenPrice&&document.activeElement!==$('price-value'))$('price-value').value=(chosenPrice.priceCents/100).toFixed(2);
     updateBuyPreview();
@@ -864,6 +982,38 @@ const CidadeCore = (() => {
     if(q.period==='year')return {date:year(q.year)+'-01-01'};
     return {date:q.to,range:{from:q.from,to:q.to}};
   }
+  function renderStrategy(){
+    if(!state?.world?.business){$('strategy-metrics').innerHTML='<p class="muted">Abra uma empresa para consultar as projeções.</p>';$('strategy-cost-rows').innerHTML='';$('strategy-risks').innerHTML='';return;}
+    const report=Core.strategyReport(state,strategyHorizon);
+    $('strategy-horizon').value=String(strategyHorizon);
+    const value=(v)=>v===null?'Não atingível':Core.money(v);
+    const data=[
+      ['Capital de giro (saldo atual)',Core.money(report.workingCapital)],
+      ['Caixa atual cobre despesas fixas por',`${report.cashCoverageDays} dias (sem vendas)`],
+      ['Despesa operacional fixa por dia',Core.money(report.dailyFixed)],
+      ['Ponto de equilíbrio do mix',report.breakEvenUnits===null?'Sem margem positiva':`${report.breakEvenUnits} un./dia (estimado)`],
+      ['Caixa no fim do cenário',Core.money(report.projectedCash)],
+      ['Obrigações no fim do cenário',Core.money(report.projectedPayable)],
+      ['Resultado operacional projetado',Core.money(report.projectedProfit)],
+      ['Unidades potencialmente não atendidas',String(report.estimatedLostUnits)],
+      ['Vendas projetadas',String(report.estimatedSoldUnits)+' unidades']
+    ];
+    $('strategy-metrics').innerHTML=data.map(([k,v])=>`<div class="strategy-metric"><small>${escape(k)}</small><strong>${escape(v)}</strong></div>`).join('');
+    const rows=[
+      ['Receita de vendas',report.recent.revenue,report.projectedRevenue],
+      ['(-) CMV / custo variável das mercadorias',report.recent.cogs,report.projectedCogs],
+      ['(-) Despesa operacional fixa',report.recent.fixed,report.projectedFixed],
+      ['(-) Despesas de abertura / não recorrentes',report.recent.oneOff,null],
+      ['Resultado operacional antes dos tributos',report.recent.operatingResult,report.projectedProfit]
+    ];
+    $('strategy-cost-rows').innerHTML=rows.map(([label,actual,projected])=>`<tr><td>${escape(label)}</td><td>${escape(Core.money(actual))}</td><td>${projected===null?'Não projetado':escape(Core.money(projected))}</td></tr>`).join('');
+    const risks=[];
+    if(report.breakEvenUnits===null)risks.push('⚠ O mix de produtos não tem margem de contribuição positiva nas condições atuais.');
+    if(report.projectedPayable>Core.overview(state).payable)risks.push('⚠ O cenário prevê novas contas a pagar por caixa insuficiente para despesas fixas.');
+    if(report.estimatedLostUnits>0)risks.push(`⚠ Projeção de ${report.estimatedLostUnits} unidades não atendidas: avalie reposição e prazos de entrega.`);
+    if(report.recent.oneOff>0)risks.push('Abertura e outras despesas eventuais constam do realizado, mas não foram repetidas na projeção.');
+    $('strategy-risks').innerHTML=risks.length?risks.map(x=>`<p>${escape(x)}</p>`).join(''):'<p>Sem alertas adicionais nos parâmetros desta projeção hipotética.</p>';
+  }
   function renderFinances(){
     if(!state)return;
     const q=ensureFinanceQuery();
@@ -904,6 +1054,7 @@ const CidadeCore = (() => {
     $('finance-summary').innerHTML=rows.map((x,i)=>`<dt class="${i===4?'emphasis':''}">${escape(x[0])}</dt><dd class="${i===4?'emphasis':''}">${escape(Core.money(x[1]))}</dd>`).join('');
     setText('journal-count',`${report.entries.length} registros`);
     $('journal-events').innerHTML=report.entries.length?report.entries.slice(-8).reverse().map(j=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(j.memo)}</p><small>${escape(BRDate(j.date))} · ${escape(j.id)}</small></div></div>`).join(''):'<p class="muted">Nenhum lançamento neste período.</p>';
+    renderStrategy();
   }
   function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
   function commit(type,payload={}){
@@ -1046,6 +1197,9 @@ const CidadeCore = (() => {
     $('policy-product').addEventListener('change',()=>{const p=chooseProduct('policy-product');if(p){$('policy-reorder').value=p.reorderPoint;$('policy-target').value=p.targetStock;}});
     $('stock-policy-form').addEventListener('submit',e=>{e.preventDefault();const productId=$('policy-product').value;commit('ESTOQUE.POLITICA_DEFINIR',{productId,reorderPoint:Number($('policy-reorder').value),targetStock:Number($('policy-target').value)});});
     $('price-product').addEventListener('change',()=>{const p=chooseProduct('price-product');if(p)$('price-value').value=(p.priceCents/100).toFixed(2);renderCommerce();});
+    $('promo-product').addEventListener('change',renderCommerce);
+    $('promo-form').addEventListener('submit',e=>{e.preventDefault();const productId=$('promo-product').value,percent=Number($('promo-percent').value),days=percent?Number($('promo-days').value):0;if(commit('PROMO.DEFINIR',{productId,percent,days}))notify(percent?`Campanha de ${percent}% confirmada por ${days} dia(s) de jogo.`:'Campanha encerrada.');});
+    $('strategy-horizon').addEventListener('change',e=>{strategyHorizon=Number(e.target.value);renderStrategy();});
     $('product-form').addEventListener('submit',e=>{e.preventDefault();
       const name=$('new-product-name').value,costCents=Math.round(Number($('new-product-cost').value)*100),priceCents=Math.round(Number($('new-product-price').value)*100);
       if(commit('PRODUTO.CADASTRAR',{name,costCents,priceCents})){$('product-form').reset();notify('Produto cadastrado. Agora configure estoque mínimo e encomende mercadorias.');}

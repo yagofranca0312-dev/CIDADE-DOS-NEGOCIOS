@@ -8,6 +8,7 @@
   const KEY='cidade-dos-negocios-save-v1';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
   let inspectorOpen=false; // interface somente, nunca persistido
+  let mapZoomed=false; // visão ampliada opcional; não altera o save
   let financeQuery=null,strategyHorizon=30,financeScope='all',statementView='summary'; // preferências de interface, independentes do GameState
   const business=()=>state?Core.activeBusiness(state):null;
   function chooseProduct(id){const b=business();return b?.products?.find(p=>p.id===$(id)?.value)||b?.products?.[0]||null;}
@@ -183,6 +184,15 @@
     $('other-city-warning').hidden=units.some(x=>x.cityId===visibleCity.id);
     setText('other-city-warning','Cidade sem unidade da sua rede. Você pode inaugurar uma unidade num lote disponível.');
     setText('map-title',`Distrito comercial de ${visibleCity.name}`);setText('map-uf',visibleCity.uf);
+    const cityUnits=units.filter(x=>x.cityId===visibleCity.id);
+    setText('v221-legend-free',`${18-cityUnits.length} disponíveis`);
+    setText('v221-legend-owned',`${cityUnits.length} ${cityUnits.length===1?'empresa':'empresas'}`);
+    setText('v221-legend-selection',inspectorOpen?`Lote ${String(selectedLot).padStart(2,'0')} selecionado`:'Nenhuma seleção');
+    document.body.classList.toggle('v221-map-zoomed',mapZoomed&&visibleCity.id==='CE-TIANGUA');
+    const zoomButton=$('v221-map-zoom');
+    zoomButton.hidden=visibleCity.id!=='CE-TIANGUA';
+    zoomButton.setAttribute('aria-pressed',String(mapZoomed));
+    zoomButton.textContent=mapZoomed?'⊖ Mostrar mapa inteiro':'⊕ Ampliar mapa';
     $('map-canvas').innerHTML=visibleCity.id==='CE-TIANGUA'
       ? CidadeTianguaCena.svgMap(visibleCity,units.filter(x=>x.cityId===visibleCity.id),inspectorOpen?selectedLot:null)
       : CidadeVisual.svgMap(visibleCity,units.filter(x=>x.cityId===visibleCity.id).map(x=>x.lot),inspectorOpen?selectedLot:null);
@@ -270,6 +280,12 @@
     $('map-canvas').addEventListener('click',e=>{const target=e.target.closest('[data-lot]');if(target){selectedLot=Number(target.dataset.lot);inspectorOpen=true;render();updateOpenPreview();}});
     $('map-canvas').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const target=e.target.closest('[data-lot]');if(target){e.preventDefault();selectedLot=Number(target.dataset.lot);inspectorOpen=true;render();$('map-canvas').querySelector(`[data-lot="${selectedLot}"]`)?.focus();}}});
   $('map-lot-picker').addEventListener('change',e=>{const next=Number(e.target.value);if(Number.isInteger(next)&&next>=1&&next<=18){selectedLot=next;inspectorOpen=true;render();$('map-lot-picker').focus();}});
+    $('v221-map-zoom').addEventListener('click',()=>{
+      mapZoomed=!mapZoomed;
+      render();
+      // No modo ampliado, a faixa do mapa pode ser deslocada horizontalmente.
+      if(mapZoomed){const el=$('map-canvas');el.scrollLeft=Math.max(0,(el.scrollWidth-el.clientWidth)/2);}
+    });
     $('v221-inspector-close').addEventListener('click',()=>{inspectorOpen=false;render();$('v221-hud-units').focus();});
     $('v221-hud-units').addEventListener('click',()=>goto('empresa'));
     $('v221-config-open').addEventListener('click',()=>goto('sistema'));

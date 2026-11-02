@@ -15,66 +15,7 @@
     select.replaceChildren(...products.map(p=>{const option=document.createElement('option');option.value=p.id;option.textContent=p.name;return option;}));
     if(products.some(p=>p.id===previous))select.value=previous;
   }
-  function renderSalesMonitor(){
-    const b=business(),sales=b?.sales||[];
-    const checks=state?.audit?.events?.filter(e=>e.type==='DEMANDA.SIMULADA'&&b&&(e.businessId===b.id||(!e.businessId&&b.id===state.world.business?.id)))||[];
-    const latest=checks.at(-1);
-    setText('demand-date',latest?BRDate(latest.date):'Aguardando primeiro dia simulado');
-    setText('demand-estimated',latest?String(latest.data.estimated):'—');
-    setText('demand-fulfilled',latest?String(latest.data.fulfilled):'—');
-    setText('demand-unmet',latest?String(latest.data.unmet):'—');
-    setText('demand-without-stock',latest?String(latest.data.withoutStock):'—');
-    setText('demand-lost-potential',latest&&Number.isSafeInteger(latest.data.lostPotentialCents)?Core.money(latest.data.lostPotentialCents):'—');
-    const rows=latest?.data?.items||[];
-    $('demand-rows').innerHTML=rows.length?rows.map(p=>`<tr><td>${escape(p.name)}</td><td>${p.estimated===null?'Sem estimativa':p.estimated}</td><td>${p.fulfilled}</td><td>${p.unmet===null?'—':p.unmet}</td></tr>`).join(''):'<tr><td colspan="4">Avance pelo menos um dia com uma empresa aberta para visualizar a demanda simulada.</td></tr>';
-    const daily=latest?sales.filter(s=>s.date===latest.date&&s.kind==='SIMULACAO_DIARIA'):[];
-    const revenue=daily.reduce((n,s)=>n+s.total,0),cost=daily.reduce((n,s)=>n+s.cogs,0);
-    setText('demand-day-revenue',latest?Core.money(revenue):'—');
-    setText('demand-day-cogs',latest?Core.money(cost):'—');
-    $('recent-sales').innerHTML=sales.length?sales.slice(-12).reverse().map(o=>{
-      const name=o.kind==='SIMULACAO_DIARIA'?'Vendas automáticas':o.kind==='BALCAO'?'Venda manual histórica (V1.2)':'Venda registrada';
-      const detail=o.items.map(x=>`<li>${escape(x.name)}: ${x.quantity} un. · receita ${escape(Core.money(x.revenue))} · CMV ${escape(Core.money(x.cogs))}</li>`).join('');
-      return `<details class="commerce-receipt"><summary>${escape(BRDate(o.date))} · ${escape(o.id)} · ${escape(name)} · ${escape(Core.money(o.total))}</summary><ul>${detail}</ul><p>CMV: ${escape(Core.money(o.cogs))} · Lucro bruto: ${escape(Core.money(o.total-o.cogs))}</p></details>`;
-    }).join(''):'<p class="muted">Nenhuma venda registrada. Abasteça o estoque e avance um dia.</p>';
-  }
-  function renderInventoryPlanner(){
-    const b=business(),rows=b?Core.inventoryReport(state):[];
-    $('inventory-planner-rows').innerHTML=rows.length?rows.map(p=>`<tr><td class="${p.alert?'stock-alert':'stock-ok'}">${escape(p.name)}${p.alert?' ⚠':''}</td><td>${p.stock}</td><td>${p.inTransit}</td><td>${p.forecastDaily} ${p.sampleDays?'(observada)':'(base)'}</td><td>${p.coverageDays} dias</td><td>${p.reorderPoint}</td><td>${p.targetStock}</td><td>${p.recommended}</td></tr>`).join(''):'<tr><td colspan="8">Abra a empresa para configurar a reposição.</td></tr>';
-    refillSelect('policy-product',b?.products||[]);
-    const selected=chooseProduct('policy-product');
-    if(selected&&document.activeElement!==$('policy-reorder'))$('policy-reorder').value=selected.reorderPoint;
-    if(selected&&document.activeElement!==$('policy-target'))$('policy-target').value=selected.targetStock;
-    $('stock-policy-form').querySelector('button').disabled=!b;
-  }
-  function renderCommerce(){
-    const b=business(),products=b?.products||[];
-    for(const id of ['buy-product','price-product','promo-product'])refillSelect(id,products);
-    const suppliers=Core.SUPPLIERS,$supplier=$('buy-supplier'),previous=$supplier.value;
-    $supplier.replaceChildren(...suppliers.map(s=>{const opt=document.createElement('option');opt.value=s.id;opt.textContent=s.name;return opt;}));
-    if(suppliers.some(x=>x.id===previous))$supplier.value=previous;
-    const supplier=suppliers.find(x=>x.id===$supplier.value);
-    setText('supplier-terms',supplier?`Entrega em ${supplier.leadDays} dia(s) · custo ${supplier.priceFactor}% da referência · capacidade de ${supplier.maxDailyPerSku} un. por produto/dia.`:'Escolha um fornecedor.');
-    const chosenPrice=chooseProduct('price-product');
-    setText('product-count',`${products.length} produto(s)`);
-    const stats=b?Core.productPerformance(state):[];
-    $('catalog-rows').innerHTML=stats.length?stats.map(p=>`<tr><td>${escape(p.name)}</td><td>${p.stockUnits}</td><td>${escape(Core.money(p.costCents))}</td><td>${escape(Core.money(p.priceCents))}</td><td>${p.sold}</td><td>${escape(Core.money(p.revenue))}</td><td>${escape(Core.money(p.cogs))}</td></tr>`).join(''):'<tr><td colspan="7">Abra uma empresa para ver o catálogo.</td></tr>';
-    const orders=b?.purchaseOrders||[];
-    $('recent-purchases').innerHTML=orders.length?orders.slice(-8).reverse().map(o=>`<div class="commerce-history-row"><strong>${escape(o.status==='PENDING'?'🚚 EM TRÂNSITO':'✓ RECEBIDO')}</strong> · ${escape(BRDate(o.date))} → ${escape(BRDate(o.dueDate||o.date))} · ${escape(o.id)} · ${escape(o.items.map(x=>x.quantity+'× '+x.name).join(', '))} · ${escape(Core.money(o.total))}</div>`).join(''):'<p class="muted">Nenhum pedido realizado nesta edição.</p>';
-    renderSalesMonitor();renderInventoryPlanner();
-    const promoProduct=chooseProduct('promo-product');
-    const promo=promoProduct&&b?.promotions?.[promoProduct.id];
-    const active=promo&&state.calendar.date<=promo.until;
-    setText('promo-status',promoProduct?(active?`Campanha vigente: ${promo.percent}% até ${BRDate(promo.until)} · preço efetivo ${Core.money(Core.effectivePrice(b,promoProduct,state.calendar.date))}.`:'Sem campanha ativa para este produto.'):'Abra sua empresa para configurar campanhas.');
-    $('promo-form').querySelector('button').disabled=!b;
-    if(promoProduct&&document.activeElement!==$('promo-percent'))$('promo-percent').value=active?String(promo.percent):'0';
-        setText('your-current-price',chosenPrice?Core.money(Core.effectivePrice(b,chosenPrice,state.calendar.date)):'—');
-    setText('competitor-price',chosenPrice?Core.money(Math.round(Core.competitorReference(state,chosenPrice,Core.cityById(b.cityId)))):'—');
-    if(chosenPrice&&document.activeElement!==$('price-value'))$('price-value').value=(chosenPrice.priceCents/100).toFixed(2);
-    updateBuyPreview();
-  }
-
-  let toastTimer;
-  const nextId=()=>`ui:${Date.now()}:${++sequence}`;
+  /* CDN_MARKET_VIEWS */
   const setText=(id,value)=>{const el=$(id);if(el)el.textContent=String(value)};
   function notify(message,isError=false){
     const n=$('toast');n.textContent=message;n.classList.toggle('error',isError);n.classList.add('visible');
@@ -171,129 +112,7 @@
     if(report.recent.oneOff>0)risks.push('Abertura e outras despesas eventuais constam do realizado, mas não foram repetidas na projeção.');
     $('strategy-risks').innerHTML=risks.length?risks.map(x=>`<p>${escape(x)}</p>`).join(''):'<p>Sem alertas adicionais nos parâmetros desta projeção hipotética.</p>';
   }
-  function renderFinances(){
-    if(!state)return;
-    const q=ensureFinanceQuery();
-    $('finance-period').value=q.period;
-    for(const group of document.querySelectorAll('[data-finance-field]'))group.hidden=group.dataset.financeField!==q.period;
-    const fields={'finance-date':q.asOf,'finance-day':q.day,'finance-month':q.month,
-      'finance-quarter':q.quarter,'finance-quarter-year':q.quarterYear,
-      'finance-semester':q.semester,'finance-semester-year':q.semesterYear,
-      'finance-year':q.year,'finance-range-from':q.from,'finance-range-to':q.to};
-    for(const [id,value] of Object.entries(fields)){const el=$(id);if(document.activeElement!==el)el.value=String(value);}
-    for(const id of ['finance-date','finance-day','finance-range-from','finance-range-to'])$(id).max=state.calendar.date;
-    $('finance-month').max=state.calendar.date.slice(0,7);
-    for(const id of ['finance-year','finance-quarter-year','finance-semester-year'])$(id).max=state.calendar.date.slice(0,4);
-    let report;
-    try {
-      const params=financeQueryDate(q);
-      report=Core.financialReport(state,q.period,params.date,params.range,financeScope);
-      $('finance-validation').hidden=true;setText('finance-validation','');
-    }catch(e){
-      $('finance-validation').hidden=false;setText('finance-validation',e.message);
-      setText('finance-period-label','Corrija o período selecionado para consultar o demonstrativo.');
-      $('finance-summary').innerHTML='';setText('finance-statement-note','Selecione um período válido para consultar os demonstrativos.');setText('journal-count','—');
-      $('journal-events').innerHTML='<p class="muted">Período inválido. Nenhum dado foi alterado.</p>';
-      return;
-    }
-    setText('finance-period-label',`${report.label} · ${financeScope==='all'?'GRUPO CONSOLIDADO':`UNIDADE ${financeScope}`} · lançamentos até ${BRDate(report.effectiveEnd)}. Consulta fixa até você alterar os filtros.`);
-    // Guia de demonstrações: um único painel, sem adicionar abas principais.
-    const titles={summary:'Resumo realizado',dre:'DRE gerencial',balance:'Balanço patrimonial',cash:'Fluxo de caixa realizado',check:'Conferência do razão'};
-    setText('finance-statement-title',titles[statementView]);
-    for(const button of document.querySelectorAll('[data-statement-view]')){
-      const active=button.dataset.statementView===statementView;
-      button.classList.toggle('active',active);button.setAttribute('aria-pressed',String(active));
-    }
-
-    const rows=[
-      ['Receita de vendas (período)',report.revenue],
-      ['(-) Custo das mercadorias vendidas',report.cogs],
-      ['Lucro bruto (período)',report.grossProfit],
-      ['(-) Despesas operacionais',report.expenses],
-      ['Resultado antes dos tributos',report.revenue-report.cogs-report.expenses],
-      ['(-) Tributos simulados contabilizados',report.taxExpense],
-      ['Resultado após tributos simulados',report.profit],
-      ['Caixa centralizado do grupo',financeScope==='all'?report.closingCash:null],
-      ['Estoque contabilizado no encerramento',report.closingInventory],
-      ['Obrigações operacionais acumuladas',report.closingPayable],
-      ['Tributos simulados a pagar',report.closingTaxPayable],
-      ['Mercadorias pagas em trânsito (ativo)',report.closingInTransit]
-    ];
-    let note='Resultados realizados do ledger. Tributos só entram quando há cenário didático opt-in efetivamente contabilizado; não representam apuração legal.';
-    if(statementView==='dre'){
-      const x=Core.incomeStatement(state,q.period,financeQueryDate(q).date,financeQueryDate(q).range,financeScope);
-      rows.splice(0,rows.length,...[
-        ['Receita de vendas',x.revenue],['(-) CMV',x.cogs],['Lucro bruto',x.grossProfit],
-        ['(-) Despesas fixas operacionais',x.fixedExpenses],['(-) Abertura de unidades',x.openingExpenses],
-        ['(-) Outras despesas não classificadas',x.unclassifiedExpenses],['Resultado antes dos tributos',x.operatingResult],
-        ['(-) Tributos simulados lançados no período',x.taxExpense],['Resultado após tributos simulados',x.resultAfterSimulatedTax]
-      ]);
-      note='DRE do período. Tributos são apenas cenários didáticos reconhecidos após ativação e fechamento da competência; não constituem valores fiscais reais.';
-    }else if(statementView==='balance'){
-      const x=Core.balanceSheet(state,report.effectiveEnd);
-      rows.splice(0,rows.length,...[
-        ['Caixa compartilhado',x.accounts.CASH],['Estoques físicos',x.accounts.INVENTORY],
-        ['Mercadorias em trânsito',x.accounts.IN_TRANSIT],['Recebíveis',x.accounts.RECEIVABLE],
-        ['Total do ativo',x.assets],['Contas a pagar (inclui tributos simulados)',x.liabilities],['Tributos simulados a pagar',x.accounts.TAX_PAYABLE],
-        ['Capital aportado',x.paidInCapital],['Resultados acumulados após tributos simulados',x.retainedEarnings],
-        ['Patrimônio líquido gerencial',x.equity],['Diferença de conciliação',x.difference]
-      ]);
-      note=`Balanço CONSOLIDADO do grupo até ${BRDate(x.asOf)}. Nunca é atribuído caixa individual a filiais. ${x.balanced?'Ativo = Passivo + PL.':'⚠ Há divergência ou conta não mapeada.'} Tributos presentes somente quando simulados e contabilizados.`;
-    }else if(statementView==='cash'){
-      const x=Core.cashFlowStatement(state,q.period,financeQueryDate(q).date,financeQueryDate(q).range,financeScope);
-      rows.splice(0,rows.length,...[
-        ['Caixa inicial do grupo',x.openingCash],['Entradas de vendas',x.categories.sales],
-        ['Aportes ao grupo',x.categories.capital],['Outras entradas sem classificação',x.categories.unclassifiedIn],
-        ['Saídas para fornecedores',x.categories.suppliers],['Saídas operacionais',x.categories.operating],
-        ['Aberturas de unidades',x.categories.opening],['Pagamento de tributo simulado',x.categories.taxPayments],['Outras saídas sem classificação',x.categories.unclassifiedOut],
-        ['Variação líquida de caixa',x.netCash],['Caixa final do grupo',x.closingCash]
-      ]);
-      note=x.warning+' Entradas, saídas e saldos representam caixa efetivo, e não custos por competência.';
-    }else if(statementView==='check'){
-      const x=Core.reconciliationReport(state,report.effectiveEnd);
-      rows.splice(0,rows.length,...[
-        ['Diferença ativo − (passivo + PL)',x.statementDifference],
-        ['Unidades conferidas (inventário)',x.snapshotAvailable?x.unitRows.length:null],
-        ['Inconsistências identificadas',x.errors.length],
-        ['Situação do fechamento',x.ok?'CONCILIADO':'VERIFICAR']
-      ]);
-      note=x.note+' '+(x.errors.length?x.errors.join(' · '):'Partidas dobradas e balanço conferidos.');
-    }
-    $('finance-summary').innerHTML=rows.map((x,i)=>`<dt class="${i===rows.length-1?'emphasis':''}">${escape(x[0])}</dt><dd class="${i===rows.length-1?'emphasis':''}">${typeof x[1]==='string'?escape(x[1]):x[1]===null?'Compartilhado (ver grupo)':escape(Core.money(x[1]))}</dd>`).join('');
-    setText('finance-statement-note',note);
-    setText('journal-count',`${report.entries.length} registros`);
-    $('journal-events').innerHTML=report.entries.length?report.entries.slice(-8).reverse().map(j=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(j.memo)}</p><small>${escape(BRDate(j.date))} · ${escape(j.id)}</small></div></div>`).join(''):'<p class="muted">Nenhum lançamento neste período.</p>';
-    renderStrategy();
-  }
-  function renderFiscal(){
-    if(!state)return;
-    const f=Core.taxReport(state),v=f.estimate,e=f.transition;
-    setText('fiscal-status',f.mode==='SIMULACAO_SIMPLES_COMERCIO'?`${v.coverageStatus} · cenário ${v.coverageStatus==='UNSUPPORTED'?'suspenso nesta competência':'ativado'}`:'NOT_COVERED · demonstração econômica');
-    $('fiscal-optin').hidden=f.mode!=='DEMONSTRACAO_ECONOMICA';
-    $('fiscal-activate').disabled=!$('fiscal-acknowledge').checked;
-    const rows=[
-      ['Modo atual',f.mode==='DEMONSTRACAO_ECONOMICA'?'Sem cobrança ativa':'Cenário de comércio simulado'],
-      ['Início das competências',f.effectiveFrom||'Somente após confirmação'],
-      ['Competência corrente',f.currentPeriod],
-      ['Cobertura da competência',v.coverageStatus],
-      ['Receita registrada no mês',Core.money(v.revenue)],
-      ['RBT12 anualizada (didática)',v.rbt12===null?'NÃO COBERTA':Core.money(v.rbt12)],
-      ['Faixa do Anexo I',v.bracket===null?'—':`${v.bracket}ª faixa`],
-      ['Alíquota efetiva aproximada',v.rateBasisPoints===null?'—':`${(v.rateBasisPoints/100).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}%`],
-      ['Cenário mensal estimado',v.amount===null?'NÃO CALCULADO':Core.money(v.amount)],
-      ['Saldo tributário simulado a pagar',Core.money(f.taxPayable)]
-    ];
-    $('fiscal-summary').innerHTML=rows.map(([k,val])=>`<dt>${escape(k)}</dt><dd>${escape(val)}</dd>`).join('');
-    setText('fiscal-note',`${v.reason} ${f.note} Valor corrente é apenas estimativa até o fechamento; competência não suportada não é zero.`);
-    const records=f.assessments.slice(-15).reverse();
-    $('fiscal-assessments').innerHTML=records.length?records.map(a=>`<div class="event-item"><div><strong>${escape(a.period)}</strong> · ${escape(a.status)}<p>${a.status==='UNSUPPORTED'?escape(a.reason):`Valor calculado ${escape(Core.money(a.amount))} · Pago ${escape(Core.money(a.paid))}`}</p></div>${a.status==='OPEN'?`<button type="button" class="btn btn-outline" data-tax-pay="${escape(a.period)}">Pagar ${escape(Core.money(a.amount-a.paid))}</button>`:''}</div>`).join(''):'<p class="muted">Nenhuma competência encerrada no modo de simulação. Nada foi lançado retroativamente.</p>';
-    $('fiscal-transition').innerHTML=[['Ano / etapa',`${e.year} · ${e.phase}`],
-      ['Receita corrente (referência educativa)',Core.money(e.revenueCurrentMonth)],
-      ['CBS de teste 2026 — 0,9%',e.cbsTestCents===null?'Não calculada':Core.money(e.cbsTestCents)],
-      ['IBS de teste 2026 — 0,1%',e.ibsTestCents===null?'Não calculado':Core.money(e.ibsTestCents)],
-      ['Reconhecimento contábil de teste','NENHUM']].map(([k,val])=>`<dt>${escape(k)}</dt><dd>${escape(val)}</dd>`).join('');
-    setText('fiscal-transition-note',e.note);
-  }
+  /* CDN_FINANCE_VIEWS */
   function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
   function commit(type,payload={}){
     if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;financeScope='all';statementView='summary';}
@@ -303,10 +122,11 @@
     notify(result.message);
     return true;
   }
-  function goto(name){tab=name;document.querySelectorAll('[data-view]').forEach(el=>{const chosen=el.getAttribute('data-view')===name;el.hidden=!chosen;el.classList.toggle('active',chosen);});document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.tab===name));
+  function goto(name){tab=name;document.querySelectorAll('[data-view]').forEach(el=>{const chosen=el.getAttribute('data-view')===name;el.hidden=!chosen;el.classList.toggle('active',chosen);});document.querySelectorAll('[data-tab]').forEach(el=>{const active=el.dataset.tab===(name==='fiscal'?'financas':name);el.classList.toggle('active',active);if(el.classList.contains('nav-item')){if(active)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');}});
     const labels={cidade:['CENTRAL DE OPERAÇÕES','A sua cidade, as suas decisões.','Explore lotes comerciais e acompanhe os acontecimentos.'],empresa:['GESTÃO EMPRESARIAL','Cada escolha constrói um negócio.','Abra sua empresa e tome decisões de administração.'],mercado:['VENDAS E SUPRIMENTOS','Preço, demanda e estoque.','Compre mercadorias e encontre sua estratégia de preço.'],financas:['INDICADORES CONTÁBEIS','Os números contam sua história.','Acompanhe lançamentos e resultados rastreáveis.'],fiscal:['CENÁRIOS TRIBUTÁRIOS','A estratégia também considera tributos.','Simulação opcional com limitações e regras por competência.'],sistema:['PERSISTÊNCIA E QA','Seu progresso, sua segurança.','Faça backups e confira o estado da simulação.']};
     const info=labels[name]||labels.cidade;setText('page-kicker',info[0]);setText('page-title-text',info[1]);setText('page-subtitle',info[2]);
     if(state)render();
+    window.scrollTo({top:0,behavior:'instant'});
   }
   function cityOptions(){
     const items=Core.CITIES.slice().sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
@@ -340,48 +160,6 @@
     $('regional-source').href=p.source;
     $('map-canvas').dataset.urbanSize=p.tier;
   }
-  function svgMap(city,ownedLots,lot){
-    // SVG estilizado original: cada grupo tem identificação de lote, sem dependências externas.
-    const seed=city.name.length+city.id.length;
-    const urbanSize={local:0,regional:1,grande:2,metropole:3}[city.sizeTier]??0;
-    const fragments=[`<svg viewBox="180 10 600 360" xmlns="http://www.w3.org/2000/svg" aria-label="Mapa isométrico fictício de ${escape(city.name)}">`,
-      `<defs><linearGradient id="sea" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#1e5270"/><stop offset="1" stop-color="#0b2639"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="4"/></filter></defs>`,
-      `<path d="M0 325 Q180 310 280 370 T800 340 L870 410H0Z" fill="#16516e" opacity=".42"/>`,
-      `<path d="M145 155 L436 19 L813 196 L519 366Z" fill="#102d3b" opacity=".9"/>`];
-    // Horizonte ilustrativo: escala visual relativa, sem geografia ou números oficiais.
-    for(let i=0;i<3+urbanSize*5;i++){
-      const cx=210+i*26, h=16+((i*19+seed)%24)+urbanSize*9;
-      fragments.push(`<rect x="${cx}" y="${125-h}" width="13" height="${h}" rx="2" fill="#6da0a9" opacity=".24" pointer-events="none"/>`);
-    }
-    for(let row=0;row<3;row++)for(let col=0;col<6;col++){
-      const num=row*6+col+1,x=392+(col-row)*57,y=91+(col+row)*26;
-      const isOwn=ownedLots.includes(num),isSelected=lot===num;
-      const ground=isOwn?'#9e8144':isSelected?'#3f8bb2':'#42665f';
-      const roofs=['#487d8c','#316275','#607387','#597c80','#425a6b'];
-      const roof=isOwn?'#e8b55f':roofs[(num+seed)%roofs.length];
-      const height=isOwn?42:14+((num*7+seed)%4)*9+urbanSize*7;
-      const xx=x,yy=y,wide=49,tall=23;
-      fragments.push(`<g data-lot="${num}" tabindex="0" role="button" aria-label="Selecionar lote ${num}"><title>Lote ${String(num).padStart(2,'0')} · clique para selecionar</title>`);
-      if(isSelected)fragments.push(`<ellipse cx="${xx}" cy="${yy+12}" rx="65" ry="37" fill="#6dc9ff" opacity=".16" filter="url(#glow)"/>`);
-      fragments.push(`<polygon points="${xx},${yy-tall} ${xx+wide},${yy} ${xx},${yy+tall} ${xx-wide},${yy}" fill="${ground}" stroke="${isSelected?'#9bdbff':'#416773'}" stroke-width="${isSelected?3:1.7}"/>`);
-      if((urbanSize>=2?num%11===0:num%5===0)&&!isOwn){
-        fragments.push(`<path d="M${xx-7} ${yy+5}l-6-18h12l-6 18" fill="#42745c" stroke="#8fc09c" stroke-width="2"/><circle cx="${xx-6}" cy="${yy-10}" r="11" fill="#2d8d66"/><circle cx="${xx+7}" cy="${yy-12}" r="9" fill="#419672"/>`);
-      }else{
-        const cx=xx,cy=yy-3;
-        fragments.push(`<polygon points="${cx-17},${cy-height} ${cx},${cy-height-8} ${cx+19},${cy-height} ${cx+2},${cy-height+10}" fill="${roof}" stroke="#9cc1cb" stroke-width=".7"/>`);
-        fragments.push(`<polygon points="${cx-17},${cy-height} ${cx+2},${cy-height+10} ${cx+2},${cy+13} ${cx-17},${cy+2}" fill="${isOwn?'#bb873c':'#345569'}"/>`);
-        fragments.push(`<polygon points="${cx+2},${cy-height+10} ${cx+19},${cy-height} ${cx+19},${cy+2} ${cx+2},${cy+13}" fill="${isOwn?'#e2a450':'#27485e'}"/>`);
-        fragments.push(`<path d="M${cx-10} ${cy-height+14}v5 M${cx-3} ${cy-height+18}v5 M${cx+8} ${cy-height+17}v6" stroke="${isOwn?'#f7d99e':'#7ba9bf'}" stroke-width="2"/>`);
-      }
-      fragments.push(`</g>`);
-    }
-    const r=Math.floor((lot-1)/6),c=(lot-1)%6;
-    const px=392+(c-r)*57,py=91+(c+r)*26;
-    // Destaque sobreposto por último: lote legível sem 18 números concorrendo no mapa.
-    fragments.push(`<g class="selected-lot-marker" pointer-events="none" aria-hidden="true"><path d="M${px} ${py-4}L${px} ${py-39}" stroke="#f4d49a" stroke-width="2"/><rect x="${px-55}" y="${py-69}" width="110" height="30" rx="8" fill="#0c2238" stroke="#f4d49a" stroke-width="1.6"/><text x="${px}" y="${py-49}" fill="#ffe1a1" text-anchor="middle" font-size="14" font-weight="800">LOTE ${String(lot).padStart(2,'0')}</text></g>`);
-    fragments.push(`<text x="208" y="40" fill="#9fbfd2" font-size="15" font-weight="700" letter-spacing="3">${escape(city.name.toUpperCase())} · ${escape(city.uf)}</text><text x="208" y="60" fill="#7eabc0" font-size="10">DISTRITO COMERCIAL FICTÍCIO · PORTE ${escape(city.sizeTier.toUpperCase())}</text></svg>`);
-    return fragments.join('');
-  }
   function eventsHTML(events){if(!events.length)return '<p class="muted">Nenhum evento registrado ainda.</p>';return events.map(e=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(e.text)}</p><small>${escape(e.date)} · ${escape(e.type)}</small></div></div>`).join('');}
   function render(){
     const started=!!state?.player?.cityId;
@@ -398,10 +176,13 @@
     $('other-city-warning').hidden=units.some(x=>x.cityId===visibleCity.id);
     setText('other-city-warning','Cidade sem unidade da sua rede. Você pode inaugurar uma unidade num lote disponível.');
     setText('map-title',`Distrito comercial de ${visibleCity.name}`);setText('map-uf',visibleCity.uf);
-    $('map-canvas').innerHTML=svgMap(visibleCity,units.filter(x=>x.cityId===visibleCity.id).map(x=>x.lot),selectedLot);
+    $('map-canvas').innerHTML=CidadeVisual.svgMap(visibleCity,units.filter(x=>x.cityId===visibleCity.id).map(x=>x.lot),selectedLot);
     renderRegional(visibleCity);
     setText('selected-lot',`Lote ${String(selectedLot).padStart(2,'0')} de 18`);updateOpenPreview();
-    $('map-open-company').disabled=units.length>=5||units.some(x=>x.cityId===visibleCity.id&&x.lot===selectedLot);
+    const lotOwner=units.find(x=>x.cityId===visibleCity.id&&x.lot===selectedLot);
+    $('map-open-company').disabled=!lotOwner&&units.length>=5;
+    setText('map-open-company',lotOwner?'Gerenciar este estabelecimento':'Abrir unidade neste lote');
+    setText('map-lot-status',lotOwner?`Sua unidade ${lotOwner.id} está neste lote.`:(units.length>=5?'Limite de 5 estabelecimentos atingido.':'Terreno disponível para uma nova unidade.'));
     setText('city-events','');$('city-events').innerHTML=eventsHTML(state.audit.events.slice(-6).reverse());
     $('company-empty').hidden=units.length>=5;$('company-active').hidden=!b;
     renderGroup();
@@ -468,7 +249,7 @@
     $('explore-city').addEventListener('change',e=>{viewCityId=e.target.value;render();updateOpenPreview();});
     $('map-canvas').addEventListener('click',e=>{const target=e.target.closest('[data-lot]');if(target){selectedLot=Number(target.dataset.lot);render();updateOpenPreview();}});
     $('map-canvas').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const target=e.target.closest('[data-lot]');if(target){e.preventDefault();selectedLot=Number(target.dataset.lot);render();}}});
-    $('map-open-company').addEventListener('click',()=>{goto('empresa');$('sector-select').focus();});
+    $('map-open-company').addEventListener('click',()=>{const owner=Core.businesses(state).find(x=>x.cityId===viewCityId&&x.lot===selectedLot);if(owner&&business()?.id!==owner.id)commit('EMPRESA.ATIVAR',{businessId:owner.id});goto('empresa');if(!owner)$('sector-select').focus();});
     $('sector-select').addEventListener('change',updateOpenPreview);
     $('open-form').addEventListener('submit',e=>{e.preventDefault();if(!state)return;if(commit('EMPRESA.ABRIR',{sector:$('sector-select').value,cityId:viewCityId,lot:selectedLot}))goto('cidade');});
     $('buy-quantity').addEventListener('input',updateBuyPreview);

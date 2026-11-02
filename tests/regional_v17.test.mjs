@@ -15,7 +15,7 @@ const fresh=(engine=C)=>{
  return run(engine,s,'EMPRESA.ABRIR',{sector:'mercado',lot:1});
 };
 test('V1.7: dados oficiais PIB 2023 cobrem 30 municípios com códigos únicos e unidade R$ mil',()=>{
- assert.equal(C.VERSION,'1.9.0-rc.1'); assert.equal(C.SCHEMA_VERSION,9);
+ assert.equal(C.VERSION,'2.0.0-rc.1'); assert.equal(C.SCHEMA_VERSION,9);
  assert.equal(C.CITIES.length,30);
  assert.equal(new Set(C.CITIES.map(c=>c.ibgeCode)).size,30);
  assert.ok(C.CITIES.every(c=>Number.isSafeInteger(c.gdp2023Thousand)&&c.gdp2023Thousand>0&&c.gdpYear===2023));
@@ -103,12 +103,12 @@ test('V1.7: 365 dias, três unidades e caixa e resultado consolidados conciliado
  assert.equal(report.units.reduce((n,u)=>n+u.profit,0),report.group.profit);
 });
 test('V1.7: rodapé, topo, abertura e título não repetem v1.5 nem v1.6',()=>{
- const html=readFileSync('index.html','utf8'),template=readFileSync('src/shell/index.template.html','utf8'),ui=readFileSync('src/ui/app.js','utf8');
+ const html=readFileSync('index.html','utf8'),template=readFileSync('src/shell/index.template.html','utf8'),ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
  for(const s of [html,template]){
-  assert.match(s,/id="intro-version">v1\.9\.0-rc\.1/);
-  assert.match(s,/id="build-version">v1\.9\.0-rc\.1/);
-  assert.match(s,/id="footer-version">v1\.9\.0-rc\.1/);
-  assert.match(s,/<title>Cidade dos Negócios 1 · v1\.9\.0-rc\.1<\/title>/);
+  assert.match(s,/id="intro-version">v2\.0\.0-rc\.1/);
+  assert.match(s,/id="build-version">v2\.0\.0-rc\.1/);
+  assert.match(s,/id="footer-version">v2\.0\.0-rc\.1/);
+  assert.match(s,/<title>Cidade dos Negócios 1 · v2\.0\.0-rc\.1<\/title>/);
   assert.doesNotMatch(s,/V1\.5\.0-RC\.1|v1\.6\.0-rc\.1|V1\.4\.0-rc\.1/);
  }
  assert.match(ui,/for\(const id of \['intro-version','build-version','footer-version'\]\)/);

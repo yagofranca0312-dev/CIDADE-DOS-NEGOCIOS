@@ -23,7 +23,7 @@ function openSecond(s,{sector='padaria',cityId=S,lot=1}={}){
   return cmd(C,s,'EMPRESA.ABRIR',{sector,cityId,lot});
 }
 test('V1.5: nova carreira com matriz, identidade estável e caixa central sem aporte nas filiais',()=>{
-  let s=fresh();assert.equal(C.VERSION,'1.9.0-rc.1');assert.equal(s.schemaVersion,9);
+  let s=fresh();assert.equal(C.VERSION,'2.0.0-rc.1');assert.equal(s.schemaVersion,9);
   assert.equal(C.activeBusiness(s).id,'est-1');assert.equal(s.world.business.cityId,T);
   const cash=C.overview(s).cash;
   s=openSecond(s);assert.equal(C.activeBusiness(s).id,'est-2');
@@ -156,7 +156,7 @@ test('V1.5: 180 dias com três filiais, pedidos e vendas conciliados por unidade
   assert.equal(C.importSave(C.exportSave(s)).migrated,false);
 });
 test('V1.5: UI e schema exibem gestão da rede e bloqueiam caixa por unidade',()=>{
-  const template=readFileSync('src/shell/index.template.html','utf8');const ui=readFileSync('src/ui/app.js','utf8');
+  const template=readFileSync('src/shell/index.template.html','utf8');const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
   for(const id of ['unit-switch','unit-rows','finance-scope','group-available-cash','group-operating-result'])assert.match(template,new RegExp(`id="${id}"`));
   assert.match(template,/Caixa compartilhado/);
   assert.match(template,/Projeções são cenários hipotéticos/);

@@ -1,7 +1,21 @@
-# 🏙️ Cidade dos Negócios 1
+# 🏙️ Cidade dos Negócios — Edição 2.0
 
-**Versão:** `1.9.0-rc.1` — **cenários tributários educativos com contabilização hipotética**, ainda pendente de homologação.  
-**Formato:** HTML autônomo, sem internet durante a partida.  
+**Versão jogável:** `2.0.0-rc.1` — **consolidação da arquitetura de apresentação e reformulação visual de jogo**, candidata para homologação Windows.  
+**Distribuição:** único `index.html` completo e offline. **Schema de save:** 9, igual ao da V1.9.  
+**Referência homologada:** V1.9, branch `releases/v1.9.0-homologada`, commit `575c54c676e024c4d5f9e0186cd404a62b636bd1`.
+
+## V2.0 — Um mundo de negócios, sem mecânicas novas
+
+- **Cidade como protagonista:** mapa isométrico ocupa a área principal, lotes interativos e inspetor de terreno/empresa contextual.
+- **Navegação simplificada:** quatro áreas (Cidade, Empresas, Mercado, Finanças), Fiscal acessível dentro de Finanças, Configurações separadas.
+- **Menos congestionamento:** indicadores e controles essenciais visíveis; outras análises em painéis recolhíveis. No celular, barra inferior fixa e controles adaptados.
+- **Código organizado:** renderizadores de mercado e finanças separados em módulos de origem incorporados na mesma closure no build; SVG do mapa separado do motor.
+- **Garantias econômicas:** motor V1.9 congelado, alterando apenas `VERSION`; `schemaVersion: 9`, estado, saldos, impostos, estoque e cronologia inalterados. Golden tests com cenários determinísticos.
+- **Critérios de homologação:** testes locais e navegador, CI remota, instalação offline, importação/exportação e aceite prático do jogador no Windows.
+
+**Documentação de referência:** [V20_CONSOLIDACAO.md](docs/V20_CONSOLIDACAO.md). **Backup:** exporte JSON antes de substituir a V1.9. Regra tributária 2027+ ainda não coberta; o simulador não equivale a sistema fiscal legal. Não divulgar recursos de arte conceitual ainda não desenvolvidos como mecânicas.
+
+---
 
 ## Patch V1.9.0-rc.1 — Sistema Tributário Brasileiro Simulado (02/11/2026)
 

@@ -1,5 +1,17 @@
 # Histórico de versões — Cidade dos Negócios
 
+## 2.0.0-rc.1 — consolidação, cidade protagonista e UX (02/11/2026)
+
+- Quatro áreas de navegação; Fiscal como subseção de Finanças; Configurações isoladas.
+- Mapa SVG maior com inspeção contextual e seleção de unidades existentes; informações secundárias recolhíveis.
+- Mercado e relatórios organizados em painéis expansíveis; HUD compacto e navegação inferior no celular.
+- Renderização do mapa e views de Mercado/Finanças extraídas para arquivos de origem; HTML final permanece único, offline.
+- Motor congelado salvo número de versão; schema 9 mantido, saves e histórico V1.9 íntegros.
+- Testes golden V1.9×V2.0, regressões, interface em cinco larguras e fluxo de operações em navegador.
+- V1.9 homologada por aprovação do jogador, snapshot `releases/v1.9.0-homologada` no commit `575c54c6`.
+- V2.0 candidata, exige CI e homologação Windows. Sem novos sistemas de gameplay.
+
+
 ## 1.9.0-rc.1 — Simulação Tributária Brasileira (02/11/2026)
 
 - Modo padrão sem apuração tributária; opt-in expresso para hipótese de comércio Simples Anexo I (somente competências 2026 delimitadas e começando no mês posterior).

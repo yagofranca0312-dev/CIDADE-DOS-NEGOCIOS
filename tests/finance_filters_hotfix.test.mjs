@@ -48,7 +48,7 @@ test('Data de referência fixa permanece válida ao avançar a simulação',()=>
  assert.equal(after.expenses,before.expenses);assert.equal(after.entries.length,before.entries.length);
 });
 test('O seletor usa campos específicos e não prende a data ao render automático',()=>{
- const html=readFileSync('src/shell/index.template.html','utf8');const ui=readFileSync('src/ui/app.js','utf8');
+ const html=readFileSync('src/shell/index.template.html','utf8');const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
  for(const id of ['finance-date','finance-day','finance-month','finance-quarter','finance-quarter-year',
     'finance-semester','finance-semester-year','finance-year','finance-range-from','finance-range-to'])
    assert.ok(html.includes(`id="${id}"`),`${id} não encontrado`);

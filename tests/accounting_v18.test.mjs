@@ -14,7 +14,7 @@ const advance=(s,days)=>{while(days>0){const x=Math.min(30,days);s=act(s,'TEMPO.
 function sample(){let s=init();s=open(s);s=act(s,'ESTOQUE.COMPRAR',{productId:'base',supplierId:'regional',quantity:160});s=advance(s,3);return s;}
 
 test('V1.8: versão visível e plano de contas com sinais, com migração de schema de save 8→9',()=>{
- assert.equal(Core.VERSION,'1.9.0-rc.1');assert.equal(Core.SCHEMA_VERSION,9);
+ assert.equal(Core.VERSION,'2.0.0-rc.1');assert.equal(Core.SCHEMA_VERSION,9);
  assert.equal(Core.ACCOUNT_CATALOG.CASH.normal,'DEBIT');
  assert.equal(Core.ACCOUNT_CATALOG.PAYABLE.normal,'CREDIT');
  assert.equal(Core.ACCOUNT_CATALOG.COGS.group,'COST');
@@ -135,12 +135,12 @@ test('V1.8: importação do save produzido na V1.7 homologada é idêntica, sem 
 });
 
 test('V1.8: uma única área financeira com demonstrativos e verificações de versão',()=>{
- const tpl=readFileSync('src/shell/index.template.html','utf8');const ui=readFileSync('src/ui/app.js','utf8');const build=readFileSync('tools/build.mjs','utf8');
+ const tpl=readFileSync('src/shell/index.template.html','utf8');const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));const build=readFileSync('tools/build.mjs','utf8');
  for(const v of ['summary','dre','balance','cash','check'])assert.match(tpl,new RegExp(`data-statement-view="${v}"`));
  for(const id of ['finance-summary','finance-statement-title','finance-statement-note'])assert.ok(tpl.includes(`id="${id}"`));
  assert.match(ui,/Core\.balanceSheet/);assert.match(ui,/Core\.cashFlowStatement/);
  assert.match(ui,/Core\.reconciliationReport/);assert.match(ui,/Core\.incomeStatement/);
  assert.match(build,/intro-version/);assert.match(build,/footer-version/);
- assert.match(tpl,/id="footer-version">v1\.9\.0-rc\.1/);
- assert.match(tpl,/<title>Cidade dos Negócios 1 · v1\.9\.0-rc\.1<\/title>/);
+ assert.match(tpl,/id="footer-version">v2\.0\.0-rc\.1/);
+ assert.match(tpl,/<title>Cidade dos Negócios 1 · v2\.0\.0-rc\.1<\/title>/);
 });

@@ -79,3 +79,13 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - DRE/BP/DFC do jogo serão conciliados com lançamentos simulados sem transformar apuração hipotética em imposto real.
 - Gate: npm check, CI no PR, navegador e Windows com backup, aceite expresso de Yago. Sem antecipar homologação.
 - **V2.0 não criará funcionalidades novas:** auditoria e consolidação de arquitetura, dados, menus, mapas e UX/UI para conferir identidade visual de um jogo de gestão empresarial.
+
+
+## Estado 02/11/2026 — V2.0.0-rc.1 candidata
+
+- **V1.9 homologada** pelo jogador e preservada na branch `releases/v1.9.0-homologada` (commit `575c54c6`).
+- **V2.0 implantada localmente**, com navegação de quatro áreas, distrito visual predominante, inspetor de lote, controles secundários recolhíveis, modularização da apresentação e `schemaVersion: 9` mantido.
+- **Sem mudanças nas regras:** motor V1.9 conservado, com alteração apenas de versão exibida; regressão comparativa determinística.
+- Gates locais: `npm run check` e navegadores/fluxos de interface. Gates remotos: GitHub PR/CI e validação Windows antes de homologar.
+- Direção artística consultada na especificação `INTERFACE.md`: cidade em primeiro plano, informações contextuais, sem apresentar funcionalidades planejadas como existentes.
+- Documento técnico: `docs/V20_CONSOLIDACAO.md`.

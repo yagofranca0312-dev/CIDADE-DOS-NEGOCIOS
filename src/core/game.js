@@ -1,7 +1,7 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.1.0-rc.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.1.1-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '1.1.0-rc.1';
+  const VERSION = '1.1.1-rc.1';
   const SCHEMA_VERSION = 2;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -203,13 +203,18 @@ const CidadeCore = (() => {
     else assert(inventory===0,'Estoque sem empresa');
     return true;
   }
+  // Data civil ISO estrita (inclui fevereiro e ano bissexto); nenhum parsing ambíguo.
+  function isoDate(value) {
+    if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;
+    const d=new Date(value+'T12:00:00Z');
+    return !Number.isNaN(d.getTime())&&d.toISOString().slice(0,10)===value;
+  }
   // Reportes por data/competência derivados exclusivamente do ledger já confirmado.
   // Saldo no fim do período é acumulado; receitas, CMV e despesas são fluxos do recorte.
-  function financialReport(state,period='all',referenceDate=state.calendar.date) {
+  function financialReport(state,period='all',referenceDate=state.calendar.date,range=null) {
     assert(state&&plain(state.economy)&&Array.isArray(state.economy.ledger),'Carreira inválida para relatório');
-    assert(['all','day','month','quarter','year'].includes(period),'Período financeiro desconhecido');
-    assert(typeof referenceDate==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(referenceDate)
-      &&!Number.isNaN(Date.parse(referenceDate+'T12:00:00Z')),'Data de referência inválida');
+    assert(['all','day','month','quarter','semester','year','range'].includes(period),'Período financeiro desconhecido');
+    assert(isoDate(referenceDate),'Data de referência inválida');
     assert(referenceDate<=state.calendar.date,'Data futura não permitida');
     const yy=Number(referenceDate.slice(0,4)),mm=Number(referenceDate.slice(5,7));
     assert(mm>=1&&mm<=12&&yy>=2000,'Competência inválida');
@@ -223,7 +228,20 @@ const CidadeCore = (() => {
       to=`${yy}-${String(end).padStart(2,'0')}-${String(new Date(Date.UTC(yy,end,0)).getUTCDate()).padStart(2,'0')}`;
       label=`${quarter+1}º trimestre de ${yy}`;
     }
+    if(period==='semester'){
+      const begin=mm<=6?1:7,end=begin+5;
+      from=`${yy}-${String(begin).padStart(2,'0')}-01`;
+      to=`${yy}-${String(end).padStart(2,'0')}-${String(new Date(Date.UTC(yy,end,0)).getUTCDate()).padStart(2,'0')}`;
+      label=`${begin===1?1:2}º semestre de ${yy}`;
+    }
     if(period==='year'){from=`${yy}-01-01`;to=`${yy}-12-31`;label=`Ano ${yy}`;}
+    if(period==='range'){
+      assert(plain(range)&&isoDate(range.from)&&isoDate(range.to),'Informe datas inicial e final válidas');
+      assert(range.from<=range.to,'A data inicial não pode ser posterior à final');
+      assert(range.from<=state.calendar.date&&range.to<=state.calendar.date,'Intervalo futuro não permitido');
+      from=range.from;to=range.to;
+      label=`Intervalo ${from.split('-').reverse().join('/')} a ${to.split('-').reverse().join('/')}`;
+    }
     const effectiveEnd=to<state.calendar.date?to:state.calendar.date;
     const entries=state.economy.ledger.filter(x=>x.date>=from&&x.date<=effectiveEnd);
     const until=state.economy.ledger.filter(x=>x.date<=effectiveEnd);

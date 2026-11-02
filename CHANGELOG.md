@@ -1,5 +1,13 @@
 # Histórico de versões — Cidade dos Negócios
 
+## 1.1.1-rc.1 — hotfix: filtros financeiros manuais
+
+- Seletores de data de corte, dia, mês, trimestre, semestre, ano e intervalo personalizado.
+- Referência consultada deixa de mudar automaticamente com a passagem dos dias.
+- Motor aceita semestre e intervalo, com validação de datas e recortes do ledger.
+- Botão manual para carregar a última data concluída.
+- Sem mudança no GameState, no formato dos saves ou nas operações econômicas; novos testes de regressão.
+
 ## 1.1.0-rc.1 — 01/11/2026 (patch de gestão; candidata em testes)
 
 - Histórico de preços da empresa baseado nos eventos de alteração já presentes nos saves anteriores.

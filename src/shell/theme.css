@@ -29,3 +29,10 @@
 .cmv-note>strong{display:block;color:#f4d49a;font-size:.84rem;margin-bottom:5px}
 .cmv-note p{margin:0;color:#bdcfdd;font-size:.78rem}
 @media(max-width:540px){.filter-fields{grid-template-columns:1fr}.price-history-row{align-items:start;flex-direction:column;gap:3px}.price-history-row strong{text-align:left}}
+
+/* Patch 1.1.1: filtros por competência independentes do relógio da simulação. */
+.filter-fields [data-finance-field][hidden]{display:none!important}
+.filter-action-row{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-top:15px}
+.filter-action-row .muted{font-size:.81rem}
+.finance-validation{margin:12px 0;padding:10px 12px;border:1px solid #df8585;border-radius:8px;color:#ffd1d1;background:#492b37;font-size:.83rem}
+@media(max-width:640px){.filter-fields{grid-template-columns:1fr}.filter-action-row{align-items:stretch;flex-direction:column}}

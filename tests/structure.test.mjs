@@ -38,7 +38,7 @@ test('Hotfix: preço próprio visível, concorrente independente e confirmação
 test('Hotfix: schema de save preservado e versão nova apenas da aplicação',()=>{
  const core=readFileSync('src/core/game.js','utf8');
  assert.match(core,/SCHEMA_VERSION = 2/);
- assert.match(core,/VERSION = '1\.1\.0-rc\.1'/);
+ assert.match(core,/VERSION = '1\.1\.1-rc\.1'/);
  assert.match(core,/function importSave\(raw\)/);
 });
 

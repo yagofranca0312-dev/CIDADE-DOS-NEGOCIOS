@@ -1,6 +1,6 @@
 {
   "name": "cidade-dos-negocios",
-  "version": "1.1.0-rc.1",
+  "version": "1.1.1-rc.1",
   "private": true,
   "type": "module",
   "description": "Cidade dos Negócios 1: simulador econômico educativo em HTML único offline",

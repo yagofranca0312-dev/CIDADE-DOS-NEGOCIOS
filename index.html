@@ -75,6 +75,8 @@
 .commerce-receipt ul{padding-left:20px;line-height:1.7}
 .commerce-receipt p{color:#bacee0;font-size:.75rem;margin:7px 0 0}
 @media(max-width:480px){.sales-kpis{grid-template-columns:1fr}}
+/* Corrige a largura minima implicita de cards em resolucoes estreitas. */
+@media(max-width:1180px){.commerce-dashboard,.commerce-history-grid{grid-template-columns:minmax(0,1fr)}.commerce-dashboard>.panel,.commerce-history-grid>.panel{min-width:0}}
 
   </style>
 </head>

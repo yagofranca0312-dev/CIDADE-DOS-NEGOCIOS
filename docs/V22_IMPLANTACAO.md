@@ -1,7 +1,7 @@
 # Cidade dos Negócios — V2.2.0-rc.1 — implantação visual
 
 **Data:** 02/11/2026  
-**Status:** CANDIDATA EM BRANCH DE DESENVOLVIMENTO; AGUARDANDO CI, QA DE NAVEGADOR E HOMOLOGAÇÃO WINDOWS.  
+**Status:** CANDIDATA PUBLICADA NA MAIN; CI PASS; QA DE NAVEGADOR, WINDOWS E HOMOLOGAÇÃO PENDENTES.  
 **Branch:** `feature/v2.2.0-rc.1`. **Base de recuperação:** `releases/v2.1.0-homologada`, commit `645467b0a87d037a049976a4d75e09c008894316`.  
 **Contrato:** V2.x apenas arte/UX; motor econômico e fiscal preservado, exceto VERSION; schemaVersion 9, sem migração.  
 **Plano de referência:** [PLANO_V22_MAPA_ATLAS_AMBIENTACAO.md](PLANO_V22_MAPA_ATLAS_AMBIENTACAO.md).
@@ -26,8 +26,8 @@
 
 ## Evidências por obter antes da aprovação
 
-1. `npm run check`, teste de `git diff --exit-code -- index.html` e GitHub Actions CI, depois de abrir PR.
-2. Comparar saídas determinísticas V2.1×V2.2 (incluindo fiscal, estoque, calendário, RNG e ledger), verificando `core` byte a byte após normalizar apenas VERSION. O teste já está escrito, mas não contabilizar como PASS antes da execução observada.
+1. **CONCLUÍDO:** `npm run check`, teste de `git diff --exit-code -- index.html` e GitHub Actions CI; 174/174 PASS na PR #15.
+2. **PARCIALMENTE CONCLUÍDO:** testes automatizados de core V2.0×V2.2 e comparativos econômicos anteriores passaram, e a equivalência de código foi conferida normalizando somente VERSION. Uma comparação direta V2.1×V2.2 pode complementar o registro na validação de homologação.
 3. QA real em Chromium ou outro navegador: 320, 360, 390, 768, 1280 e 1920 px; seleção nos 18 lotes, toque, teclado, inspeção, expansão do HUD, navegação, zoom 200% e foco visível. **Não há evidência de captura ou teste de navegador nesta sessão.**
 4. Medir peso do executável, quantidade de nós de cena, tempo de render e fluidez em aparelho real; os limites de arquivo e grupos presentes em teste são controles preventivos, não benchmark de desempenho medido.
 5. Windows nativo: `JOGAR_OFFLINE.bat`, `file://`, importação/exportação, backup JSON prévio, persistência de `localStorage` após fechar/abrir, retomada do jogo e rollback.
@@ -37,4 +37,11 @@
 
 Falha do `npm run check`, HTML gerado divergente, alteração econômica não justificada, perda de lote acionável, seleção quebrada, situação tributária simulada apresentada como real, navegação indisponível ou perda de save impedem homologação.
 
-**Estado do projeto ao registrar este documento:** alterações de código e pacote HTML da V2.2 implementadas na branch; PR, CI, QA nativo e homologação ainda pendentes. Este registro deve receber um adendo datado quando os gates forem efetivamente executados.
+## Adendo de publicação e testes — 02/11/2026
+
+- **PR #15 integrada** à `main` após CI PASS. Merge commit `1078dbaa9a582962e7de8e7ecbe97bcff5d4a92d`.
+- **CI PR PASS:** GitHub Actions execução `41489051796` (link: https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/41489051796). `npm run check`: **174 testes PASS, zero FAIL**.
+- **Build reproduzível:** `git diff --exit-code -- index.html` PASS, HTML único gerado com 394.165 bytes e SHA-256 `ac741cab5e79d13a7decb02e7331a776fcd816af08dd2ebc0bf9d7db6dc9cd9b`.
+- **Matriz automatizada:** confirma renderização dos 18 lotes e das 30 cidades, quatro perfis artísticos, rótulos e posse, escape de SVG, sem uso de RNG nem mutação de estado na cena, além das regressões econômicas históricas. Esses testes não substituem QA visual no navegador.
+- **Próxima etapa:** testar no Windows e no navegador com backup JSON, comparar responsividade e interação, registrar problemas e então solicitar homologação expressa.
+- **Status final desta execução:** V2.2.0-rc.1 **IMPLANTADA NA MAIN COMO CANDIDATA NÃO HOMOLOGADA**. A V2.1 homologada continua disponível na branch de recuperação.

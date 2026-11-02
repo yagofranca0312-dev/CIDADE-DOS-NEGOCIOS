@@ -36,3 +36,19 @@
 .filter-action-row .muted{font-size:.81rem}
 .finance-validation{margin:12px 0;padding:10px 12px;border:1px solid #df8585;border-radius:8px;color:#ffd1d1;background:#492b37;font-size:.83rem}
 @media(max-width:640px){.filter-fields{grid-template-columns:1fr}.filter-action-row{align-items:stretch;flex-direction:column}}
+
+/* V1.2 — cadastro, carrinho e indicadores de produtos. */
+.commerce-dashboard,.commerce-history-grid{margin-top:18px}
+.commerce-catalog{margin-top:18px}
+.table-scroll{width:100%;overflow-x:auto}
+.catalog-table{width:100%;border-collapse:collapse;min-width:670px;font-size:.78rem}
+.catalog-table th,.catalog-table td{text-align:left;padding:12px 9px;border-bottom:1px solid #36526a;white-space:nowrap}
+.catalog-table th{color:#a9cce2;font-weight:800}
+.cart-items{margin:16px 0;padding:12px;background:#0e2337;border-radius:9px;min-height:56px}
+.cart-row{display:flex;gap:8px;justify-content:space-between;align-items:center;border-bottom:1px solid #36526a;padding:7px 0;font-size:.78rem}
+.cart-row:last-child{border:0}
+.cart-row button{padding:5px 8px;min-height:35px}
+.cart-total{font-weight:750;color:#f4d49a;margin:10px 0}
+.cart-actions{display:flex;gap:9px;flex-wrap:wrap}
+.commerce-log{display:grid;gap:8px;margin-top:12px;font-size:.77rem;color:#c7dae7;max-height:180px;overflow-y:auto}
+.commerce-history-row{border-bottom:1px solid #34516a;padding:7px 0}

@@ -12,6 +12,7 @@
 /* CDN_V2_CSS */
 /* CDN_V21_CSS */
 /* CDN_V22_CSS */
+/* CDN_V221_CSS */
   </style>
 </head>
 <body>
@@ -69,7 +70,7 @@
       <div class="sidebar-bottom"><span class="online-dot"></span> EXECUÇÃO LOCAL <small>100% sem servidor</small></div>
     </aside>
     <div class="main-pane">
-      <header class="topbar">
+      <header class="topbar"><div class="v221-top-brand" aria-hidden="true"><span class="v221-brand-symbol"><svg viewBox="0 0 80 80" aria-hidden="true" width="48" height="48"><use href="#city-brand-glyph"/></svg></span><span><strong>CIDADE DOS NEGÓCIOS</strong><small>EDIÇÃO 2 · DISTRITO COMERCIAL</small></span></div>
         <div><div class="overline">MUNDO ATIVO</div><h2 id="top-city">Tianguá <span>· CE</span></h2></div>
         <div class="topbar-controls">
           <div id="unit-switch-container" class="unit-switch" hidden><label class="compact-label" for="unit-switch">Unidade ativa</label><select id="unit-switch" aria-label="Selecionar estabelecimento para gerenciar"></select></div>
@@ -92,17 +93,27 @@
           <button type="button" id="stats-more-toggle" class="v21-stats-toggle" aria-controls="stats-bar" aria-expanded="false">Mostrar resultado e estoque <span aria-hidden="true">⌄</span></button>
         </section>
         <section data-view="cidade" class="view active">
+          <div class="v221-city-hud" aria-label="Painel superior do jogo">
+            <button type="button" id="v221-hud-time" class="v221-hud-cell" aria-expanded="false" aria-controls="v221-time-menu"><span>▦ DATA DO MUNDO</span><strong id="v221-date-label">—</strong><small>Calendário da simulação ▾</small></button>
+            <div class="v221-hud-cell" role="group" aria-label="Caixa consolidado"><span>◇ CAIXA DO GRUPO</span><strong id="v221-hud-cash">—</strong><small>Saldo, não receita</small></div>
+            <div class="v221-hud-cell" role="group" aria-label="Resultado acumulado"><span>▥ RESULTADO</span><strong id="v221-hud-profit">—</strong><small>Toda a carreira</small></div>
+            <button type="button" class="v221-hud-cell" id="v221-hud-units" title="Gerenciar a rede de empresas"><span>▣ ESTABELECIMENTOS</span><strong id="v221-hud-count">0/5</strong><small>Unidades do grupo ▾</small></button>
+            <div class="v221-city-actions"><button type="button" id="v221-event-open" title="Atividade da carreira" aria-label="Atividade da carreira">♧</button><button type="button" id="v221-help-open" title="Como jogar" aria-label="Ajuda do distrito">?</button><button type="button" id="v221-config-open" title="Backup e configurações" aria-label="Configurações e backup">⚙</button></div>
+          </div>
+          <div class="v221-popover v221-time-menu" id="v221-time-menu" hidden><strong>Calendário e ritmo</strong><p>Controles do motor real.</p><div class="v221-time-actions"><button type="button" data-v221-time="play">▶ / ❚❚</button><button type="button" data-v221-time="1">+ 1 dia</button><button type="button" data-v221-time="7">+ 7 dias</button><button type="button" data-v221-time="30">+ 30 dias</button></div><label for="v221-time-speed">Velocidade</label><select id="v221-time-speed"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select></div>
+          <div id="v221-help-panel" class="v221-popover" hidden><strong>Distrito comercial de Tianguá</strong><p>Selecione um dos 18 lotes; use Tab e Enter ou Espaço no teclado para selecioná-los. Abrir uma empresa só altera o jogo após confirmação.</p><p>Mapa ilustrativo fictício: ruas e imóveis não representam endereços reais.</p><button type="button" id="v221-help-close">Fechar</button></div>
+          <div class="v221-city-pick" id="v221-city-pick" hidden><label for="v221-city-selector">Explorar município</label><select id="v221-city-selector" aria-label="Cidade a explorar"></select><button type="button" id="v221-city-pick-close">Fechar</button></div>
           <div class="city-stage-intro"><div><span class="stage-eyebrow">UM MUNDO DE NEGÓCIOS</span><strong>Seu próximo movimento começa na cidade.</strong></div><span class="stage-live"><span aria-hidden="true">●</span> SIMULAÇÃO LOCAL</span></div>
           <div class="dashboard-grid city-stage">
-            <article class="panel map-panel"><div class="panel-heading"><div><div class="overline">MAPA URBANO · ESTILIZADO</div><h3 id="map-title">Seu distrito comercial</h3></div><span class="tag-soft" id="map-uf">CE</span></div>
+            <article class="panel map-panel"><button type="button" class="v221-city-switch-trigger" id="v221-city-switch-trigger" aria-label="Explorar cidades"><strong id="v221-map-city-title">Tianguá · CE</strong><small>DISTRITO COMERCIAL · ESCOLHER CIDADE ▾</small></button><button type="button" class="v221-city-info-trigger" id="v221-city-info-trigger" aria-label="Abrir Observatório econômico">ⓘ Cidade</button><div class="panel-heading"><div><div class="overline">MAPA URBANO · ESTILIZADO</div><h3 id="map-title">Seu distrito comercial</h3></div><span class="tag-soft" id="map-uf">CE</span></div>
               <div class="world-map-notice">SELECIONE UM LOTE NO MAPA OU USE O SELETOR</div>
               <div id="map-canvas" class="map-canvas" role="group" aria-label="Mapa ilustrativo clicável com 18 lotes"></div>
               <div class="map-legend"><span><i class="legend-color lot"></i> Lote disponível</span><span><i class="legend-color own"></i> Sua empresa</span><span><i class="legend-color sel"></i> Selecionado</span></div>
               <div class="v22-lot-nav"><label for="map-lot-picker">Escolher lote</label><select id="map-lot-picker" aria-label="Ir diretamente para um dos 18 lotes"><option value="1">Lote 01</option><option value="2">Lote 02</option><option value="3">Lote 03</option><option value="4">Lote 04</option><option value="5">Lote 05</option><option value="6">Lote 06</option><option value="7">Lote 07</option><option value="8">Lote 08</option><option value="9">Lote 09</option><option value="10">Lote 10</option><option value="11">Lote 11</option><option value="12">Lote 12</option><option value="13">Lote 13</option><option value="14">Lote 14</option><option value="15">Lote 15</option><option value="16">Lote 16</option><option value="17">Lote 17</option><option value="18">Lote 18</option></select></div>
               <p class="map-disclaimer">Mapa fictício para jogabilidade. Não representa ruas, lotes ou imóveis reais.</p>
             </article>
-            <div class="right-column"><article class="panel v21-inspector"><div class="panel-heading"><div><div class="overline">INSPEÇÃO DO DISTRITO</div><h3>Seu terreno selecionado</h3></div><span class="tag-soft">COMERCIAL</span></div><div class="big-number" id="selected-lot">Lote 01</div><p class="lot-status" id="map-lot-status">Escolha um lote no mapa.</p><button class="btn btn-primary full" id="map-open-company" type="button">Abrir unidade neste lote</button><details class="v21-inspector-help"><summary>Como funcionam os lotes?</summary><p class="muted">Selecione um lote no mapa para abrir uma unidade ou gerenciar uma já existente. O grupo pode ter até cinco estabelecimentos em diferentes cidades; cada lote comporta uma unidade.</p></details></article>
-              <details class="world-drawer"><summary>◈ Observatório econômico <span>IBGE + simulação</span></summary><article class="panel regional-panel" aria-labelledby="regional-title"><div class="panel-heading"><div><div class="overline">IBGE E SIMULAÇÃO</div><h3 id="regional-title">Observatório econômico</h3></div><span class="tag-soft">OFFLINE</span></div>
+            <div class="right-column"><article class="panel v21-inspector" id="v221-inspector" hidden><button type="button" id="v221-inspector-close" class="v221-inspector-close" aria-label="Fechar inspeção">×</button><div class="panel-heading"><div><div class="overline">INSPEÇÃO DO DISTRITO</div><h3>Seu terreno selecionado</h3></div><span class="tag-soft">COMERCIAL</span></div><div class="big-number" id="selected-lot">Lote 01</div><p class="lot-status" id="map-lot-status">Escolha um lote no mapa.</p><button class="btn btn-primary full" id="map-open-company" type="button">Abrir unidade neste lote</button><details class="v21-inspector-help"><summary>Como funcionam os lotes?</summary><p class="muted">Selecione um lote no mapa para abrir uma unidade ou gerenciar uma já existente. O grupo pode ter até cinco estabelecimentos em diferentes cidades; cada lote comporta uma unidade.</p></details></article>
+              <details class="world-drawer" id="v221-observatory"><summary>◈ Observatório econômico <span>IBGE + simulação</span></summary><article class="panel regional-panel" aria-labelledby="regional-title"><div class="panel-heading"><div><div class="overline">IBGE E SIMULAÇÃO</div><h3 id="regional-title">Observatório econômico</h3></div><span class="tag-soft">OFFLINE</span></div>
                 <div class="regional-hero"><small>POPULAÇÃO ESTIMADA · IBGE 2026</small><strong id="regional-population">—</strong><span>Referência: <b id="regional-date">—</b> · código IBGE <b id="regional-code">—</b></span></div>
                 <div class="regional-indicators"><div><small>Perfil urbano do jogo</small><strong id="regional-urban-size">—</strong></div><div><small>Fator de demanda simulado</small><strong id="regional-demand-factor">—</strong></div><div><small>Referência concorrencial simulada</small><strong id="regional-competition-factor">—</strong></div></div>
                 <dl class="regional-sources"><dt>PIB municipal 2023 · R$ correntes</dt><dd id="regional-gdp">—</dd>
@@ -114,7 +125,7 @@
                 <p id="regional-model-status" class="regional-caution">Indicadores reais e parâmetros simulados identificados separadamente.</p>
                 <a id="regional-source" class="regional-source-link" target="_blank" rel="noopener noreferrer" href="https://ftp.ibge.gov.br/Estimativas_de_Populacao/Estimativas_2026/POP2026_20261029.pdf">Fonte oficial: estimativas de população IBGE 2026 ↗</a>
               </article></details>
-              <details class="world-drawer"><summary>◷ Eventos da cidade <span>Histórico confirmado</span></summary><article class="panel"><div class="panel-heading"><h3>Aconteceu na cidade</h3><span class="tag-soft">EVENTOS REAIS DO JOGO</span></div><div id="city-events" class="event-list"></div></article></details></div>
+              <details class="world-drawer" id="v221-activity"><summary>◷ Atividade da carreira <span>Histórico confirmado</span></summary><article class="panel"><div class="panel-heading"><h3>Aconteceu na carreira</h3><span class="tag-soft">EVENTOS REAIS DO JOGO</span></div><div id="city-events" class="event-list"></div></article></details></div>
           </div>
         </section>
         <section data-view="empresa" class="view" hidden>

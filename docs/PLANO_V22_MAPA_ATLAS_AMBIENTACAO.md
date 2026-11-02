@@ -2,7 +2,7 @@
 
 **Projeto:** Cidade dos Negócios — Edição 2  
 **Data:** 02/11/2026  
-**Estado:** PLANEJAMENTO APROVADO, IMPLANTAÇÃO EM BRANCH DE DESENVOLVIMENTO — GATES DE TESTE E HOMOLOGAÇÃO PENDENTES  
+**Estado:** PLANEJAMENTO APROVADO E CANDIDATA IMPLANTADA NA MAIN — CI PASS, QA DE NAVEGADOR/WINDOWS E HOMOLOGAÇÃO PENDENTES  
 **Baseline de produto:** V2.1.0-rc.1, homologada por aceite expresso do titular em 02/11/2026, branch de recuperação releases/v2.1.0-homologada, commit 645467b0a87d037a049976a4d75e09c008894316.  
 **Versão de destino proposta:** 2.2.0-rc.1. **Save schema:** 9, sem migração.  
 **Escopo autorizado:** execução da implantação V2.2 em branch isolada, por ordem expressa do titular em 02/11/2026. Preservar V2.1 homologada e não declarar V2.2 homologada antes dos gates. A execução e pendências estão registradas em [V22_IMPLANTACAO.md](V22_IMPLANTACAO.md).
@@ -140,4 +140,4 @@ Transformar o distrito SVG existente em uma cidade isométrica **mais legível, 
 **Execução iniciada:** inventário técnico realizado e P02–P05 codificados em branch. Capturas/protótipos de comparação e gates de teste ainda precisam de verificação; ver registro de implantação.  
 **Critério de conclusão da V2.2:** cidade mais rica e inteligível, 18 lotes e 30 cidades utilizáveis, motor e saves inalterados, HTML offline, regressões e QA aprovados, aceite explícito do jogador.
 
-**Estados no início da validação:** P01 = diagnóstico técnico parcial; P02–P05 = codificados, não homologados; P06 = compilação versionada e testes escritos, CI pendente; QA V2.2 = NOT_EXECUTED; homologação = PENDENTE.
+**Estados após publicação:** P01 = diagnóstico técnico parcial (capturas pendentes); P02–P05 = implementados, QA visual pendente; P06 = HTML e CI PASS (174/174), testes Windows pendentes; homologação V2.2 = PENDENTE. Ver V22_IMPLANTACAO.md.

@@ -1,8 +1,18 @@
 # 🏙️ Cidade dos Negócios 1
 
-**Versão:** `1.1.0-rc.1` — **patch de gestão empresarial, candidata jogável**, homologação estável ainda pendente.  
+**Versão:** `1.1.1-rc.1` — **patch de gestão empresarial, candidata jogável**, homologação estável ainda pendente.  
 **Formato:** um `index.html` autônomo, com CSS e JS incorporados; sem internet ou instalação obrigatória para jogar.  
 **Data-base do planejamento:** 01/11/2026.
+
+## Hotfix V1.1.1-rc.1 — filtros financeiros manuais
+
+- A consulta financeira deixa de acompanhar automaticamente o calendário do jogo. Depois de escolhida, a data/competência permanece fixa durante a sessão.
+- **Toda carreira**: data de corte; **Dia**: calendário diário com todas as datas alcançadas; **Competência**: seletor de mês/ano.
+- **Trimestre**: trimestre 1–4 + ano; **Semestre**: semestre 1–2 + ano; **Ano**: campo exclusivo de ano.
+- **Intervalo personalizado**: seleção de data inicial e final na cronologia do jogo.
+- **Usar data atual do jogo** exige clique explícito; não há avanço automático do período escolhido.
+- Datas impossíveis, intervalos invertidos ou futuros são rejeitados sem alterar a carreira.
+- O save `schemaVersion: 2` e as fórmulas econômicas foram mantidos.
 
 ## Patch V1.1.0-rc.1
 

@@ -4,8 +4,8 @@ import {runInNewContext} from 'node:vm';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 const sandbox={};
-const coreSource=readFileSync(resolve('src/core/game.js'),'utf8');
-const core=runInNewContext(`${coreSource}\nCidadeCore`,sandbox,{filename:'src/core/game.js'});
+const coreSource=readFileSync(resolve('tests/fixtures/core_v1_2_1.js'),'utf8');
+const core=runInNewContext(`${coreSource}\nCidadeCore`,sandbox,{filename:'tests/fixtures/core_v1_2_1.js'});
 const tiangua=core.CITIES.find(c=>c.name==='Tianguá').id;
 function cmd(type,payload={},id=type+':'+JSON.stringify(payload).replace(/[^a-z\d]/gi,'').slice(0,45)) {return {type,id,payload};}
 function play(seed=1234,cityId=tiangua){

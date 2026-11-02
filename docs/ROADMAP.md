@@ -71,3 +71,9 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - DRE por unidade/consolidada, balanço somente do grupo, fluxo de caixa realizado/contribuição por unidade, reconciliação com estoque atual, fechamento mensal não mutante.
 - V1.9 permanece dedicada a tributos brasileiros simulados; V2.0 exclusivamente a consolidação técnica e UX/UI como jogo, sem novos sistemas.
 - Gate: regressões locais e CI PASS, testes de navegador e update Windows; usuário homologa após uso real.
+
+## Estado 02/11/2026 — V1.8 HOMOLOGADA, V1.9 PLANEJADA
+
+- **V1.8.0-rc.1 homologada** por confirmação expressa do jogador; snapshot preservado em `releases/v1.8.0-homologada` no commit `66bdab08547daec1df50eca3d6b1967a2a664d2c`.
+- **V1.9:** sistema tributário brasileiro **simulado, parcial e documentado**, com motor fiscal temporal, Simples comércio em hipótese delimitada, Reforma Tributária educativa e integração ao ledger somente de cálculos efetivamente cobertos; plano `docs/PLANO_V19.md`. **Ainda não implementada.**
+- **V2.0:** consolidação/refatoração da arquitetura e reformulação da UX/UI com identidade de jogo empresarial, sem introduzir novos sistemas.

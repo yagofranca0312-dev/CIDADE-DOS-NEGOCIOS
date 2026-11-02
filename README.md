@@ -1,14 +1,24 @@
 # 🏙️ Cidade dos Negócios 1
 
-**Versão:** `1.2.0-rc.1` — **patch comercial com múltiplos produtos**, candidato a homologação.  
+**Versão:** `1.2.1-rc.1` — **hotfix de demanda e vendas automáticas**, candidato a homologação.  
 **Formato:** um `index.html` autônomo, com CSS e JS incorporados; sem internet ou instalação obrigatória para jogar.  
 **Data-base do planejamento:** 01/11/2026.
+
+## Hotfix 1.2.1-rc.1 — controle das vendas pela demanda simulada
+
+- **Venda automática:** exclusivamente pelo avanço do tempo. O comando legado `VENDA.REGISTRAR` agora rejeita novas vendas manuais sem mutar o save, caixa, estoque ou RNG.
+- **Balcão virou painel:** mostra estimativa de demanda (somente produtos com estoque), unidades vendidas, demanda não atendida, receita e CMV do último dia simulado.
+- **Comprovantes:** movimentações consolidadas por dia e por produto, com quantidade, receita, CMV e lucro bruto. Não equivale a transações individuais de clientes nem emissão fiscal.
+- **Histórico preservado:** vendas manuais realizadas na V1.2 continuam contabilizadas e marcadas como legadas. Não serão duplicadas, eliminadas ou convertidas em vendas automáticas.
+- **Economia preservada:** mesma fórmula de demanda, consumo de RNG e lançamentos contábeis das vendas automáticas da V1.2. Agora os dias simulados geram também o evento `DEMANDA.SIMULADA` para auditoria; períodos anteriores permanecem sem estimativa retroativa.
+- **Saves compatíveis:** `schemaVersion: 3` inalterado; atualizador BAT e backup JSON continuam disponíveis. Recomenda-se exportar backup antes da atualização.
+- **Limite:** produto sem estoque não tem demanda calculada nesta versão, portanto aparece como **sem estimativa**, não como demanda zero.
 
 ## Patch 1.2.0-rc.1 — gestão comercial multitem
 
 - **Catálogo:** cada empresa começa com três produtos fictícios; cadastre novos até o limite de 40 por estabelecimento, definindo nome, custo e preço de venda em centavos.
 - **Compras:** selecione produto, fornecedor fictício e quantidade; as entradas incrementam estoque e baixam o caixa. Cada pedido guarda itens, fornecedor, data, custo e lançamento contábil.
-- **Vendas:** carrinho permite vários itens e confirma uma única venda à vista, com baixa de estoque, entrada no caixa, receita e CMV por item no mesmo commit. Vendas simuladas dos dias também trabalham por produto.
+- **Vendas (histórico da V1.2.0):** o carrinho permitia venda manual de múltiplos itens. O hotfix 1.2.1 desativa novas vendas manuais; o avanço de dias registra vendas automáticas com baixa do estoque, caixa, receita e CMV por produto.
 - **Consultas:** catálogo exibe estoque, custo, preço, unidades vendidas, receita e CMV por produto a partir desta edição; últimos pedidos e vendas ficam visíveis.
 - **Saves antigos:** conversão automática e validada de `schemaVersion: 2` para `3` após verificar o checksum do save original. Caixa, estoque total, preço base, histórico contábil, RNG, datas e total histórico de vendas são preservados; registros anteriores não são artificialmente distribuídos entre novos produtos.
 - **Importante:** antes de atualizar, faça backup JSON na V1.1.1. Saves convertidos para schema 3 **não são legíveis por versões antigas**. A migração é unidirecional; mantenha o backup pré-migração para poder retornar ao executável anterior.

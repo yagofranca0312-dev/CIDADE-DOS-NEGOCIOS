@@ -17,3 +17,27 @@ test('Build reproduzível byte a byte',()=>{
  const expected=template.replace('/* CDN_CSS */',css).replace('/* CDN_CORE */',core).replace('/* CDN_UI */',ui);
  assert.equal(createHash('sha256').update(expected).digest('hex'),createHash('sha256').update(html).digest('hex'));
 });
+
+test('Hotfix: lote selecionado destacado sem etiquetas de todos os lotes',()=>{
+ const ui=readFileSync('src/ui/app.js','utf8');
+ assert.match(ui,/selected-lot-marker/);
+ assert.match(ui,/LOTE \$\{String\(lot\)/);
+ assert.match(ui,/<title>Lote/);
+ assert.match(ui,/Lote \$\{String\(selectedLot\)/);
+});
+test('Hotfix: preço próprio visível, concorrente independente e confirmação da mudança',()=>{
+ const template=readFileSync('src/shell/index.template.html','utf8');
+ const ui=readFileSync('src/ui/app.js','utf8');
+ assert.match(template,/id="your-current-price"/);
+ assert.match(template,/id="competitor-price"/);
+ assert.match(template,/id="price-change-feedback"/);
+ assert.match(ui,/setText\('your-current-price',Core.money\(b.unitPrice\)\)/);
+ assert.match(ui,/Seu preço foi atualizado:/);
+ assert.match(ui,/const after=state.world.business.unitPrice/);
+});
+test('Hotfix: schema de save preservado e versão nova apenas da aplicação',()=>{
+ const core=readFileSync('src/core/game.js','utf8');
+ assert.match(core,/SCHEMA_VERSION = 2/);
+ assert.match(core,/VERSION = '1\.0\.1-rc\.1'/);
+ assert.match(core,/function importSave\(raw\)/);
+});

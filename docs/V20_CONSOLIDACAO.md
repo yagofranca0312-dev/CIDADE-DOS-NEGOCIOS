@@ -1,6 +1,6 @@
 # Cidade dos Negócios — V2.0.0-rc.1 — Consolidação técnica e experiência de jogo
 
-**Estado:** candidata implementada localmente, testes automatizados e navegação real em navegador aprovados; homologação Windows do jogador pendente. **Data:** 02/11/2026.  
+**Estado:** HOMOLOGADA por aprovação expressa do jogador em 02/11/2026. Código aprovado preservado na branch `releases/v2.0.0-homologada` (commit `ac3e840b71d3551026f62cc6a04c9173f553f9d7`). Testes e CI registrados na publicação da candidata. Sem alterações no motor após homologação. **Data:** 02/11/2026.  
 **Base de referência:** V1.9.0-rc.1 homologada pelo jogador, commit `575c54c676e024c4d5f9e0186cd404a62b636bd1`, branch `releases/v1.9.0-homologada`.
 
 ## Contrato da V2.0

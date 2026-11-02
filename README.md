@@ -1,8 +1,19 @@
 # 🏙️ Cidade dos Negócios 1
 
-**Versão:** `1.3.0-rc.1` — **inteligência de demanda, fornecedores e reposição**, candidata jogável aguardando homologação.  
+**Versão:** `1.4.0-rc.1` — **gestão estratégica, promoções e cenários financeiros**, candidata jogável aguardando homologação.  
 **Formato:** um `index.html` autônomo, com CSS e JS incorporados; sem internet ou instalação obrigatória para jogar.  
 **Data-base do planejamento:** 01/11/2026.
+
+## Patch 1.4.0-rc.1 — Gestão Estratégica e Equilíbrio Econômico
+
+- **Base homologada:** a V1.3, validada pelo jogador no Windows, está preservada em `releases/v1.3.0-homologada`.
+- **Promoções por produto:** campanhas de 5%, 10% ou 15% de desconto por 1–30 dias; podem ser encerradas. O preço de tabela não muda, e a demanda e a receita das **vendas automáticas** usam o preço efetivo em cada dia. Sem segunda fonte de vendas; promoções não consomem dinheiro com publicidade porque esse mecanismo não foi implementado.
+- **Gestão de custos:** CMV é custo variável das mercadorias vendidas; despesa operacional diária do setor é fixa, e gastos de abertura aparecem separadamente no realizado. O demonstrativo contábil histórico continua íntegro e as receitas de vendas permanecem líquidas de desconto já no valor de transação simulado. Tributos continuam `NOT_COVERED`.
+- **Painel gerencial:** capital de giro gerencial = caixa + estoque + mercadorias em trânsito + contas a receber − obrigações a pagar; ponto de equilíbrio **estimado**, margem de contribuição média do mix de produtos e cobertura de despesas fixas pelo caixa atual, sem vendas.
+- **Cenários de caixa e resultados:** escolher 7, 30 ou 90 dias. A projeção determinística usa custo do inventário, procura esperada e estoque disponível, entregas **já pagas**, campanhas vigentes e despesas fixas, sem RNG e **sem gerar lançamentos ou realizar compras**. Prevê faturamento, CMV, resultado, caixa, obrigações e vendas perdidas; não é previsão estatística validada nem garantia financeira.
+- **Limitações explícitas:** não prevê alterações futuras de concorrência, eventos econômicos, crédito, pagamento de contas a pagar, impostos, novos pedidos ou campanhas futuras. Projeções de caixa refletem essas hipóteses; saldo aparente não representa recursos livres para gastar sem verificar as obrigações.
+- **Saves:** migração unilateral verificável dos esquemas 2/3/4 para o esquema **5** (adição de campanhas), mantendo ledger, inventário, caixa, RNG, registros comerciais e eventos. Guarde backup JSON **antes** de atualizar; a V1.3 não pode ler saves convertidos para esquema 5.
+- **Testes:** 76 regressões anteriores + testes de campanhas, migração, integridade contábil e estabilidade de 90/180/365 dias; execução real no Windows dependerá de homologação do jogador.
 
 ## Patch 1.3.0-rc.1 — Inteligência de Mercado e Abastecimento
 

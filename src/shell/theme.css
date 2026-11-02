@@ -82,3 +82,20 @@
 .stock-ok{color:#9fdcc1}
 @media(max-width:900px){.stock-policy-form{grid-template-columns:repeat(2,minmax(0,1fr))}.stock-policy-form button{grid-column:1/-1}}
 @media(max-width:480px){.stock-policy-form{grid-template-columns:1fr}}
+
+/* V1.4 — Estratégia promocional e indicadores gerenciais. */
+.strategy-promo-panel,.strategy-panel{margin-top:19px}
+.promo-form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:end;margin:15px 0 10px}
+.promo-form>div{min-width:0}.promo-form label{margin-top:0}.promo-form>.btn{grid-column:1/-1;justify-self:start}
+.strategy-controls{display:flex;align-items:center;gap:14px;margin:18px 0;flex-wrap:wrap}
+.strategy-controls label{margin:0}.strategy-controls select{min-width:130px;max-width:220px}
+.strategy-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.strategy-metric{border:1px solid #355069;border-radius:10px;background:#10283c;padding:13px;min-width:0}
+.strategy-metric small{color:#abc8d7;display:block;font-size:.72rem}
+.strategy-metric strong{display:block;color:#f3d399;font-size:clamp(.94rem,1.7vw,1.26rem);margin-top:7px;overflow-wrap:anywhere}
+.strategy-table{width:100%;border-collapse:collapse;min-width:620px;font-size:.78rem}
+.strategy-table th,.strategy-table td{text-align:left;padding:11px 10px;border-bottom:1px solid #36526a}
+.strategy-table th{color:#a5c8da}.strategy-table td{font-variant-numeric:tabular-nums}
+.strategy-risks{margin-top:14px;font-size:.81rem;color:#ccdae4}.strategy-risks p{margin:7px 0}
+@media(max-width:850px){.strategy-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.promo-form{grid-template-columns:1fr}.strategy-metrics{grid-template-columns:1fr}}

@@ -7,7 +7,7 @@
   const BRDate=iso=>iso.split('-').reverse().join('/');
   const KEY='cidade-dos-negocios-save-v1';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
-  let financeQuery=null; // preferência de consulta da interface, independente do GameState
+  let financeQuery=null,strategyHorizon=30; // preferências de interface, independentes do GameState
   const business=()=>state?.world?.business||null;
   function chooseProduct(id){const b=business();return b?.products?.find(p=>p.id===$(id)?.value)||b?.products?.[0]||null;}
   function refillSelect(id,products){
@@ -48,7 +48,7 @@
   }
   function renderCommerce(){
     const b=business(),products=b?.products||[];
-    for(const id of ['buy-product','price-product'])refillSelect(id,products);
+    for(const id of ['buy-product','price-product','promo-product'])refillSelect(id,products);
     const suppliers=Core.SUPPLIERS,$supplier=$('buy-supplier'),previous=$supplier.value;
     $supplier.replaceChildren(...suppliers.map(s=>{const opt=document.createElement('option');opt.value=s.id;opt.textContent=s.name;return opt;}));
     if(suppliers.some(x=>x.id===previous))$supplier.value=previous;
@@ -61,7 +61,13 @@
     const orders=b?.purchaseOrders||[];
     $('recent-purchases').innerHTML=orders.length?orders.slice(-8).reverse().map(o=>`<div class="commerce-history-row"><strong>${escape(o.status==='PENDING'?'🚚 EM TRÂNSITO':'✓ RECEBIDO')}</strong> · ${escape(BRDate(o.date))} → ${escape(BRDate(o.dueDate||o.date))} · ${escape(o.id)} · ${escape(o.items.map(x=>x.quantity+'× '+x.name).join(', '))} · ${escape(Core.money(o.total))}</div>`).join(''):'<p class="muted">Nenhum pedido realizado nesta edição.</p>';
     renderSalesMonitor();renderInventoryPlanner();
-    setText('your-current-price',chosenPrice?Core.money(chosenPrice.priceCents):'—');
+    const promoProduct=chooseProduct('promo-product');
+    const promo=promoProduct&&b?.promotions?.[promoProduct.id];
+    const active=promo&&state.calendar.date<=promo.until;
+    setText('promo-status',promoProduct?(active?`Campanha vigente: ${promo.percent}% até ${BRDate(promo.until)} · preço efetivo ${Core.money(Core.effectivePrice(b,promoProduct,state.calendar.date))}.`:'Sem campanha ativa para este produto.'):'Abra sua empresa para configurar campanhas.');
+    $('promo-form').querySelector('button').disabled=!b;
+    if(promoProduct&&document.activeElement!==$('promo-percent'))$('promo-percent').value=active?String(promo.percent):'0';
+        setText('your-current-price',chosenPrice?Core.money(Core.effectivePrice(b,chosenPrice,state.calendar.date)):'—');
     setText('competitor-price',chosenPrice?Core.money(Math.round(chosenPrice.referenceCents*state.world.competitor.priceIndex/100)):'—');
     if(chosenPrice&&document.activeElement!==$('price-value'))$('price-value').value=(chosenPrice.priceCents/100).toFixed(2);
     updateBuyPreview();
@@ -115,6 +121,38 @@
     if(q.period==='year')return {date:year(q.year)+'-01-01'};
     return {date:q.to,range:{from:q.from,to:q.to}};
   }
+  function renderStrategy(){
+    if(!state?.world?.business){$('strategy-metrics').innerHTML='<p class="muted">Abra uma empresa para consultar as projeções.</p>';$('strategy-cost-rows').innerHTML='';$('strategy-risks').innerHTML='';return;}
+    const report=Core.strategyReport(state,strategyHorizon);
+    $('strategy-horizon').value=String(strategyHorizon);
+    const value=(v)=>v===null?'Não atingível':Core.money(v);
+    const data=[
+      ['Capital de giro (saldo atual)',Core.money(report.workingCapital)],
+      ['Caixa atual cobre despesas fixas por',`${report.cashCoverageDays} dias (sem vendas)`],
+      ['Despesa operacional fixa por dia',Core.money(report.dailyFixed)],
+      ['Ponto de equilíbrio do mix',report.breakEvenUnits===null?'Sem margem positiva':`${report.breakEvenUnits} un./dia (estimado)`],
+      ['Caixa no fim do cenário',Core.money(report.projectedCash)],
+      ['Obrigações no fim do cenário',Core.money(report.projectedPayable)],
+      ['Resultado operacional projetado',Core.money(report.projectedProfit)],
+      ['Unidades potencialmente não atendidas',String(report.estimatedLostUnits)],
+      ['Vendas projetadas',String(report.estimatedSoldUnits)+' unidades']
+    ];
+    $('strategy-metrics').innerHTML=data.map(([k,v])=>`<div class="strategy-metric"><small>${escape(k)}</small><strong>${escape(v)}</strong></div>`).join('');
+    const rows=[
+      ['Receita de vendas',report.recent.revenue,report.projectedRevenue],
+      ['(-) CMV / custo variável das mercadorias',report.recent.cogs,report.projectedCogs],
+      ['(-) Despesa operacional fixa',report.recent.fixed,report.projectedFixed],
+      ['(-) Despesas de abertura / não recorrentes',report.recent.oneOff,null],
+      ['Resultado operacional antes dos tributos',report.recent.operatingResult,report.projectedProfit]
+    ];
+    $('strategy-cost-rows').innerHTML=rows.map(([label,actual,projected])=>`<tr><td>${escape(label)}</td><td>${escape(Core.money(actual))}</td><td>${projected===null?'Não projetado':escape(Core.money(projected))}</td></tr>`).join('');
+    const risks=[];
+    if(report.breakEvenUnits===null)risks.push('⚠ O mix de produtos não tem margem de contribuição positiva nas condições atuais.');
+    if(report.projectedPayable>Core.overview(state).payable)risks.push('⚠ O cenário prevê novas contas a pagar por caixa insuficiente para despesas fixas.');
+    if(report.estimatedLostUnits>0)risks.push(`⚠ Projeção de ${report.estimatedLostUnits} unidades não atendidas: avalie reposição e prazos de entrega.`);
+    if(report.recent.oneOff>0)risks.push('Abertura e outras despesas eventuais constam do realizado, mas não foram repetidas na projeção.');
+    $('strategy-risks').innerHTML=risks.length?risks.map(x=>`<p>${escape(x)}</p>`).join(''):'<p>Sem alertas adicionais nos parâmetros desta projeção hipotética.</p>';
+  }
   function renderFinances(){
     if(!state)return;
     const q=ensureFinanceQuery();
@@ -155,6 +193,7 @@
     $('finance-summary').innerHTML=rows.map((x,i)=>`<dt class="${i===4?'emphasis':''}">${escape(x[0])}</dt><dd class="${i===4?'emphasis':''}">${escape(Core.money(x[1]))}</dd>`).join('');
     setText('journal-count',`${report.entries.length} registros`);
     $('journal-events').innerHTML=report.entries.length?report.entries.slice(-8).reverse().map(j=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(j.memo)}</p><small>${escape(BRDate(j.date))} · ${escape(j.id)}</small></div></div>`).join(''):'<p class="muted">Nenhum lançamento neste período.</p>';
+    renderStrategy();
   }
   function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
   function commit(type,payload={}){
@@ -297,6 +336,9 @@
     $('policy-product').addEventListener('change',()=>{const p=chooseProduct('policy-product');if(p){$('policy-reorder').value=p.reorderPoint;$('policy-target').value=p.targetStock;}});
     $('stock-policy-form').addEventListener('submit',e=>{e.preventDefault();const productId=$('policy-product').value;commit('ESTOQUE.POLITICA_DEFINIR',{productId,reorderPoint:Number($('policy-reorder').value),targetStock:Number($('policy-target').value)});});
     $('price-product').addEventListener('change',()=>{const p=chooseProduct('price-product');if(p)$('price-value').value=(p.priceCents/100).toFixed(2);renderCommerce();});
+    $('promo-product').addEventListener('change',renderCommerce);
+    $('promo-form').addEventListener('submit',e=>{e.preventDefault();const productId=$('promo-product').value,percent=Number($('promo-percent').value),days=percent?Number($('promo-days').value):0;if(commit('PROMO.DEFINIR',{productId,percent,days}))notify(percent?`Campanha de ${percent}% confirmada por ${days} dia(s) de jogo.`:'Campanha encerrada.');});
+    $('strategy-horizon').addEventListener('change',e=>{strategyHorizon=Number(e.target.value);renderStrategy();});
     $('product-form').addEventListener('submit',e=>{e.preventDefault();
       const name=$('new-product-name').value,costCents=Math.round(Number($('new-product-cost').value)*100),priceCents=Math.round(Number($('new-product-price').value)*100);
       if(commit('PRODUTO.CADASTRAR',{name,costCents,priceCents})){$('product-form').reset();notify('Produto cadastrado. Agora configure estoque mínimo e encomende mercadorias.');}

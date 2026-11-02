@@ -1,8 +1,10 @@
 # 🏙️ Cidade dos Negócios — Edição 2.0
 
-**Versão jogável:** `2.0.0-rc.1` — **consolidação da arquitetura de apresentação e reformulação visual de jogo**, candidata para homologação Windows.  
+**Versão jogável:** `2.0.0-rc.1` — **consolidação da arquitetura de apresentação e reformulação visual de jogo**, homologada pelo jogador em 02/11/2026.  
 **Distribuição:** único `index.html` completo e offline. **Schema de save:** 9, igual ao da V1.9.  
 **Referência homologada:** V1.9, branch `releases/v1.9.0-homologada`, commit `575c54c676e024c4d5f9e0186cd404a62b636bd1`.
+
+**Homologação da V2.0:** aprovada expressamente pelo jogador em 02/11/2026. Versão preservada em `releases/v2.0.0-homologada` (commit `ac3e840b71d3551026f62cc6a04c9173f553f9d7`). A identificação técnica `2.0.0-rc.1` foi mantida para corresponder ao executável testado; não houve mudança do motor.
 
 ## V2.0 — Um mundo de negócios, sem mecânicas novas
 

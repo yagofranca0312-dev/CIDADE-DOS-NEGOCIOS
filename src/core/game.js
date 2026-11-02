@@ -1,8 +1,8 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.5.0-rc.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.6.0-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '1.5.0-rc.1';
-  const SCHEMA_VERSION = 6;
+  const VERSION = '1.6.0-rc.1';
+  const SCHEMA_VERSION = 7;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
   const CITIES_SOURCE = [
@@ -15,10 +15,57 @@ const CidadeCore = (() => {
     ['SP','São Paulo'],['SE','Aracaju'],['TO','Palmas'],
     ['CE','Tianguá'],['CE','Sobral'],['CE','Ubajara']
   ];
-  const CITIES = Object.freeze(CITIES_SOURCE.map(([uf,name], index) => Object.freeze({
-    id:`${uf}-${name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z\d]+/gi,'-').toUpperCase()}`,
-    uf, name, capital:index<27, factor:[85,100,115,95,110][index%5]  // Apenas parâmetros inventados para gameplay, NÃO indicadores oficiais.
-  })));
+  // Recorte offline verificável: IBGE, estimativas de população municipal em 1º/07/2026,
+  // arquivo POP2026_20261029.pdf (atualizado em 29/10/2026). IDs municipais oficiais completos.
+  // O mapeamento está em MESMA ordem de CITIES_SOURCE, acompanhado de testes de cobertura.
+  const POPULATION_SOURCE=Object.freeze({
+    id:'IBGE-POP2026-20261029',year:2026,referenceDate:'2026-07-01',publishedFile:'POP2026_20261029.pdf',
+    url:'https://ftp.ibge.gov.br/Estimativas_de_Populacao/Estimativas_2026/POP2026_20261029.pdf'
+  });
+  const MUNICIPAL_POPULATION=Object.freeze([
+    ['1200401',390058], ['2704302',995134], ['1600303',491987], ['1302603',2327101],
+    ['2927408',2559945],['2304400',2582360],['5300108',3009996],['3205309',343935],
+    ['5208707',1511709],['2111300',1090229],['5103403',698917],['5002704',970843],
+    ['3106200',2415451],['1501402',1396157],['2507507',906093],['4106902',1832183],
+    ['2611606',1588983],['2211001',908012],['3304557',6731133],['2408102',783196],
+    ['4314902',1388791],['1100205',520379],['1400100',500965],['4205407',598370],
+    ['3550308',11911337],['2800308',623328],['1721000',333154],['2313401',87757],
+    ['2312908',217690],['2313609',34531]
+  ]);
+  if(MUNICIPAL_POPULATION.length!==CITIES_SOURCE.length)throw Error('Tabela municipal desatualizada');
+  // Faixas do JOGO, não classificações oficiais do IBGE/REGIC.
+  const sizeTier=pop=>pop<100000?'local':pop<500000?'regional':pop<1500000?'grande':'metropole';
+  const TIER_LABELS=Object.freeze({local:'Mercado local',regional:'Centro regional simulado',grande:'Centro urbano de maior porte',metropole:'Metrópole simulada'});
+  const COMPETITOR_FACTOR=Object.freeze({local:102,regional:100,grande:98,metropole:96});
+  const PRICE_ELASTICITY=Object.freeze({local:1.25,regional:1.4,grande:1.55,metropole:1.7});
+  const CITIES=Object.freeze(CITIES_SOURCE.map(([uf,name],index)=>{
+    const [ibgeCode,population2026]=MUNICIPAL_POPULATION[index],tier=sizeTier(population2026);
+    const factor=Math.max(80,Math.min(130,Math.round(100+14*Math.log10(population2026/150000))));
+    return Object.freeze({
+      id:`${uf}-${name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z\d]+/gi,'-').toUpperCase()}`,
+      uf,name,capital:index<27,ibgeCode,population2026,populationYear:2026,populationReferenceDate:'2026-07-01',
+      factor,sizeTier:tier,modelLabel:TIER_LABELS[tier],competitionFactor:COMPETITOR_FACTOR[tier],priceElasticity:PRICE_ELASTICITY[tier]
+    });
+  }));
+  // PIB municipal 2023 e REGIC 2018 são bases externas oficiais, mas NÃO possuem
+  // valores individualmente integrados/verificados neste pacote. Não inventar números.
+  const ECONOMIC_REFERENCES=Object.freeze({
+    population:POPULATION_SOURCE,
+    gdp:Object.freeze({year:2023,available:false,url:'https://www.ibge.gov.br/estatisticas/economicas/contas-nacionais/9088-produto-interno-bruto-dos-municipios.html'}),
+    regic:Object.freeze({year:2018,available:false,url:'https://www.ibge.gov.br/geociencias/organizacao-do-territorio/redes-e-fluxos-geograficos/15798-regioes-de-influencia-das-cidades.html'})
+  });
+  function regionalProfile(cityId){
+    const city=CITIES.find(c=>c.id===cityId);
+    if(!city)return null;
+    return {cityId:city.id,name:city.name,uf:city.uf,ibgeCode:city.ibgeCode,population:city.population2026,
+      populationYear:2026,referenceDate:POPULATION_SOURCE.referenceDate,source:POPULATION_SOURCE.url,
+      tier:city.sizeTier,tierLabel:city.modelLabel,demandFactor:city.factor,competitionFactor:city.competitionFactor,
+      priceElasticity:city.priceElasticity,gdp2023:null,regic2018:null,
+      note:'Dados populacionais oficiais. Perfil, concorrência e potencial comercial: parâmetros simulados do jogo, não indicadores do IBGE.'};
+  }
+  function competitorReference(state,p,city){return p.referenceCents*state.world.competitor.priceIndex/100*city.competitionFactor/100;}
+  function demandElasticity(price,reference,city){return clamp(1.32-(price/reference-1)*city.priceElasticity,.08,1.85);}
+
   const SECTORS = Object.freeze({
     mercado: Object.freeze({name:'Mercado de bairro', product:'Cesta de produtos', cost:3200, recommended:4900, openCost:750000, dailyCost:13500, demand:13, glyph:'🛒'}),
     padaria: Object.freeze({name:'Padaria', product:'Pão artesanal', cost:540, recommended:960, openCost:900000, dailyCost:15900, demand:22, glyph:'🥖'}),
@@ -46,8 +93,8 @@ const CidadeCore = (() => {
   // Migração aditiva e auditável: inventário anterior fica no valor original;
   // ordens recebidas antes da V1.3 não geram novos créditos/debitos.
   function upgradedState(original) {
-    if(original.schemaVersion===6)return clone(original);
-    assert([2,3,4,5].includes(original.schemaVersion),'Schema de save não suportado');
+    if(original.schemaVersion===7)return clone(original);
+    assert([2,3,4,5,6].includes(original.schemaVersion),'Schema de save não suportado');
     const state=clone(original);
     if(state.schemaVersion===2){
       state.schemaVersion=3;
@@ -63,15 +110,22 @@ const CidadeCore = (() => {
         b.purchaseOrders.forEach(o=>{o.status='RECEIVED';o.dueDate=o.date;o.receivedAt=o.date;});
       }
     }
-    state.schemaVersion=5;
-    if(state.world.business){const b=state.world.business;
-      if(!b.promotions)b.promotions={};
+    if(state.schemaVersion<5){
+      state.schemaVersion=5;
+      if(state.world.business){const b=state.world.business;
+        if(!b.promotions)b.promotions={};
+      }
     }
-    state.world.branches=[];
-    state.world.branchSeq=state.world.business?1:0;
-    state.world.activeBusinessId=state.world.business?.id??null;
-    if(state.world.business)state.world.business.cityId=state.player.cityId;
-    state.schemaVersion=6;
+    if(state.schemaVersion<6){
+      state.world.branches=[];
+      state.world.branchSeq=state.world.business?1:0;
+      state.world.activeBusinessId=state.world.business?.id??null;
+      if(state.world.business)state.world.business.cityId=state.player.cityId;
+      state.schemaVersion=6;
+    }
+    // Metadados de origem, não uma reescrita dos lançamentos históricos.
+    state.world.regional={datasetId:POPULATION_SOURCE.id,modelId:'REGIONAL-V1',effectiveFrom:state.calendar.date};
+    state.schemaVersion=7;
     return state;
   }
   function businesses(state){
@@ -215,10 +269,10 @@ const CidadeCore = (() => {
     return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),inTransit:balance(draft,'IN_TRANSIT'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),revenue,cogs,expenses,profit:revenue-cogs-expenses,stock:businesses(draft).reduce((n,b)=>n+b.stockUnits,0),unitPrice:activeBusiness(draft)?.unitPrice??null,units:businesses(draft).length,tick:draft.calendar.tick,city:cityById(activeBusiness(draft)?.cityId||draft.player.cityId)?.name??'—'};
   }
   function emptyLegacy(seed) {return {
-    schemaVersion:6,worldId:`legacy-${seed}`,revision:0,
+    schemaVersion:7,worldId:`legacy-${seed}`,revision:0,
     meta:{title:'Cidade dos Negócios',version:VERSION,origin:'MIGRATED_EMPTY_CP000',mode:'DEMONSTRACAO_ECONOMICA'},
     calendar:{date:START_DATE,tick:0},rng:{seed},
-    player:{name:'',companyName:'',cityId:null},world:{cities:CITIES.map(x=>x.id),business:null,branches:[],branchSeq:0,activeBusinessId:null,competitor:{priceIndex:100}},
+    player:{name:'',companyName:'',cityId:null},world:{cities:CITIES.map(x=>x.id),business:null,branches:[],branchSeq:0,activeBusinessId:null,regional:{datasetId:POPULATION_SOURCE.id,modelId:'REGIONAL-V1',effectiveFrom:START_DATE},competitor:{priceIndex:100}},
     economy:{journalSeq:0,ledger:[]},fiscal:{mode:'DEMONSTRACAO_ECONOMICA',coverageStatus:'NOT_COVERED',rulePackId:null},
     audit:{eventSeq:0,events:[],commands:{}}
   };}
@@ -337,9 +391,9 @@ const CidadeCore = (() => {
       const items=[],demandLines=[];
       let estimated=0,fulfilled=0,unmet=0,withoutStock=0;
       for(const p of b.products){
-        const competitorPrice=p.referenceCents*(draft.world.competitor.priceIndex/100);
+        const competitorPrice=competitorReference(draft,p,city);
         const price=effectivePrice(b,p,draft.calendar.date);
-        const elasticity=clamp(1.32-(price/competitorPrice-1)*1.4,0.08,1.85);
+        const elasticity=demandElasticity(price,competitorPrice,city);
         const base=p.demand*(city.factor/100)*elasticity*season*share;
         const demand=Math.max(0,Math.floor(base*(0.75+random(draft)*0.55)));
         const sold=Math.min(p.stockUnits,demand),lost=demand-sold;
@@ -350,7 +404,7 @@ const CidadeCore = (() => {
       }
       if(items.length)registerSale(draft,b,items,'SIMULACAO_DIARIA');
       event(draft,'DEMANDA.SIMULADA',`${b.id} · ${city.name}: ${estimated} un. procuradas, ${fulfilled} vendidas, ${unmet} não atendidas.`,
-        {estimated,fulfilled,unmet,withoutStock,lostPotentialCents:demandLines.reduce((n,x)=>n+x.lostPotentialCents,0),items:demandLines,marketShare:share},b.id);
+        {estimated,fulfilled,unmet,withoutStock,lostPotentialCents:demandLines.reduce((n,x)=>n+x.lostPotentialCents,0),items:demandLines,marketShare:share,regionalFactor:city.factor,regionalDataset:POPULATION_SOURCE.id},b.id);
       const cash=balance(draft,'CASH'),expense=s.dailyCost;
       journal(draft,`Despesa operacional diária · ${b.id}`,[
         {account:'EXPENSE',debit:expense,credit:0},
@@ -390,7 +444,7 @@ const CidadeCore = (() => {
     }catch(error){return {ok:false,status:'REJECTED',state:current?clone(current):null,error:error.message};}
   }
   function validate(state) {
-    assert(plain(state)&&[2,3,4,5,6].includes(state.schemaVersion),'Save com schema incompatível');
+    assert(plain(state)&&[2,3,4,5,6,7].includes(state.schemaVersion),'Save com schema incompatível');
     assert(Number.isSafeInteger(state.revision)&&state.revision>=0,'Revisão inválida');
     assert(plain(state.player)&&plain(state.calendar)&&int(state.calendar.tick),'Jogador/calendário inválidos');
     assert(/^\d{4}-\d{2}-\d{2}$/.test(state.calendar.date)&&!Number.isNaN(Date.parse(state.calendar.date+'T12:00:00Z')),'Data inválida');
@@ -399,6 +453,10 @@ const CidadeCore = (() => {
     assert(state.world.cities.every(id=>!!cityById(id)),'Cidade inválida');
     assert(state.player.cityId===null||!!cityById(state.player.cityId),'Cidade de carreira inválida');
     assert(plain(state.world.competitor)&&int(state.world.competitor.priceIndex),'Concorrente inválido');
+    if(state.schemaVersion>=7){
+      const regional=state.world.regional;
+      assert(plain(regional)&&regional.datasetId===POPULATION_SOURCE.id&&regional.modelId==='REGIONAL-V1'&&isoDate(regional.effectiveFrom)&&regional.effectiveFrom>=START_DATE&&regional.effectiveFrom<=state.calendar.date,'Versão econômica regional ou data de ativação inválida');
+    }
     assert(plain(state.economy)&&Array.isArray(state.economy.ledger)&&state.economy.ledger.length<=150000,'Ledger inválido');
     assert(plain(state.audit)&&Array.isArray(state.audit.events)&&plain(state.audit.commands),'Auditoria inválida');
     assert(state.audit.events.length<=250000&&new Set(state.audit.events.map(x=>x.id)).size===state.audit.events.length,'Eventos duplicados ou excesso');
@@ -413,7 +471,7 @@ const CidadeCore = (() => {
     }
     const cash=balance(state,'CASH'),inventory=balance(state,'INVENTORY');
     assert(int(cash)&&int(inventory)&&int(balance(state,'PAYABLE')),'Saldos financeiros inválidos');
-    if(state.schemaVersion===6){
+    if(state.schemaVersion>=6){
       assert(Array.isArray(state.world.branches)&&state.world.branches.length<=4,'Número de filiais inválido');
       const units=businesses(state);
       assert(units.length<=5&&int(state.world.branchSeq)&&state.world.branchSeq<=100000,'Limite de estabelecimentos inválido');
@@ -573,8 +631,8 @@ const CidadeCore = (() => {
     const products=b.products.map(p=>({p,stock:p.stockUnits,value:p.stockValueCents}));
     for(const row of products){
       const p=row.p,unitPrice=effectivePrice(b,p,state.calendar.date),unitCost=p.stockUnits?Math.round(p.stockValueCents/p.stockUnits):p.costCents;
-      const reference=p.referenceCents*state.world.competitor.priceIndex/100;
-      const demand=Math.max(0,Math.round(p.demand*city.factor/100/businesses(state).filter(x=>x.cityId===b.cityId&&x.sector===b.sector).length*clamp(1.32-(unitPrice/reference-1)*1.4,.08,1.85)));
+      const reference=competitorReference(state,p,city);
+      const demand=Math.max(0,Math.round(p.demand*city.factor/100/businesses(state).filter(x=>x.cityId===b.cityId&&x.sector===b.sector).length*demandElasticity(unitPrice,reference,city)));
       weightedDemand+=demand;weightedContribution+=demand*(unitPrice-unitCost);
     }
     const contributionPerUnit=weightedDemand?weightedContribution/weightedDemand:0;
@@ -587,8 +645,8 @@ const CidadeCore = (() => {
         for(const line of order.items){const row=products.find(x=>x.p.id===line.productId);row.stock+=line.quantity;row.value+=line.total;}
       }
       const season=1+0.13*Math.sin(((state.calendar.tick+d)%365)/365*Math.PI*2);
-      for(const row of products){const p=row.p,price=effectivePrice(b,p,date),ref=p.referenceCents*state.world.competitor.priceIndex/100;
-        const elasticity=clamp(1.32-(price/ref-1)*1.4,.08,1.85);
+      for(const row of products){const p=row.p,price=effectivePrice(b,p,date),ref=competitorReference(state,p,city);
+        const elasticity=demandElasticity(price,ref,city);
         const demand=Math.max(0,Math.floor(p.demand*city.factor/100/businesses(state).filter(x=>x.cityId===b.cityId&&x.sector===b.sector).length*elasticity*season*1.025));
         const sold=Math.min(demand,row.stock);missed+=demand-sold;unitsSold+=sold;
         const cost=sold===row.stock?row.value:row.stock?Math.round(row.value*sold/row.stock):0;
@@ -646,10 +704,10 @@ const CidadeCore = (() => {
     assert(plain(data)&&data.saveFormatVersion===1&&data.app==='Cidade dos Negócios'&&data.checksumAlgorithm==='FNV1A32'&&typeof data.checksum==='string'&&plain(data.payload),'Envelope de save incompatível');
     assert(hash(JSON.stringify(data.payload))===data.checksum,'Checksum diverge: arquivo alterado ou corrompido');
     validate(data.payload);
-    const migrated=data.payload.schemaVersion!==6,state=upgradedState(data.payload);validate(state);
-    return {state,migrated,message:migrated?'Carreira migrada para V1.5: matriz, caixa, estoque e histórico preservados.':'Carreira restaurada com integridade validada.'};
+    const migrated=data.payload.schemaVersion!==7,state=upgradedState(data.payload);validate(state);
+    return {state,migrated,message:migrated?'Carreira migrada para V1.6: histórico preservado e novos fatores regionais aplicados somente daqui em diante.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,ECONOMIC_REFERENCES,regionalProfile,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();

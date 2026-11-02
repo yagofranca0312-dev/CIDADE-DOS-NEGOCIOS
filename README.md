@@ -1,8 +1,20 @@
 # 🏙️ Cidade dos Negócios 1
 
-**Versão:** `1.5.0-rc.1` — **rede empresarial multiunidade**, candidata jogável, aguardando homologação no Windows.  
+**Versão:** `1.6.0-rc.1` — **economia regional baseada em população oficial e cidades dinâmicas**, candidata jogável aguardando homologação Windows.  
 **Formato:** um `index.html` autônomo, com CSS e JS incorporados; sem internet ou instalação obrigatória para jogar.  
 **Data-base do planejamento:** 01/11/2026.
+
+## Patch 1.6.0-rc.1 — Economia Regional e Cidades Dinâmicas
+
+- **Base oficial offline:** as 30 cidades da carreira possuem código IBGE de 7 dígitos e população estimada pelo **IBGE em 1º/07/2026**, extraída de `POP2026_20261029.pdf` (atualização 29/10/2026). Veja `docs/FONTES_REGIONAIS_V16.md` para todos os valores, a URL original e o método.
+- **Não confundir dados reais com gameplay:** tamanho/população são oficiais; o fator de demanda (80% a 130%), sensibilidade a preços, faixa urbana (local/regional/grande/metrópole) e pressão concorrencial são **modelos fictícios**, e não indicadores do IBGE. PIB municipal 2023 e REGIC 2018 **não foram incorporados por cidade** nesta edição: o painel os indica como não integrados, sem inventar valores.
+- **Demanda local diferente:** a procura futura por produtos passa a utilizar o fator regional calibrado na escala logarítmica da população municipal. Preços concorrentes e elasticidade também variam por faixa simulada. Continua existindo partilha de mercado entre lojas do mesmo setor e cidade, sem duplicar consumidores.
+- **Mapa diferenciado:** o distrito isométrico mantém os mesmos 18 lotes e cliques, mas a altura dos edifícios, a paisagem e a densidade visual variam por faixa populacional. **Não reproduz** geografia real nem quantidade real de prédios.
+- **Observatório regional:** ao trocar de cidade, mostra população oficial, data de referência, código IBGE, perfil urbano fictício, índices simulados e fonte oficial externa. A consulta não exige internet; o link de evidência pode ser aberto separadamente quando houver conexão.
+- **Compatibilidade do histórico:** saves `schemaVersion: 2–6` são migrados para 7 sem recontar caixa, CMV, livros, estabelecimentos ou vendas antigas. `world.regional.effectiveFrom` registra a data do jogo em que o novo modelo entrou em vigor; a simulação futura muda deliberadamente, sem editar o passado. O esquema 7 não é legível pelo executável antigo.
+- **Qualidade:** bateria de testes do motor, impacto econômico, cobertura municipal, migração preservativa, 365 dias de simulação multiunidade e quatro resoluções. Windows e atualizador BAT dependem da sua validação de homologação.
+
+**Antes de atualizar:** exporte o backup JSON na V1.5 homologada. O save migrado para schema 7 não abre versões anteriores.
 
 ## Patch 1.5.0-rc.1 — Expansão Empresarial e Múltiplos Estabelecimentos
 

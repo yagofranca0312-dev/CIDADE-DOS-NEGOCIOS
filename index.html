@@ -124,6 +124,28 @@
 @media(max-width:950px){.topbar-controls{flex-wrap:wrap}.unit-switch{min-width:160px;max-width:100%}}
 @media(max-width:530px){.group-highlights{grid-template-columns:1fr}.unit-switch{width:100%}}
 
+/* V1.6 — observatório regional: dados oficiais apartados da modelagem fictícia. */
+.regional-panel{display:grid;gap:11px}
+.regional-panel .panel-heading{margin-bottom:1px}
+.regional-hero{padding:14px;background:linear-gradient(120deg,#1d4352,#153149);border:1px solid #376273;border-radius:11px}
+.regional-hero small{display:block;font-size:.65rem;font-weight:800;letter-spacing:.06em;color:#c2dde5}
+.regional-hero strong{display:block;font-size:clamp(1.45rem,2.6vw,1.95rem);font-variant-numeric:tabular-nums;color:#f5d9a6;margin:5px 0}
+.regional-hero span{font-size:.7rem;color:#bdd1dd;line-height:1.5}
+.regional-indicators{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.regional-indicators div{background:#102b3f;border:1px solid #2d4c60;border-radius:8px;padding:9px;min-width:0}
+.regional-indicators small{display:block;font-size:.63rem;line-height:1.4;color:#abc3d2}
+.regional-indicators strong{display:block;font-size:.83rem;margin-top:5px;overflow-wrap:anywhere}
+.regional-sources{display:grid;grid-template-columns:1fr;gap:4px;margin:2px 0}
+.regional-sources dt{color:#a9bdce;font-size:.7rem}
+.regional-sources dd{margin:0 0 6px;font-size:.74rem;font-weight:700}
+.regional-caution{margin:0;color:#e6cda1;font-size:.72rem;line-height:1.55}
+.regional-source-link{font-size:.73rem;overflow-wrap:anywhere}
+.map-canvas[data-urban-size="local"]{background:radial-gradient(ellipse at 50% 40%,#2b5552,#14333d 65%,#112b35)}
+.map-canvas[data-urban-size="regional"]{background:radial-gradient(ellipse at 52% 40%,#275a63,#173a49 65%,#112a3e)}
+.map-canvas[data-urban-size="grande"]{background:radial-gradient(ellipse at 50% 40%,#2b5075,#173b5d 65%,#0d243c)}
+.map-canvas[data-urban-size="metropole"]{background:radial-gradient(ellipse at 50% 40%,#42537d,#183459 65%,#111e3e)}
+@media(max-width:480px){.regional-hero strong{font-size:1.55rem}.regional-indicators{grid-template-columns:1fr 1fr}}
+
   </style>
 </head>
 <body>
@@ -184,7 +206,7 @@
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
       <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Tributação legal não calculada nesta versão.</div>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.5.0-rc.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.6.0-rc.1</span></div>
         <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
           <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
           <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
@@ -199,6 +221,13 @@
               <p class="map-disclaimer">Mapa fictício para jogabilidade. Não representa ruas, lotes ou imóveis reais.</p>
             </article>
             <div class="right-column"><article class="panel"><div class="panel-heading"><h3>Lote selecionado</h3><span class="tag-soft">COMERCIAL</span></div><div class="big-number" id="selected-lot">Lote 01</div><p class="muted">Selecione um dos lotes no mapa. O grupo pode ter até cinco estabelecimentos, em cidades diferentes. Cada lote comporta uma unidade.</p><button class="btn btn-primary full" id="map-open-company" type="button">Abrir unidade neste lote</button></article>
+              <article class="panel regional-panel" aria-labelledby="regional-title"><div class="panel-heading"><div><div class="overline">IBGE E SIMULAÇÃO</div><h3 id="regional-title">Observatório econômico</h3></div><span class="tag-soft">OFFLINE</span></div>
+                <div class="regional-hero"><small>POPULAÇÃO ESTIMADA · IBGE 2026</small><strong id="regional-population">—</strong><span>Referência: <b id="regional-date">—</b> · código IBGE <b id="regional-code">—</b></span></div>
+                <div class="regional-indicators"><div><small>Perfil urbano do jogo</small><strong id="regional-urban-size">—</strong></div><div><small>Fator de demanda simulado</small><strong id="regional-demand-factor">—</strong></div><div><small>Referência concorrencial simulada</small><strong id="regional-competition-factor">—</strong></div></div>
+                <dl class="regional-sources"><dt>PIB municipal</dt><dd id="regional-gdp">—</dd><dt>Hierarquia urbana REGIC</dt><dd id="regional-regic">—</dd></dl>
+                <p id="regional-model-status" class="regional-caution">Indicadores reais e parâmetros simulados identificados separadamente.</p>
+                <a id="regional-source" class="regional-source-link" target="_blank" rel="noopener noreferrer" href="https://ftp.ibge.gov.br/Estimativas_de_Populacao/Estimativas_2026/POP2026_20261029.pdf">Fonte oficial: estimativas de população IBGE 2026 ↗</a>
+              </article>
               <article class="panel"><div class="panel-heading"><h3>Aconteceu na cidade</h3><span class="tag-soft">EVENTOS REAIS DO JOGO</span></div><div id="city-events" class="event-list"></div></article></div>
           </div>
         </section>
@@ -318,11 +347,11 @@
   <input type="file" id="import-file" accept=".json,application/json" hidden>
   <div class="toast" id="toast" aria-live="polite" role="status"></div>
   <script>
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.5.0-rc.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.6.0-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '1.5.0-rc.1';
-  const SCHEMA_VERSION = 6;
+  const VERSION = '1.6.0-rc.1';
+  const SCHEMA_VERSION = 7;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
   const CITIES_SOURCE = [
@@ -335,10 +364,57 @@ const CidadeCore = (() => {
     ['SP','São Paulo'],['SE','Aracaju'],['TO','Palmas'],
     ['CE','Tianguá'],['CE','Sobral'],['CE','Ubajara']
   ];
-  const CITIES = Object.freeze(CITIES_SOURCE.map(([uf,name], index) => Object.freeze({
-    id:`${uf}-${name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z\d]+/gi,'-').toUpperCase()}`,
-    uf, name, capital:index<27, factor:[85,100,115,95,110][index%5]  // Apenas parâmetros inventados para gameplay, NÃO indicadores oficiais.
-  })));
+  // Recorte offline verificável: IBGE, estimativas de população municipal em 1º/07/2026,
+  // arquivo POP2026_20261029.pdf (atualizado em 29/10/2026). IDs municipais oficiais completos.
+  // O mapeamento está em MESMA ordem de CITIES_SOURCE, acompanhado de testes de cobertura.
+  const POPULATION_SOURCE=Object.freeze({
+    id:'IBGE-POP2026-20261029',year:2026,referenceDate:'2026-07-01',publishedFile:'POP2026_20261029.pdf',
+    url:'https://ftp.ibge.gov.br/Estimativas_de_Populacao/Estimativas_2026/POP2026_20261029.pdf'
+  });
+  const MUNICIPAL_POPULATION=Object.freeze([
+    ['1200401',390058], ['2704302',995134], ['1600303',491987], ['1302603',2327101],
+    ['2927408',2559945],['2304400',2582360],['5300108',3009996],['3205309',343935],
+    ['5208707',1511709],['2111300',1090229],['5103403',698917],['5002704',970843],
+    ['3106200',2415451],['1501402',1396157],['2507507',906093],['4106902',1832183],
+    ['2611606',1588983],['2211001',908012],['3304557',6731133],['2408102',783196],
+    ['4314902',1388791],['1100205',520379],['1400100',500965],['4205407',598370],
+    ['3550308',11911337],['2800308',623328],['1721000',333154],['2313401',87757],
+    ['2312908',217690],['2313609',34531]
+  ]);
+  if(MUNICIPAL_POPULATION.length!==CITIES_SOURCE.length)throw Error('Tabela municipal desatualizada');
+  // Faixas do JOGO, não classificações oficiais do IBGE/REGIC.
+  const sizeTier=pop=>pop<100000?'local':pop<500000?'regional':pop<1500000?'grande':'metropole';
+  const TIER_LABELS=Object.freeze({local:'Mercado local',regional:'Centro regional simulado',grande:'Centro urbano de maior porte',metropole:'Metrópole simulada'});
+  const COMPETITOR_FACTOR=Object.freeze({local:102,regional:100,grande:98,metropole:96});
+  const PRICE_ELASTICITY=Object.freeze({local:1.25,regional:1.4,grande:1.55,metropole:1.7});
+  const CITIES=Object.freeze(CITIES_SOURCE.map(([uf,name],index)=>{
+    const [ibgeCode,population2026]=MUNICIPAL_POPULATION[index],tier=sizeTier(population2026);
+    const factor=Math.max(80,Math.min(130,Math.round(100+14*Math.log10(population2026/150000))));
+    return Object.freeze({
+      id:`${uf}-${name.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z\d]+/gi,'-').toUpperCase()}`,
+      uf,name,capital:index<27,ibgeCode,population2026,populationYear:2026,populationReferenceDate:'2026-07-01',
+      factor,sizeTier:tier,modelLabel:TIER_LABELS[tier],competitionFactor:COMPETITOR_FACTOR[tier],priceElasticity:PRICE_ELASTICITY[tier]
+    });
+  }));
+  // PIB municipal 2023 e REGIC 2018 são bases externas oficiais, mas NÃO possuem
+  // valores individualmente integrados/verificados neste pacote. Não inventar números.
+  const ECONOMIC_REFERENCES=Object.freeze({
+    population:POPULATION_SOURCE,
+    gdp:Object.freeze({year:2023,available:false,url:'https://www.ibge.gov.br/estatisticas/economicas/contas-nacionais/9088-produto-interno-bruto-dos-municipios.html'}),
+    regic:Object.freeze({year:2018,available:false,url:'https://www.ibge.gov.br/geociencias/organizacao-do-territorio/redes-e-fluxos-geograficos/15798-regioes-de-influencia-das-cidades.html'})
+  });
+  function regionalProfile(cityId){
+    const city=CITIES.find(c=>c.id===cityId);
+    if(!city)return null;
+    return {cityId:city.id,name:city.name,uf:city.uf,ibgeCode:city.ibgeCode,population:city.population2026,
+      populationYear:2026,referenceDate:POPULATION_SOURCE.referenceDate,source:POPULATION_SOURCE.url,
+      tier:city.sizeTier,tierLabel:city.modelLabel,demandFactor:city.factor,competitionFactor:city.competitionFactor,
+      priceElasticity:city.priceElasticity,gdp2023:null,regic2018:null,
+      note:'Dados populacionais oficiais. Perfil, concorrência e potencial comercial: parâmetros simulados do jogo, não indicadores do IBGE.'};
+  }
+  function competitorReference(state,p,city){return p.referenceCents*state.world.competitor.priceIndex/100*city.competitionFactor/100;}
+  function demandElasticity(price,reference,city){return clamp(1.32-(price/reference-1)*city.priceElasticity,.08,1.85);}
+
   const SECTORS = Object.freeze({
     mercado: Object.freeze({name:'Mercado de bairro', product:'Cesta de produtos', cost:3200, recommended:4900, openCost:750000, dailyCost:13500, demand:13, glyph:'🛒'}),
     padaria: Object.freeze({name:'Padaria', product:'Pão artesanal', cost:540, recommended:960, openCost:900000, dailyCost:15900, demand:22, glyph:'🥖'}),
@@ -366,8 +442,8 @@ const CidadeCore = (() => {
   // Migração aditiva e auditável: inventário anterior fica no valor original;
   // ordens recebidas antes da V1.3 não geram novos créditos/debitos.
   function upgradedState(original) {
-    if(original.schemaVersion===6)return clone(original);
-    assert([2,3,4,5].includes(original.schemaVersion),'Schema de save não suportado');
+    if(original.schemaVersion===7)return clone(original);
+    assert([2,3,4,5,6].includes(original.schemaVersion),'Schema de save não suportado');
     const state=clone(original);
     if(state.schemaVersion===2){
       state.schemaVersion=3;
@@ -383,15 +459,22 @@ const CidadeCore = (() => {
         b.purchaseOrders.forEach(o=>{o.status='RECEIVED';o.dueDate=o.date;o.receivedAt=o.date;});
       }
     }
-    state.schemaVersion=5;
-    if(state.world.business){const b=state.world.business;
-      if(!b.promotions)b.promotions={};
+    if(state.schemaVersion<5){
+      state.schemaVersion=5;
+      if(state.world.business){const b=state.world.business;
+        if(!b.promotions)b.promotions={};
+      }
     }
-    state.world.branches=[];
-    state.world.branchSeq=state.world.business?1:0;
-    state.world.activeBusinessId=state.world.business?.id??null;
-    if(state.world.business)state.world.business.cityId=state.player.cityId;
-    state.schemaVersion=6;
+    if(state.schemaVersion<6){
+      state.world.branches=[];
+      state.world.branchSeq=state.world.business?1:0;
+      state.world.activeBusinessId=state.world.business?.id??null;
+      if(state.world.business)state.world.business.cityId=state.player.cityId;
+      state.schemaVersion=6;
+    }
+    // Metadados de origem, não uma reescrita dos lançamentos históricos.
+    state.world.regional={datasetId:POPULATION_SOURCE.id,modelId:'REGIONAL-V1',effectiveFrom:state.calendar.date};
+    state.schemaVersion=7;
     return state;
   }
   function businesses(state){
@@ -535,10 +618,10 @@ const CidadeCore = (() => {
     return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),inTransit:balance(draft,'IN_TRANSIT'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),revenue,cogs,expenses,profit:revenue-cogs-expenses,stock:businesses(draft).reduce((n,b)=>n+b.stockUnits,0),unitPrice:activeBusiness(draft)?.unitPrice??null,units:businesses(draft).length,tick:draft.calendar.tick,city:cityById(activeBusiness(draft)?.cityId||draft.player.cityId)?.name??'—'};
   }
   function emptyLegacy(seed) {return {
-    schemaVersion:6,worldId:`legacy-${seed}`,revision:0,
+    schemaVersion:7,worldId:`legacy-${seed}`,revision:0,
     meta:{title:'Cidade dos Negócios',version:VERSION,origin:'MIGRATED_EMPTY_CP000',mode:'DEMONSTRACAO_ECONOMICA'},
     calendar:{date:START_DATE,tick:0},rng:{seed},
-    player:{name:'',companyName:'',cityId:null},world:{cities:CITIES.map(x=>x.id),business:null,branches:[],branchSeq:0,activeBusinessId:null,competitor:{priceIndex:100}},
+    player:{name:'',companyName:'',cityId:null},world:{cities:CITIES.map(x=>x.id),business:null,branches:[],branchSeq:0,activeBusinessId:null,regional:{datasetId:POPULATION_SOURCE.id,modelId:'REGIONAL-V1',effectiveFrom:START_DATE},competitor:{priceIndex:100}},
     economy:{journalSeq:0,ledger:[]},fiscal:{mode:'DEMONSTRACAO_ECONOMICA',coverageStatus:'NOT_COVERED',rulePackId:null},
     audit:{eventSeq:0,events:[],commands:{}}
   };}
@@ -657,9 +740,9 @@ const CidadeCore = (() => {
       const items=[],demandLines=[];
       let estimated=0,fulfilled=0,unmet=0,withoutStock=0;
       for(const p of b.products){
-        const competitorPrice=p.referenceCents*(draft.world.competitor.priceIndex/100);
+        const competitorPrice=competitorReference(draft,p,city);
         const price=effectivePrice(b,p,draft.calendar.date);
-        const elasticity=clamp(1.32-(price/competitorPrice-1)*1.4,0.08,1.85);
+        const elasticity=demandElasticity(price,competitorPrice,city);
         const base=p.demand*(city.factor/100)*elasticity*season*share;
         const demand=Math.max(0,Math.floor(base*(0.75+random(draft)*0.55)));
         const sold=Math.min(p.stockUnits,demand),lost=demand-sold;
@@ -670,7 +753,7 @@ const CidadeCore = (() => {
       }
       if(items.length)registerSale(draft,b,items,'SIMULACAO_DIARIA');
       event(draft,'DEMANDA.SIMULADA',`${b.id} · ${city.name}: ${estimated} un. procuradas, ${fulfilled} vendidas, ${unmet} não atendidas.`,
-        {estimated,fulfilled,unmet,withoutStock,lostPotentialCents:demandLines.reduce((n,x)=>n+x.lostPotentialCents,0),items:demandLines,marketShare:share},b.id);
+        {estimated,fulfilled,unmet,withoutStock,lostPotentialCents:demandLines.reduce((n,x)=>n+x.lostPotentialCents,0),items:demandLines,marketShare:share,regionalFactor:city.factor,regionalDataset:POPULATION_SOURCE.id},b.id);
       const cash=balance(draft,'CASH'),expense=s.dailyCost;
       journal(draft,`Despesa operacional diária · ${b.id}`,[
         {account:'EXPENSE',debit:expense,credit:0},
@@ -710,7 +793,7 @@ const CidadeCore = (() => {
     }catch(error){return {ok:false,status:'REJECTED',state:current?clone(current):null,error:error.message};}
   }
   function validate(state) {
-    assert(plain(state)&&[2,3,4,5,6].includes(state.schemaVersion),'Save com schema incompatível');
+    assert(plain(state)&&[2,3,4,5,6,7].includes(state.schemaVersion),'Save com schema incompatível');
     assert(Number.isSafeInteger(state.revision)&&state.revision>=0,'Revisão inválida');
     assert(plain(state.player)&&plain(state.calendar)&&int(state.calendar.tick),'Jogador/calendário inválidos');
     assert(/^\d{4}-\d{2}-\d{2}$/.test(state.calendar.date)&&!Number.isNaN(Date.parse(state.calendar.date+'T12:00:00Z')),'Data inválida');
@@ -719,6 +802,10 @@ const CidadeCore = (() => {
     assert(state.world.cities.every(id=>!!cityById(id)),'Cidade inválida');
     assert(state.player.cityId===null||!!cityById(state.player.cityId),'Cidade de carreira inválida');
     assert(plain(state.world.competitor)&&int(state.world.competitor.priceIndex),'Concorrente inválido');
+    if(state.schemaVersion>=7){
+      const regional=state.world.regional;
+      assert(plain(regional)&&regional.datasetId===POPULATION_SOURCE.id&&regional.modelId==='REGIONAL-V1'&&isoDate(regional.effectiveFrom)&&regional.effectiveFrom>=START_DATE&&regional.effectiveFrom<=state.calendar.date,'Versão econômica regional ou data de ativação inválida');
+    }
     assert(plain(state.economy)&&Array.isArray(state.economy.ledger)&&state.economy.ledger.length<=150000,'Ledger inválido');
     assert(plain(state.audit)&&Array.isArray(state.audit.events)&&plain(state.audit.commands),'Auditoria inválida');
     assert(state.audit.events.length<=250000&&new Set(state.audit.events.map(x=>x.id)).size===state.audit.events.length,'Eventos duplicados ou excesso');
@@ -733,7 +820,7 @@ const CidadeCore = (() => {
     }
     const cash=balance(state,'CASH'),inventory=balance(state,'INVENTORY');
     assert(int(cash)&&int(inventory)&&int(balance(state,'PAYABLE')),'Saldos financeiros inválidos');
-    if(state.schemaVersion===6){
+    if(state.schemaVersion>=6){
       assert(Array.isArray(state.world.branches)&&state.world.branches.length<=4,'Número de filiais inválido');
       const units=businesses(state);
       assert(units.length<=5&&int(state.world.branchSeq)&&state.world.branchSeq<=100000,'Limite de estabelecimentos inválido');
@@ -893,8 +980,8 @@ const CidadeCore = (() => {
     const products=b.products.map(p=>({p,stock:p.stockUnits,value:p.stockValueCents}));
     for(const row of products){
       const p=row.p,unitPrice=effectivePrice(b,p,state.calendar.date),unitCost=p.stockUnits?Math.round(p.stockValueCents/p.stockUnits):p.costCents;
-      const reference=p.referenceCents*state.world.competitor.priceIndex/100;
-      const demand=Math.max(0,Math.round(p.demand*city.factor/100/businesses(state).filter(x=>x.cityId===b.cityId&&x.sector===b.sector).length*clamp(1.32-(unitPrice/reference-1)*1.4,.08,1.85)));
+      const reference=competitorReference(state,p,city);
+      const demand=Math.max(0,Math.round(p.demand*city.factor/100/businesses(state).filter(x=>x.cityId===b.cityId&&x.sector===b.sector).length*demandElasticity(unitPrice,reference,city)));
       weightedDemand+=demand;weightedContribution+=demand*(unitPrice-unitCost);
     }
     const contributionPerUnit=weightedDemand?weightedContribution/weightedDemand:0;
@@ -907,8 +994,8 @@ const CidadeCore = (() => {
         for(const line of order.items){const row=products.find(x=>x.p.id===line.productId);row.stock+=line.quantity;row.value+=line.total;}
       }
       const season=1+0.13*Math.sin(((state.calendar.tick+d)%365)/365*Math.PI*2);
-      for(const row of products){const p=row.p,price=effectivePrice(b,p,date),ref=p.referenceCents*state.world.competitor.priceIndex/100;
-        const elasticity=clamp(1.32-(price/ref-1)*1.4,.08,1.85);
+      for(const row of products){const p=row.p,price=effectivePrice(b,p,date),ref=competitorReference(state,p,city);
+        const elasticity=demandElasticity(price,ref,city);
         const demand=Math.max(0,Math.floor(p.demand*city.factor/100/businesses(state).filter(x=>x.cityId===b.cityId&&x.sector===b.sector).length*elasticity*season*1.025));
         const sold=Math.min(demand,row.stock);missed+=demand-sold;unitsSold+=sold;
         const cost=sold===row.stock?row.value:row.stock?Math.round(row.value*sold/row.stock):0;
@@ -966,11 +1053,11 @@ const CidadeCore = (() => {
     assert(plain(data)&&data.saveFormatVersion===1&&data.app==='Cidade dos Negócios'&&data.checksumAlgorithm==='FNV1A32'&&typeof data.checksum==='string'&&plain(data.payload),'Envelope de save incompatível');
     assert(hash(JSON.stringify(data.payload))===data.checksum,'Checksum diverge: arquivo alterado ou corrompido');
     validate(data.payload);
-    const migrated=data.payload.schemaVersion!==6,state=upgradedState(data.payload);validate(state);
-    return {state,migrated,message:migrated?'Carreira migrada para V1.5: matriz, caixa, estoque e histórico preservados.':'Carreira restaurada com integridade validada.'};
+    const migrated=data.payload.schemaVersion!==7,state=upgradedState(data.payload);validate(state);
+    return {state,migrated,message:migrated?'Carreira migrada para V1.6: histórico preservado e novos fatores regionais aplicados somente daqui em diante.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({VERSION,SCHEMA_VERSION,START_DATE,ECONOMIC_REFERENCES,regionalProfile,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();
 
@@ -1044,7 +1131,7 @@ const CidadeCore = (() => {
     $('promo-form').querySelector('button').disabled=!b;
     if(promoProduct&&document.activeElement!==$('promo-percent'))$('promo-percent').value=active?String(promo.percent):'0';
         setText('your-current-price',chosenPrice?Core.money(Core.effectivePrice(b,chosenPrice,state.calendar.date)):'—');
-    setText('competitor-price',chosenPrice?Core.money(Math.round(chosenPrice.referenceCents*state.world.competitor.priceIndex/100)):'—');
+    setText('competitor-price',chosenPrice?Core.money(Math.round(Core.competitorReference(state,chosenPrice,Core.cityById(b.cityId)))):'—');
     if(chosenPrice&&document.activeElement!==$('price-value'))$('price-value').value=(chosenPrice.priceCents/100).toFixed(2);
     updateBuyPreview();
   }
@@ -1213,25 +1300,46 @@ const CidadeCore = (() => {
     }
     const tiangua=Core.CITIES.find(c=>c.name==='Tianguá');$('start-city').value=tiangua.id;
   }
+  function renderRegional(city){
+    const p=Core.regionalProfile(city.id);
+    if(!p)return;
+    setText('regional-population',new Intl.NumberFormat('pt-BR').format(p.population));
+    setText('regional-code',p.ibgeCode);
+    setText('regional-date','01/07/'+p.populationYear);
+    setText('regional-urban-size',p.tierLabel);
+    setText('regional-demand-factor',`${p.demandFactor}%`);
+    setText('regional-competition-factor',`${p.competitionFactor}%`);
+    setText('regional-gdp','Não integrado (referência 2023)');
+    setText('regional-regic','Não integrado (referência 2018)');
+    setText('regional-model-status','Modelo simulado, baseado apenas no porte populacional. Não representa renda familiar, poder de compra nem competição real.');
+    $('regional-source').href=p.source;
+    $('map-canvas').dataset.urbanSize=p.tier;
+  }
   function svgMap(city,ownedLots,lot){
     // SVG estilizado original: cada grupo tem identificação de lote, sem dependências externas.
     const seed=city.name.length+city.id.length;
+    const urbanSize={local:0,regional:1,grande:2,metropole:3}[city.sizeTier]??0;
     const fragments=[`<svg viewBox="180 10 600 360" xmlns="http://www.w3.org/2000/svg" aria-label="Mapa isométrico fictício de ${escape(city.name)}">`,
       `<defs><linearGradient id="sea" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#1e5270"/><stop offset="1" stop-color="#0b2639"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="4"/></filter></defs>`,
       `<path d="M0 325 Q180 310 280 370 T800 340 L870 410H0Z" fill="#16516e" opacity=".42"/>`,
       `<path d="M145 155 L436 19 L813 196 L519 366Z" fill="#102d3b" opacity=".9"/>`];
+    // Horizonte ilustrativo: escala visual relativa, sem geografia ou números oficiais.
+    for(let i=0;i<3+urbanSize*5;i++){
+      const cx=210+i*26, h=16+((i*19+seed)%24)+urbanSize*9;
+      fragments.push(`<rect x="${cx}" y="${125-h}" width="13" height="${h}" rx="2" fill="#6da0a9" opacity=".24" pointer-events="none"/>`);
+    }
     for(let row=0;row<3;row++)for(let col=0;col<6;col++){
       const num=row*6+col+1,x=392+(col-row)*57,y=91+(col+row)*26;
       const isOwn=ownedLots.includes(num),isSelected=lot===num;
       const ground=isOwn?'#9e8144':isSelected?'#3f8bb2':'#42665f';
       const roofs=['#487d8c','#316275','#607387','#597c80','#425a6b'];
       const roof=isOwn?'#e8b55f':roofs[(num+seed)%roofs.length];
-      const height=isOwn?42:14+((num*7+seed)%4)*9;
+      const height=isOwn?42:14+((num*7+seed)%4)*9+urbanSize*7;
       const xx=x,yy=y,wide=49,tall=23;
       fragments.push(`<g data-lot="${num}" tabindex="0" role="button" aria-label="Selecionar lote ${num}"><title>Lote ${String(num).padStart(2,'0')} · clique para selecionar</title>`);
       if(isSelected)fragments.push(`<ellipse cx="${xx}" cy="${yy+12}" rx="65" ry="37" fill="#6dc9ff" opacity=".16" filter="url(#glow)"/>`);
       fragments.push(`<polygon points="${xx},${yy-tall} ${xx+wide},${yy} ${xx},${yy+tall} ${xx-wide},${yy}" fill="${ground}" stroke="${isSelected?'#9bdbff':'#416773'}" stroke-width="${isSelected?3:1.7}"/>`);
-      if(num%5===0&&!isOwn){
+      if((urbanSize>=2?num%11===0:num%5===0)&&!isOwn){
         fragments.push(`<path d="M${xx-7} ${yy+5}l-6-18h12l-6 18" fill="#42745c" stroke="#8fc09c" stroke-width="2"/><circle cx="${xx-6}" cy="${yy-10}" r="11" fill="#2d8d66"/><circle cx="${xx+7}" cy="${yy-12}" r="9" fill="#419672"/>`);
       }else{
         const cx=xx,cy=yy-3;
@@ -1246,7 +1354,7 @@ const CidadeCore = (() => {
     const px=392+(c-r)*57,py=91+(c+r)*26;
     // Destaque sobreposto por último: lote legível sem 18 números concorrendo no mapa.
     fragments.push(`<g class="selected-lot-marker" pointer-events="none" aria-hidden="true"><path d="M${px} ${py-4}L${px} ${py-39}" stroke="#f4d49a" stroke-width="2"/><rect x="${px-55}" y="${py-69}" width="110" height="30" rx="8" fill="#0c2238" stroke="#f4d49a" stroke-width="1.6"/><text x="${px}" y="${py-49}" fill="#ffe1a1" text-anchor="middle" font-size="14" font-weight="800">LOTE ${String(lot).padStart(2,'0')}</text></g>`);
-    fragments.push(`<text x="208" y="40" fill="#9fbfd2" font-size="15" font-weight="700" letter-spacing="3">${escape(city.name.toUpperCase())} · ${escape(city.uf)}</text><text x="208" y="60" fill="#7eabc0" font-size="10">DISTRITO COMERCIAL FICTÍCIO</text></svg>`);
+    fragments.push(`<text x="208" y="40" fill="#9fbfd2" font-size="15" font-weight="700" letter-spacing="3">${escape(city.name.toUpperCase())} · ${escape(city.uf)}</text><text x="208" y="60" fill="#7eabc0" font-size="10">DISTRITO COMERCIAL FICTÍCIO · PORTE ${escape(city.sizeTier.toUpperCase())}</text></svg>`);
     return fragments.join('');
   }
   function eventsHTML(events){if(!events.length)return '<p class="muted">Nenhum evento registrado ainda.</p>';return events.map(e=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(e.text)}</p><small>${escape(e.date)} · ${escape(e.type)}</small></div></div>`).join('');}
@@ -1266,6 +1374,7 @@ const CidadeCore = (() => {
     setText('other-city-warning','Cidade sem unidade da sua rede. Você pode inaugurar uma unidade num lote disponível.');
     setText('map-title',`Distrito comercial de ${visibleCity.name}`);setText('map-uf',visibleCity.uf);
     $('map-canvas').innerHTML=svgMap(visibleCity,units.filter(x=>x.cityId===visibleCity.id).map(x=>x.lot),selectedLot);
+    renderRegional(visibleCity);
     setText('selected-lot',`Lote ${String(selectedLot).padStart(2,'0')} de 18`);updateOpenPreview();
     $('map-open-company').disabled=units.length>=5||units.some(x=>x.cityId===visibleCity.id&&x.lot===selectedLot);
     setText('city-events','');$('city-events').innerHTML=eventsHTML(state.audit.events.slice(-6).reverse());
@@ -1276,7 +1385,7 @@ const CidadeCore = (() => {
     if(b){const s=Core.SECTORS[b.sector];setText('company-glyph',s.glyph);setText('company-title',`${state.player.companyName} · ${b.id} · ${s.name}`);setText('company-product',`${b.products.length} produto(s) cadastrados`);setText('company-location',`${Core.cityById(b.cityId).name} / ${Core.cityById(b.cityId).uf} · lote ${String(b.lot).padStart(2,'0')}`);setText('company-sold',b.totalSold);setText('company-price',Core.money(b.unitPrice));setText('company-payable',Core.money(info.payable));
       setText('market-product','Escolha o produto e o fornecedor. Custos unitários são simulados.');
       setText('your-current-price',Core.money(b.unitPrice));
-      setText('competitor-price',Core.money(Math.round(s.recommended*state.world.competitor.priceIndex/100)));
+      setText('competitor-price',Core.money(Math.round(Core.competitorReference(state,{referenceCents:s.recommended},ownCity))));
       if(document.activeElement!==$('price-value'))$('price-value').value=(b.unitPrice/100).toFixed(2);
       updateBuyPreview();
     }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('your-current-price','—');setText('competitor-price','—');setText('buy-total','—');}

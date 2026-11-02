@@ -68,7 +68,7 @@
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
       <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Tributação legal não calculada nesta versão.</div>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.5.0-rc.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.6.0-rc.1</span></div>
         <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
           <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
           <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
@@ -83,6 +83,13 @@
               <p class="map-disclaimer">Mapa fictício para jogabilidade. Não representa ruas, lotes ou imóveis reais.</p>
             </article>
             <div class="right-column"><article class="panel"><div class="panel-heading"><h3>Lote selecionado</h3><span class="tag-soft">COMERCIAL</span></div><div class="big-number" id="selected-lot">Lote 01</div><p class="muted">Selecione um dos lotes no mapa. O grupo pode ter até cinco estabelecimentos, em cidades diferentes. Cada lote comporta uma unidade.</p><button class="btn btn-primary full" id="map-open-company" type="button">Abrir unidade neste lote</button></article>
+              <article class="panel regional-panel" aria-labelledby="regional-title"><div class="panel-heading"><div><div class="overline">IBGE E SIMULAÇÃO</div><h3 id="regional-title">Observatório econômico</h3></div><span class="tag-soft">OFFLINE</span></div>
+                <div class="regional-hero"><small>POPULAÇÃO ESTIMADA · IBGE 2026</small><strong id="regional-population">—</strong><span>Referência: <b id="regional-date">—</b> · código IBGE <b id="regional-code">—</b></span></div>
+                <div class="regional-indicators"><div><small>Perfil urbano do jogo</small><strong id="regional-urban-size">—</strong></div><div><small>Fator de demanda simulado</small><strong id="regional-demand-factor">—</strong></div><div><small>Referência concorrencial simulada</small><strong id="regional-competition-factor">—</strong></div></div>
+                <dl class="regional-sources"><dt>PIB municipal</dt><dd id="regional-gdp">—</dd><dt>Hierarquia urbana REGIC</dt><dd id="regional-regic">—</dd></dl>
+                <p id="regional-model-status" class="regional-caution">Indicadores reais e parâmetros simulados identificados separadamente.</p>
+                <a id="regional-source" class="regional-source-link" target="_blank" rel="noopener noreferrer" href="https://ftp.ibge.gov.br/Estimativas_de_Populacao/Estimativas_2026/POP2026_20261029.pdf">Fonte oficial: estimativas de população IBGE 2026 ↗</a>
+              </article>
               <article class="panel"><div class="panel-heading"><h3>Aconteceu na cidade</h3><span class="tag-soft">EVENTOS REAIS DO JOGO</span></div><div id="city-events" class="event-list"></div></article></div>
           </div>
         </section>

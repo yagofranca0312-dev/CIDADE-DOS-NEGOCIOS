@@ -93,4 +93,11 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 ## Estado 02/11/2026 — V2.0 HOMOLOGADA
 
 - **V2.0.0-rc.1 homologada** pelo jogador, com aprovação expressa da reorganização visual. Snapshot recuperável `releases/v2.0.0-homologada` (commit `ac3e840b71d3551026f62cc6a04c9173f553f9d7`). A confirmação não altera os bytes do executável.
-- Próxima etapa **sugerida, ainda não aprovada:** V2.1 de polimento de jogabilidade, ritmo de decisões, feedback do resultado e avaliação de partidas longas; priorizar clareza, diversão e evidências de teste antes de adicionar sistemas pesados.
+- Diretriz mais recente de Yago: **toda a linha V2.x é exclusivamente visual e de experiência; novas mecânicas e sistemas ficam para V3.x**. A sugestão anterior de V2.1 como expansão de jogabilidade foi superada.
+
+## Estado 02/11/2026 — V2.1 VISUAL PLANEJADA
+
+- **V2.0 homologada** no commit `ac3e840b71d3551026f62cc6a04c9173f553f9d7`, branch `releases/v2.0.0-homologada`.
+- **V2.1:** marca/abertura, HUD, painéis contextuais, coesão entre telas, acessibilidade e empacotamento; zero novas mecânicas. Fonte principal `INTERFACE.md` v0.1.0 e quatro imagens REF-01 a REF-04.
+- **Documento aprovado para planejamento, não implementação:** [PLANO_V21_VISUAL.md](PLANO_V21_VISUAL.md). A V2.2 poderá aprofundar arte e mapa; V2.3 efeitos visuais; **V3.x** inicia funcionalidades novas.
+- Gates: motor V2.0 preservado (schema 9), regressão determinística, build HTML único offline, testes de navegador e homologação explícita do jogador.

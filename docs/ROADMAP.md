@@ -117,3 +117,12 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - **Natureza do aceite:** homologação expressa de produto pelo titular com pendência técnica conhecida; não altera a identificação de versão do executável nem representa testes extras.
 - **V2.2.0-rc.1 proposta:** [Mapa, Atlas de Edifícios e Ambientação Urbana](PLANO_V22_MAPA_ATLAS_AMBIENTACAO.md). P01–P06 planejadas, nenhuma implementada. A execução depende de nova ordem expressa do titular.
 - **Fronteira permanente:** V2.x só arte/visual/UX; V3.x novas mecânicas. Core econômico-fiscal, 30 cidades, 18 lotes, cinco unidades, saves schema 9, HTML offline e navegação V2.1 preservados.
+
+## Estado 02/11/2026 — V2.2 IMPLANTADA EM BRANCH / CANDIDATA EM VALIDAÇÃO
+
+- **Versão `2.2.0-rc.1`:** código da nova cena isométrica, atlas geométrico neutro, ambientação por `sizeTier`, seleção acessível e integração HTML offline implantados em `feature/v2.2.0-rc.1`.
+- **Snapshot base imutável:** `releases/v2.1.0-homologada`, `645467b0`.
+- **Motor:** somente `VERSION` alterado; `schemaVersion=9`. Novos sistemas de gameplay continuam proibidos em toda linha V2.x.
+- **P01:** inventário técnico executado; capturas e protótipo visual com comparação manual pendentes. **P02–P05:** codificados, QA pendente. **P06:** build versionado e novos testes codificados, execução CI/QA Windows pendente.
+- **Critérios futuros:** `npm run check`, CI PASS, hash de build reproduzível, QA desktop/mobile, validação Windows de save/backup e homologação explícita. Não chamar versão de homologada enquanto essas evidências não existirem.
+- **Documento de execução:** [V22_IMPLANTACAO.md](V22_IMPLANTACAO.md). O plano continua em [PLANO_V22_MAPA_ATLAS_AMBIENTACAO.md](PLANO_V22_MAPA_ATLAS_AMBIENTACAO.md).

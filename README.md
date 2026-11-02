@@ -1,8 +1,19 @@
 # 🏙️ Cidade dos Negócios 1
 
-**Versão:** `1.2.1-rc.1` — **hotfix de demanda e vendas automáticas**, candidato a homologação.  
+**Versão:** `1.3.0-rc.1` — **inteligência de demanda, fornecedores e reposição**, candidata jogável aguardando homologação.  
 **Formato:** um `index.html` autônomo, com CSS e JS incorporados; sem internet ou instalação obrigatória para jogar.  
 **Data-base do planejamento:** 01/11/2026.
+
+## Patch 1.3.0-rc.1 — Inteligência de Mercado e Abastecimento
+
+- **Procura independente de estoque:** o motor calcula demanda estimada para todos os SKUs, inclusive quando estão sem mercadorias; registra unidades atendidas, não atendidas e potencial de faturamento perdido (estimativa, **não receita**). As vendas continuam **exclusivamente automáticas** ao avançar os dias. Não reconstitui dados de dias anteriores.
+- **Fornecedores simulados com preços e prazos diferentes:** Regional = 100% do custo de referência, entrega em 1 dia, 200 unidades por produto/dia; Atacado = 94%, entrega em 3 dias, 500 unidades por produto/dia. Valores e prazos são **regras fictícias do jogo**, não cotações.
+- **Pedido pago em trânsito:** o caixa é reduzido na encomenda, o ativo `IN_TRANSIT` é reconhecido e só é transferido para `INVENTORY` ao receber a mercadoria. Assim, pedido pendente nunca pode ser vendido. A entrega é processada na passagem para a data de vencimento.
+- **Custos por lote:** entradas com preços diferentes são conciliadas pelo custo médio ponderado do estoque; cada venda baixa o CMV proporcional ao valor contábil disponível, com arredondamento em centavos sem saldo residual negativo.
+- **Planejamento de reposição:** estoque mínimo e meta por produto, alertas, cobertura projetada, quantidade em trânsito e sugestão de encomenda **sem compra automática**. Previsão baseada nos últimos até 7 dias de demanda observada desde a V1.3 ou na estimativa-base fictícia quando não há histórico.
+- **Relatórios:** demonstrativo financeiro distingue saldo de mercadorias em trânsito do estoque físico. Histórico de vendas, preços e decisões anteriores é preservado.
+- **Compatibilidade:** importação e migração automáticas verificadas de saves `schemaVersion: 2` e `3` para `4`; dados contábeis e físicos são preservados sem inventar compras/recebimentos passados. O schema 4 é **incompatível com executáveis anteriores**: antes de atualizar pelo BAT, exporte e guarde um backup JSON na V1.2.1.
+- **Limites:** sem fontes externas, dados municipais reais, emissões fiscais, crédito ao fornecedor ou logística de entregas probabilística. A demanda é agregada por dia e por SKU, não clientes individuais. A nova forma de consumir RNG gera resultados futuros diferentes da V1.2.1 mesmo com os mesmos parâmetros; isso é uma mudança deliberada, não uma recontagem do passado.
 
 ## Hotfix 1.2.1-rc.1 — controle das vendas pela demanda simulada
 

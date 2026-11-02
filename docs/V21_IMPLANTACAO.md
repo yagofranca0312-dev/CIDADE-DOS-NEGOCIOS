@@ -1,6 +1,6 @@
 # V2.1 — Implementação visual, critérios e limites
 
-**Status:** candidata local implementada, ainda não homologada por Yago. **Base:** V2.0 homologada, commit `ac3e840b`.
+**Status:** HOMOLOGADA POR ACEITE EXPRESSO DO TITULAR em 02/11/2026; snapshot congelado da candidata original `2.1.0-rc.1`. A execução nativa no Windows (`file://` e persistência entre reinícios) não foi comprovada nesta sessão e permanece como pendência técnica conhecida. **Base:** V2.0 homologada, commit `ac3e840b`.
 
 ## Escopo executado
 
@@ -33,4 +33,13 @@
 - Limite da evidência de navegador: a execução em `file://`/localhost e a persistência nativa de `localStorage` entre reinicializações precisam de confirmação no Windows; a QA automatizada validou o comportamento visual com documento HTML incorporado e persistência simulada.
 - **Atualizador:** enquanto a branch principal pública permanecer na V2.0, o BAT de atualização remota rejeitará instalação de versão inferior e abrirá a cópia local; preferir `JOGAR_OFFLINE.bat` para esta candidata.
 
-**Homologação prática ainda pendente**.
+## Homologação por aceite expresso — 02/11/2026
+
+- **Decisão do titular:** “siga para o planejamento da 2.2 e deixe homologado a 2.1” (02/11/2026). Trata-se de autorização expressa para encerrar a aprovação de produto e preservar um snapshot, não de relato de teste no Windows.
+- **Resultado:** V2.1.0-rc.1 **HOMOLOGADA PELO TITULAR**, mantendo o identificador técnico do executável original e sem modificar seu código.
+- **Snapshot recuperável:** branch `releases/v2.1.0-homologada`, commit `645467b0a87d037a049976a4d75e09c008894316` (merge da PR #14 em main).
+- **Evidência:** 162 testes locais PASS; PR #14 integrada; workflow de validação da PR com `conclusion: success`; QA navegador nas seis larguras previstas e comparativo determinístico V2.0×V2.1 conforme relatório da candidata.
+- **Limites conhecidos:** não há comprovação nesta sessão de teste manual em Windows com `file://`, reinício do navegador e persistência real de `localStorage`. Este gate NÃO foi convertido em PASS pela decisão de homologação.
+- **Cuidados de uso:** exportar backup JSON antes de atualizar, realizar verificação prática na instalação Windows, manter possibilidade de rollback para a V2.0 preservada em `releases/v2.0.0-homologada`. Se surgir regressão crítica, registrar e corrigir em hotfix separado; não reescrever retroativamente o snapshot homologado.
+- **Próxima versão:** V2.2, apenas [planejamento visual](PLANO_V22_MAPA_ATLAS_AMBIENTACAO.md); implementação não iniciada.
+

@@ -59,3 +59,18 @@ Execute somente uma cópia separada do protótipo/jogo candidato. **Exporte o ba
 **Verificação:** `npm run check` com 186 testes após o hotfix; smoke Playwright/Chromium com 0, 1 e 3 unidades e abertura por ramo; viewport móvel 390×844; nenhum erro JavaScript nos fluxos exercitados.
 
 **Pendências antes de homologar:** revisão visual pelo usuário, validação nativa Windows `file://`, persistência de save e acessibilidade com zoom. O PR permanece draft e a `main` não deve ser alterada.
+
+## Patch de interface responsiva — 02/11/2026 (revisão de UX)
+
+**Escopo estrito:** restaurar informações do protótipo visual aprovado e eliminar o recorte horizontal do mapa em smartphone, sem mexer no motor ou na arte-base homologada visualmente.
+
+- Aviso persistente e correto: `SIMULAÇÃO EDUCATIVA` — valores financeiros fictícios do jogo; não foram copiados os números ilustrativos da primeira imagem.
+- Legenda acessível e dinâmica em HTML: terrenos disponíveis por cidade (18 menos as unidades na cidade), quantidade de empresas da cidade e indicação da seleção atual. O HUD de estabelecimentos permanece **total do grupo**, como sempre.
+- Mapa com encaixe integral padrão em telas até 890px, retirando `min-width:900px` e qualquer extrapolação horizontal.
+- Botão **Ampliar mapa**: alterna visão geral e ampliação horizontal rolável; não altera save, economia, seleção nem objetos visuais.
+- Em até 620px, HUD em duas colunas e banner funcional **Tianguá · CE** acima do mapa, sem corte de caracteres. O título previamente gravado na cena permanece parte da imagem original, em escala pequena.
+- Quatro botões inferiores mantidos; lote 03 e sprites por ramo não alterados.
+
+**Testes:** 190 testes Node (`npm run check`) aprovados, incluindo 4 verificações novas da UI. Validação em Chromium headless com largura 320, 390, 740 e 1536px (zero exceções JS no fluxo exercitado); ensaio de 3 aberturas reais no motor em 390, 740 e 1440px: Mercado lote 03, Padaria lote 14 e Roupas lote 18. Legenda `15 disponíveis / 3 empresas`, HUD `3/5`, patrimônio do jogo consistente. Panorama inicial sem scroll lateral de documento; zoom opcional amplia mapa para interação. Teste nativo `file://` no Windows e revisão visual do usuário continuam pendentes.
+
+**Regra de release:** permanecer em PR Draft até o usuário confirmar interface e comportamento no próprio computador. Nunca atualizar `main` automaticamente pela candidata.

@@ -22,7 +22,7 @@ const CidadeVisual=(()=>{
     const shade=owned?'#a76a34':'#254659';
     const glass=owned?'#ffe3a6':'#a5d3df';
     const parts=[
-      '<g class="v22-building" aria-hidden="true" pointer-events="none" transform="translate('+x+' '+y+') scale('+scale+')">',
+      '<g class="v22-building" aria-hidden="true" pointer-events="'+(owned?'visiblePainted':'none')+'" transform="translate('+x+' '+y+') scale('+scale+')">',
       '<ellipse cx="2" cy="5" rx="'+(w+8)+'" ry="10" fill="#081927" opacity=".35"/>',
       '<polygon points="'+(-w)+','+(-h)+' 0,'+(-h-10)+' '+(w+2)+','+(-h)+' 2,'+(-h+11)+'" fill="'+roof+'" stroke="#a9c6c9" stroke-width="1.1"/>',
       '<polygon points="'+(-w)+','+(-h)+' 2,'+(-h+11)+' 2,11 '+(-w)+',1" fill="'+face+'"/>',

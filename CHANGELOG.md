@@ -1,5 +1,7 @@
 # Histórico de versões — Cidade dos Negócios
 
+> **Homologada pelo jogador em 02/11/2026.** Snapshot imutável: `releases/v1.7.0-homologada` no commit `3c06cdbf4fcdffe379215b8bbaa57666cd4a850b`. A versão técnica continua `1.7.0-rc.1`; o registro de homologação não altera o binário.
+
 ## 1.7.0-rc.1 — PIB oficial, comparador e versão única (02/11/2026)
 
 - PIB total de 2023 (SIDRA/IBGE, tabela 5938, variável 37) para os 30 municípios.
@@ -8,7 +10,7 @@
 - Migração schema 2–7 para 8, preservação de saldos, inventário, histórico e RNG.
 - Corrige rodapé antigo `V1.5.0-RC.1` e referência da introdução; versão sincronizada entre motor, tela inicial, badge, rodapé, pacote e arquivo.
 - V2.0 permanece dedicada à consolidação técnica e visual — sem novas mecânicas.
-- Candidata: necessita CI e homologação real em Windows.
+- Status histórico da candidata: a homologação prática foi confirmada posteriormente pelo jogador (02/11/2026).
 
 
 ## 1.6.0-rc.1 — economia regional (02/11/2026)

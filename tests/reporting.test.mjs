@@ -2,7 +2,7 @@ import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-const core=runInNewContext(readFileSync('src/core/game.js','utf8')+'\nCidadeCore',{}, {filename:'game.js'});
+const core=runInNewContext(readFileSync('tests/fixtures/core_v1_2_1.js','utf8')+'\nCidadeCore',{}, {filename:'game.js'});
 const oldCore=runInNewContext(readFileSync('tests/fixtures/core_v1_0_1.js','utf8')+'\nCidadeCore',{}, {filename:'old.js'});
 const city=core.CITIES.find(c=>c.name==='Tianguá').id;
 const cmd=(type,payload={},id=type+Math.random().toString(36).slice(2))=>({type,id,payload});

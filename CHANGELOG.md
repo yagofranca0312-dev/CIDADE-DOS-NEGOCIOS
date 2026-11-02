@@ -1,5 +1,15 @@
 # Histórico de versões — Cidade dos Negócios
 
+## 1.4.0-rc.1 — estratégia e equilíbrio econômico (02/11/2026)
+
+- Campanhas de desconto por SKU e prazo determinado; motor altera preço efetivo e elasticidade da demanda sem trocar preço de tabela ou criar vendas manuais.
+- Painel de capital de giro, cobertura de caixa, ponto de equilíbrio aproximado e riscos.
+- Custos variáveis (CMV), despesa fixa operacional e despesa não recorrente separados no realizado.
+- Cenários puros de 7/30/90 dias com estoque, recebimentos previstos, caixa e obrigações estimados; nenhuma projeção se transforma em lançamento.
+- Backtests determinísticos 90/180/365 dias e regressões de migração de saves.
+- Save schema 5 com migração conservadora de 2/3/4; versões antigas não leem schema 5.
+- V1.3 homologada no Windows pelo usuário e preservada; V1.4 ainda aguarda homologação prática.
+
 ## 1.3.0-rc.1 — inteligência de mercado e abastecimento (01/11/2026)
 
 - Demanda diária estimada para todos os SKUs, inclusive sem estoque; apuração de não atendidos e potencial de faturamento perdido (sem reconhecimento contábil de receita não realizada).

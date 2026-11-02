@@ -1,7 +1,9 @@
 # 🏙️ Cidade dos Negócios 1
 
-**Versão:** `1.7.0-rc.1` — **PIB municipal oficial, simulação regional e comparador econômico**, candidata para testes.  
+**Versão:** `1.7.0-rc.1` — **PIB municipal oficial, simulação regional e comparador econômico**, homologada pelo jogador em 02/11/2026.  
 **Formato:** HTML autônomo, sem internet durante a partida.  
+
+**Homologação:** validação expressa do jogador em 02/11/2026. Snapshot: `releases/v1.7.0-homologada`. Planejamento V1.8: [docs/PLANO_V18.md](docs/PLANO_V18.md).
 
 ## Patch V1.7.0-rc.1 — inteligência econômica regional (primeiro incremento)
 

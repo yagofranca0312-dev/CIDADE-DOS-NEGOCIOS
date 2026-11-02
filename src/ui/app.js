@@ -7,6 +7,7 @@
   const BRDate=iso=>iso.split('-').reverse().join('/');
   const KEY='cidade-dos-negocios-save-v1';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
+  let inspectorOpen=false; // interface somente, nunca persistido
   let financeQuery=null,strategyHorizon=30,financeScope='all',statementView='summary'; // preferências de interface, independentes do GameState
   const business=()=>state?Core.activeBusiness(state):null;
   function chooseProduct(id){const b=business();return b?.products?.find(p=>p.id===$(id)?.value)||b?.products?.[0]||null;}
@@ -118,11 +119,11 @@
     if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;financeScope='all';statementView='summary';}
     const result=Core.dispatch(state,{type,id:nextId(),payload});
     if(!result.ok){notify(result.error,true);return false;}
-    if(result.status==='APPLIED'){state=result.state;const chosen=business();if((type==='EMPRESA.ABRIR'||type==='EMPRESA.ATIVAR')&&chosen){viewCityId=chosen.cityId;selectedLot=chosen.lot;}else viewCityId=viewCityId??state.player.cityId;saveLocal();render();}
+    if(result.status==='APPLIED'){state=result.state;const chosen=business();if((type==='EMPRESA.ABRIR'||type==='EMPRESA.ATIVAR')&&chosen){viewCityId=chosen.cityId;selectedLot=chosen.lot;inspectorOpen=false;}else viewCityId=viewCityId??state.player.cityId;saveLocal();render();}
     notify(result.message);
     return true;
   }
-  function goto(name){tab=name;document.querySelectorAll('[data-view]').forEach(el=>{const chosen=el.getAttribute('data-view')===name;el.hidden=!chosen;el.classList.toggle('active',chosen);});document.querySelectorAll('[data-tab]').forEach(el=>{const active=el.dataset.tab===(name==='fiscal'?'financas':name);el.classList.toggle('active',active);if(el.classList.contains('nav-item')){if(active)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');}});
+  function goto(name){tab=name;document.body.classList.toggle('v221-city-mode',!!state?.player?.cityId&&name==='cidade');document.querySelectorAll('[data-view]').forEach(el=>{const chosen=el.getAttribute('data-view')===name;el.hidden=!chosen;el.classList.toggle('active',chosen);});document.querySelectorAll('[data-tab]').forEach(el=>{const active=el.dataset.tab===(name==='fiscal'?'financas':name);el.classList.toggle('active',active);if(el.classList.contains('nav-item')){if(active)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');}});
     const labels={cidade:['CENTRAL DE OPERAÇÕES','A sua cidade, as suas decisões.','Explore lotes comerciais e acompanhe os acontecimentos.'],empresa:['GESTÃO EMPRESARIAL','Cada escolha constrói um negócio.','Abra sua empresa e tome decisões de administração.'],mercado:['VENDAS E SUPRIMENTOS','Preço, demanda e estoque.','Compre mercadorias e encontre sua estratégia de preço.'],financas:['INDICADORES CONTÁBEIS','Os números contam sua história.','Acompanhe lançamentos e resultados rastreáveis.'],fiscal:['CENÁRIOS TRIBUTÁRIOS','A estratégia também considera tributos.','Simulação opcional com limitações e regras por competência.'],sistema:['PERSISTÊNCIA E QA','Seu progresso, sua segurança.','Faça backups e confira o estado da simulação.']};
     const info=labels[name]||labels.cidade;setText('page-kicker',info[0]);setText('page-title-text',info[1]);setText('page-subtitle',info[2]);
     if(state)render();
@@ -130,7 +131,7 @@
   }
   function cityOptions(){
     const items=Core.CITIES.slice().sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));
-    for(const selectId of ['start-city','explore-city']){
+    for(const selectId of ['start-city','explore-city','v221-city-selector']){
       $(selectId).innerHTML='';
       const group=document.createDocumentFragment();
       for(const city of items){const opt=document.createElement('option');opt.value=city.id;opt.textContent=`${city.name} · ${city.uf}${city.capital?' (capital)':''}`;group.appendChild(opt);}
@@ -163,20 +164,28 @@
   function eventsHTML(events){if(!events.length)return '<p class="muted">Nenhum evento registrado ainda.</p>';return events.map(e=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(e.text)}</p><small>${escape(e.date)} · ${escape(e.type)}</small></div></div>`).join('');}
   function render(){
     const started=!!state?.player?.cityId;
+    document.body.classList.toggle('v221-city-mode',started&&tab==='cidade');
     $('onboarding').hidden=started;$('game-shell').hidden=!started;
     if(!started)return;
     const b=business(),units=Core.businesses(state),info=Core.overview(state),ownCity=Core.cityById(b?.cityId||state.player.cityId);
     const visibleCity=Core.cityById(viewCityId)||ownCity;
     viewCityId=visibleCity.id;
+    $('v221-city-selector').value=visibleCity.id;
     setText('top-city',`${visibleCity.name} · ${visibleCity.uf}`);
+    setText('v221-map-city-title',`${visibleCity.name.toUpperCase()} · ${visibleCity.uf}`);
     $('explore-city').value=visibleCity.id;
     setText('date-label',BRDate(state.calendar.date));
+    setText('v221-date-label',BRDate(state.calendar.date));
     setText('kpi-cash',Core.money(info.cash));setText('kpi-revenue',Core.money(info.revenue));setText('kpi-profit',Core.money(info.profit));setText('kpi-stock',info.stock);
+    setText('v221-hud-cash',Core.money(info.cash));setText('v221-hud-profit',Core.money(info.profit));setText('v221-hud-count',`${units.length}/5`);
     setText('kpi-stock-label',b?`${b.products.length} produtos cadastrados · unidades totais`:'Sem estoque');
     $('other-city-warning').hidden=units.some(x=>x.cityId===visibleCity.id);
     setText('other-city-warning','Cidade sem unidade da sua rede. Você pode inaugurar uma unidade num lote disponível.');
     setText('map-title',`Distrito comercial de ${visibleCity.name}`);setText('map-uf',visibleCity.uf);
-    $('map-canvas').innerHTML=CidadeVisual.svgMap(visibleCity,units.filter(x=>x.cityId===visibleCity.id).map(x=>x.lot),selectedLot);
+    $('map-canvas').innerHTML=visibleCity.id==='CE-TIANGUA'
+      ? CidadeTianguaCena.svgMap(visibleCity,units.filter(x=>x.cityId===visibleCity.id),inspectorOpen?selectedLot:null)
+      : CidadeVisual.svgMap(visibleCity,units.filter(x=>x.cityId===visibleCity.id).map(x=>x.lot),inspectorOpen?selectedLot:null);
+    $('v221-inspector').hidden=!inspectorOpen;
     $('map-lot-picker').value=String(selectedLot);
     renderRegional(visibleCity);
     setText('selected-lot',`Lote ${String(selectedLot).padStart(2,'0')} de 18`);updateOpenPreview();
@@ -255,10 +264,26 @@
       if(confirm(`Confirmar pagamento apenas SIMULADO da competência ${period}? Ele diminuirá o caixa do jogo.`))commit('FISCAL.PAGAR_SIMULADO',{period});});
 
     $('unit-rows').addEventListener('click',e=>{const btn=e.target.closest('[data-unit-activate]');if(btn)commit('EMPRESA.ATIVAR',{businessId:btn.dataset.unitActivate});});
-    $('explore-city').addEventListener('change',e=>{viewCityId=e.target.value;render();updateOpenPreview();});
-    $('map-canvas').addEventListener('click',e=>{const target=e.target.closest('[data-lot]');if(target){selectedLot=Number(target.dataset.lot);render();updateOpenPreview();}});
-    $('map-canvas').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const target=e.target.closest('[data-lot]');if(target){e.preventDefault();selectedLot=Number(target.dataset.lot);render();$('map-canvas').querySelector(`[data-lot="${selectedLot}"]`)?.focus();}}});
-  $('map-lot-picker').addEventListener('change',e=>{const next=Number(e.target.value);if(Number.isInteger(next)&&next>=1&&next<=18){selectedLot=next;render();$('map-lot-picker').focus();}});
+    $('explore-city').addEventListener('change',e=>{viewCityId=e.target.value;inspectorOpen=false;render();updateOpenPreview();});
+    $('v221-city-selector').addEventListener('change',e=>{viewCityId=e.target.value;inspectorOpen=false;$('v221-city-pick').hidden=true;render();});
+    $('map-canvas').addEventListener('click',e=>{const target=e.target.closest('[data-lot]');if(target){selectedLot=Number(target.dataset.lot);inspectorOpen=true;render();updateOpenPreview();}});
+    $('map-canvas').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const target=e.target.closest('[data-lot]');if(target){e.preventDefault();selectedLot=Number(target.dataset.lot);inspectorOpen=true;render();$('map-canvas').querySelector(`[data-lot="${selectedLot}"]`)?.focus();}}});
+  $('map-lot-picker').addEventListener('change',e=>{const next=Number(e.target.value);if(Number.isInteger(next)&&next>=1&&next<=18){selectedLot=next;inspectorOpen=true;render();$('map-lot-picker').focus();}});
+    $('v221-inspector-close').addEventListener('click',()=>{inspectorOpen=false;render();$('v221-hud-units').focus();});
+    $('v221-hud-units').addEventListener('click',()=>goto('empresa'));
+    $('v221-config-open').addEventListener('click',()=>goto('sistema'));
+    $('v221-help-open').addEventListener('click',()=>{$('v221-help-panel').hidden=!$('v221-help-panel').hidden;});
+    $('v221-help-close').addEventListener('click',()=>{$('v221-help-panel').hidden=true;});
+    $('v221-city-switch-trigger').addEventListener('click',()=>{$('v221-city-pick').hidden=!$('v221-city-pick').hidden;});
+    $('v221-city-pick-close').addEventListener('click',()=>{$('v221-city-pick').hidden=true;});
+    $('v221-city-info-trigger').addEventListener('click',()=>{$('v221-observatory').open=!$('v221-observatory').open;$('v221-activity').open=false;});
+    $('v221-event-open').addEventListener('click',()=>{$('v221-activity').open=!$('v221-activity').open;$('v221-observatory').open=false;});
+    $('v221-hud-time').addEventListener('click',()=>{const el=$('v221-time-menu');el.hidden=!el.hidden;$('v221-hud-time').setAttribute('aria-expanded',String(!el.hidden));$('v221-time-speed').value=$('speed-select').value;});
+    $('v221-time-speed').addEventListener('change',e=>{$('speed-select').value=e.target.value;$('speed-select').dispatchEvent(new Event('change'));});
+    for(const button of document.querySelectorAll('[data-v221-time]'))button.addEventListener('click',()=>{
+      const t=button.dataset.v221Time;const target=t==='play'?'pause-btn':t==='1'?'next-day':t==='7'?'next-week':'next-month';
+      $(target).click();$('v221-time-menu').hidden=true;$('v221-hud-time').setAttribute('aria-expanded','false');
+    });
     $('map-open-company').addEventListener('click',()=>{const owner=Core.businesses(state).find(x=>x.cityId===viewCityId&&x.lot===selectedLot);if(owner&&business()?.id!==owner.id)commit('EMPRESA.ATIVAR',{businessId:owner.id});goto('empresa');if(!owner)$('sector-select').focus();});
     $('sector-select').addEventListener('change',updateOpenPreview);
     $('open-form').addEventListener('submit',e=>{e.preventDefault();if(!state)return;if(commit('EMPRESA.ABRIR',{sector:$('sector-select').value,cityId:viewCityId,lot:selectedLot}))goto('cidade');});

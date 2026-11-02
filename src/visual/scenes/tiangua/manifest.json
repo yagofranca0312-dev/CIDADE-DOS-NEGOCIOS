@@ -1,0 +1,32 @@
+{
+  "sceneId": "CE-TIANGUA",
+  "version": "v2.2.1-prerender-rc.1",
+  "baseScene": "urban-base.webp",
+  "sprites": {
+    "mercado": "mercado.webp",
+    "padaria": "padaria.webp",
+    "roupas": "roupas.webp"
+  },
+  "dimensions": [
+    1536,
+    664
+  ],
+  "status": "ART_QA_PENDING",
+  "notes": "Backdrop sem logica economica; composicao manual do antigo predio 03 exige aceite artistico. Sprites extraidos de estudo visual com pintura de labels ainda provisoria.",
+  "urban-base.webp": {
+    "size": 416244,
+    "sha256": "3184f6c01f5a5d5dcb561b4be8c02632b836df49f948fbb8bedf5f43815fa94b"
+  },
+  "mercado.webp": {
+    "size": 15670,
+    "sha256": "e359a65d9be52868c7275e0e62b213ea2671fe8c915f8dc69fd058b87c9ef55a"
+  },
+  "padaria.webp": {
+    "size": 9198,
+    "sha256": "3af9948857ff6f469a79cbd1b03fd6f9712db07d2694866b28ff0405cdd04b45"
+  },
+  "roupas.webp": {
+    "size": 13878,
+    "sha256": "df1b668ff3ef3f227de10e0339871854a41c83d35220a3f35837aff61f1c1b22"
+  }
+}

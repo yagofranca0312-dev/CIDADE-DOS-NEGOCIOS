@@ -1,9 +1,9 @@
 {
   "name": "cidade-dos-negocios",
-  "version": "2.1.0-rc.1",
+  "version": "2.2.0-rc.1",
   "private": true,
   "type": "module",
-  "description": "Cidade dos Negócios 2.0: simulador empresarial offline com cidade protagonista",
+  "description": "Cidade dos Negócios 2.2: simulador empresarial offline com cidade protagonista",
   "scripts": {
     "build": "node tools/build.mjs",
     "test": "node --test tests/*.test.mjs",

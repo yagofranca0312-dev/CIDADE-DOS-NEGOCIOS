@@ -16,7 +16,7 @@ function fresh(engine=V16,name='Tianguá',seed=88){
  return run(engine,state,'EMPRESA.ABRIR',{sector:'mercado',lot:1});
 }
 test('V1.6: versão/schema 7, 30 municípios oficiais identificados sem duplicação',()=>{
- assert.equal(V16.VERSION,'2.1.0-rc.1');assert.equal(V16.SCHEMA_VERSION,9);
+ assert.equal(V16.VERSION,'2.2.0-rc.1');assert.equal(V16.SCHEMA_VERSION,9);
  assert.equal(V16.CITIES.length,30);
  assert.equal(new Set(V16.CITIES.map(c=>c.ibgeCode)).size,30);
  assert.equal(new Set(V16.CITIES.map(c=>c.id)).size,30);
@@ -99,7 +99,7 @@ test('V1.6: adulteração de metadados regionais é rejeitada sem mutar a carrei
 test('V1.6: não faz chamada externa para jogar e mapa diferencia porte sem fonte de rede',()=>{
  const html=readFileSync('src/shell/index.template.html','utf8');const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));const visual=readFileSync('src/visual/city-scene.js','utf8');
  for(const id of ['regional-population','regional-code','regional-gdp','regional-regic','regional-source','regional-demand-factor'])assert.match(html,new RegExp(`id="${id}"`));
- assert.match(ui,/function renderRegional\(city\)/);assert.match(visual,/urbanSize\*7/);
+ assert.match(ui,/function renderRegional\(city\)/);assert.match(visual,/const count=4\+tier\*3/);
  assert.doesNotMatch(ui,/\b(?:fetch|XMLHttpRequest|eval)\s*\(/);
 });
 test('V1.6: evolução de 365 dias com 3 unidades concilia lançamentos e demanda regional',()=>{

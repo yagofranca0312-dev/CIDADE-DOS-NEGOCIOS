@@ -1,4 +1,19 @@
-# 🏙️ Cidade dos Negócios — Edição 2.1
+# 🏙️ Cidade dos Negócios — Edição 2.2
+
+**Versão candidata em desenvolvimento:** `2.2.0-rc.1` — IMPLEMENTADA na branch `feature/v2.2.0-rc.1` e aguardando CI, QA em navegador e homologação no Windows. **Save schema:** 9, sem migração; HTML único offline. O motor V2.1 permanece idêntico exceto identificador de versão. A V2.1 continua HOMOLOGADA e congelada na branch `releases/v2.1.0-homologada`.
+
+## V2.2 — Cidade viva, edifícios e ambientação (exclusivamente visual)
+
+- Cena isométrica redesenhada com ruas, plataforma urbana, calçadas, árvores, skyline e cinco arquétipos de construções geométricas.
+- Lotes livres claramente disponíveis; edifícios da rede exibidos somente quando o motor registra posse; visual sem ramo, nível, atividade bancária, indústria ou economia inventados.
+- Quatro densidades artísticas de cenário (`local`, `regional`, `grande`, `metropole`) para as 30 cidades, com rótulos de cenário fictício.
+- 18 lotes 1–18 acessíveis por clique, Enter/Espaço e seletor direto para toque; HUD V2.1 e inspetor preservados.
+- 12 novos cenários de teste estrutural; build offline sincronizado para `2.2.0-rc.1`; CI/Windows devem passar antes de homologar.
+- [Implantação V2.2 e gates](docs/V22_IMPLANTACAO.md) · [Plano original V2.2](docs/PLANO_V22_MAPA_ATLAS_AMBIENTACAO.md).
+
+---
+
+## Histórico: V2.1 homologada
 
 **Versão atual:** `2.1.0-rc.1` — HOMOLOGADA por aceite expresso de Yago em 02/11/2026, preservada na branch `releases/v2.1.0-homologada` (commit `645467b0`). **Schema:** 9, sem alterações econômicas. **HTML único offline.** A homologação não comprova teste nativo de persistência no Windows.
 

@@ -2,10 +2,10 @@
 
 **Projeto:** Cidade dos Negócios — Edição 2  
 **Data:** 02/11/2026  
-**Estado:** PLANEJADO — NÃO IMPLEMENTADO, NÃO TESTADO, NÃO HOMOLOGADO  
+**Estado:** PLANEJAMENTO APROVADO, IMPLANTAÇÃO EM BRANCH DE DESENVOLVIMENTO — GATES DE TESTE E HOMOLOGAÇÃO PENDENTES  
 **Baseline de produto:** V2.1.0-rc.1, homologada por aceite expresso do titular em 02/11/2026, branch de recuperação releases/v2.1.0-homologada, commit 645467b0a87d037a049976a4d75e09c008894316.  
 **Versão de destino proposta:** 2.2.0-rc.1. **Save schema:** 9, sem migração.  
-**Escopo autorizado neste momento:** APENAS PLANEJAMENTO. Não alterar código, executável, save ou assets em produção.
+**Escopo autorizado:** execução da implantação V2.2 em branch isolada, por ordem expressa do titular em 02/11/2026. Preservar V2.1 homologada e não declarar V2.2 homologada antes dos gates. A execução e pendências estão registradas em [V22_IMPLANTACAO.md](V22_IMPLANTACAO.md).
 
 ## 1. Objetivo do produto e fronteira vinculante
 
@@ -136,8 +136,8 @@ Transformar o distrito SVG existente em uma cidade isométrica **mais legível, 
 
 ## 9. Decisão e próximo checkpoint
 
-**Decisão desta etapa:** planejamento proposto e documentado; **não** autoriza implementação.  
-**Próxima ação após nova ordem de Yago:** começar V22-P01, auditar baseline e produzir protótipos comparativos antes de alterar src.  
+**Decisão inicial deste plano:** planejamento proposto e documentado. **Autorização posterior:** implantação expressamente solicitada por Yago em 02/11/2026; detalhamento técnico e evidências em V22_IMPLANTACAO.md.  
+**Execução iniciada:** inventário técnico realizado e P02–P05 codificados em branch. Capturas/protótipos de comparação e gates de teste ainda precisam de verificação; ver registro de implantação.  
 **Critério de conclusão da V2.2:** cidade mais rica e inteligível, 18 lotes e 30 cidades utilizáveis, motor e saves inalterados, HTML offline, regressões e QA aprovados, aceite explícito do jogador.
 
-**Estados:** P01–P06 = PLANEJADOS; implementação = NÃO INICIADA; CI V2.2 = NOT_EXECUTED; QA V2.2 = NOT_EXECUTED; homologação V2.2 = PENDENTE.
+**Estados no início da validação:** P01 = diagnóstico técnico parcial; P02–P05 = codificados, não homologados; P06 = compilação versionada e testes escritos, CI pendente; QA V2.2 = NOT_EXECUTED; homologação = PENDENTE.

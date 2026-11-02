@@ -23,7 +23,7 @@ function openSecond(s,{sector='padaria',cityId=S,lot=1}={}){
   return cmd(C,s,'EMPRESA.ABRIR',{sector,cityId,lot});
 }
 test('V1.5: nova carreira com matriz, identidade estável e caixa central sem aporte nas filiais',()=>{
-  let s=fresh();assert.equal(C.VERSION,'2.1.0-rc.1');assert.equal(s.schemaVersion,9);
+  let s=fresh();assert.equal(C.VERSION,'2.2.0-rc.1');assert.equal(s.schemaVersion,9);
   assert.equal(C.activeBusiness(s).id,'est-1');assert.equal(s.world.business.cityId,T);
   const cash=C.overview(s).cash;
   s=openSecond(s);assert.equal(C.activeBusiness(s).id,'est-2');

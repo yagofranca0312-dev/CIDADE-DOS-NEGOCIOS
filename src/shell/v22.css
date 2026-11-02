@@ -68,3 +68,30 @@
 @media(prefers-reduced-motion:reduce){
  .v22-city-svg .v22-lot .v22-tile-outline{transition:none}
 }
+
+/* V2.2.1 — protótipo Tianguá: somente a classe injetada em CE-TIANGUA.
+   Sem animação, alteração do hit-area nem dependência de assets externos. */
+.v22-city-svg.v221-pilot-tiangua .v22-lot.is-available .v22-tile-outline{
+  fill:#335e60;
+  stroke:#88aaa1;
+  stroke-width:1.6;
+}
+.v22-city-svg.v221-pilot-tiangua .v22-lot.is-available .v22-plot{
+  fill:#4c7470;
+  stroke:#acc4b3;
+}
+.v22-city-svg.v221-pilot-tiangua .v22-lot.is-owned .v22-tile-outline{
+  stroke:#eac57b;
+}
+.v22-city-svg.v221-pilot-tiangua .v22-lot.is-selected .v22-tile-outline,
+.v22-city-svg.v221-pilot-tiangua .v22-lot:focus-visible .v22-tile-outline{
+  stroke:#c9f5ff;
+  stroke-width:4.6;
+}
+.v22-city-svg.v221-pilot-tiangua .v221-tiagua-scenery,
+.v22-city-svg.v221-pilot-tiangua .v221-tiagua-scenery *{
+  pointer-events:none;
+}
+@media(prefers-reduced-motion:reduce){
+ .v22-city-svg.v221-pilot-tiangua .v22-lot .v22-tile-outline{transition:none}
+}

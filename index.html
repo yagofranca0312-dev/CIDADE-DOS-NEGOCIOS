@@ -62,6 +62,20 @@
 .commerce-log{display:grid;gap:8px;margin-top:12px;font-size:.77rem;color:#c7dae7;max-height:180px;overflow-y:auto}
 .commerce-history-row{border-bottom:1px solid #34516a;padding:7px 0}
 
+/* Hotfix 1.2.1: balcão vira monitor de demanda/vendas, somente leitura. */
+.sales-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:14px 0}
+.sales-kpis>div{background:#10283b;border:1px solid #34536b;border-radius:9px;padding:12px;min-width:0}
+.sales-kpis small{display:block;color:#adc5d6;font-size:.7rem}
+.sales-kpis strong{display:block;color:#f4d49a;font-size:1.1rem;margin-top:6px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.sales-money strong{font-size:1rem}
+.demand-table{min-width:420px;margin-top:12px}
+.commerce-receipts{max-height:330px}
+.commerce-receipt{background:#10283b;border:1px solid #365670;border-radius:8px;padding:10px 12px;font-size:.78rem}
+.commerce-receipt summary{cursor:pointer;font-weight:750;line-height:1.5}
+.commerce-receipt ul{padding-left:20px;line-height:1.7}
+.commerce-receipt p{color:#bacee0;font-size:.75rem;margin:7px 0 0}
+@media(max-width:480px){.sales-kpis{grid-template-columns:1fr}}
+
   </style>
 </head>
 <body>
@@ -74,7 +88,7 @@
       <p class="hero-subtitle">Uma cidade. Uma empresa. Mil decisões.</p>
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◆ Economia simulada</span><span>◆ 30 cidades</span><span>◆ Offline</span></div>
-      <p class="fine-print">V1.2.0-rc.1 — prévia jogável. Parâmetros econômicos fictícios e legislação tributária ainda não implementada.</p>
+      <p class="fine-print">V1.2.1-rc.1 — prévia jogável. Parâmetros econômicos fictícios e legislação tributária ainda não implementada.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -121,7 +135,7 @@
       <div class="world-warning" id="other-city-warning" hidden>Você está explorando outra cidade. A empresa atual opera apenas na cidade de origem nesta versão.</div>
       <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Tributação legal não calculada nesta versão.</div>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.2.0-rc.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.2.1-rc.1</span></div>
         <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
           <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
           <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
@@ -157,14 +171,22 @@
                 <p class="field-hint">Até 40 produtos por estabelecimento. Um cadastro não compra estoque.</p>
                 <button type="submit" class="btn btn-primary">Cadastrar produto</button>
               </form></article>
-            <article class="panel"><div class="panel-heading"><h3>Venda no balcão</h3><span class="tag-soft">CARRINHO</span></div>
-              <label for="sale-product">Produto para vender</label><select id="sale-product"></select>
-              <label for="sale-quantity">Quantidade</label><input id="sale-quantity" type="number" min="1" max="2000" value="1">
-              <button type="button" id="cart-add" class="btn btn-outline spaced">Adicionar ao carrinho</button>
-              <div id="cart-items" class="cart-items" aria-live="polite"></div>
-              <div class="cart-total">Total da venda: <strong id="cart-total">R$ 0,00</strong></div>
-              <div class="cart-actions"><button type="button" id="cart-clear" class="btn btn-outline">Limpar</button><button type="button" id="cart-checkout" class="btn btn-primary" disabled>Confirmar venda</button></div>
-              <p class="field-hint">Venda fictícia à vista; o checkout confirma caixa, receita e CMV simultaneamente. Não emite nota fiscal.</p>
+            <article class="panel" aria-label="Painel de vendas automáticas">
+              <div class="panel-heading"><h3>Vendas simuladas e demanda</h3><span class="tag-soft">AUTOMÁTICO</span></div>
+              <p class="muted">As vendas são geradas exclusivamente ao avançar os dias. O painel mostra a estimativa de demanda e as vendas realizadas; ele não cria vendas adicionais.</p>
+              <p class="field-hint">Último dia concluído: <strong id="demand-date">—</strong></p>
+              <div class="sales-kpis" aria-label="Resumo de demanda do último dia">
+                <div><small>Demanda estimada*</small><strong id="demand-estimated">—</strong></div>
+                <div><small>Unidades vendidas</small><strong id="demand-fulfilled">—</strong></div>
+                <div><small>Demanda não atendida</small><strong id="demand-unmet">—</strong></div>
+                <div><small>Produtos sem estoque</small><strong id="demand-without-stock">—</strong></div>
+              </div>
+              <div class="sales-kpis sales-money">
+                <div><small>Receita do dia</small><strong id="demand-day-revenue">—</strong></div>
+                <div><small>CMV do dia</small><strong id="demand-day-cogs">—</strong></div>
+              </div>
+              <div class="table-scroll"><table class="catalog-table demand-table"><thead><tr><th>Produto</th><th>Demanda*</th><th>Vendido</th><th>Não atendido</th></tr></thead><tbody id="demand-rows"></tbody></table></div>
+              <p class="field-hint">* Estimativa calculada apenas para produtos com estoque no começo do dia. Sem estoque, a demanda não é estimada, não é zero. Dados detalhados disponíveis apenas para dias simulados a partir da V1.2.1.</p>
             </article>
           </div>
           <article class="panel commerce-catalog"><div class="panel-heading"><h3>Catálogo e desempenho por produto</h3><span class="tag-soft" id="product-count">0 produtos</span></div>
@@ -173,7 +195,7 @@
           </article>
           <div class="dashboard-grid commerce-history-grid">
             <article class="panel"><h3>Últimas compras</h3><div id="recent-purchases" class="commerce-log"></div></article>
-            <article class="panel"><h3>Últimas vendas</h3><div id="recent-sales" class="commerce-log"></div></article>
+            <article class="panel"><h3>Comprovantes de vendas simuladas</h3><p class="muted">Cada registro automático consolida as vendas do dia, não representa um cliente individual. Registros manuais anteriores permanecem identificados como históricos.</p><div id="recent-sales" class="commerce-log commerce-receipts"></div></article>
           </div>
         </section>
         <section data-view="financas" class="view" hidden>
@@ -214,16 +236,16 @@
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.2.0-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.2.1-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>
   <div class="toast" id="toast" aria-live="polite" role="status"></div>
   <script>
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.2.0-rc.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.2.1-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '1.2.0-rc.1';
+  const VERSION = '1.2.1-rc.1';
   const SCHEMA_VERSION = 3;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -291,7 +313,8 @@ const CidadeCore = (() => {
       {account:'INVENTORY',debit:total,credit:0},{account:'CASH',debit:0,credit:total}]);
     event(draft,'ESTOQUE.COMPRADO',`Compra ${id} confirmada: ${qtyTotal} unidades por ${money(total)}.`,{id,total,supplierId});
   }
-  function registerSale(draft,b,items,kind='BALCAO') {
+  function registerSale(draft,b,items,kind='SIMULACAO_DIARIA') {
+    assert(kind==='SIMULACAO_DIARIA','A venda só pode ser gerada pela simulação de demanda');
     assert(Array.isArray(items)&&items.length>=1&&items.length<=40,'Carrinho vazio ou inválido');
     const used=new Set();let total=0,cost=0,qtyTotal=0;
     const lines=items.map(line=>{assert(plain(line),'Item de venda inválido');const p=product(b,line.productId),quantity=Number(line.quantity);
@@ -309,7 +332,7 @@ const CidadeCore = (() => {
     journal(draft,`Venda ${id} (${kind}): ${lines.map(x=>`${x.quantity} ${x.name}`).join(', ')}`,[
       {account:'CASH',debit:total,credit:0},{account:'REVENUE',debit:0,credit:total},
       {account:'COGS',debit:cost,credit:0},{account:'INVENTORY',debit:0,credit:cost}]);
-    event(draft,'VENDA.CONCLUIDA',`${kind==='BALCAO'?'Venda manual':'Vendas do dia'} ${id}: ${qtyTotal} unidades por ${money(total)}.`,{id,total,cost,qtyTotal});
+    event(draft,'VENDA.CONCLUIDA',`Vendas simuladas do dia ${id}: ${qtyTotal} unidades por ${money(total)}.`,{id,total,cost,qtyTotal});
   }
   function productPerformance(state) {
     const b=state?.world?.business;if(!b)return [];
@@ -401,8 +424,9 @@ const CidadeCore = (() => {
       registerPurchase(draft,b,payload.supplierId,payload.items);return;
     }
     if(type==='VENDA.REGISTRAR') {
-      assert(b,'Abra uma empresa antes de vender');
-      registerSale(draft,b,payload.items);return;
+      // Comando legado desativado: compras reais são simuladas exclusivamente pelo motor diário.
+      // Recibos BALCAO antigos permanecem no save para auditoria, sem nova mutação do ledger.
+      throw Error('Venda manual desativada na V1.2.1: avance o dia para simular a demanda e as vendas.');
     }
     if(type==='PRECO.DEFINIR') {
       assert(b,'Abra uma empresa antes de definir preços');
@@ -428,17 +452,27 @@ const CidadeCore = (() => {
     if(b){
       const s=SECTORS[b.sector],city=cityById(draft.player.cityId);
       const season=1+0.13*Math.sin((draft.calendar.tick%365)/365*Math.PI*2);
-      const items=[];
+      const items=[],demandLines=[];
+      let estimated=0,fulfilled=0,unmet=0,withoutStock=0;
       for(const p of b.products){
-        if(!p.stockUnits)continue; // Sem consumo de RNG para produto sem estoque.
+        if(!p.stockUnits){
+          // Sem estoque, a V1 não calcula nem inventa demanda: diferencie de demanda zero.
+          withoutStock++;
+          demandLines.push({productId:p.id,name:p.name,stockBefore:0,estimated:null,fulfilled:0,unmet:null});
+          continue; // Preserva o consumo de RNG e a economia da V1.2.
+        }
         const competitorPrice=p.referenceCents*(draft.world.competitor.priceIndex/100);
         const ratio=p.priceCents/competitorPrice;
         const elasticity=clamp(1.32-(ratio-1)*1.4,0.08,1.85);
         const demand=Math.max(0,Math.floor(p.demand*(city.factor/100)*elasticity*season*(0.75+random(draft)*0.55)));
         const sold=Math.min(p.stockUnits,demand);
+        estimated+=demand;fulfilled+=sold;unmet+=demand-sold;
+        demandLines.push({productId:p.id,name:p.name,stockBefore:p.stockUnits,estimated:demand,fulfilled:sold,unmet:demand-sold});
         if(sold>0)items.push({productId:p.id,quantity:sold});
       }
       if(items.length)registerSale(draft,b,items,'SIMULACAO_DIARIA');
+      event(draft,'DEMANDA.SIMULADA',`Demanda simulada: ${estimated} un. estimadas, ${fulfilled} vendidas, ${unmet} não atendidas; ${withoutStock} produto(s) sem estimativa por falta de estoque.`,
+        {estimated,fulfilled,unmet,withoutStock,items:demandLines});
       const cash=balance(draft,'CASH'),expense=s.dailyCost;
       // Despesa não desaparece quando não há caixa: vira obrigação a pagar.
       journal(draft,'Despesa operacional diária',[
@@ -620,8 +654,6 @@ const CidadeCore = (() => {
   const KEY='cidade-dos-negocios-save-v1';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
   let financeQuery=null; // preferência de consulta da interface, independente do GameState
-  // Carrinho é estado transitório da interface; apenas a venda confirmada entra no save.
-  let cart=[];
   const business=()=>state?.world?.business||null;
   function chooseProduct(id){const b=business();return b?.products?.find(p=>p.id===$(id)?.value)||b?.products?.[0]||null;}
   function refillSelect(id,products){
@@ -629,15 +661,30 @@ const CidadeCore = (() => {
     select.replaceChildren(...products.map(p=>{const option=document.createElement('option');option.value=p.id;option.textContent=p.name;return option;}));
     if(products.some(p=>p.id===previous))select.value=previous;
   }
-  function renderCart(){
-    const b=business(),items=cart.map(entry=>({entry,p:b?.products.find(p=>p.id===entry.productId)})).filter(x=>x.p);
-    const total=items.reduce((n,x)=>n+x.entry.quantity*x.p.priceCents,0);
-    $('cart-items').innerHTML=items.length?items.map(({entry,p})=>`<div class="cart-row"><span>${escape(p.name)} · ${entry.quantity} × ${escape(Core.money(p.priceCents))}</span><button type="button" class="btn btn-outline" data-cart-remove="${escape(p.id)}" aria-label="Remover ${escape(p.name)}">Remover</button></div>`).join(''):'<p class="muted">Carrinho vazio.</p>';
-    setText('cart-total',Core.money(total));$('cart-checkout').disabled=!items.length;
+  function renderSalesMonitor(){
+    const b=business(),sales=b?.sales||[];
+    const checks=state?.audit?.events?.filter(e=>e.type==='DEMANDA.SIMULADA')||[];
+    const latest=checks.at(-1);
+    setText('demand-date',latest?BRDate(latest.date):'Aguardando primeiro dia simulado');
+    setText('demand-estimated',latest?String(latest.data.estimated):'—');
+    setText('demand-fulfilled',latest?String(latest.data.fulfilled):'—');
+    setText('demand-unmet',latest?String(latest.data.unmet):'—');
+    setText('demand-without-stock',latest?String(latest.data.withoutStock):'—');
+    const rows=latest?.data?.items||[];
+    $('demand-rows').innerHTML=rows.length?rows.map(p=>`<tr><td>${escape(p.name)}</td><td>${p.estimated===null?'Sem estimativa':p.estimated}</td><td>${p.fulfilled}</td><td>${p.unmet===null?'—':p.unmet}</td></tr>`).join(''):'<tr><td colspan="4">Avance pelo menos um dia com uma empresa aberta para visualizar a demanda simulada.</td></tr>';
+    const daily=latest?sales.filter(s=>s.date===latest.date&&s.kind==='SIMULACAO_DIARIA'):[];
+    const revenue=daily.reduce((n,s)=>n+s.total,0),cost=daily.reduce((n,s)=>n+s.cogs,0);
+    setText('demand-day-revenue',latest?Core.money(revenue):'—');
+    setText('demand-day-cogs',latest?Core.money(cost):'—');
+    $('recent-sales').innerHTML=sales.length?sales.slice(-12).reverse().map(o=>{
+      const name=o.kind==='SIMULACAO_DIARIA'?'Vendas automáticas':o.kind==='BALCAO'?'Venda manual histórica (V1.2)':'Venda registrada';
+      const detail=o.items.map(x=>`<li>${escape(x.name)}: ${x.quantity} un. · receita ${escape(Core.money(x.revenue))} · CMV ${escape(Core.money(x.cogs))}</li>`).join('');
+      return `<details class="commerce-receipt"><summary>${escape(BRDate(o.date))} · ${escape(o.id)} · ${escape(name)} · ${escape(Core.money(o.total))}</summary><ul>${detail}</ul><p>CMV: ${escape(Core.money(o.cogs))} · Lucro bruto: ${escape(Core.money(o.total-o.cogs))}</p></details>`;
+    }).join(''):'<p class="muted">Nenhuma venda registrada. Abasteça o estoque e avance um dia.</p>';
   }
   function renderCommerce(){
     const b=business(),products=b?.products||[];
-    for(const id of ['buy-product','price-product','sale-product'])refillSelect(id,products);
+    for(const id of ['buy-product','price-product'])refillSelect(id,products);
     const suppliers=Core.SUPPLIERS,$supplier=$('buy-supplier'),previous=$supplier.value;
     $supplier.replaceChildren(...suppliers.map(s=>{const opt=document.createElement('option');opt.value=s.id;opt.textContent=s.name;return opt;}));
     if(suppliers.some(x=>x.id===previous))$supplier.value=previous;
@@ -645,13 +692,13 @@ const CidadeCore = (() => {
     setText('product-count',`${products.length} produto(s)`);
     const stats=b?Core.productPerformance(state):[];
     $('catalog-rows').innerHTML=stats.length?stats.map(p=>`<tr><td>${escape(p.name)}</td><td>${p.stockUnits}</td><td>${escape(Core.money(p.costCents))}</td><td>${escape(Core.money(p.priceCents))}</td><td>${p.sold}</td><td>${escape(Core.money(p.revenue))}</td><td>${escape(Core.money(p.cogs))}</td></tr>`).join(''):'<tr><td colspan="7">Abra uma empresa para ver o catálogo.</td></tr>';
-    const orders=b?.purchaseOrders||[],sales=b?.sales||[];
+    const orders=b?.purchaseOrders||[];
     $('recent-purchases').innerHTML=orders.length?orders.slice(-6).reverse().map(o=>`<div class="commerce-history-row">${escape(BRDate(o.date))} · ${escape(o.id)} · ${escape(o.items.map(x=>x.quantity+'× '+x.name).join(', '))} · ${escape(Core.money(o.total))}</div>`).join(''):'<p class="muted">Nenhuma compra registrada nesta edição.</p>';
-    $('recent-sales').innerHTML=sales.length?sales.slice(-6).reverse().map(o=>`<div class="commerce-history-row">${escape(BRDate(o.date))} · ${escape(o.id)} · ${escape(o.kind)} · ${escape(Core.money(o.total))} · CMV ${escape(Core.money(o.cogs))}</div>`).join(''):'<p class="muted">Nenhuma venda detalhada registrada nesta edição.</p>';
+    renderSalesMonitor();
     setText('your-current-price',chosenPrice?Core.money(chosenPrice.priceCents):'—');
     setText('competitor-price',chosenPrice?Core.money(Math.round(chosenPrice.referenceCents*state.world.competitor.priceIndex/100)):'—');
     if(chosenPrice&&document.activeElement!==$('price-value'))$('price-value').value=(chosenPrice.priceCents/100).toFixed(2);
-    updateBuyPreview();renderCart();
+    updateBuyPreview();
   }
 
   let toastTimer;
@@ -744,7 +791,7 @@ const CidadeCore = (() => {
   }
   function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
   function commit(type,payload={}){
-    if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;cart=[];}
+    if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;}
     const result=Core.dispatch(state,{type,id:nextId(),payload});
     if(!result.ok){notify(result.error,true);return false;}
     if(result.status==='APPLIED'){state=result.state;viewCityId=viewCityId??state.player.cityId;saveLocal();render();}
@@ -857,7 +904,7 @@ const CidadeCore = (() => {
     if(!file)return;
     if(file.size>25_000_000){notify('Save excede 25 MB.',true);return;}
     if(state?.player.cityId&&!confirm('Substituir a carreira atual pelo save importado? Recomendamos exportar antes.'))return;
-    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;viewCityId=state.player.cityId;selectedLot=1;financeQuery=null;cart=[];saveLocal();render();notify(incoming.message);}
+    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;viewCityId=state.player.cityId;selectedLot=1;financeQuery=null;saveLocal();render();notify(incoming.message);}
     catch(e){notify(`Importação rejeitada: ${e.message}. A carreira anterior foi preservada.`,true);}
   }
   function launchAuto(){
@@ -878,22 +925,10 @@ const CidadeCore = (() => {
     $('buy-quantity').addEventListener('input',updateBuyPreview);
     $('buy-product').addEventListener('change',updateBuyPreview);
     $('price-product').addEventListener('change',()=>{const p=chooseProduct('price-product');if(p)$('price-value').value=(p.priceCents/100).toFixed(2);renderCommerce();});
-    $('sale-product').addEventListener('change',()=>renderCart());
     $('product-form').addEventListener('submit',e=>{e.preventDefault();
       const name=$('new-product-name').value,costCents=Math.round(Number($('new-product-cost').value)*100),priceCents=Math.round(Number($('new-product-price').value)*100);
       if(commit('PRODUTO.CADASTRAR',{name,costCents,priceCents})){$('product-form').reset();notify('Produto cadastrado. Agora você pode comprar estoque.');}
     });
-    $('cart-add').addEventListener('click',()=>{
-      const p=chooseProduct('sale-product'),quantity=Number($('sale-quantity').value);
-      if(!p||!Number.isInteger(quantity)||quantity<1||quantity>2000){notify('Informe uma quantidade válida (1–2000).',true);return;}
-      const existing=cart.find(x=>x.productId===p.id),current=existing?.quantity||0;
-      if(current+quantity>p.stockUnits){notify(`Estoque insuficiente para ${p.name}.`,true);return;}
-      if(existing)existing.quantity+=quantity;else cart.push({productId:p.id,quantity});renderCart();
-    });
-    $('cart-items').addEventListener('click',e=>{const btn=e.target.closest('[data-cart-remove]');if(btn){cart=cart.filter(x=>x.productId!==btn.dataset.cartRemove);renderCart();}});
-    $('cart-clear').addEventListener('click',()=>{cart=[];renderCart();});
-    $('cart-checkout').addEventListener('click',()=>{if(commit('VENDA.REGISTRAR',{items:cart.map(x=>({...x}))})){cart=[];renderCart();notify('Venda confirmada no caixa, na receita e no CMV.');}});
-
     for(const b of document.querySelectorAll('[data-buy-preset]'))b.addEventListener('click',()=>{$('buy-quantity').value=b.dataset.buyPreset;updateBuyPreview();$('buy-quantity').focus();});
     $('finance-period').addEventListener('change',e=>{ensureFinanceQuery().period=e.target.value;renderFinances();});
     const controls=[['finance-date','asOf'],['finance-day','day'],['finance-month','month'],
@@ -927,7 +962,7 @@ const CidadeCore = (() => {
     $('start-import').addEventListener('click',()=>$('import-file').click());
     $('import-file').addEventListener('change',async e=>{const f=e.target.files?.[0];try{await importFile(f);}finally{e.target.value='';}});
     $('run-diagnostic').addEventListener('click',()=>{try{const before=JSON.stringify(state),out=Core.diagnostics(state);if(before!==JSON.stringify(state))throw Error('Diagnóstico alterou o estado');setText('diagnostic-result',out.status+' · revisão '+out.revision);notify('Verificação estrutural e contábil aprovada.');}catch(e){setText('diagnostic-result',e.message);notify(e.message,true);}});
-    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financeQuery=null;cart=[];render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
+    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financeQuery=null;render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
   }
   function updateOpenPreview(){const s=Core.SECTORS[$('sector-select').value];if(s)setText('open-preview',`Investimento inicial simulado: ${Core.money(s.openCost)} · Produto: ${s.product}`);}
   function start(){

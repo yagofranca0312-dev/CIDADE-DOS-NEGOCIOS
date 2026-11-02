@@ -39,6 +39,13 @@
 .cmv-note p{margin:0;color:#bdcfdd;font-size:.78rem}
 @media(max-width:540px){.filter-fields{grid-template-columns:1fr}.price-history-row{align-items:start;flex-direction:column;gap:3px}.price-history-row strong{text-align:left}}
 
+/* Patch 1.1.1: filtros por competência independentes do relógio da simulação. */
+.filter-fields [data-finance-field][hidden]{display:none!important}
+.filter-action-row{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-top:15px}
+.filter-action-row .muted{font-size:.81rem}
+.finance-validation{margin:12px 0;padding:10px 12px;border:1px solid #df8585;border-radius:8px;color:#ffd1d1;background:#492b37;font-size:.83rem}
+@media(max-width:640px){.filter-fields{grid-template-columns:1fr}.filter-action-row{align-items:stretch;flex-direction:column}}
+
   </style>
 </head>
 <body>
@@ -51,7 +58,7 @@
       <p class="hero-subtitle">Uma cidade. Uma empresa. Mil decisões.</p>
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◆ Economia simulada</span><span>◆ 30 cidades</span><span>◆ Offline</span></div>
-      <p class="fine-print">V1.1.0-rc.1 — prévia jogável. Parâmetros econômicos fictícios e legislação tributária ainda não implementada.</p>
+      <p class="fine-print">V1.1.1-rc.1 — prévia jogável. Parâmetros econômicos fictícios e legislação tributária ainda não implementada.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -98,7 +105,7 @@
       <div class="world-warning" id="other-city-warning" hidden>Você está explorando outra cidade. A empresa atual opera apenas na cidade de origem nesta versão.</div>
       <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Tributação legal não calculada nesta versão.</div>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.1.0-rc.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge">v1.1.1-rc.1</span></div>
         <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
           <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
           <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
@@ -127,7 +134,33 @@
           <article class="panel"><div class="panel-heading"><h3>Estratégia de preços</h3><span class="tag-soft">M08 · MERCADO</span></div><form id="price-form"><label for="price-value">Preço de venda (R$)</label><input id="price-value" type="number" min="1" max="10000" step="0.01" required><div class="price-compare" aria-label="Comparação de preços simulados"><div class="price-tile yours"><small>SEU PREÇO ATUAL</small><strong id="your-current-price" aria-live="polite">—</strong></div><div class="price-tile"><small>REFERÊNCIA DO CONCORRENTE</small><strong id="competitor-price">—</strong></div></div><button type="submit" class="btn btn-outline">Atualizar preço</button></form><p class="price-change-feedback" id="price-change-feedback" role="status" aria-live="polite">Alterações de preços serão confirmadas aqui.</p><p class="muted hint-bottom">O preço do concorrente é independente do seu e pode mudar com o tempo. Preços mais altos podem reduzir a demanda.</p><div class="history-title"><h3>Histórico de preços</h3><span class="tag-soft" id="price-history-count">0 alterações</span></div><p class="muted">Alterações da sua empresa registradas na carreira, inclusive antes desta atualização.</p><div id="price-history" class="price-history" aria-label="Histórico de alterações de preços"></div></article></div>
         </section>
         <section data-view="financas" class="view" hidden>
-          <article class="panel finance-filters"><div class="panel-heading"><h3>Período do demonstrativo</h3><span class="tag-soft">M11 · CONSULTA SEM ALTERAR O SAVE</span></div><div class="filter-fields"><div><label for="finance-period">Agrupar por</label><select id="finance-period"><option value="all">Toda a carreira</option><option value="day">Dia</option><option value="month">Competência (mês)</option><option value="quarter">Trimestre</option><option value="year">Ano</option></select></div><div><label for="finance-date">Data de referência no jogo</label><input id="finance-date" type="date" min="2026-11-01"></div></div><p id="finance-period-label" class="field-hint">Selecione um período para consultar seus resultados.</p></article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Demonstrativo gerencial</h3><span class="tag-soft">M11 · LEDGER</span></div><dl class="finance-list" id="finance-summary"></dl><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Tributação ainda não é calculada.</p></div><p class="muted">Fluxos do período filtrado; saldos de caixa, estoque e contas a pagar são acumulados até seu encerramento, não despesas do período.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
+          <article class="panel finance-filters">
+            <div class="panel-heading"><h3>Consulta financeira por período</h3><span class="tag-soft">M11 · NÃO ALTERA A CARREIRA</span></div>
+            <div class="filter-fields">
+              <div><label for="finance-period">Tipo de consulta</label><select id="finance-period">
+                <option value="all">Toda a carreira até uma data</option>
+                <option value="day">Dia específico</option>
+                <option value="month">Competência (mês)</option>
+                <option value="quarter">Trimestre</option>
+                <option value="semester">Semestre</option>
+                <option value="year">Ano</option>
+                <option value="range">Intervalo personalizado</option>
+              </select></div>
+              <div data-finance-field="all"><label for="finance-date">Data de referência (corte)</label><input id="finance-date" type="date" min="2026-11-01"></div>
+              <div data-finance-field="day" hidden><label for="finance-day">Dia a consultar</label><input id="finance-day" type="date" min="2026-11-01"></div>
+              <div data-finance-field="month" hidden><label for="finance-month">Competência (mês/ano)</label><input id="finance-month" type="month" min="2026-11"></div>
+              <div data-finance-field="quarter" hidden><label for="finance-quarter">Trimestre</label><select id="finance-quarter"><option value="1">1º trimestre (jan–mar)</option><option value="2">2º trimestre (abr–jun)</option><option value="3">3º trimestre (jul–set)</option><option value="4">4º trimestre (out–dez)</option></select></div>
+              <div data-finance-field="quarter" hidden><label for="finance-quarter-year">Ano do trimestre</label><input id="finance-quarter-year" type="number" min="2026" max="9999" step="1"></div>
+              <div data-finance-field="semester" hidden><label for="finance-semester">Semestre</label><select id="finance-semester"><option value="1">1º semestre (jan–jun)</option><option value="2">2º semestre (jul–dez)</option></select></div>
+              <div data-finance-field="semester" hidden><label for="finance-semester-year">Ano do semestre</label><input id="finance-semester-year" type="number" min="2026" max="9999" step="1"></div>
+              <div data-finance-field="year" hidden><label for="finance-year">Ano de referência</label><input id="finance-year" type="number" min="2026" max="9999" step="1"></div>
+              <div data-finance-field="range" hidden><label for="finance-range-from">Data inicial</label><input id="finance-range-from" type="date" min="2026-11-01"></div>
+              <div data-finance-field="range" hidden><label for="finance-range-to">Data final</label><input id="finance-range-to" type="date" min="2026-11-01"></div>
+            </div>
+            <div class="filter-action-row"><button type="button" id="finance-current-date" class="btn btn-outline">Usar data atual do jogo</button><span class="muted">O filtro não muda quando você avança os dias.</span></div>
+            <p id="finance-validation" class="finance-validation" aria-live="polite" hidden></p>
+            <p id="finance-period-label" class="field-hint" aria-live="polite">Escolha a data ou competência que deseja consultar.</p>
+          </article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Demonstrativo gerencial</h3><span class="tag-soft">M11 · LEDGER</span></div><dl class="finance-list" id="finance-summary"></dl><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Tributação ainda não é calculada.</p></div><p class="muted">Fluxos do período filtrado; saldos de caixa, estoque e contas a pagar são acumulados até seu encerramento, não despesas do período.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
         </section>
         <section data-view="fiscal" class="view" hidden>
           <article class="panel fiscal-panel"><span class="fiscal-icon">§</span><div><div class="overline">MT-01 · COBERTURA NORMATIVA</div><h3>Tributação não implementada nesta versão</h3><p>O jogo simula operações econômicas fictícias, mas não calcula ICMS, ISS, PIS/Cofins, IBS, CBS, Simples Nacional ou obrigações acessórias. Ausência de cálculo <strong>não significa alíquota zero</strong>.</p><p>O calendário pode avançar até 2033 e além; isso não representa validação da legislação desses anos. Uma futura implementação exigirá bases legais identificadas, vigência por competência e testes fiscais independentes.</p><div class="tag-warning">STATUS: NOT_COVERED · MODO DEMONSTRAÇÃO</div></div></article>
@@ -138,16 +171,16 @@
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.1.0-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · V1.1.1-RC.1 · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>
   <div class="toast" id="toast" aria-live="polite" role="status"></div>
   <script>
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.1.0-rc.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.1.1-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '1.1.0-rc.1';
+  const VERSION = '1.1.1-rc.1';
   const SCHEMA_VERSION = 2;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -349,13 +382,18 @@ const CidadeCore = (() => {
     else assert(inventory===0,'Estoque sem empresa');
     return true;
   }
+  // Data civil ISO estrita (inclui fevereiro e ano bissexto); nenhum parsing ambíguo.
+  function isoDate(value) {
+    if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;
+    const d=new Date(value+'T12:00:00Z');
+    return !Number.isNaN(d.getTime())&&d.toISOString().slice(0,10)===value;
+  }
   // Reportes por data/competência derivados exclusivamente do ledger já confirmado.
   // Saldo no fim do período é acumulado; receitas, CMV e despesas são fluxos do recorte.
-  function financialReport(state,period='all',referenceDate=state.calendar.date) {
+  function financialReport(state,period='all',referenceDate=state.calendar.date,range=null) {
     assert(state&&plain(state.economy)&&Array.isArray(state.economy.ledger),'Carreira inválida para relatório');
-    assert(['all','day','month','quarter','year'].includes(period),'Período financeiro desconhecido');
-    assert(typeof referenceDate==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(referenceDate)
-      &&!Number.isNaN(Date.parse(referenceDate+'T12:00:00Z')),'Data de referência inválida');
+    assert(['all','day','month','quarter','semester','year','range'].includes(period),'Período financeiro desconhecido');
+    assert(isoDate(referenceDate),'Data de referência inválida');
     assert(referenceDate<=state.calendar.date,'Data futura não permitida');
     const yy=Number(referenceDate.slice(0,4)),mm=Number(referenceDate.slice(5,7));
     assert(mm>=1&&mm<=12&&yy>=2000,'Competência inválida');
@@ -369,7 +407,20 @@ const CidadeCore = (() => {
       to=`${yy}-${String(end).padStart(2,'0')}-${String(new Date(Date.UTC(yy,end,0)).getUTCDate()).padStart(2,'0')}`;
       label=`${quarter+1}º trimestre de ${yy}`;
     }
+    if(period==='semester'){
+      const begin=mm<=6?1:7,end=begin+5;
+      from=`${yy}-${String(begin).padStart(2,'0')}-01`;
+      to=`${yy}-${String(end).padStart(2,'0')}-${String(new Date(Date.UTC(yy,end,0)).getUTCDate()).padStart(2,'0')}`;
+      label=`${begin===1?1:2}º semestre de ${yy}`;
+    }
     if(period==='year'){from=`${yy}-01-01`;to=`${yy}-12-31`;label=`Ano ${yy}`;}
+    if(period==='range'){
+      assert(plain(range)&&isoDate(range.from)&&isoDate(range.to),'Informe datas inicial e final válidas');
+      assert(range.from<=range.to,'A data inicial não pode ser posterior à final');
+      assert(range.from<=state.calendar.date&&range.to<=state.calendar.date,'Intervalo futuro não permitido');
+      from=range.from;to=range.to;
+      label=`Intervalo ${from.split('-').reverse().join('/')} a ${to.split('-').reverse().join('/')}`;
+    }
     const effectiveEnd=to<state.calendar.date?to:state.calendar.date;
     const entries=state.economy.ledger.filter(x=>x.date>=from&&x.date<=effectiveEnd);
     const until=state.economy.ledger.filter(x=>x.date<=effectiveEnd);
@@ -423,7 +474,7 @@ const CidadeCore = (() => {
   const BRDate=iso=>iso.split('-').reverse().join('/');
   const KEY='cidade-dos-negocios-save-v1';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
-  let financePeriod='all',financeRefDate=null,financeDatePinned=false;
+  let financeQuery=null; // preferência de consulta da interface, independente do GameState
   let toastTimer;
   const nextId=()=>`ui:${Date.now()}:${++sequence}`;
   const setText=(id,value)=>{const el=$(id);if(el)el.textContent=String(value)};
@@ -454,13 +505,50 @@ const CidadeCore = (() => {
     setText('price-history-count',`${items.length} alteração(ões)`);
     container.innerHTML=items.length?items.slice(-12).reverse().map(item=>`<div class="price-history-row"><small>${escape(BRDate(item.date))} · ${escape(item.id)}</small><strong>${escape(Core.money(item.old))} → ${escape(Core.money(item.cents))}</strong></div>`).join(''):'<p class="muted">Nenhuma alteração registrada nesta carreira.</p>';
   }
+  function initialFinanceQuery(){
+    const date=lastAvailableDate(),year=Number(date.slice(0,4)),month=Number(date.slice(5,7));
+    return {period:'all',asOf:date,day:date,month:date.slice(0,7),
+      quarter:String(Math.floor((month-1)/3)+1),quarterYear:year,
+      semester:String(Math.floor((month-1)/6)+1),semesterYear:year,
+      year,from:Core.START_DATE,to:date};
+  }
+  function ensureFinanceQuery(){if(!financeQuery)financeQuery=initialFinanceQuery();return financeQuery;}
+  function financeQueryDate(q){
+    const year=n=>String(n).padStart(4,'0');
+    if(q.period==='all')return {date:q.asOf};
+    if(q.period==='day')return {date:q.day};
+    if(q.period==='month')return {date:q.month+'-01'};
+    if(q.period==='quarter')return {date:year(q.quarterYear)+'-'+String((Number(q.quarter)-1)*3+1).padStart(2,'0')+'-01'};
+    if(q.period==='semester')return {date:year(q.semesterYear)+'-'+(q.semester==='1'?'01':'07')+'-01'};
+    if(q.period==='year')return {date:year(q.year)+'-01-01'};
+    return {date:q.to,range:{from:q.from,to:q.to}};
+  }
   function renderFinances(){
     if(!state)return;
-    if(!financeDatePinned)financeRefDate=lastAvailableDate();
-    const fdate=$('finance-date');fdate.max=state.calendar.date;fdate.value=financeRefDate;
-    $('finance-period').value=financePeriod;
-    const report=Core.financialReport(state,financePeriod,financeRefDate);
-    setText('finance-period-label',`${report.label} · movimentos registrados até ${BRDate(report.effectiveEnd)}. Saldos são acumulados até esta data.`);
+    const q=ensureFinanceQuery();
+    $('finance-period').value=q.period;
+    for(const group of document.querySelectorAll('[data-finance-field]'))group.hidden=group.dataset.financeField!==q.period;
+    const fields={'finance-date':q.asOf,'finance-day':q.day,'finance-month':q.month,
+      'finance-quarter':q.quarter,'finance-quarter-year':q.quarterYear,
+      'finance-semester':q.semester,'finance-semester-year':q.semesterYear,
+      'finance-year':q.year,'finance-range-from':q.from,'finance-range-to':q.to};
+    for(const [id,value] of Object.entries(fields)){const el=$(id);if(document.activeElement!==el)el.value=String(value);}
+    for(const id of ['finance-date','finance-day','finance-range-from','finance-range-to'])$(id).max=state.calendar.date;
+    $('finance-month').max=state.calendar.date.slice(0,7);
+    for(const id of ['finance-year','finance-quarter-year','finance-semester-year'])$(id).max=state.calendar.date.slice(0,4);
+    let report;
+    try {
+      const params=financeQueryDate(q);
+      report=Core.financialReport(state,q.period,params.date,params.range);
+      $('finance-validation').hidden=true;setText('finance-validation','');
+    }catch(e){
+      $('finance-validation').hidden=false;setText('finance-validation',e.message);
+      setText('finance-period-label','Corrija o período selecionado para consultar o demonstrativo.');
+      $('finance-summary').innerHTML='';setText('journal-count','—');
+      $('journal-events').innerHTML='<p class="muted">Período inválido. Nenhum dado foi alterado.</p>';
+      return;
+    }
+    setText('finance-period-label',`${report.label} · lançamentos até ${BRDate(report.effectiveEnd)}. Saldos acumulados no encerramento. Consulta fixa até você alterar os filtros.`);
     const rows=[
       ['Receita de vendas (período)',report.revenue],
       ['(-) Custo das mercadorias vendidas',report.cogs],
@@ -477,7 +565,7 @@ const CidadeCore = (() => {
   }
   function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
   function commit(type,payload={}){
-    if(type==='CARREIRA.CRIAR'){resetTimer();financePeriod='all';financeRefDate=null;financeDatePinned=false;}
+    if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;}
     const result=Core.dispatch(state,{type,id:nextId(),payload});
     if(!result.ok){notify(result.error,true);return false;}
     if(result.status==='APPLIED'){state=result.state;viewCityId=viewCityId??state.player.cityId;saveLocal();render();}
@@ -565,7 +653,7 @@ const CidadeCore = (() => {
       updateBuyPreview();
     }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('your-current-price','—');setText('competitor-price','—');setText('buy-total','—');}
     renderPriceHistory();
-    renderFinances();
+    if(tab==='financas'||financeQuery)renderFinances();
     const report=Core.diagnostics(state);
     $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Cidade ativa',ownCity.name],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal','NOT_COVERED']].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
     setText('turn-message',!b?'Abra sua primeira empresa.':b.stockUnits===0?'Seu estoque está vazio. Reabasteça.':`Sua empresa está operando há ${state.calendar.tick} dia(s).`);
@@ -590,7 +678,7 @@ const CidadeCore = (() => {
     if(!file)return;
     if(file.size>25_000_000){notify('Save excede 25 MB.',true);return;}
     if(state?.player.cityId&&!confirm('Substituir a carreira atual pelo save importado? Recomendamos exportar antes.'))return;
-    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;viewCityId=state.player.cityId;selectedLot=1;financePeriod='all';financeRefDate=null;financeDatePinned=false;saveLocal();render();notify(incoming.message);}
+    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;viewCityId=state.player.cityId;selectedLot=1;financeQuery=null;saveLocal();render();notify(incoming.message);}
     catch(e){notify(`Importação rejeitada: ${e.message}. A carreira anterior foi preservada.`,true);}
   }
   function launchAuto(){
@@ -610,11 +698,25 @@ const CidadeCore = (() => {
     $('open-form').addEventListener('submit',e=>{e.preventDefault();if(!state||viewCityId!==state.player.cityId){notify('Volte à cidade de origem para abrir o negócio.',true);return;}if(commit('EMPRESA.ABRIR',{sector:$('sector-select').value,lot:selectedLot}))goto('cidade');});
     $('buy-quantity').addEventListener('input',updateBuyPreview);
     for(const b of document.querySelectorAll('[data-buy-preset]'))b.addEventListener('click',()=>{$('buy-quantity').value=b.dataset.buyPreset;updateBuyPreview();$('buy-quantity').focus();});
-    $('finance-period').addEventListener('change',e=>{financePeriod=e.target.value;renderFinances();});
-    $('finance-date').addEventListener('change',e=>{
-      const date=e.target.value;
-      if(date>=Core.START_DATE&&date<=state.calendar.date){financeDatePinned=true;financeRefDate=date;renderFinances();}
-      else{notify('Escolha uma data válida até a data do mundo.',true);renderFinances();}
+    $('finance-period').addEventListener('change',e=>{ensureFinanceQuery().period=e.target.value;renderFinances();});
+    const controls=[['finance-date','asOf'],['finance-day','day'],['finance-month','month'],
+      ['finance-quarter','quarter'],['finance-quarter-year','quarterYear'],
+      ['finance-semester','semester'],['finance-semester-year','semesterYear'],
+      ['finance-year','year'],['finance-range-from','from'],['finance-range-to','to']];
+    for(const [id,field] of controls)$(id).addEventListener('change',e=>{
+      ensureFinanceQuery()[field]=field.endsWith('Year')||field==='year'?Number(e.target.value):e.target.value;
+      renderFinances();
+    });
+    $('finance-current-date').addEventListener('click',()=>{
+      const q=ensureFinanceQuery(),current=lastAvailableDate(),year=Number(current.slice(0,4)),month=Number(current.slice(5,7));
+      if(q.period==='all')q.asOf=current;
+      else if(q.period==='day')q.day=current;
+      else if(q.period==='month')q.month=current.slice(0,7);
+      else if(q.period==='quarter'){q.quarter=String(Math.floor((month-1)/3)+1);q.quarterYear=year;}
+      else if(q.period==='semester'){q.semester=String(Math.floor((month-1)/6)+1);q.semesterYear=year;}
+      else if(q.period==='year')q.year=year;
+      else {q.to=current;}
+      renderFinances();
     });
     $('buy-form').addEventListener('submit',e=>{e.preventDefault();commit('ESTOQUE.COMPRAR',{quantity:Number($('buy-quantity').value)});});
     $('price-form').addEventListener('submit',e=>{e.preventDefault();const value=$('price-value').value,cents=Math.round(Number(value)*100),before=state?.world.business?.unitPrice;if(commit('PRECO.DEFINIR',{cents})){const after=state.world.business.unitPrice;const message=`Seu preço foi atualizado: ${Core.money(before)} → ${Core.money(after)}.`;setText('price-change-feedback',message);notify(message);}});
@@ -628,7 +730,7 @@ const CidadeCore = (() => {
     $('start-import').addEventListener('click',()=>$('import-file').click());
     $('import-file').addEventListener('change',async e=>{const f=e.target.files?.[0];try{await importFile(f);}finally{e.target.value='';}});
     $('run-diagnostic').addEventListener('click',()=>{try{const before=JSON.stringify(state),out=Core.diagnostics(state);if(before!==JSON.stringify(state))throw Error('Diagnóstico alterou o estado');setText('diagnostic-result',out.status+' · revisão '+out.revision);notify('Verificação estrutural e contábil aprovada.');}catch(e){setText('diagnostic-result',e.message);notify(e.message,true);}});
-    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financePeriod='all';financeRefDate=null;financeDatePinned=false;render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
+    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financeQuery=null;render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
   }
   function updateOpenPreview(){const s=Core.SECTORS[$('sector-select').value];if(s)setText('open-preview',`Investimento inicial simulado: ${Core.money(s.openCost)} · Produto: ${s.product}`);}
   function start(){

@@ -1,6 +1,6 @@
 # Plano de implementação — Cidade dos Negócios V1.8.0
 
-**Status:** PLANEJADO, não implementado. **Base homologada:** V1.7.0-rc.1 (commit `3c06cdbf4fcdffe379215b8bbaa57666cd4a850b`, branch `releases/v1.7.0-homologada`). **Data:** 02/11/2026.
+**Status:** IMPLEMENTADO COMO V1.8.0-rc.1; CI e testes locais aprovados; homologação prática no Windows pendente. **Base homologada:** V1.7.0-rc.1 (commit `3c06cdbf4fcdffe379215b8bbaa57666cd4a850b`, branch `releases/v1.7.0-homologada`). **Data:** 02/11/2026.
 
 ## Missão
 Aprofundar a contabilidade gerencial fictícia do simulador, com relatórios coerentes, reconciliáveis e úteis para administrar até cinco unidades. Sem emissão de documentos reais, fiscal ou tributos legalmente calculados. Preservar o arquivo HTML único offline. Não antecipar a reforma de UX/UI nem refatoração ampla previstas para V2.0.
@@ -66,3 +66,13 @@ Aprofundar a contabilidade gerencial fictícia do simulador, com relatórios coe
 
 ## Critério de conclusão
 A V1.8 estará **implementada e pronta para homologação** quando relatórios derivados do ledger forem consistentes, todos os gates aplicáveis estiverem aprovados, a CI estiver verde, o HTML/ZIP tiver versão coerente e os saves antigos preservados. Somente o aceite expresso do jogador a torna homologada.
+
+
+## Relatório de execução da V1.8.0-rc.1 (02/11/2026)
+
+- E1–E5 implementadas, com documentação detalhada em `docs/CONTABILIDADE_V18.md`.
+- Mantido schema 8: não foi necessário migrar os saves; a V1.7 homologada pode ser importada sem alterar seus lançamentos.
+- `npm run check`: 130/130 testes locais. CI no PR #11: build, testes, comparação do HTML gerado e SHA-256 concluídos com sucesso.
+- Chromium: interface com cinco demonstrativos internos testada em 320, 390, 768 e 1280 px, sem erros JS ou rolagem horizontal.
+- Limites: fechamento apenas gerencial, não cria movimentações, não calcula tributos, balanço e caixa pertencem ao grupo.
+- **Não homologada ainda:** a aceitação prática do jogador continua necessária.

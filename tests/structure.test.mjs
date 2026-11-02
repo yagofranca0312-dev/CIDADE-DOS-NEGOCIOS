@@ -15,7 +15,9 @@ test('Aviso de cobertura fiscal explícita',()=>{assert.match(html,/Cenários tr
 test('Build reproduzível byte a byte',()=>{
  const template=readFileSync('src/shell/index.template.html','utf8'),css=readFileSync('src/shell/theme.css','utf8'),v2css=readFileSync('src/shell/v2.css','utf8'),core=readFileSync('src/core/game.js','utf8'),visual=readFileSync('src/visual/city-scene.js','utf8'),ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
  const uiBundle=readFileSync('src/ui/app.js','utf8').replace('/* CDN_MARKET_VIEWS */',readFileSync('src/ui/market-views.part.js','utf8')).replace('/* CDN_FINANCE_VIEWS */',readFileSync('src/ui/finance-views.part.js','utf8'));
- const expected=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_CORE */',core).replace('/* CDN_VISUAL */',visual).replace('/* CDN_UI */',uiBundle);
+ const art='data:image/webp;base64,'+readFileSync('src/visual/keyart-v21.webp.b64','utf8').trim();
+ const v21css=readFileSync('src/shell/v21.css','utf8').replace('__CDN_V21_KEYART__',art);
+ const expected=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21css).replace('/* CDN_CORE */',core).replace('/* CDN_VISUAL */',visual).replace('/* CDN_UI */',uiBundle);
  assert.equal(createHash('sha256').update(expected).digest('hex'),createHash('sha256').update(html).digest('hex'));
 });
 
@@ -39,7 +41,7 @@ test('Hotfix: preço próprio visível, concorrente independente e confirmação
 test('V1.3: schema 5 com migração da V1 e formato de exportação validado',()=>{
  const core=readFileSync('src/core/game.js','utf8');
  assert.match(core,/SCHEMA_VERSION = 9/);
- assert.match(core,/VERSION = '2\.0\.0-rc\.1'/);
+ assert.match(core,/VERSION = '2\.1\.0-rc\.1'/);
  assert.match(core,/function importSave\(raw\)/);
  assert.match(core,/function upgradedState\(original\)/);
 });

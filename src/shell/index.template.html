@@ -5,23 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10243E">
   <meta name="description" content="Cidade dos Negócios 1, simulador empresarial brasileiro offline, em um único HTML.">
-  <title>Cidade dos Negócios 1 · v2.0.0-rc.1</title>
+  <title>Cidade dos Negócios 1 · v2.1.0-rc.1</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2080%2080%22%3E%3Crect%20width%3D%2280%22%20height%3D%2280%22%20rx%3D%2214%22%20fill%3D%22%2310243e%22%2F%3E%3Cpath%20d%3D%22M9%2069V39L24%2031V69H9ZM28%2069V20L43%2014V69H28ZM47%2069V43L62%2034V69H47Z%22%20fill%3D%22%2351a9df%22%2F%3E%3Cpath%20d%3D%22m8%2060%2022-23%2012%209L70%2013m-14%200%2015-2-2%2016%22%20stroke%3D%22%23e9ad50%22%20stroke-width%3D%226%22%20fill%3D%22none%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
   <style>
 /* CDN_CSS */
 /* CDN_V2_CSS */
+/* CDN_V21_CSS */
   </style>
 </head>
 <body>
+  <svg xmlns="http://www.w3.org/2000/svg" class="v21-sprite" width="0" height="0" aria-hidden="true" focusable="false">
+    <symbol id="city-brand-glyph" viewBox="0 0 80 80">
+      <path d="M9 69V39L24 31V69ZM28 69V20L43 14V69ZM47 69V43L62 34V69Z" fill="#183F5E" stroke="#81C9E6" stroke-width="2.4" stroke-linejoin="round"/>
+      <path d="M14 45v4m0 6v4m19-30v5m0 7v5m0 7v5m19-8v5" stroke="#F7D9A0" stroke-width="3" stroke-linecap="round"/>
+      <path d="m8 60 22-23 12 9L70 13" fill="none" stroke="#E9AD50" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="m56 13 15-2-2 16" fill="none" stroke="#E9AD50" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M7 74h65" stroke="#A0BED3" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+    </symbol>
+  </svg>
   <div class="onboarding" id="onboarding">
-    <div class="onboarding-art" aria-hidden="true"><div class="skyline"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    <div class="onboarding-art" aria-hidden="true"><div class="v21-horizon"></div></div>
     <div class="intro-copy">
-      <p class="eyebrow"><span class="eyebrow-dot"></span> CIDADE DOS NEGÓCIOS · EDIÇÃO 2.0</p>
-      <div class="brand-icon brand-intro" aria-hidden="true"><svg viewBox="0 0 62 62" width="60" height="60"><rect x="5" y="30" width="13" height="27" rx="2" fill="#51A9DF"/><rect x="24" y="19" width="13" height="38" rx="2" fill="#E9AD50"/><rect x="43" y="8" width="13" height="49" rx="2" fill="#51A9DF"/><path d="M8 20l15-8 12 5L51 1" fill="none" stroke="#F4D49A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-      <h1>CIDADE DOS<br><em>NEGÓCIOS</em></h1>
-      <p class="hero-subtitle">Trinta cidades. Uma rede. Suas decisões.</p>
+      <p class="eyebrow v21-hero-eyebrow"><span class="eyebrow-dot"></span> EDIÇÃO 2 · CONSTRUA SUA HISTÓRIA</p>
+      <div class="v21-hero-brand"><div class="v21-hero-mark" aria-hidden="true"><svg viewBox="0 0 80 80"><use href="#city-brand-glyph"/></svg></div>
+        <h1>CIDADE <span>DOS</span><br><em>NEGÓCIOS</em></h1>
+      </div>
+      <p class="hero-subtitle">Sua cidade. Seu negócio. Seu legado.</p>
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
-      <div class="intro-features"><span>◆ Economia simulada</span><span>◆ 30 cidades</span><span>◆ Offline</span></div>
-      <p class="fine-print"><span id="intro-version">v2.0.0-rc.1</span> — prévia jogável. Dados oficiais identificados; mercado e legislação tributária simulados ou não cobertos.</p>
+      <div class="intro-features"><span>◈ Gestão empresarial</span><span>◈ 30 cidades brasileiras</span><span>◈ Jogue offline</span></div>
+      <p class="v21-art-disclaimer">Arte promocional conceitual · As cidades e os lotes do jogo são representações fictícias.</p>
+      <p class="fine-print"><span id="intro-version">v2.1.0-rc.1</span> — simulador empresarial offline. Dados oficiais e estimativas fictícias identificados.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -43,7 +56,7 @@
   </div>
   <div id="game-shell" class="game-shell" hidden>
     <aside class="sidebar">
-      <div class="sidebar-brand"><div class="brand-mark" aria-hidden="true"><span>▥</span></div><div><strong>CIDADE DOS<br>NEGÓCIOS</strong><small>EDIÇÃO 2.0</small></div></div>
+      <div class="sidebar-brand"><div class="brand-mark v21-sidebar-mark" aria-hidden="true"><svg viewBox="0 0 80 80"><use href="#city-brand-glyph"/></svg></div><div><strong>CIDADE DOS<br><span>NEGÓCIOS</span></strong><small>EDIÇÃO 2 · SIMULADOR</small></div></div>
       <div class="nav-label">SEU MUNDO</div>
       <nav class="nav-items nav-primary" aria-label="Navegação principal">
         <button type="button" data-tab="cidade" class="nav-item active" aria-current="page"><span aria-hidden="true">▦</span> Cidade</button>
@@ -67,14 +80,15 @@
         </div>
       </header>
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
-      <div class="world-warning legal-warning">SIMULAÇÃO EDUCATIVA · Indicadores econômicos fictícios · Cenários tributários não são apuração legal.</div>
+      <details class="world-warning legal-warning v21-legal-note"><summary>ⓘ SIMULAÇÃO EDUCATIVA <span>Dados econômicos simulados e tributos não oficiais · ver limites</span></summary><p>Indicadores econômicos do jogo são fictícios, salvo população e PIB identificados como oficiais. Cenários tributários não são apuração legal. Regras sem cobertura não representam isenção nem imposto zero.</p></details>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v2.0.0-rc.1</span></div>
-        <section id="stats-bar" class="stats-bar" aria-label="Indicadores do negócio">
-          <div class="stat"><span>CAIXA DISPONÍVEL</span><strong id="kpi-cash">—</strong><small>Capital e operações, não faturamento</small></div>
-          <div class="stat"><span>RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Desde a abertura da carreira</small></div>
-          <div class="stat"><span>RESULTADO GERENCIAL</span><strong id="kpi-profit">—</strong><small>Após tributos simulados, quando ativados</small></div>
-          <div class="stat"><span>ESTOQUE DISPONÍVEL</span><strong id="kpi-stock">—</strong><small id="kpi-stock-label">Estoque físico consolidado do grupo</small></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v2.1.0-rc.1</span></div>
+        <section id="stats-bar" class="stats-bar v21-hud" aria-label="Indicadores financeiros e operacionais do grupo">
+          <div class="stat stat--cash"><span><i class="v21-stat-icon" aria-hidden="true">◇</i> CAIXA DO GRUPO</span><strong id="kpi-cash">—</strong><small>Saldo disponível · não é receita</small></div>
+          <div class="stat stat--revenue"><span><i class="v21-stat-icon" aria-hidden="true">↗</i> RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Vendas realizadas · toda a carreira</small></div>
+          <div class="stat stat--profit"><span><i class="v21-stat-icon" aria-hidden="true">▤</i> RESULTADO ACUMULADO</span><strong id="kpi-profit">—</strong><small>Após tributos simulados, se aplicáveis</small></div>
+          <div class="stat stat--stock"><span><i class="v21-stat-icon" aria-hidden="true">▣</i> ESTOQUE CONSOLIDADO</span><strong id="kpi-stock">—</strong><small id="kpi-stock-label">Unidades físicas do grupo</small></div>
+          <button type="button" id="stats-more-toggle" class="v21-stats-toggle" aria-controls="stats-bar" aria-expanded="false">Mostrar resultado e estoque <span aria-hidden="true">⌄</span></button>
         </section>
         <section data-view="cidade" class="view active">
           <div class="city-stage-intro"><div><span class="stage-eyebrow">UM MUNDO DE NEGÓCIOS</span><strong>Seu próximo movimento começa na cidade.</strong></div><span class="stage-live"><span aria-hidden="true">●</span> SIMULAÇÃO LOCAL</span></div>
@@ -85,7 +99,7 @@
               <div class="map-legend"><span><i class="legend-color lot"></i> Lote disponível</span><span><i class="legend-color own"></i> Sua empresa</span><span><i class="legend-color sel"></i> Selecionado</span></div>
               <p class="map-disclaimer">Mapa fictício para jogabilidade. Não representa ruas, lotes ou imóveis reais.</p>
             </article>
-            <div class="right-column"><article class="panel"><div class="panel-heading"><h3>Lote selecionado</h3><span class="tag-soft">COMERCIAL</span></div><div class="big-number" id="selected-lot">Lote 01</div><p class="lot-status" id="map-lot-status">Escolha um lote no mapa.</p><p class="muted">Selecione um dos lotes no mapa. O grupo pode ter até cinco estabelecimentos, em cidades diferentes. Cada lote comporta uma unidade.</p><button class="btn btn-primary full" id="map-open-company" type="button">Abrir unidade neste lote</button></article>
+            <div class="right-column"><article class="panel v21-inspector"><div class="panel-heading"><div><div class="overline">INSPEÇÃO DO DISTRITO</div><h3>Seu terreno selecionado</h3></div><span class="tag-soft">COMERCIAL</span></div><div class="big-number" id="selected-lot">Lote 01</div><p class="lot-status" id="map-lot-status">Escolha um lote no mapa.</p><button class="btn btn-primary full" id="map-open-company" type="button">Abrir unidade neste lote</button><details class="v21-inspector-help"><summary>Como funcionam os lotes?</summary><p class="muted">Selecione um lote no mapa para abrir uma unidade ou gerenciar uma já existente. O grupo pode ter até cinco estabelecimentos em diferentes cidades; cada lote comporta uma unidade.</p></details></article>
               <details class="world-drawer"><summary>◈ Observatório econômico <span>IBGE + simulação</span></summary><article class="panel regional-panel" aria-labelledby="regional-title"><div class="panel-heading"><div><div class="overline">IBGE E SIMULAÇÃO</div><h3 id="regional-title">Observatório econômico</h3></div><span class="tag-soft">OFFLINE</span></div>
                 <div class="regional-hero"><small>POPULAÇÃO ESTIMADA · IBGE 2026</small><strong id="regional-population">—</strong><span>Referência: <b id="regional-date">—</b> · código IBGE <b id="regional-code">—</b></span></div>
                 <div class="regional-indicators"><div><small>Perfil urbano do jogo</small><strong id="regional-urban-size">—</strong></div><div><small>Fator de demanda simulado</small><strong id="regional-demand-factor">—</strong></div><div><small>Referência concorrencial simulada</small><strong id="regional-competition-factor">—</strong></div></div>
@@ -244,7 +258,7 @@
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v2.0.0-rc.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v2.1.0-rc.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>

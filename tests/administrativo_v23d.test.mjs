@@ -95,7 +95,7 @@ test('V2.3-D: Fiscal e departamentos não simulados continuam identificados corr
   assert.match(f,/id="fiscal-summary"/);assert.match(f,/id="fiscal-assessments"/);
   assert.match(f,/id="fiscal-activate"/);
   assert.match(r,/sem cadastro de empregados|cadastro de empregados/);
-  assert.match(p,/sem CNPJ/);
+  assert.match(p,/CNPJs, inscrições, licenças e atos societários não são simulados/);
   assert.doesNotMatch(r+p,/id="buy-form"|id="fiscal-activate"/);
 });
 test('V2.3-D: mudanças são de apresentação, não adicionam comandos econômicos',()=>{

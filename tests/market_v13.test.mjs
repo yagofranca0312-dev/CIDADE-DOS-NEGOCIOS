@@ -25,7 +25,7 @@ const demand=s=>s.audit.events.filter(e=>e.type==='DEMANDA.SIMULADA').at(-1).dat
 const json=x=>JSON.stringify(x);
 
 test('V1.3: nova carreira inicia com schema 4, 3 SKUs, preços e políticas default',()=>{
- const s=make();assert.equal(s.schemaVersion,9);assert.equal(Core.VERSION,'2.3.0-alpha.3');
+ const s=make();assert.equal(s.schemaVersion,9);assert.equal(Core.VERSION,'2.3.0');
  assert.equal(s.world.business.products.length,3);
  for(const p of s.world.business.products){assert.equal(p.stockValueCents,0);assert.ok(p.targetStock>=p.reorderPoint);}
  assert.equal(Core.overview(s).inTransit,0);Core.validate(s);

@@ -359,6 +359,23 @@ body {background:var(--v2-void);background-image:radial-gradient(ellipse at 70% 
 @media(max-width:800px){.v23-subnav{gap:6px;margin:0 -2px 12px;padding-bottom:10px}.v23-subtab{min-height:46px;padding:10px 12px;font-size:.8rem}.v23-subpane{padding-bottom:15px}}
 @media(max-width:360px){.v23-subtab{font-size:.75rem;padding:9px 10px}}
 
+/* V2.3-B: pedido múltiplo assistido, sem mudar regras do motor econômico. */
+.restock-assistant{margin-bottom:18px;border:1px solid #567b8c}
+.restock-assistant .panel-heading{gap:8px;flex-wrap:wrap}
+.restock-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0}
+.restock-controls label{display:block;margin-bottom:6px;font-weight:700}
+.restock-controls select{width:100%;min-width:0}
+.restock-choice{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0;align-items:center}
+.restock-choice button{min-height:44px}
+.restock-info{font-size:.91rem;padding:11px 13px;border-radius:9px;border:1px solid #43677b;background:#102b3c;color:#e7edf4;margin:11px 0}
+.restock-check{display:flex;gap:7px;align-items:center;min-width:160px;cursor:pointer}
+.restock-check input{width:19px;height:19px;flex:none}
+.restock-table input[type="number"]{width:96px;max-width:none;min-height:42px;padding:6px 8px}
+.restock-table td{vertical-align:middle;white-space:nowrap}
+.restock-table td:first-child{white-space:normal;min-width:180px}
+.restock-inventory-action{display:flex;justify-content:flex-start;margin:10px 0 15px}
+@media(max-width:800px){.restock-controls{grid-template-columns:minmax(0,1fr)}.restock-choice button{flex:1 1 150px}.restock-assistant{min-width:0}.restock-table{min-width:780px}}
+
 /* Cidade dos Negócios V2.1 — Identidade, onboarding, HUD e clareza operacional.
    Apresentação apenas; as regras econômicas e fiscais não são alteradas.
    REF-01 logo · REF-02 HUD · REF-04 arte de ambientação. */
@@ -920,9 +937,32 @@ button.v221-hud-cell:hover{background:#1e4254}
             <div id="company-empty"><p class="muted">Escolha cidade e lote no mapa para abrir a matriz ou uma filial. A nova unidade utiliza o caixa compartilhado.</p><form id="open-form"><label for="sector-select">Ramo de atividade</label><select id="sector-select"><option value="mercado">Mercado de bairro</option><option value="padaria">Padaria</option><option value="roupas">Loja de roupas</option></select><p id="open-preview" class="field-hint"></p><button type="submit" class="btn btn-primary">Inaugurar negócio</button></form></div>
             <div id="company-active" hidden><div class="company-emblem"><span id="company-glyph">▣</span><div><h3 id="company-title">—</h3><p id="company-product" class="muted"></p></div></div><dl class="detail-list"><dt>Endereço virtual</dt><dd id="company-location">—</dd><dt>Unidades vendidas</dt><dd id="company-sold">—</dd><dt>Preço atual</dt><dd id="company-price">—</dd><dt>Obrigações a pagar (grupo)</dt><dd id="company-payable">—</dd></dl></div>
             </article><article class="panel"><div class="panel-heading"><h3>Administração da rede</h3></div><p class="muted">Selecione a unidade ativa no topo. Produtos, compras, preços e vendas pertencem à unidade; o caixa e o calendário são do grupo.</p><button type="button" class="btn btn-outline full" data-go="mercado">Ir para o mercado ↗</button><button type="button" class="btn btn-outline full spaced" data-go="financas">Ver demonstrativos ↗</button></article></div></div><div class="v23-subpane" id="v23-pane-empresa-analises" role="tabpanel" data-section-pane="empresa:analises" aria-labelledby="v23-tab-empresa-analises" hidden><article class="panel v23-pending" role="note"><div class="panel-heading"><h3>Análises empresariais</h3><span class="tag-soft">EM PREPARAÇÃO</span></div><p>Novas análises serão entregues no Patch V2.3-C. Indicadores atuais disponíveis no Dashboard e nos demonstrativos.</p><p class="field-hint">Nenhum dado ou movimento fictício é criado nesta seção.</p></article></div><div class="v23-subpane" id="v23-pane-empresa-comparativos" role="tabpanel" data-section-pane="empresa:comparativos" aria-labelledby="v23-tab-empresa-comparativos" hidden><article class="panel v23-pending" role="note"><div class="panel-heading"><h3>Comparativos empresariais</h3><span class="tag-soft">EM PREPARAÇÃO</span></div><p>Comparações entre unidades e períodos serão entregues no Patch V2.3-C com dados históricos verificáveis.</p><p class="field-hint">Nenhum dado ou movimento fictício é criado nesta seção.</p></article></div></section>
-<section data-view="mercado" class="view" hidden><div class="view-toolbar"><span>CENTRAL OPERACIONAL</span><span class="toolbar-hint">Ações e relatórios da unidade ativa.</span></div><nav class="v23-subnav" role="tablist" aria-label="Setores do Mercado"><button type="button" role="tab" class="v23-subtab active" data-section-tab="mercado:compras" id="v23-tab-mercado-compras" aria-controls="v23-pane-mercado-compras" aria-selected="true" tabindex="0">Compras</button><button type="button" role="tab" class="v23-subtab" data-section-tab="mercado:estoque" id="v23-tab-mercado-estoque" aria-controls="v23-pane-mercado-estoque" aria-selected="false" tabindex="-1">Estoque</button><button type="button" role="tab" class="v23-subtab" data-section-tab="mercado:vendas" id="v23-tab-mercado-vendas" aria-controls="v23-pane-mercado-vendas" aria-selected="false" tabindex="-1">Vendas</button><button type="button" role="tab" class="v23-subtab" data-section-tab="mercado:outros" id="v23-tab-mercado-outros" aria-controls="v23-pane-mercado-outros" aria-selected="false" tabindex="-1">Outros</button></nav><div class="v23-subpane" id="v23-pane-mercado-compras" role="tabpanel" data-section-pane="mercado:compras" aria-labelledby="v23-tab-mercado-compras"><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Compras e estoque</h3><span class="tag-soft">M15 · SUPRIMENTOS</span></div><form id="buy-form"><label for="buy-product">Produto</label><select id="buy-product"></select><label for="buy-supplier">Fornecedor simulado</label><select id="buy-supplier"></select><p id="supplier-terms" class="field-hint" aria-live="polite">Consulte prazos e limites do fornecedor.</p><p id="market-product" class="muted">Abra uma empresa antes de comprar mercadorias.</p><label for="buy-quantity">Quantidade de unidades</label><input type="number" min="1" max="2000" value="30" id="buy-quantity" required><div class="buy-presets" aria-label="Atalhos para preencher quantidade"><span>Preencher:</span><button type="button" class="btn btn-outline" data-buy-preset="10">10 un.</button><button type="button" class="btn btn-outline" data-buy-preset="50">50 un.</button><button type="button" class="btn btn-outline" data-buy-preset="100">100 un.</button><button type="button" class="btn btn-outline" data-buy-preset="250">250 un.</button></div><p class="field-hint">O pedido é pago hoje, fica **em trânsito** e só pode gerar vendas após a entrega. Atalhos apenas preenchem a quantidade.</p><p id="buy-total" class="field-hint">—</p><button type="submit" class="btn btn-primary">Encomendar mercadorias</button></form></article><article class="panel"><h3>Pedidos e entregas</h3><p class="field-hint">Pedido pago e em trânsito não representa estoque disponível. O recebimento entra na contabilidade ao vencer o prazo.</p><div id="recent-purchases" class="commerce-log"></div></article></div></div><div class="v23-subpane" id="v23-pane-mercado-estoque" role="tabpanel" data-section-pane="mercado:estoque" aria-labelledby="v23-tab-mercado-estoque" hidden><article class="panel stock-planner" aria-labelledby="planner-title">
+<section data-view="mercado" class="view" hidden><div class="view-toolbar"><span>CENTRAL OPERACIONAL</span><span class="toolbar-hint">Ações e relatórios da unidade ativa.</span></div><nav class="v23-subnav" role="tablist" aria-label="Setores do Mercado"><button type="button" role="tab" class="v23-subtab active" data-section-tab="mercado:compras" id="v23-tab-mercado-compras" aria-controls="v23-pane-mercado-compras" aria-selected="true" tabindex="0">Compras</button><button type="button" role="tab" class="v23-subtab" data-section-tab="mercado:estoque" id="v23-tab-mercado-estoque" aria-controls="v23-pane-mercado-estoque" aria-selected="false" tabindex="-1">Estoque</button><button type="button" role="tab" class="v23-subtab" data-section-tab="mercado:vendas" id="v23-tab-mercado-vendas" aria-controls="v23-pane-mercado-vendas" aria-selected="false" tabindex="-1">Vendas</button><button type="button" role="tab" class="v23-subtab" data-section-tab="mercado:outros" id="v23-tab-mercado-outros" aria-controls="v23-pane-mercado-outros" aria-selected="false" tabindex="-1">Outros</button></nav><div class="v23-subpane" id="v23-pane-mercado-compras" role="tabpanel" data-section-pane="mercado:compras" aria-labelledby="v23-tab-mercado-compras"><article class="panel restock-assistant" id="restock-assistant" aria-labelledby="restock-heading">
+  <div class="panel-heading"><h3 id="restock-heading">Reposição inteligente de estoque</h3><span class="tag-soft">V2.3-B · PEDIDO ASSISTIDO</span></div>
+  <p class="muted">Monte um pedido de vários produtos automaticamente e revise antes de pagar. Não há compras recorrentes ou sem sua confirmação. O planejamento considera estoque físico, pedidos em trânsito, metas e limites existentes.</p>
+  <p class="restock-info" id="restock-alerts" role="status" aria-live="polite">Escolha uma empresa para planejar a reposição.</p>
+  <div class="restock-controls">
+    <div><label for="restock-mode">Como deseja repor?</label><select id="restock-mode"><option value="criticos">Somente produtos críticos</option><option value="ideal" selected>Completar estoque ideal</option><option value="personalizado">Personalizar quantidades e seleção</option></select></div>
+    <div><label for="restock-supplier">Fornecedor do pedido</label><select id="restock-supplier"></select></div>
+  </div>
+  <div class="restock-choice">
+    <button class="btn btn-outline" type="button" id="restock-cheapest">Preferir menor custo</button>
+    <button class="btn btn-outline" type="button" id="restock-fastest">Preferir menor prazo</button>
+    <button class="btn btn-primary" type="button" id="restock-prepare">Preparar reposição</button>
+  </div>
+  <p class="field-hint" id="restock-compare">Compare prazos e preços dos fornecedores.</p>
+  <p class="field-hint" id="restock-terms">A escolha de fornecedor é por pedido; nenhuma compra é dividida silenciosamente.</p>
+  <div class="table-scroll"><table class="catalog-table restock-table"><thead><tr><th>Incluir produto</th><th>Físico</th><th>Trânsito</th><th>Cobertura</th><th>Sugerido</th><th>Comprar</th><th>Preço un.</th><th>Total</th></tr></thead><tbody id="restock-order-rows"><tr><td colspan="8">Prepare uma proposta para visualizar os produtos.</td></tr></tbody></table></div>
+  <p id="restock-preview" class="restock-info" aria-live="polite">Nenhuma compra realizada.</p>
+  <div class="restock-choice">
+    <button class="btn btn-outline" type="button" id="restock-adjust-budget" disabled>Ajustar proposta ao caixa</button>
+    <button class="btn btn-outline" type="button" id="restock-cancel" disabled>Cancelar proposta</button>
+    <button class="btn btn-primary" type="button" id="restock-confirm" disabled>Conferir e confirmar pedido</button>
+  </div>
+  <p class="field-hint">Ajustar ao caixa é opcional, prioriza menor cobertura e pode reduzir ou excluir itens. Somente um clique final de confirmação executa COMPRAS.REGISTRAR. Se o pedido ultrapassar a capacidade do fornecedor, revise as quantidades.</p>
+</article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Compras e estoque</h3><span class="tag-soft">M15 · SUPRIMENTOS</span></div><form id="buy-form"><label for="buy-product">Produto</label><select id="buy-product"></select><label for="buy-supplier">Fornecedor simulado</label><select id="buy-supplier"></select><p id="supplier-terms" class="field-hint" aria-live="polite">Consulte prazos e limites do fornecedor.</p><p id="market-product" class="muted">Abra uma empresa antes de comprar mercadorias.</p><label for="buy-quantity">Quantidade de unidades</label><input type="number" min="1" max="2000" value="30" id="buy-quantity" required><div class="buy-presets" aria-label="Atalhos para preencher quantidade"><span>Preencher:</span><button type="button" class="btn btn-outline" data-buy-preset="10">10 un.</button><button type="button" class="btn btn-outline" data-buy-preset="50">50 un.</button><button type="button" class="btn btn-outline" data-buy-preset="100">100 un.</button><button type="button" class="btn btn-outline" data-buy-preset="250">250 un.</button></div><p class="field-hint">O pedido é pago hoje, fica **em trânsito** e só pode gerar vendas após a entrega. Atalhos apenas preenchem a quantidade.</p><p id="buy-total" class="field-hint">—</p><button type="submit" class="btn btn-primary">Encomendar mercadorias</button></form></article><article class="panel"><h3>Pedidos e entregas</h3><p class="field-hint">Pedido pago e em trânsito não representa estoque disponível. O recebimento entra na contabilidade ao vencer o prazo.</p><div id="recent-purchases" class="commerce-log"></div></article></div></div><div class="v23-subpane" id="v23-pane-mercado-estoque" role="tabpanel" data-section-pane="mercado:estoque" aria-labelledby="v23-tab-mercado-estoque" hidden><article class="panel stock-planner" aria-labelledby="planner-title">
             <div class="panel-heading"><h3 id="planner-title">Inteligência de estoque e abastecimento</h3><span class="tag-soft">V1.3 · PROJEÇÕES SIMULADAS</span></div>
-            <p class="muted">Média de demanda observada nos últimos 7 dias (quando disponível), estoque físico, pedidos em trânsito, cobertura e sugestão de reposição. Nenhum pedido é feito automaticamente.</p>
+            <p class="muted">Demanda observada em até sete dias, estoque físico, mercadorias em trânsito, cobertura e metas da unidade. Pedidos consolidados são preparados no setor Compras e dependem de confirmação.</p><div class="restock-inventory-action"><button class="btn btn-primary" type="button" data-section-go="mercado:compras">Preparar reposição automática assistida ↗</button></div>
             <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Produto</th><th>Em estoque</th><th>Em trânsito</th><th>Previsão/dia</th><th>Cobertura</th><th>Mínimo</th><th>Meta</th><th>Sugerido</th></tr></thead><tbody id="inventory-planner-rows"></tbody></table></div>
             <form id="stock-policy-form" class="stock-policy-form"><label for="policy-product">Produto</label><select id="policy-product"></select><label for="policy-reorder">Alerta: estoque mínimo (un.)</label><input id="policy-reorder" type="number" min="0" max="100000" step="1" required><label for="policy-target">Meta de estoque (un.)</label><input id="policy-target" type="number" min="1" max="100000" step="1" required><button type="submit" class="btn btn-outline">Salvar política de reposição</button></form>
           </article></div><div class="v23-subpane" id="v23-pane-mercado-vendas" role="tabpanel" data-section-pane="mercado:vendas" aria-labelledby="v23-tab-mercado-vendas" hidden><div class="dashboard-grid"><article class="panel" aria-label="Painel de vendas automáticas">
@@ -2307,6 +2347,7 @@ const CidadeTianguaCena=(()=>{
   const KEY='cidade-dos-negocios-save-v1';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
   let inspectorOpen=false; // interface somente, nunca persistido
+  let restockDraft=null; // proposta de compra efêmera (não entra em saves)
   const activeSection={empresa:'dashboard',mercado:'compras',administrativo:'financas'}; // somente UI, fora do save
   let mapZoomed=false; // visão ampliada opcional; não altera o save
   let financeQuery=null,strategyHorizon=30,financeScope='all',statementView='summary'; // preferências de interface, independentes do GameState
@@ -2317,6 +2358,163 @@ const CidadeTianguaCena=(()=>{
     select.replaceChildren(...products.map(p=>{const option=document.createElement('option');option.value=p.id;option.textContent=p.name;return option;}));
     if(products.some(p=>p.id===previous))select.value=previous;
   }
+  /* V2.3-B — Assistente de reposição: interface, não motor econômico. */
+function restockSupplierLimit(unit,row,supplier,date){
+  const ordered=unit.purchaseOrders.filter(o=>o.date===date&&o.supplierId===supplier.id)
+    .reduce((n,o)=>n+o.items.filter(x=>x.productId===row.id).reduce((s,x)=>s+x.quantity,0),0);
+  return Math.max(0,Math.min(2000,supplier.maxDailyPerSku-ordered,100000-row.stock-row.inTransit));
+}
+function restockRoom(unit){
+  const pending=unit.purchaseOrders.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.items.reduce((s,x)=>s+x.quantity,0),0);
+  return Math.max(0,100000-unit.stockUnits-pending);
+}
+function prepareRestockPlan(unit,rows,supplier,mode,date,revision){
+  let room=restockRoom(unit);
+  const ranking=rows.slice().sort((a,b)=>a.coverageDays-b.coverageDays||a.id.localeCompare(b.id));
+  const amounts=new Map();
+  for(const row of ranking){
+    const needed=mode==='criticos'&&!row.alert?0:row.recommended;
+    const quantity=Math.max(0,Math.min(needed,restockSupplierLimit(unit,row,supplier,date),room));
+    amounts.set(row.id,quantity);room-=quantity;
+  }
+  return {businessId:unit.id,revision,mode,supplierId:supplier.id,
+    lines:rows.map(row=>({productId:row.id,selected:(amounts.get(row.id)||0)>0,quantity:amounts.get(row.id)||0}))};
+}
+function reviewRestockPlan(draft,unit,rows,supplier,cash,date,revision){
+  const errors=[],inventory=new Map(rows.map(x=>[x.id,x])),products=new Map(unit?.products.map(x=>[x.id,x])||[]);
+  if(!draft||!unit||!supplier||draft.businessId!==unit.id||draft.revision!==revision||draft.supplierId!==supplier.id)
+    errors.push('Proposta desatualizada. Prepare novamente antes de comprar.');
+  const items=[];let total=0,units=0;
+  for(const line of draft?.lines||[]){
+    if(!line.selected)continue;
+    const row=inventory.get(line.productId),product=products.get(line.productId),q=Number(line.quantity);
+    if(!row||!product){errors.push('Produto da proposta não localizado.');continue;}
+    if(!Number.isInteger(q)||q<1||q>2000){errors.push('Quantidade inválida para '+row.name+' (1 a 2000).');continue;}
+    const cap=restockSupplierLimit(unit,row,supplier,date);
+    if(q>cap)errors.push('Limite do fornecedor ou capacidade individual excedidos: '+row.name+' (máximo '+cap+').');
+    const price=Math.round(product.costCents*supplier.priceFactor/100);
+    total+=q*price;units+=q;
+    items.push({productId:row.id,name:row.name,quantity:q,unitCost:price,total:q*price});
+  }
+  if(!items.length)errors.push('Selecione ao menos um produto com quantidade positiva.');
+  if(items.length>40)errors.push('Máximo de 40 produtos por pedido.');
+  if(unit&&units>restockRoom(unit))errors.push('Capacidade total do depósito excedida.');
+  if(unit&&unit.purchaseOrders.length>=20000)errors.push('Histórico de compras cheio.');
+  if(!Number.isSafeInteger(total)||total>cash)errors.push('Caixa insuficiente para pagamento integral hoje.');
+  return {valid:errors.length===0,errors,items,total,units,cash,remaining:cash-total};
+}
+function adjustRestockToBudget(draft,unit,rows,supplier,cash,date){
+  const byId=new Map(rows.map(x=>[x.id,x])),products=new Map(unit.products.map(x=>[x.id,x]));
+  let available=cash,room=restockRoom(unit);
+  const ranking=draft.lines.filter(x=>x.selected).slice().sort((a,b)=>
+    (byId.get(a.productId)?.coverageDays??Infinity)-(byId.get(b.productId)?.coverageDays??Infinity)||a.productId.localeCompare(b.productId));
+  const allocations=new Map();
+  for(const line of ranking){
+    const row=byId.get(line.productId),product=products.get(line.productId);
+    if(!row||!product)continue;
+    const price=Math.round(product.costCents*supplier.priceFactor/100);
+    const quantity=Math.max(0,Math.min(Number.isInteger(line.quantity)?line.quantity:0,restockSupplierLimit(unit,row,supplier,date),room,Math.floor(available/price)));
+    allocations.set(line.productId,quantity);available-=quantity*price;room-=quantity;
+  }
+  for(const line of draft.lines){if(!line.selected)continue;line.quantity=allocations.get(line.productId)||0;line.selected=line.quantity>0;}
+  return draft;
+}
+function renderRestockSummary(){
+  const unit=business(),supplier=Core.SUPPLIERS.find(x=>x.id===restockDraft?.supplierId);
+  const rows=unit?Core.inventoryReport(state):[];
+  const review=reviewRestockPlan(restockDraft,unit,rows,supplier,unit?Core.overview(state).cash:0,state?.calendar?.date,state?.revision);
+  $('restock-adjust-budget').disabled=!restockDraft||!review.items.length||review.total<=review.cash;
+  $('restock-confirm').disabled=!restockDraft||!review.valid;
+  $('restock-cancel').disabled=!restockDraft;
+  if(!restockDraft){setText('restock-preview','Prepare o pedido para conferir quantidades, custo, caixa e prazo. Nenhuma compra foi realizada.');return;}
+  setText('restock-preview',review.items.length+' produto(s) · '+review.units+' unidade(s) · total '+Core.money(review.total)+' · caixa '+Core.money(review.cash)+' · saldo após compra '+Core.money(review.remaining)+(review.errors.length?' · ATENÇÃO: '+review.errors.join(' '):' · Pronto para confirmação.'));
+  for(const line of restockDraft.lines){
+    const product=unit?.products.find(x=>x.id===line.productId);
+    const el=document.querySelector('[data-restock-line-total="'+line.productId+'"]');
+    if(el&&product&&supplier){
+      const q=Number(line.quantity),price=Math.round(product.costCents*supplier.priceFactor/100);
+      el.textContent=Core.money(line.selected&&Number.isInteger(q)&&q>=0?q*price:0);
+    }
+  }
+}
+function renderRestock(){
+  const unit=business(),rows=unit?Core.inventoryReport(state):[],select=$('restock-supplier'),old=select.value;
+  select.replaceChildren(...Core.SUPPLIERS.map(s=>{const o=document.createElement('option');o.value=s.id;o.textContent=s.name;return o;}));
+  if(Core.SUPPLIERS.some(s=>s.id===old))select.value=old;
+  const supplier=Core.SUPPLIERS.find(s=>s.id===select.value);
+  $('restock-prepare').disabled=!unit;$('restock-fastest').disabled=!unit;$('restock-cheapest').disabled=!unit;
+  const critical=rows.filter(x=>x.alert&&x.recommended>0).length,needed=rows.filter(x=>x.recommended>0).length;
+  setText('restock-alerts',unit?critical+' produto(s) críticos · '+needed+' com necessidade de reposição. Mercadorias em trânsito consideradas.':'Abra uma empresa para planejar o abastecimento.');
+  setText('restock-compare',Core.SUPPLIERS.map(s=>s.name+': custo '+s.priceFactor+'% da referência · '+s.leadDays+' dia(s) · máximo '+s.maxDailyPerSku+' un. por produto/dia.').join(' | '));
+  setText('restock-terms',supplier?'Fornecedor: '+supplier.name+' · entrega em '+supplier.leadDays+' dia(s). Pagamento imediato com caixa do grupo.':'Selecione um fornecedor.');
+  if(restockDraft&&(restockDraft.businessId!==unit?.id||restockDraft.revision!==state?.revision||restockDraft.supplierId!==supplier?.id))restockDraft=null;
+  const table=$('restock-order-rows');
+  if(!restockDraft)table.innerHTML='<tr><td colspan="8">Selecione um modo e prepare a proposta. A compra não é automática.</td></tr>';
+  else{
+    const byId=new Map(rows.map(x=>[x.id,x]));
+    table.innerHTML=restockDraft.lines.map(line=>{
+      const row=byId.get(line.productId),product=unit.products.find(x=>x.id===line.productId);
+      const cap=restockSupplierLimit(unit,row,supplier,state.calendar.date),price=Math.round(product.costCents*supplier.priceFactor/100);
+      return '<tr><td><label class="restock-check"><input type="checkbox" data-restock-check="'+escape(row.id)+'" '+(line.selected?'checked':'')+' aria-label="Incluir '+escape(row.name)+'"> '+escape(row.name)+'</label></td><td>'+row.stock+'</td><td>'+row.inTransit+'</td><td>'+row.coverageDays+' dias</td><td>'+row.recommended+'</td><td><input type="number" min="0" max="'+cap+'" step="1" value="'+line.quantity+'" data-restock-quantity="'+escape(row.id)+'" aria-label="Quantidade de '+escape(row.name)+'"></td><td>'+escape(Core.money(price))+'</td><td data-restock-line-total="'+escape(row.id)+'">'+escape(Core.money(line.selected?line.quantity*price:0))+'</td></tr>';
+    }).join('');
+  }
+  renderRestockSummary();
+}
+
+function bindRestock(){
+  $('restock-mode').addEventListener('change',()=>{restockDraft=null;renderRestock();});
+  $('restock-supplier').addEventListener('change',()=>{restockDraft=null;renderRestock();});
+  $('restock-cheapest').addEventListener('click',()=>{
+    $('restock-supplier').value=Core.SUPPLIERS.slice().sort((a,b)=>a.priceFactor-b.priceFactor||a.leadDays-b.leadDays||a.id.localeCompare(b.id))[0].id;
+    restockDraft=null;renderRestock();
+  });
+  $('restock-fastest').addEventListener('click',()=>{
+    $('restock-supplier').value=Core.SUPPLIERS.slice().sort((a,b)=>a.leadDays-b.leadDays||a.priceFactor-b.priceFactor||a.id.localeCompare(b.id))[0].id;
+    restockDraft=null;renderRestock();
+  });
+  $('restock-prepare').addEventListener('click',()=>{
+    const unit=business(),supplier=Core.SUPPLIERS.find(x=>x.id===$('restock-supplier').value);
+    if(!unit||!supplier){notify('Abra uma empresa e selecione um fornecedor.',true);return;}
+    resetTimer(); // evitar que a carreira avance durante a revisao do pedido
+    restockDraft=prepareRestockPlan(unit,Core.inventoryReport(state),supplier,$('restock-mode').value,state.calendar.date,state.revision);
+    renderRestock();
+  });
+  $('restock-order-rows').addEventListener('change',e=>{
+    if(!restockDraft)return;
+    const checked=e.target.closest('[data-restock-check]'),input=e.target.closest('[data-restock-quantity]');
+    if(checked){const line=restockDraft.lines.find(x=>x.productId===checked.dataset.restockCheck);if(line)line.selected=checked.checked;}
+    if(input){const line=restockDraft.lines.find(x=>x.productId===input.dataset.restockQuantity);if(line)line.quantity=input.value.trim()===''?NaN:Number(input.value);}
+    renderRestockSummary();
+  });
+  $('restock-order-rows').addEventListener('input',e=>{
+    const input=e.target.closest('[data-restock-quantity]');
+    if(!restockDraft||!input)return;
+    const line=restockDraft.lines.find(x=>x.productId===input.dataset.restockQuantity);
+    if(line)line.quantity=input.value.trim()===''?NaN:Number(input.value);
+    renderRestockSummary();
+  });
+  $('restock-adjust-budget').addEventListener('click',()=>{
+    const unit=business(),supplier=Core.SUPPLIERS.find(x=>x.id===restockDraft?.supplierId);
+    if(!unit||!supplier||!restockDraft||restockDraft.revision!==state.revision)return;
+    adjustRestockToBudget(restockDraft,unit,Core.inventoryReport(state),supplier,Core.overview(state).cash,state.calendar.date);
+    renderRestock();
+  });
+  $('restock-cancel').addEventListener('click',()=>{restockDraft=null;renderRestock();});
+  $('restock-confirm').addEventListener('click',()=>{
+    const unit=business(),supplier=Core.SUPPLIERS.find(x=>x.id===restockDraft?.supplierId);
+    const review=reviewRestockPlan(restockDraft,unit,unit?Core.inventoryReport(state):[],supplier,unit?Core.overview(state).cash:0,state?.calendar?.date,state?.revision);
+    if(!review.valid){renderRestockSummary();notify(review.errors.join(' '),true);return;}
+    const revision=state.revision,unitId=unit.id,items=review.items.map(x=>({productId:x.productId,quantity:x.quantity}));
+    const message='Confirmar pedido para '+unit.id+'?\nFornecedor: '+supplier.name+'\n'+review.items.length+' produto(s) · '+review.units+' unidade(s)\nTotal pago agora: '+Core.money(review.total)+'\nSaldo estimado após compra: '+Core.money(review.remaining)+'\nPrevisão de entrega: '+supplier.leadDays+' dia(s).';
+    if(!confirm(message))return;
+    if(state.revision!==revision||business()?.id!==unitId){notify('A carreira mudou. Prepare uma nova proposta.',true);restockDraft=null;renderRestock();return;}
+    if(commit('COMPRAS.REGISTRAR',{supplierId:supplier.id,items})){
+      notify('Pedido consolidado confirmado. Estoque físico será recebido apenas após o prazo de entrega.');
+      goto('mercado','compras');
+    }
+  });
+}
+
   /* V2.0: fragmento de visualização, incorporado à mesma closure pelo build. */
   function renderSalesMonitor(){
     const b=business(),sales=b?.sales||[];
@@ -2374,6 +2572,7 @@ const CidadeTianguaCena=(()=>{
     setText('competitor-price',chosenPrice?Core.money(Math.round(Core.competitorReference(state,chosenPrice,Core.cityById(b.cityId)))):'—');
     if(chosenPrice&&document.activeElement!==$('price-value'))$('price-value').value=(chosenPrice.priceCents/100).toFixed(2);
     updateBuyPreview();
+    renderRestock();
   }
 
   let toastTimer;
@@ -2606,7 +2805,7 @@ const CidadeTianguaCena=(()=>{
     if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;financeScope='all';statementView='summary';}
     const result=Core.dispatch(state,{type,id:nextId(),payload});
     if(!result.ok){notify(result.error,true);return false;}
-    if(result.status==='APPLIED'){state=result.state;const chosen=business();if((type==='EMPRESA.ABRIR'||type==='EMPRESA.ATIVAR')&&chosen){viewCityId=chosen.cityId;selectedLot=chosen.lot;inspectorOpen=false;}else viewCityId=viewCityId??state.player.cityId;saveLocal();render();}
+    if(result.status==='APPLIED'){restockDraft=null;state=result.state;const chosen=business();if((type==='EMPRESA.ABRIR'||type==='EMPRESA.ATIVAR')&&chosen){viewCityId=chosen.cityId;selectedLot=chosen.lot;inspectorOpen=false;}else viewCityId=viewCityId??state.player.cityId;saveLocal();render();}
     notify(result.message);
     return true;
   }
@@ -2742,7 +2941,7 @@ const CidadeTianguaCena=(()=>{
     if(!file)return;
     if(file.size>25_000_000){notify('Save excede 25 MB.',true);return;}
     if(state?.player.cityId&&!confirm('Substituir a carreira atual pelo save importado? Recomendamos exportar antes.'))return;
-    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';saveLocal();render();notify(incoming.message);}
+    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;restockDraft=null;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';saveLocal();render();notify(incoming.message);}
     catch(e){notify(`Importação rejeitada: ${e.message}. A carreira anterior foi preservada.`,true);}
   }
   function launchAuto(){
@@ -2847,6 +3046,7 @@ const CidadeTianguaCena=(()=>{
       renderFinances();
     });
     $('regional-compare-city').addEventListener('change',()=>renderRegional(Core.cityById(viewCityId)||Core.CITIES[0]));
+    bindRestock();
     $('buy-form').addEventListener('submit',e=>{e.preventDefault();commit('ESTOQUE.COMPRAR',{productId:$('buy-product').value,supplierId:$('buy-supplier').value,quantity:Number($('buy-quantity').value)});});
     $('price-form').addEventListener('submit',e=>{e.preventDefault();const p=chooseProduct('price-product'),value=$('price-value').value,cents=Math.round(Number(value)*100),before=p?.priceCents;if(commit('PRECO.DEFINIR',{productId:p?.id,cents})){const after=business().products.find(x=>x.id===p.id).priceCents;const message=`Preço de ${p.name} atualizado: ${Core.money(before)} → ${Core.money(after)}.`;setText('price-change-feedback',message);notify(message);}});
     $('next-day').addEventListener('click',()=>commit('TEMPO.AVANCAR_DIA'));

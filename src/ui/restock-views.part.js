@@ -100,3 +100,57 @@ function renderRestock(){
   }
   renderRestockSummary();
 }
+
+function bindRestock(){
+  $('restock-mode').addEventListener('change',()=>{restockDraft=null;renderRestock();});
+  $('restock-supplier').addEventListener('change',()=>{restockDraft=null;renderRestock();});
+  $('restock-cheapest').addEventListener('click',()=>{
+    $('restock-supplier').value=Core.SUPPLIERS.slice().sort((a,b)=>a.priceFactor-b.priceFactor||a.leadDays-b.leadDays||a.id.localeCompare(b.id))[0].id;
+    restockDraft=null;renderRestock();
+  });
+  $('restock-fastest').addEventListener('click',()=>{
+    $('restock-supplier').value=Core.SUPPLIERS.slice().sort((a,b)=>a.leadDays-b.leadDays||a.priceFactor-b.priceFactor||a.id.localeCompare(b.id))[0].id;
+    restockDraft=null;renderRestock();
+  });
+  $('restock-prepare').addEventListener('click',()=>{
+    const unit=business(),supplier=Core.SUPPLIERS.find(x=>x.id===$('restock-supplier').value);
+    if(!unit||!supplier){notify('Abra uma empresa e selecione um fornecedor.',true);return;}
+    resetTimer(); // evitar que a carreira avance durante a revisao do pedido
+    restockDraft=prepareRestockPlan(unit,Core.inventoryReport(state),supplier,$('restock-mode').value,state.calendar.date,state.revision);
+    renderRestock();
+  });
+  $('restock-order-rows').addEventListener('change',e=>{
+    if(!restockDraft)return;
+    const checked=e.target.closest('[data-restock-check]'),input=e.target.closest('[data-restock-quantity]');
+    if(checked){const line=restockDraft.lines.find(x=>x.productId===checked.dataset.restockCheck);if(line)line.selected=checked.checked;}
+    if(input){const line=restockDraft.lines.find(x=>x.productId===input.dataset.restockQuantity);if(line)line.quantity=input.value.trim()===''?NaN:Number(input.value);}
+    renderRestockSummary();
+  });
+  $('restock-order-rows').addEventListener('input',e=>{
+    const input=e.target.closest('[data-restock-quantity]');
+    if(!restockDraft||!input)return;
+    const line=restockDraft.lines.find(x=>x.productId===input.dataset.restockQuantity);
+    if(line)line.quantity=input.value.trim()===''?NaN:Number(input.value);
+    renderRestockSummary();
+  });
+  $('restock-adjust-budget').addEventListener('click',()=>{
+    const unit=business(),supplier=Core.SUPPLIERS.find(x=>x.id===restockDraft?.supplierId);
+    if(!unit||!supplier||!restockDraft||restockDraft.revision!==state.revision)return;
+    adjustRestockToBudget(restockDraft,unit,Core.inventoryReport(state),supplier,Core.overview(state).cash,state.calendar.date);
+    renderRestock();
+  });
+  $('restock-cancel').addEventListener('click',()=>{restockDraft=null;renderRestock();});
+  $('restock-confirm').addEventListener('click',()=>{
+    const unit=business(),supplier=Core.SUPPLIERS.find(x=>x.id===restockDraft?.supplierId);
+    const review=reviewRestockPlan(restockDraft,unit,unit?Core.inventoryReport(state):[],supplier,unit?Core.overview(state).cash:0,state?.calendar?.date,state?.revision);
+    if(!review.valid){renderRestockSummary();notify(review.errors.join(' '),true);return;}
+    const revision=state.revision,unitId=unit.id,items=review.items.map(x=>({productId:x.productId,quantity:x.quantity}));
+    const message='Confirmar pedido para '+unit.id+'?\nFornecedor: '+supplier.name+'\n'+review.items.length+' produto(s) · '+review.units+' unidade(s)\nTotal pago agora: '+Core.money(review.total)+'\nSaldo estimado após compra: '+Core.money(review.remaining)+'\nPrevisão de entrega: '+supplier.leadDays+' dia(s).';
+    if(!confirm(message))return;
+    if(state.revision!==revision||business()?.id!==unitId){notify('A carreira mudou. Prepare uma nova proposta.',true);restockDraft=null;renderRestock();return;}
+    if(commit('COMPRAS.REGISTRAR',{supplierId:supplier.id,items})){
+      notify('Pedido consolidado confirmado. Estoque físico será recebido apenas após o prazo de entrega.');
+      goto('mercado','compras');
+    }
+  });
+}

@@ -403,6 +403,23 @@ body {background:var(--v2-void);background-image:radial-gradient(ellipse at 70% 
 @media(max-width:800px){.company-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.company-metric{padding:12px}.company-filter-grid{grid-template-columns:repeat(auto-fit,minmax(155px,1fr))}.company-comparison,.company-analysis{padding:14px}.company-quick-actions button{flex:1 1 145px}}
 @media(max-width:360px){.company-kpi-grid,.company-filter-grid{grid-template-columns:minmax(0,1fr)}}
 
+/* V2.3-D — tesouraria e contabilidade em departamentos reais. */
+.admin-shared-filters{min-width:0}
+.admin-shared-filters[hidden]{display:none!important}
+.admin-treasury{padding:19px;margin-bottom:16px}
+.admin-treasury-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;margin:15px 0}
+.admin-treasury-kpis>div{min-width:0;background:#153449;border:1px solid #41687d;border-radius:11px;padding:13px 15px}
+.admin-treasury-kpis small{display:block;color:#a8cbd8;font-size:.73rem;min-height:30px}
+.admin-treasury-kpis strong{display:block;color:#ffe0ab;font-size:clamp(1rem,1.5vw,1.27rem);margin-top:7px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.admin-treasury h4{font-size:.9rem;color:#ebd69f;margin:10px 0}
+.admin-treasury .dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+.admin-treasury .finance-list{min-width:0}
+.admin-department-links{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0 17px}
+.admin-department-links .btn{min-height:44px}
+.v23-subpane[data-section-pane="administrativo:contabilidade"] .dashboard-grid{gap:14px}
+@media(max-width:800px){.admin-treasury{padding:14px}.admin-treasury .dashboard-grid{grid-template-columns:1fr}.admin-treasury-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:360px){.admin-treasury-kpis{grid-template-columns:1fr}}
+
 /* Cidade dos Negócios V2.1 — Identidade, onboarding, HUD e clareza operacional.
    Apresentação apenas; as regras econômicas e fiscais não são alteradas.
    REF-01 logo · REF-02 HUD · REF-04 arte de ambientação. */
@@ -1087,10 +1104,8 @@ button.v221-hud-cell:hover{background:#1e4254}
             <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Produto</th><th>Estoque</th><th>Custo un.</th><th>Venda un.</th><th>Vendido*</th><th>Receita*</th><th>CMV*</th></tr></thead><tbody id="catalog-rows"></tbody></table></div>
             <p class="field-hint">* Desempenho por produto registrado a partir desta edição. Vendas antigas continuam preservadas no total contábil, sem distribuição fictícia entre SKUs.</p>
           </article></div></section>
-<section data-view="administrativo" class="view" hidden><div class="view-toolbar"><span>DEPARTAMENTOS ADMINISTRATIVOS</span><span class="toolbar-hint">Gestão financeira, contábil e fiscal da rede.</span></div><nav class="v23-subnav" role="tablist" aria-label="Departamentos administrativos"><button type="button" role="tab" class="v23-subtab active" data-section-tab="administrativo:financas" id="v23-tab-administrativo-financas" aria-controls="v23-pane-administrativo-financas" aria-selected="true" tabindex="0">Finanças</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:rh-dp" id="v23-tab-administrativo-rh-dp" aria-controls="v23-pane-administrativo-rh-dp" aria-selected="false" tabindex="-1">RH / DP</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:contabilidade" id="v23-tab-administrativo-contabilidade" aria-controls="v23-pane-administrativo-contabilidade" aria-selected="false" tabindex="-1">Contabilidade</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:fiscal" id="v23-tab-administrativo-fiscal" aria-controls="v23-pane-administrativo-fiscal" aria-selected="false" tabindex="-1">Fiscal</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:paralegal" id="v23-tab-administrativo-paralegal" aria-controls="v23-pane-administrativo-paralegal" aria-selected="false" tabindex="-1">Paralegal</button></nav><div class="v23-subpane" id="v23-pane-administrativo-financas" role="tabpanel" data-section-pane="administrativo:financas" aria-labelledby="v23-tab-administrativo-financas">
-          <div class="view-toolbar"><span>TESOURARIA E RESULTADOS</span><button type="button" class="btn btn-outline" data-tab="fiscal">§ Tributos simulados</button></div>
-          <article class="panel finance-filters">
-            <div class="panel-heading"><h3>Consulta financeira por período</h3><span class="tag-soft">M11 · NÃO ALTERA A CARREIRA</span></div>
+<section data-view="administrativo" class="view" hidden><div class="view-toolbar"><span>DEPARTAMENTOS ADMINISTRATIVOS</span><span class="toolbar-hint">Gestão financeira, contábil e fiscal da rede.</span></div><nav class="v23-subnav" role="tablist" aria-label="Departamentos administrativos"><button type="button" role="tab" class="v23-subtab active" data-section-tab="administrativo:financas" id="v23-tab-administrativo-financas" aria-controls="v23-pane-administrativo-financas" aria-selected="true" tabindex="0">Finanças</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:rh-dp" id="v23-tab-administrativo-rh-dp" aria-controls="v23-pane-administrativo-rh-dp" aria-selected="false" tabindex="-1">RH / DP</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:contabilidade" id="v23-tab-administrativo-contabilidade" aria-controls="v23-pane-administrativo-contabilidade" aria-selected="false" tabindex="-1">Contabilidade</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:fiscal" id="v23-tab-administrativo-fiscal" aria-controls="v23-pane-administrativo-fiscal" aria-selected="false" tabindex="-1">Fiscal</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:paralegal" id="v23-tab-administrativo-paralegal" aria-controls="v23-pane-administrativo-paralegal" aria-selected="false" tabindex="-1">Paralegal</button></nav><div class="admin-shared-filters" id="admin-shared-filters" aria-label="Filtros de Finanças e Contabilidade"><article class="panel finance-filters">
+            <div class="panel-heading"><h3>Consulta por período · Finanças e Contabilidade</h3><span class="tag-soft">M11 · NÃO ALTERA A CARREIRA</span></div>
             <div class="filter-fields">
               <div><label for="finance-scope">Estabelecimento ou grupo</label><select id="finance-scope"><option value="all">Grupo consolidado</option></select></div>
               <div><label for="finance-period">Tipo de consulta</label><select id="finance-period">
@@ -1116,16 +1131,38 @@ button.v221-hud-cell:hover{background:#1e4254}
             <div class="filter-action-row"><button type="button" id="finance-current-date" class="btn btn-outline">Usar data atual do jogo</button><span class="muted">O filtro não muda quando você avança os dias.</span></div>
             <p id="finance-validation" class="finance-validation" aria-live="polite" hidden></p>
             <p id="finance-period-label" class="field-hint" aria-live="polite">Escolha a data ou competência que deseja consultar.</p>
-          </article><div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3 id="finance-statement-title">Resumo realizado</h3><span class="tag-soft">M11 · LEDGER</span></div><div class="statement-switch" role="group" aria-label="Demonstrativos contábeis"><button type="button" data-statement-view="summary" aria-pressed="true">Resumo</button><button type="button" data-statement-view="dre" aria-pressed="false">DRE</button><button type="button" data-statement-view="balance" aria-pressed="false">Balanço</button><button type="button" data-statement-view="cash" aria-pressed="false">Caixa</button><button type="button" data-statement-view="check" aria-pressed="false">Conferência</button></div><dl class="finance-list" id="finance-summary"></dl><p id="finance-statement-note" class="field-hint" aria-live="polite">Demonstrações gerenciais: tributos apenas quando efetivamente simulados e contabilizados.</p><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Na hipótese fiscal habilitada, a despesa simulada será apresentada separadamente.</p></div><p class="muted">Fluxos do período filtrado e separados por unidade; saldos de estoque e obrigações são acumulados até o encerramento. O caixa não é repartido artificialmente entre filiais: somente a consulta consolidada exibe o saldo compartilhado.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div>
-          <details class="market-drawer finance-drawer"><summary>▥ Projeções e estratégia <span>Cenários hipotéticos, não lançamentos</span></summary><article class="panel strategy-panel"><div class="panel-heading"><h3>Gestão estratégica e equilíbrio econômico</h3><span class="tag-soft">V1.4 · ANÁLISE E PROJEÇÃO</span></div>
+          </article></div>
+<div class="v23-subpane" id="v23-pane-administrativo-financas" role="tabpanel" data-section-pane="administrativo:financas" aria-labelledby="v23-tab-administrativo-financas"><div class="view-toolbar"><span>FINANÇAS · TESOURARIA</span><button type="button" class="btn btn-outline" data-section-go="administrativo:contabilidade">Demonstrativos contábeis ↗</button></div>
+<article class="panel admin-treasury" aria-labelledby="treasury-heading">
+<div class="panel-heading"><h3 id="treasury-heading">Tesouraria e fluxo de caixa realizado</h3><span class="tag-soft">REGISTROS DO JOGO</span></div>
+<p class="muted">Fluxo financeiro, obrigações e disponibilidades provenientes do mesmo livro contábil. Filiais possuem resultados e fluxos atribuíveis, mas não contas bancárias independentes.</p>
+<p class="field-hint" id="treasury-period-label">Selecione um período acima.</p>
+<div class="admin-treasury-kpis">
+<div><small>Caixa final do grupo</small><strong id="treasury-cash">—</strong></div>
+<div><small>Entradas do período</small><strong id="treasury-inflows">—</strong></div>
+<div><small>Saídas do período</small><strong id="treasury-outflows">—</strong></div>
+<div><small>Variação de caixa</small><strong id="treasury-net">—</strong></div>
+<div><small>Obrigações operacionais</small><strong id="treasury-payable">—</strong></div>
+<div><small>Tributos simulados a pagar</small><strong id="treasury-tax">—</strong></div>
+<div><small>Mercadorias em trânsito (ativo)</small><strong id="treasury-transit">—</strong></div>
+</div>
+<div class="dashboard-grid"><div><h4>Entradas e saídas por natureza</h4><dl class="finance-list" id="treasury-categories"></dl></div>
+<div><h4>Receita e resultado operacional</h4><dl class="finance-list" id="treasury-performance"></dl></div></div>
+<p id="treasury-scope-note" class="field-hint">Caixa e tributos do grupo não são rateados entre filiais.</p></article>
+<div class="admin-department-links"><button type="button" class="btn btn-outline" data-section-go="administrativo:contabilidade">Abrir DRE, balanço, razão e conciliação</button><button type="button" class="btn btn-outline" data-section-go="administrativo:fiscal">Ver tributos simulados</button></div>
+<details class="market-drawer finance-drawer"><summary>▥ Projeções e estratégia <span>Cenários hipotéticos, não lançamentos</span></summary><article class="panel strategy-panel"><div class="panel-heading"><h3>Gestão estratégica e equilíbrio econômico</h3><span class="tag-soft">V1.4 · ANÁLISE E PROJEÇÃO</span></div>
             <p class="muted">Resultados realizados vêm exclusivamente do livro contábil. Projeções são cenários hipotéticos, não lançamentos. A projeção estratégica considera a unidade ativa e o caixa compartilhado atual, sem projetar simultaneamente as demais unidades; não é uma projeção consolidada da rede. Esses cenários não realizam novas compras nem liquidam obrigações existentes. Não gera lançamentos.</p>
             <div class="strategy-controls"><label for="strategy-horizon">Horizonte de projeção (dias)</label><select id="strategy-horizon"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select></div>
             <div id="strategy-metrics" class="strategy-metrics" aria-live="polite"><p class="muted">Abra uma empresa para gerar indicadores.</p></div>
             <div class="table-scroll"><table class="strategy-table"><thead><tr><th>Tipo de custo / resultado</th><th>Realizado: últimos 30 dias encerrados</th><th>Projeção: horizonte escolhido</th></tr></thead><tbody id="strategy-cost-rows"></tbody></table></div>
             <div id="strategy-risks" class="strategy-risks" aria-live="polite"></div>
             <p class="field-hint">Ponto de equilíbrio estimado = despesa operacional fixa diária ÷ margem de contribuição média do mix, sem impostos. Capital de giro gerencial = caixa + estoque + trânsito + recebíveis − obrigações. A previsão respeita estoque atual e entregas já pagas; não prevê novas compras, crédito, tributos ou alterações futuras da concorrência. Saldo positivo não é promessa de liquidez.</p>
-          </article></details>
-        </div><div class="v23-subpane" id="v23-pane-administrativo-rh-dp" role="tabpanel" data-section-pane="administrativo:rh-dp" aria-labelledby="v23-tab-administrativo-rh-dp" hidden><article class="panel v23-pending" role="note"><div class="panel-heading"><h3>Recursos Humanos / DP</h3><span class="tag-soft">EM PREPARAÇÃO</span></div><p>Estrutura futura. Funcionários, salários e encargos não são simulados nesta etapa.</p><p class="field-hint">Nenhum dado ou movimento fictício é criado nesta seção.</p></article></div><div class="v23-subpane" id="v23-pane-administrativo-contabilidade" role="tabpanel" data-section-pane="administrativo:contabilidade" aria-labelledby="v23-tab-administrativo-contabilidade" hidden><article class="panel v23-pending" role="note"><div class="panel-heading"><h3>Contabilidade</h3><span class="tag-soft">EM PREPARAÇÃO</span></div><p>DRE, balanço e conciliação permanecem acessíveis em Finanças até o Patch V2.3-D.</p><p class="field-hint">Nenhum dado ou movimento fictício é criado nesta seção.</p></article><button type="button" class="btn btn-outline v23-link" data-section-go="administrativo:financas">Consultar demonstrativos em Finanças</button></div><div class="v23-subpane" id="v23-pane-administrativo-fiscal" role="tabpanel" data-section-pane="administrativo:fiscal" aria-labelledby="v23-tab-administrativo-fiscal" hidden>
+          </article></details></div>
+<div class="v23-subpane" id="v23-pane-administrativo-rh-dp" role="tabpanel" data-section-pane="administrativo:rh-dp" aria-labelledby="v23-tab-administrativo-rh-dp" hidden><article class="panel v23-pending" role="note"><div class="panel-heading"><h3>Recursos Humanos / DP</h3><span class="tag-soft">EM PREPARAÇÃO</span></div><p>Departamento reservado: sem cadastro de empregados, salários, folha, vínculos ou encargos trabalhistas. Nenhum registro econômico será criado.</p><p class="field-hint">Nenhum dado ou movimento fictício é criado nesta seção.</p></article></div><div class="v23-subpane" id="v23-pane-administrativo-contabilidade" role="tabpanel" data-section-pane="administrativo:contabilidade" aria-labelledby="v23-tab-administrativo-contabilidade" hidden>
+<div class="view-toolbar"><span>CONTABILIDADE · DEMONSTRATIVOS E RAZÃO</span><button type="button" class="btn btn-outline" data-section-go="administrativo:financas">Ver Finanças ↗</button></div>
+<p class="field-hint">DRE gerencial, balanço consolidado, conciliação e razão do mesmo livro contábil. Os filtros de período acima são compartilhados com Finanças, sem duplicação de demonstrativos.</p>
+<div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3 id="finance-statement-title">Resumo realizado</h3><span class="tag-soft">M11 · LEDGER</span></div><div class="statement-switch" role="group" aria-label="Demonstrativos contábeis"><button type="button" data-statement-view="summary" aria-pressed="true">Resumo</button><button type="button" data-statement-view="dre" aria-pressed="false">DRE</button><button type="button" data-statement-view="balance" aria-pressed="false">Balanço</button><button type="button" data-statement-view="cash" aria-pressed="false">Caixa</button><button type="button" data-statement-view="check" aria-pressed="false">Conferência</button></div><dl class="finance-list" id="finance-summary"></dl><p id="finance-statement-note" class="field-hint" aria-live="polite">Demonstrações gerenciais: tributos apenas quando efetivamente simulados e contabilizados.</p><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Na hipótese fiscal habilitada, a despesa simulada será apresentada separadamente.</p></div><p class="muted">Fluxos do período filtrado e separados por unidade; saldos de estoque e obrigações são acumulados até o encerramento. O caixa não é repartido artificialmente entre filiais: somente a consulta consolidada exibe o saldo compartilhado.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div></div>
+<div class="v23-subpane" id="v23-pane-administrativo-fiscal" role="tabpanel" data-section-pane="administrativo:fiscal" aria-labelledby="v23-tab-administrativo-fiscal" hidden>
           <div class="view-toolbar"><span>ADMINISTRATIVO / FISCAL</span><button type="button" class="btn btn-outline" data-tab="financas">← Voltar às finanças</button></div>
           <article class="panel fiscal-panel"><span class="fiscal-icon">§</span><div>
             <div class="overline">V1.9 · SIMULAÇÃO TRIBUTÁRIA EDUCATIVA</div>
@@ -1157,7 +1194,7 @@ button.v221-hud-cell:hover{background:#1e4254}
             <p id="fiscal-transition-note" class="field-hint"></p>
             <p class="field-hint">Em 2026, CBS 0,9% e IBS 0,1% são parâmetros informativos do ano-teste; não geram obrigação nem saída de caixa. Para 2027–2033, a linha do tempo é educativa e não calcula tributos exigíveis. O Simples integrado e a opção pelo recolhimento regular de IBS/CBS não são duplicados ou simulados.</p>
           </article>
-        </div><div class="v23-subpane" id="v23-pane-administrativo-paralegal" role="tabpanel" data-section-pane="administrativo:paralegal" aria-labelledby="v23-tab-administrativo-paralegal" hidden><article class="panel v23-pending" role="note"><div class="panel-heading"><h3>Paralegal</h3><span class="tag-soft">EM PREPARAÇÃO</span></div><p>Estrutura futura. CNPJs, inscrições, licenças e atos societários não são simulados nesta etapa.</p><p class="field-hint">Nenhum dado ou movimento fictício é criado nesta seção.</p></article></div></section>
+        </div><div class="v23-subpane" id="v23-pane-administrativo-paralegal" role="tabpanel" data-section-pane="administrativo:paralegal" aria-labelledby="v23-tab-administrativo-paralegal" hidden><article class="panel v23-pending" role="note"><div class="panel-heading"><h3>Paralegal</h3><span class="tag-soft">EM PREPARAÇÃO</span></div><p>Departamento reservado: sem CNPJ, inscrições, licenças, alvarás, atos societários ou taxas simuladas. Filiais são apenas centros de resultado.</p><p class="field-hint">Nenhum dado ou movimento fictício é criado nesta seção.</p></article></div></section>
 <section data-view="sistema" class="view" hidden>
           <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Salvamento e recuperação</h3><span class="tag-soft">M05</span></div><p class="muted">O backup JSON é o método portátil recomendado, especialmente ao atualizar o HTML no Windows.</p><div class="button-stack"><button class="btn btn-primary" type="button" id="export-btn">Exportar minha carreira (.json)</button><button class="btn btn-outline" type="button" id="import-btn">Importar carreira (.json)</button><button class="btn btn-outline" type="button" id="new-career-btn">Começar uma nova carreira</button></div><p class="field-hint" id="autosave-label">Verificando salvamento local…</p></article>
           <article class="panel"><div class="panel-heading"><h3>Diagnóstico e integridade</h3><span class="tag-soft">M06</span></div><dl class="detail-list" id="diagnostic-details"></dl><button class="btn btn-outline spaced" id="run-diagnostic" type="button">Executar verificação</button><p class="field-hint" id="diagnostic-result">—</p></article></div>
@@ -2958,6 +2995,31 @@ function bindRestock(){
     $('strategy-risks').innerHTML=risks.length?risks.map(x=>`<p>${escape(x)}</p>`).join(''):'<p>Sem alertas adicionais nos parâmetros desta projeção hipotética.</p>';
   }
   /* V2.0: fragmento de visualização, incorporado à mesma closure pelo build. */
+  // Demonstrativo financeiro puro: compara o livro do mesmo recorte, sem novos lançamentos.
+  function renderTreasury(report,q,params){
+    const flow=Core.cashFlowStatement(state,q.period,params.date,params.range,financeScope);
+    const group=financeScope==='all';
+    setText('treasury-period-label',report.label+' · '+(group?'grupo consolidado':'contribuição da unidade '+financeScope)+' · até '+BRDate(report.effectiveEnd));
+    const numbers={'treasury-cash':flow.closingCash,'treasury-inflows':flow.inflows,'treasury-outflows':flow.outflows,'treasury-net':flow.netCash,
+      'treasury-payable':report.closingPayable,'treasury-tax':group?report.closingTaxPayable:null,'treasury-transit':report.closingInTransit};
+    for(const [id,value] of Object.entries(numbers))setText(id,value===null?'Somente grupo':Core.money(value));
+    const cat=flow.categories;
+    const categories=[
+      ['Receitas de vendas efetivamente recebidas',cat.sales],['Aportes de capital',cat.capital],
+      ['Outras entradas',cat.unclassifiedIn],['Pagamentos a fornecedores',cat.suppliers],
+      ['Despesas operacionais pagas',cat.operating],['Custos de abertura pagos',cat.opening],
+      ['Tributos simulados pagos',cat.taxPayments],['Outras saídas',cat.unclassifiedOut]
+    ];
+    $('treasury-categories').innerHTML=categories.map(([title,value])=>'<dt>'+escape(title)+'</dt><dd>'+escape(Core.money(value))+'</dd>').join('');
+    $('treasury-performance').innerHTML=[
+      ['Receita reconhecida no período',report.revenue],['CMV do período',report.cogs],
+      ['Despesas operacionais reconhecidas',report.expenses],['Resultado operacional antes dos tributos',report.revenue-report.cogs-report.expenses]
+    ].map(([title,value])=>'<dt>'+escape(title)+'</dt><dd>'+escape(Core.money(value))+'</dd>').join('');
+    setText('treasury-scope-note',group?
+      'Saldo e fluxo do grupo conciliados pelo razão: '+(flow.reconciled?'SIM':'VERIFICAR')+'. Tributos apresentados apenas se simulados e contabilizados.':
+      'A unidade contribui para entradas e saídas do caixa centralizado. Não existe saldo individual; tributos simulados não são rateados.');
+  }
+
   function renderFinances(){
     if(!state)return;
     const q=ensureFinanceQuery();
@@ -2981,6 +3043,9 @@ function bindRestock(){
       setText('finance-period-label','Corrija o período selecionado para consultar o demonstrativo.');
       $('finance-summary').innerHTML='';setText('finance-statement-note','Selecione um período válido para consultar os demonstrativos.');setText('journal-count','—');
       $('journal-events').innerHTML='<p class="muted">Período inválido. Nenhum dado foi alterado.</p>';
+      setText('treasury-period-label','Corrija o período selecionado.');
+      for(const id of ['treasury-cash','treasury-inflows','treasury-outflows','treasury-net','treasury-payable','treasury-tax','treasury-transit'])setText(id,'—');
+      $('treasury-categories').innerHTML='';$('treasury-performance').innerHTML='';
       return;
     }
     setText('finance-period-label',`${report.label} · ${financeScope==='all'?'GRUPO CONSOLIDADO':`UNIDADE ${financeScope}`} · lançamentos até ${BRDate(report.effectiveEnd)}. Consulta fixa até você alterar os filtros.`);
@@ -3050,6 +3115,7 @@ function bindRestock(){
     setText('finance-statement-note',note);
     setText('journal-count',`${report.entries.length} registros`);
     $('journal-events').innerHTML=report.entries.length?report.entries.slice(-8).reverse().map(j=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(j.memo)}</p><small>${escape(BRDate(j.date))} · ${escape(j.id)}</small></div></div>`).join(''):'<p class="muted">Nenhum lançamento neste período.</p>';
+    renderTreasury(report,q,financeQueryDate(q));
     renderStrategy();
   }
   function renderFiscal(){
@@ -3093,10 +3159,14 @@ function bindRestock(){
   }
   // Rotas anteriores de Finanças e Fiscal permanecem compatíveis.
   function goto(name,requestedSection=null){
-    const aliases={financas:['administrativo','financas'],fiscal:['administrativo','fiscal']};
+    const aliases={financas:['administrativo','financas'],fiscal:['administrativo','fiscal'],contabilidade:['administrativo','contabilidade']};
     const [root,section]=aliases[name]||[name,requestedSection];
     if(!['cidade','empresa','mercado','administrativo','sistema'].includes(root))return;
     if(section&&Object.prototype.hasOwnProperty.call(activeSection,root)&&document.querySelector('[data-section-pane="'+root+':'+section+'"]'))activeSection[root]=section;
+    if(root==='administrativo'&&activeSection.administrativo==='contabilidade'&&
+       (statementView==='summary'||statementView==='cash'))statementView='dre';
+    const sharedFilters=$('admin-shared-filters');
+    if(sharedFilters)sharedFilters.hidden=!(root==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo));
     tab=root;
     document.body.classList.toggle('v221-city-mode',!!state?.player?.cityId&&root==='cidade');
     document.querySelectorAll('.view[data-view]').forEach(el=>{const chosen=el.dataset.view===root;el.hidden=!chosen;el.classList.toggle('active',chosen);});
@@ -3196,7 +3266,7 @@ function bindRestock(){
       updateBuyPreview();
     }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('your-current-price','—');setText('competitor-price','—');setText('buy-total','—');}
     renderCommerce();renderPriceHistory();
-    if((tab==='administrativo'&&activeSection.administrativo==='financas')||financeQuery)renderFinances();
+    if((tab==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo))||financeQuery)renderFinances();
     renderFiscal();
     const report=Core.diagnostics(state);
     $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal',state.fiscal.coverageStatus]].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');

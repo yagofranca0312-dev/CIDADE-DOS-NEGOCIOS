@@ -37,7 +37,7 @@ test('V2.0 importa save genuíno da V1.9 sem migração, retrabalho nem correç�
 test('V2.0 navegação tem quatro áreas e comandos fiscais/backup ficam acessíveis',()=>{
  const template=readFileSync('src/shell/index.template.html','utf8');
  const nav=template.match(/<nav class="nav-items nav-primary"[\s\S]*?<\/nav>/)?.[0];assert.ok(nav);
- assert.deepEqual([...nav.matchAll(/data-tab="([^"]+)"/g)].map(x=>x[1]),['cidade','empresa','mercado','financas']);
+ assert.deepEqual([...nav.matchAll(/data-tab="([^"]+)"/g)].map(x=>x[1]),['cidade','empresa','mercado','administrativo']);
  assert.match(template,/data-tab="fiscal"/);assert.match(template,/data-tab="sistema"/);
  assert.match(template,/id="map-lot-status"/);assert.match(template,/class="world-drawer"/);
  assert.match(template,/id="map-canvas"/);assert.match(template,/id="fiscal-activate"/);

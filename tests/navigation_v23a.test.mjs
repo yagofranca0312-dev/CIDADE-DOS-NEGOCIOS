@@ -76,3 +76,7 @@ test('V2.3-A build offline contém script compilável e módulo fiscal',()=>{
   assert.match(built,/data-section-pane="administrativo:fiscal"/);
   assert.match(built,/const VERSION = '2\.2\.1'/);
 });
+
+test('V2.3-A: Gerenciar do mapa abre diretamente Minhas Empresas',()=>{
+ assert.match(app,/\$\('map-open-company'\)\.addEventListener\('click',[\s\S]*?goto\('empresa','minhas-empresas'\)/);
+});

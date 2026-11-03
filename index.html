@@ -2808,7 +2808,7 @@ const CidadeTianguaCena=(()=>{
       const t=button.dataset.v221Time;const target=t==='play'?'pause-btn':t==='1'?'next-day':t==='7'?'next-week':'next-month';
       $(target).click();$('v221-time-menu').hidden=true;$('v221-hud-time').setAttribute('aria-expanded','false');
     });
-    $('map-open-company').addEventListener('click',()=>{const owner=Core.businesses(state).find(x=>x.cityId===viewCityId&&x.lot===selectedLot);if(owner&&business()?.id!==owner.id)commit('EMPRESA.ATIVAR',{businessId:owner.id});goto('empresa');if(!owner)$('sector-select').focus();});
+    $('map-open-company').addEventListener('click',()=>{const owner=Core.businesses(state).find(x=>x.cityId===viewCityId&&x.lot===selectedLot);if(owner&&business()?.id!==owner.id)commit('EMPRESA.ATIVAR',{businessId:owner.id});goto('empresa','minhas-empresas');if(!owner)$('sector-select').focus();});
     $('sector-select').addEventListener('change',updateOpenPreview);
     $('open-form').addEventListener('submit',e=>{e.preventDefault();if(!state)return;if(commit('EMPRESA.ABRIR',{sector:$('sector-select').value,cityId:viewCityId,lot:selectedLot}))goto('cidade');});
     $('buy-quantity').addEventListener('input',updateBuyPreview);

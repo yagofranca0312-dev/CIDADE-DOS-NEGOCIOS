@@ -2,8 +2,8 @@
 
 **Base:** `v2.3.0-alpha.2` publicada na main; snapshot `releases/v2.3.0-alpha.2-patch-b-publicada`.  
 **Branch:** `feature/v2.3-c-dashboard-empresas`.  
-**Estado:** candidata com CI PASS, autorizada para implantação na main como prévia de teste, ainda NÃO HOMOLOGADA funcionalmente.  
-**Identificador exibido:** `v2.3.0-alpha.2` durante teste; Patch C não foi versionado definitivamente.  
+**Estado:** homologação expressamente solicitada pelo jogador em 03/11/2026; versão intermediária 2.3.0-alpha.3, condicionada ao CI de versionamento.  
+**Identificador exibido após publicação:** `v2.3.0-alpha.3`. A V2.3.0 definitiva depende do Patch D.  
 **Save:** schema 9 preservado; nenhum campo persistente adicionado.
 
 ## Entrega C

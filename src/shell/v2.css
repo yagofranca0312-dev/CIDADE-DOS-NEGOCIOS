@@ -203,3 +203,30 @@ body {background:var(--v2-void);background-image:radial-gradient(ellipse at 70% 
 .restock-table td:first-child{white-space:normal;min-width:180px}
 .restock-inventory-action{display:flex;justify-content:flex-start;margin:10px 0 15px}
 @media(max-width:800px){.restock-controls{grid-template-columns:minmax(0,1fr)}.restock-choice button{flex:1 1 150px}.restock-assistant{min-width:0}.restock-table{min-width:780px}}
+
+/* V2.3-C: paineis empresariais históricos, leitura sem alterações do save. */
+.company-kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;margin:15px 0}
+.company-metric{border:1px solid #41677b;background:linear-gradient(140deg,#1d4055,#102d41);border-radius:12px;padding:14px 16px;min-width:0}
+.company-metric small{display:block;color:#a9d1df;font-size:.72rem;line-height:1.35;min-height:28px}
+.company-metric strong{display:block;font-size:clamp(1rem,1.35vw,1.32rem);margin-top:7px;color:#f5ddab;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.company-alert{border:1px solid #41677b;border-radius:9px;background:#143347;color:#cde1eb;padding:12px;margin:12px 0;font-size:.84rem}
+.company-quick-actions{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.company-quick-actions button{min-height:42px}
+.company-filter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:14px 0}
+.company-filter-grid>div{min-width:0}
+.company-filter-grid label{display:block;font-size:.78rem;color:#e3f1f6;font-weight:700;margin:0 0 6px}
+.company-filter-grid input,.company-filter-grid select{display:block;width:100%;min-height:42px;min-width:0}
+.company-unit-location{display:block;color:#9dc3d3;margin-top:5px}
+.company-unit-filters{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.company-custom-dates[hidden]{display:none!important}
+.company-error{background:#56302c;color:#ffe4d7;border:1px solid #aa7564;border-radius:9px;padding:12px}
+.company-error[hidden]{display:none!important}
+.company-section-heading{color:#f5dfa9;font-size:.95rem;margin:20px 0 10px}
+.company-trend-table{min-width:570px}
+.company-trend-table td:nth-child(2){width:28%;min-width:110px}
+.company-bar{height:13px;border:1px solid #376378;border-radius:7px;background:#123347;overflow:hidden}
+.company-bar span{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#3b9b9a,#ecc578)}
+.company-comparison-table{min-width:780px}
+.company-comparison,.company-analysis{padding:18px}
+@media(max-width:800px){.company-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.company-metric{padding:12px}.company-filter-grid{grid-template-columns:repeat(auto-fit,minmax(155px,1fr))}.company-comparison,.company-analysis{padding:14px}.company-quick-actions button{flex:1 1 145px}}
+@media(max-width:360px){.company-kpi-grid,.company-filter-grid{grid-template-columns:minmax(0,1fr)}}

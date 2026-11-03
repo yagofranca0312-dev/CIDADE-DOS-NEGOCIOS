@@ -1,6 +1,17 @@
-# 🏙️ Cidade dos Negócios — Edição 2.2
+# 🏙️ Cidade dos Negócios — Edição 2.2.1
 
-**Versão candidata publicada:** `2.2.0-rc.1` — INTEGRADA À `main` pela PR #15 (merge `1078dbaa`), com CI PASS de 174/174 testes e build HTML reproduzível. Aguardando QA visual no navegador, validação Windows e homologação de Yago. **Save schema:** 9, sem migração; HTML único offline. O motor V2.1 permanece idêntico exceto identificador de versão. A V2.1 continua HOMOLOGADA e congelada na branch `releases/v2.1.0-homologada`.
+**Versão homologada:** `2.2.1` — aceite expresso de Yago em 02/11/2026. O mapa original de Tianguá, a seleção corrigida do lote 03, as fachadas dinâmicas, a legenda real e a responsividade para smartphone foram integrados à `main` pelo PR #17 e aprovados pelo titular. **Save schema:** 9, sem migração. O motor econômico e fiscal foi preservado; mudou somente seu identificador de versão. Snapshot de homologação: `releases/v2.2.1-homologada`. A validação nativa de persistência em Windows `file://` não foi comprovada por teste automatizado.
+
+## V2.2.1 — Tianguá pré-renderizada e responsiva
+
+- Arte isométrica **original aprovada**, 18 terrenos interativos e destaque de seleção sem invasão da fachada do lote 03.
+- Mercado, padaria e roupas vinculados a unidades realmente abertas pelo motor; placa dinâmica no prédio pré-renderizado do lote 03, sprites nos demais.
+- HUD com valores efetivos da simulação, aviso educativo, legenda de lotes e empresas por município e botão opcional **Ampliar mapa** no celular.
+- Quatro abas principais: Cidade, Empresas, Mercado e Finanças. Outras 29 cidades mantêm o cenário anterior.
+- **190 testes automatizados** na revisão de UX aprovada, com build HTML offline reproduzível; homologação documental em [HOMOLOGACAO_V221.md](docs/HOMOLOGACAO_V221.md).
+
+---
+
 
 ## V2.2 — Cidade viva, edifícios e ambientação (exclusivamente visual)
 

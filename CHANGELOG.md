@@ -1,5 +1,17 @@
 # Histórico de versões — Cidade dos Negócios
 
+## 2.3.0 — Homologação final do ciclo A–D (03/11/2026)
+
+- **Patch A — Navegação:** Cidade, Empresas, Mercado e Administrativo, 13 subáreas e atalhos legados preservados.
+- **Patch B — Mercado:** reposição inteligente com modos crítico/ideal/personalizado, compras multi-SKU, comparação de fornecedores, ajuste opcional ao caixa e confirmação explícita.
+- **Patch C — Empresas:** Dashboard e gestão de unidades; análises e comparativos por período, cidade, ramo e unidade.
+- **Patch D — Administrativo:** Finanças com tesouraria/fluxo de caixa; Contabilidade com DRE/balanço/razão/conciliação; Fiscal preservado; RH/DP e Paralegal informativos sem simulações fictícias.
+- Homologação **expressamente solicitada pelo titular** nesta conversa após implantação do Patch D. Isso constitui autorização de release; não comprova execução independente de todos os cenários manuais no Windows.
+- Regras econômicas e fiscais do motor preservadas em A–D (exceto identificador técnico VERSION). Caixa e tributos consolidados não são distribuídos artificialmente entre filiais.
+- Formato de save **schema 9** preservado; funcionamento offline em HTML único. CI completo e reprodutibilidade obrigatórios antes da publicação.
+- **Snapshot homologado:** releases/v2.3.0-homologada, criado após merge e CI da main. V2.3.0 não engloba a reforma tributária ampliada (reservada para V3.0).
+
+
 ## 2.3.0-alpha.3 — Patch C homologado pelo jogador (03/11/2026)
 
 - Dashboard empresarial: receita, margem, resultado operacional e após tributos, estoque, alertas e tributos do grupo.

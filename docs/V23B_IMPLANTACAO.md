@@ -26,3 +26,8 @@ Rodar npm run check (197 testes legados + novos testes B), conferir build reprod
 ## Próximas entregas
 
 A versão intermediária de teste 2.3.0-alpha.2 pode ser instalada pelo atualizador normal. Após aceite, registrar homologação funcional. Patch C trará dashboards de Empresas; Patch D concluirá Administrativo e integração V2.3.0.
+
+
+## Encerramento do ciclo (03/11/2026)
+
+O status acima registra a etapa histórica de prévia alpha.2; **a V2.3.0 completa foi aprovada posteriormente pelo titular**, abrangendo o Patch B em conjunto com A, C e D. Não há evidência documentada de teste manual isolado do Patch B; a homologação final é aceite formal do ciclo.

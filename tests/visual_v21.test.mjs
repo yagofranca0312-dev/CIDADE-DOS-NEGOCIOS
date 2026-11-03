@@ -48,6 +48,6 @@ test('CSS acessibilidade e versão sincronizada, sem depender de fontes externas
  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
  assert.match(css,/max-width:800px/);assert.match(css,/max-width:430px/);
  for(const id of ['intro-version','build-version','footer-version'])assert.ok(template.includes(`id="${id}">v2.2.1<`));
- assert.match(template,/<title>Cidade dos Negócios 1 · v2\.2\.0-rc\.1<\/title>/);
+ assert.match(template,/<title>Cidade dos Negócios 1 · v2\.2\.1<\/title>/);
  assert.doesNotMatch(html,/<script[^>]+src=/i);assert.doesNotMatch(html,/<link[^>]+stylesheet/i);
 });

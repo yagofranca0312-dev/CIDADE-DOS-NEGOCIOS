@@ -1,5 +1,17 @@
 # Histórico de versões — Cidade dos Negócios
 
+## 2.3.0-alpha.1 — Patch A homologado pelo jogador (02/11/2026)
+
+- Navegação principal em quatro áreas: Cidade, Empresas, Mercado e Administrativo.
+- Menus internos: 4 subáreas em Empresas, 4 em Mercado e 5 departamentos em Administrativo.
+- Fiscal integrado ao Administrativo; controles e avisos existentes mantidos. Atalhos legados preservados.
+- Menu adaptado para dispositivos móveis; componentes e formulários operacionais preservados.
+- Aceite prático do jogador em Windows em 02/11/2026, após instalação isolada e teste do Patch A.
+- Motor econômico, regras fiscais e contábeis inalterados (exceto VERSION); schema 9 e saves preservados.
+- **Escopo:** homologação intermediária do Patch A. A V2.3.0 final depende da conclusão de B, C e D.
+- **Publicação normal:** após CI e integração à main; snapshot estável específico do Patch A.
+
+
 ## 2.1.0-rc.1 — identidade visual e clareza de jogo (02/11/2026)
 
 - Logotipo SVG, favicon offline e arte da referência KEYART otimizada e incorporada.

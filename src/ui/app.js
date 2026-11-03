@@ -8,6 +8,7 @@
   const KEY='cidade-dos-negocios-save-v1';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
   let inspectorOpen=false; // interface somente, nunca persistido
+  const activeSection={empresa:'dashboard',mercado:'compras',administrativo:'financas'}; // somente UI, fora do save
   let mapZoomed=false; // visão ampliada opcional; não altera o save
   let financeQuery=null,strategyHorizon=30,financeScope='all',statementView='summary'; // preferências de interface, independentes do GameState
   const business=()=>state?Core.activeBusiness(state):null;
@@ -53,6 +54,7 @@
     }));
     if(![...finance.options].some(o=>o.value===scope))financeScope='all';finance.value=financeScope;
     setText('group-count',`${group.count}/5 estabelecimentos`);
+    setText('v23a-dashboard-count',`${group.count}/5 estabelecimentos`);
     setText('group-available-cash',Core.money(group.group.cash));
     setText('group-operating-result',Core.money(group.group.profit));
     const rows=group.units.map(u=>`<tr><td><strong>${escape(u.id)}</strong> · ${escape(Core.SECTORS[u.sector].name)}<br><small>${escape(u.city)} · lote ${u.lot}</small></td><td>${escape(Core.money(u.revenue))}</td><td>${escape(Core.money(u.profit))}</td><td>${u.stock}</td><td><button type="button" class="btn btn-outline" data-unit-activate="${escape(u.id)}" ${u.id===active?.id?'disabled':''}>${u.id===active?.id?'Ativa':'Gerenciar'}</button></td></tr>`).join('');
@@ -124,9 +126,20 @@
     notify(result.message);
     return true;
   }
-  function goto(name){tab=name;document.body.classList.toggle('v221-city-mode',!!state?.player?.cityId&&name==='cidade');document.querySelectorAll('[data-view]').forEach(el=>{const chosen=el.getAttribute('data-view')===name;el.hidden=!chosen;el.classList.toggle('active',chosen);});document.querySelectorAll('[data-tab]').forEach(el=>{const active=el.dataset.tab===(name==='fiscal'?'financas':name);el.classList.toggle('active',active);if(el.classList.contains('nav-item')){if(active)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');}});
-    const labels={cidade:['CENTRAL DE OPERAÇÕES','A sua cidade, as suas decisões.','Explore lotes comerciais e acompanhe os acontecimentos.'],empresa:['GESTÃO EMPRESARIAL','Cada escolha constrói um negócio.','Abra sua empresa e tome decisões de administração.'],mercado:['VENDAS E SUPRIMENTOS','Preço, demanda e estoque.','Compre mercadorias e encontre sua estratégia de preço.'],financas:['INDICADORES CONTÁBEIS','Os números contam sua história.','Acompanhe lançamentos e resultados rastreáveis.'],fiscal:['CENÁRIOS TRIBUTÁRIOS','A estratégia também considera tributos.','Simulação opcional com limitações e regras por competência.'],sistema:['PERSISTÊNCIA E QA','Seu progresso, sua segurança.','Faça backups e confira o estado da simulação.']};
-    const info=labels[name]||labels.cidade;setText('page-kicker',info[0]);setText('page-title-text',info[1]);setText('page-subtitle',info[2]);
+  // Rotas anteriores de Finanças e Fiscal permanecem compatíveis.
+  function goto(name,requestedSection=null){
+    const aliases={financas:['administrativo','financas'],fiscal:['administrativo','fiscal']};
+    const [root,section]=aliases[name]||[name,requestedSection];
+    if(!['cidade','empresa','mercado','administrativo','sistema'].includes(root))return;
+    if(section&&Object.prototype.hasOwnProperty.call(activeSection,root)&&document.querySelector('[data-section-pane="'+root+':'+section+'"]'))activeSection[root]=section;
+    tab=root;
+    document.body.classList.toggle('v221-city-mode',!!state?.player?.cityId&&root==='cidade');
+    document.querySelectorAll('.view[data-view]').forEach(el=>{const chosen=el.dataset.view===root;el.hidden=!chosen;el.classList.toggle('active',chosen);});
+    document.querySelectorAll('.nav-primary [data-tab]').forEach(el=>{const chosen=el.dataset.tab===root;el.classList.toggle('active',chosen);if(chosen)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');});
+    document.querySelectorAll('[data-section-pane]').forEach(el=>{const [area,sub]=el.dataset.sectionPane.split(':');el.hidden=!(area===root&&activeSection[area]===sub);});
+    document.querySelectorAll('[data-section-tab]').forEach(el=>{const [area,sub]=el.dataset.sectionTab.split(':');const chosen=activeSection[area]===sub;el.classList.toggle('active',chosen);el.setAttribute('aria-selected',String(chosen));el.tabIndex=chosen?0:-1;});
+    const labels={cidade:['CENTRAL DE OPERAÇÕES','A sua cidade, as suas decisões.','Explore lotes comerciais e acompanhe os acontecimentos.'],empresa:['GESTÃO EMPRESARIAL','Sua rede em um só lugar.','Dashboard, estabelecimentos e análises da carreira.'],mercado:['CENTRAL OPERACIONAL','Compre, abasteça e venda.','Compras, estoque, vendas e ferramentas comerciais.'],administrativo:['GESTÃO ADMINISTRATIVA','Os departamentos da sua rede.','Finanças, RH/DP, Contabilidade, Fiscal e Paralegal.'],sistema:['PERSISTÊNCIA E QA','Seu progresso, sua segurança.','Faça backups e confira o estado da simulação.']};
+    const info=labels[root];setText('page-kicker',info[0]);setText('page-title-text',info[1]);setText('page-subtitle',info[2]);
     if(state)render();
     window.scrollTo({top:0,behavior:'instant'});
   }
@@ -217,7 +230,7 @@
       updateBuyPreview();
     }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('your-current-price','—');setText('competitor-price','—');setText('buy-total','—');}
     renderCommerce();renderPriceHistory();
-    if(tab==='financas'||financeQuery)renderFinances();
+    if((tab==='administrativo'&&activeSection.administrativo==='financas')||financeQuery)renderFinances();
     renderFiscal();
     const report=Core.diagnostics(state);
     $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal',state.fiscal.coverageStatus]].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
@@ -265,6 +278,16 @@
     $('career-form').addEventListener('submit',e=>{e.preventDefault();const name=$('player-name').value,companyName=$('company-name').value,cityId=$('start-city').value;commit('CARREIRA.CRIAR',{name,companyName,cityId,seed:(Date.now()>>>0)});});
     for(const button of document.querySelectorAll('[data-tab]'))button.addEventListener('click',()=>goto(button.dataset.tab));
     for(const button of document.querySelectorAll('[data-go]'))button.addEventListener('click',()=>goto(button.dataset.go));
+    for(const button of document.querySelectorAll('[data-section-tab]')){
+      button.addEventListener('click',()=>goto(...button.dataset.sectionTab.split(':')));
+      button.addEventListener('keydown',e=>{
+        if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;
+        const list=[...button.parentElement.querySelectorAll('[data-section-tab]')],ix=list.indexOf(button),step=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;
+        const next=e.key==='Home'?list[0]:e.key==='End'?list.at(-1):list[(ix+step+list.length)%list.length];
+        if(next){e.preventDefault();next.focus();next.click();}
+      });
+    }
+    for(const button of document.querySelectorAll('[data-section-go]'))button.addEventListener('click',()=>goto(...button.dataset.sectionGo.split(':')));
     $('unit-switch').addEventListener('change',e=>{if(e.target.value)commit('EMPRESA.ATIVAR',{businessId:e.target.value});});
     $('finance-scope').addEventListener('change',e=>{financeScope=e.target.value;renderFinances();});
     $('fiscal-acknowledge').addEventListener('change',()=>{$('fiscal-activate').disabled=!$('fiscal-acknowledge').checked;});
@@ -301,7 +324,7 @@
       const t=button.dataset.v221Time;const target=t==='play'?'pause-btn':t==='1'?'next-day':t==='7'?'next-week':'next-month';
       $(target).click();$('v221-time-menu').hidden=true;$('v221-hud-time').setAttribute('aria-expanded','false');
     });
-    $('map-open-company').addEventListener('click',()=>{const owner=Core.businesses(state).find(x=>x.cityId===viewCityId&&x.lot===selectedLot);if(owner&&business()?.id!==owner.id)commit('EMPRESA.ATIVAR',{businessId:owner.id});goto('empresa');if(!owner)$('sector-select').focus();});
+    $('map-open-company').addEventListener('click',()=>{const owner=Core.businesses(state).find(x=>x.cityId===viewCityId&&x.lot===selectedLot);if(owner&&business()?.id!==owner.id)commit('EMPRESA.ATIVAR',{businessId:owner.id});goto('empresa','minhas-empresas');if(!owner)$('sector-select').focus();});
     $('sector-select').addEventListener('change',updateOpenPreview);
     $('open-form').addEventListener('submit',e=>{e.preventDefault();if(!state)return;if(commit('EMPRESA.ABRIR',{sector:$('sector-select').value,cityId:viewCityId,lot:selectedLot}))goto('cidade');});
     $('buy-quantity').addEventListener('input',updateBuyPreview);

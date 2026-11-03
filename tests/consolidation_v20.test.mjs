@@ -18,9 +18,9 @@ function career(C,{extra=false,tax=false}={}){
  return s;
 }
 test('V2.0 motor mantém código e regras V1.9 idênticos, exceto versão exibida',()=>{
- const normCore=text=>text.replace('/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.2.1 */','/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.9.0-rc.1 */').replace("const VERSION = '2.2.1';","const VERSION = '1.9.0-rc.1';");
+ const normCore=text=>text.replace('/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.3.0-alpha.1 */','/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.9.0-rc.1 */').replace("const VERSION = '2.3.0-alpha.1';","const VERSION = '1.9.0-rc.1';");
  assert.equal(normCore(readFileSync('src/core/game.js','utf8')),readFileSync('tests/fixtures/core_v1_9_0.js','utf8'));
- assert.equal(now.SCHEMA_VERSION,9);assert.equal(now.VERSION,'2.2.1');
+ assert.equal(now.SCHEMA_VERSION,9);assert.equal(now.VERSION,'2.3.0-alpha.1');
 });
 test('V2.0 e V1.9 produzem mesma rede, estoque, balanço, caixa e RNG',()=>{
  for(const opts of [{},{extra:true},{tax:true}]){
@@ -37,7 +37,7 @@ test('V2.0 importa save genuíno da V1.9 sem migração, retrabalho nem correç�
 test('V2.0 navegação tem quatro áreas e comandos fiscais/backup ficam acessíveis',()=>{
  const template=readFileSync('src/shell/index.template.html','utf8');
  const nav=template.match(/<nav class="nav-items nav-primary"[\s\S]*?<\/nav>/)?.[0];assert.ok(nav);
- assert.deepEqual([...nav.matchAll(/data-tab="([^"]+)"/g)].map(x=>x[1]),['cidade','empresa','mercado','financas']);
+ assert.deepEqual([...nav.matchAll(/data-tab="([^"]+)"/g)].map(x=>x[1]),['cidade','empresa','mercado','administrativo']);
  assert.match(template,/data-tab="fiscal"/);assert.match(template,/data-tab="sistema"/);
  assert.match(template,/id="map-lot-status"/);assert.match(template,/class="world-drawer"/);
  assert.match(template,/id="map-canvas"/);assert.match(template,/id="fiscal-activate"/);

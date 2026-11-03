@@ -1,6 +1,6 @@
 {
   "sceneId": "CE-TIANGUA",
-  "version": "v2.2.1-prerender-rc.1",
+  "version": "v2.2.1",
   "baseScene": "urban-base.webp",
   "sprites": {
     "mercado": "mercado.webp",
@@ -11,8 +11,8 @@
     1536,
     664
   ],
-  "status": "PENDING_USER_VISUAL_ACCEPTANCE",
-  "notes": "Arte-base idêntica à imagem previamente aprovada; imóvel 03 é parte do cenário original e recebe placa dinâmica após abertura real. Outros ramos usam sprites. QA visual e Windows pendentes.",
+  "status": "HOMOLOGATED",
+  "notes": "Imagem-base original do protótipo aprovada por Yago em 02/11/2026; o prédio do lote 03 faz parte do fundo e recebe placa dinâmica após abertura real. Os outros lotes usam sprites por ramo. Teste nativo no Windows via file:// e persistência local não foram comprovados neste ambiente.",
   "urban-base.webp": {
     "size": 550922,
     "sha256": "e71547eb5962ff09ad13f8fed8c07468dd4bbcf0bf1a1e576b37d778119e9aa6"

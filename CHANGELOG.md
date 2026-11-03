@@ -1,5 +1,16 @@
 # Histórico de versões — Cidade dos Negócios
 
+## 2.3.0-alpha.2 — Patch B versionado, disponível para teste (03/11/2026)
+
+- Reposição Inteligente em Mercado > Compras: críticos, meta ideal e seleção personalizada.
+- Comparação de fornecedores, pedido multi-SKU confirmado e ajuste opcional ao caixa.
+- Sem compras automáticas não confirmadas; estoque em trânsito e limites considerados.
+- 205 testes automatizados PASS, zero falhas; HTML offline reproduzível, CI do Patch B.
+- Schema 9; motor econômico, contabilidade e fiscal preservados, salvo número de versão.
+- NÃO HOMOLOGADO funcionalmente no Windows: publicado para teste do jogador, aguardando aceite.
+- Patch C segue em branch própria; V2.3.0 final depende de C e D.
+
+
 ## 2.3.0-alpha.1 — Patch A homologado pelo jogador (02/11/2026)
 
 - Navegação principal em quatro áreas: Cidade, Empresas, Mercado e Administrativo.

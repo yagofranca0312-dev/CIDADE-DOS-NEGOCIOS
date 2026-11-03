@@ -2,7 +2,7 @@
 
 **Base:** `v2.3.0-alpha.2` publicada na main; snapshot `releases/v2.3.0-alpha.2-patch-b-publicada`.  
 **Branch:** `feature/v2.3-c-dashboard-empresas`.  
-**Estado:** candidata em branch isolada, ainda não homologada.  
+**Estado:** candidata com CI PASS, autorizada para implantação na main como prévia de teste, ainda NÃO HOMOLOGADA funcionalmente.  
 **Identificador exibido:** `v2.3.0-alpha.2` durante teste; Patch C não foi versionado definitivamente.  
 **Save:** schema 9 preservado; nenhum campo persistente adicionado.
 

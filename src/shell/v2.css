@@ -230,3 +230,20 @@ body {background:var(--v2-void);background-image:radial-gradient(ellipse at 70% 
 .company-comparison,.company-analysis{padding:18px}
 @media(max-width:800px){.company-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.company-metric{padding:12px}.company-filter-grid{grid-template-columns:repeat(auto-fit,minmax(155px,1fr))}.company-comparison,.company-analysis{padding:14px}.company-quick-actions button{flex:1 1 145px}}
 @media(max-width:360px){.company-kpi-grid,.company-filter-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* V2.3-D — tesouraria e contabilidade em departamentos reais. */
+.admin-shared-filters{min-width:0}
+.admin-shared-filters[hidden]{display:none!important}
+.admin-treasury{padding:19px;margin-bottom:16px}
+.admin-treasury-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;margin:15px 0}
+.admin-treasury-kpis>div{min-width:0;background:#153449;border:1px solid #41687d;border-radius:11px;padding:13px 15px}
+.admin-treasury-kpis small{display:block;color:#a8cbd8;font-size:.73rem;min-height:30px}
+.admin-treasury-kpis strong{display:block;color:#ffe0ab;font-size:clamp(1rem,1.5vw,1.27rem);margin-top:7px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.admin-treasury h4{font-size:.9rem;color:#ebd69f;margin:10px 0}
+.admin-treasury .dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+.admin-treasury .finance-list{min-width:0}
+.admin-department-links{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0 17px}
+.admin-department-links .btn{min-height:44px}
+.v23-subpane[data-section-pane="administrativo:contabilidade"] .dashboard-grid{gap:14px}
+@media(max-width:800px){.admin-treasury{padding:14px}.admin-treasury .dashboard-grid{grid-template-columns:1fr}.admin-treasury-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:360px){.admin-treasury-kpis{grid-template-columns:1fr}}

@@ -13,8 +13,8 @@ test('JavaScript do HTML compilado tem sintaxe válida',()=>{assert.doesNotThrow
 test('Módulos e pontos de entrada presentes',()=>{for(const token of ['const CidadeCore','dispatch(','exportSave(','importSave(','diagnostics(','svgMap('])assert.ok(scripts[0][2].includes(token),token);});
 test('Aviso de cobertura fiscal explícita',()=>{assert.match(html,/Cenários tributários não são apuração legal/);assert.match(html,/NOT_COVERED/);});
 test('Build reproduzível byte a byte',()=>{
- const template=readFileSync('src/shell/index.template.html','utf8'),css=readFileSync('src/shell/theme.css','utf8'),v2css=readFileSync('src/shell/v2.css','utf8'),core=readFileSync('src/core/game.js','utf8'),visual=readFileSync('src/visual/city-scene.js','utf8'),ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/restock-views.part.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
- const uiBundle=readFileSync('src/ui/app.js','utf8').replace('/* CDN_RESTOCK_VIEWS */',readFileSync('src/ui/restock-views.part.js','utf8')).replace('/* CDN_MARKET_VIEWS */',readFileSync('src/ui/market-views.part.js','utf8')).replace('/* CDN_FINANCE_VIEWS */',readFileSync('src/ui/finance-views.part.js','utf8'));
+ const template=readFileSync('src/shell/index.template.html','utf8'),css=readFileSync('src/shell/theme.css','utf8'),v2css=readFileSync('src/shell/v2.css','utf8'),core=readFileSync('src/core/game.js','utf8'),visual=readFileSync('src/visual/city-scene.js','utf8'),ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/company-views.part.js','utf8')+readFileSync('src/ui/restock-views.part.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
+ const uiBundle=readFileSync('src/ui/app.js','utf8').replace('/* CDN_COMPANY_VIEWS */',readFileSync('src/ui/company-views.part.js','utf8')).replace('/* CDN_RESTOCK_VIEWS */',readFileSync('src/ui/restock-views.part.js','utf8')).replace('/* CDN_MARKET_VIEWS */',readFileSync('src/ui/market-views.part.js','utf8')).replace('/* CDN_FINANCE_VIEWS */',readFileSync('src/ui/finance-views.part.js','utf8'));
  const art='data:image/webp;base64,'+readFileSync('src/visual/keyart-v21.webp.b64','utf8').trim();
  const v21css=readFileSync('src/shell/v21.css','utf8').replace('__CDN_V21_KEYART__',art);
  const scene=readFileSync('src/visual/tiangua-scene.js','utf8')
@@ -28,7 +28,7 @@ test('Build reproduzível byte a byte',()=>{
 });
 
 test('V2.2: lote selecionado continua sinalizado, com 18 controles e sem rótulos concorrentes',()=>{
- const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/restock-views.part.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
+ const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/company-views.part.js','utf8')+readFileSync('src/ui/restock-views.part.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
  const visual=readFileSync('src/visual/city-scene.js','utf8');
  assert.match(visual,/const chosen=Number\.isInteger\(lot\)/);
  assert.match(visual,/class="v22-lot /);
@@ -39,7 +39,7 @@ test('V2.2: lote selecionado continua sinalizado, com 18 controles e sem rótulo
 
 test('Hotfix: preço próprio visível, concorrente independente e confirmação da mudança',()=>{
  const template=readFileSync('src/shell/index.template.html','utf8');
- const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/restock-views.part.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
+ const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/company-views.part.js','utf8')+readFileSync('src/ui/restock-views.part.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
  assert.match(template,/id="your-current-price"/);
  assert.match(template,/id="competitor-price"/);
  assert.match(template,/id="price-change-feedback"/);
@@ -57,7 +57,7 @@ test('V1.3: schema 5 com migração da V1 e formato de exportação validado',()
 
 test('V1.1: controles de quantidade, recortes financeiros e histórico de preços presentes',()=>{
  const template=readFileSync('src/shell/index.template.html','utf8');
- const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/restock-views.part.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
+ const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/company-views.part.js','utf8')+readFileSync('src/ui/restock-views.part.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
  for(const v of ['10','50','100','250'])assert.match(template,new RegExp(`data-buy-preset="${v}"`));
  for(const id of ['finance-period','finance-date','finance-period-label','price-history'])assert.ok(template.includes(`id="${id}"`));
  assert.match(ui,/renderPriceHistory\(\)/);

@@ -19,6 +19,7 @@
     select.replaceChildren(...products.map(p=>{const option=document.createElement('option');option.value=p.id;option.textContent=p.name;return option;}));
     if(products.some(p=>p.id===previous))select.value=previous;
   }
+  /* CDN_COMPANY_VIEWS */
   /* CDN_RESTOCK_VIEWS */
   /* CDN_MARKET_VIEWS */
   const setText=(id,value)=>{const el=$(id);if(el)el.textContent=String(value)};
@@ -222,6 +223,7 @@
     setText('city-events','');$('city-events').innerHTML=eventsHTML(state.audit.events.slice(-6).reverse());
     $('company-empty').hidden=units.length>=5;$('company-active').hidden=!b;
     renderGroup();
+    renderCompanyPanels();
     setText('company-status',b?'EM OPERAÇÃO':'NÃO INAUGURADA');
     $('buy-form').querySelector('button').disabled=!b;$('price-form').querySelector('button').disabled=!b;
     if(b){const s=Core.SECTORS[b.sector];setText('company-glyph',s.glyph);setText('company-title',`${state.player.companyName} · ${b.id} · ${s.name}`);setText('company-product',`${b.products.length} produto(s) cadastrados`);setText('company-location',`${Core.cityById(b.cityId).name} / ${Core.cityById(b.cityId).uf} · lote ${String(b.lot).padStart(2,'0')}`);setText('company-sold',b.totalSold);setText('company-price',Core.money(b.unitPrice));setText('company-payable',Core.money(info.payable));
@@ -300,6 +302,10 @@
       if(confirm(`Confirmar pagamento apenas SIMULADO da competência ${period}? Ele diminuirá o caixa do jogo.`))commit('FISCAL.PAGAR_SIMULADO',{period});});
 
     $('unit-rows').addEventListener('click',e=>{const btn=e.target.closest('[data-unit-activate]');if(btn)commit('EMPRESA.ATIVAR',{businessId:btn.dataset.unitActivate});});
+    for(const id of ['company-unit-city','company-unit-sector','company-analysis-scope','company-analysis-period','company-analysis-from','company-analysis-to','company-compare-dimension','company-compare-city','company-compare-sector','company-compare-period','company-compare-from','company-compare-to','company-compare-sort']){
+      $(id).addEventListener('change',()=>renderCompanyPanels());
+    }
+    $('company-unit-search').addEventListener('input',companyRenderUnitList);
     $('explore-city').addEventListener('change',e=>{viewCityId=e.target.value;inspectorOpen=false;render();updateOpenPreview();});
     $('v221-city-selector').addEventListener('change',e=>{viewCityId=e.target.value;inspectorOpen=false;$('v221-city-pick').hidden=true;render();});
     $('map-canvas').addEventListener('click',e=>{const target=e.target.closest('[data-lot]');if(target){selectedLot=Number(target.dataset.lot);inspectorOpen=true;render();updateOpenPreview();}});

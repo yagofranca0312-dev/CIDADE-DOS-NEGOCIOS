@@ -1,6 +1,6 @@
 {
   "name": "cidade-dos-negocios",
-  "version": "2.3.0-alpha.3",
+  "version": "2.3.0",
   "private": true,
   "type": "module",
   "description": "Cidade dos Negócios 2.2: simulador empresarial offline com cidade protagonista",

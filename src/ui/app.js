@@ -131,10 +131,14 @@
   }
   // Rotas anteriores de Finanças e Fiscal permanecem compatíveis.
   function goto(name,requestedSection=null){
-    const aliases={financas:['administrativo','financas'],fiscal:['administrativo','fiscal']};
+    const aliases={financas:['administrativo','financas'],fiscal:['administrativo','fiscal'],contabilidade:['administrativo','contabilidade']};
     const [root,section]=aliases[name]||[name,requestedSection];
     if(!['cidade','empresa','mercado','administrativo','sistema'].includes(root))return;
     if(section&&Object.prototype.hasOwnProperty.call(activeSection,root)&&document.querySelector('[data-section-pane="'+root+':'+section+'"]'))activeSection[root]=section;
+    if(root==='administrativo'&&activeSection.administrativo==='contabilidade'&&
+       (statementView==='summary'||statementView==='cash'))statementView='dre';
+    const sharedFilters=$('admin-shared-filters');
+    if(sharedFilters)sharedFilters.hidden=!(root==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo));
     tab=root;
     document.body.classList.toggle('v221-city-mode',!!state?.player?.cityId&&root==='cidade');
     document.querySelectorAll('.view[data-view]').forEach(el=>{const chosen=el.dataset.view===root;el.hidden=!chosen;el.classList.toggle('active',chosen);});
@@ -234,7 +238,7 @@
       updateBuyPreview();
     }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('your-current-price','—');setText('competitor-price','—');setText('buy-total','—');}
     renderCommerce();renderPriceHistory();
-    if((tab==='administrativo'&&activeSection.administrativo==='financas')||financeQuery)renderFinances();
+    if((tab==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo))||financeQuery)renderFinances();
     renderFiscal();
     const report=Core.diagnostics(state);
     $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal',state.fiscal.coverageStatus]].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');

@@ -134,3 +134,14 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - Job de build do HTML único e `git diff --exit-code -- index.html` concluídos com sucesso; artefato HTML de **394.165 bytes**, SHA-256 `ac741cab5e79d13a7decb02e7331a776fcd816af08dd2ebc0bf9d7db6dc9cd9b`.
 - **Não homologada**: QA visual em navegador real, performance em hardware de referência e validação nativa no Windows (`file://`, importação/exportação e persistência após reinício) ainda dependem de evidência observável e aceite expresso do jogador.
 - V2.1 HOMOLOGADA permanece preservada na branch `releases/v2.1.0-homologada`, commit `645467b0`. V2.2 preserva schema 9 e motor de regras salvo VERSION.
+
+
+## Estado 02/11/2026 — V2.3 PATCH A HOMOLOGADO PELO JOGADOR
+
+- V2.3 organizada em quatro patches internos A–D, com versão final `2.3.0` reservada ao ciclo completo.
+- Patch A: quatro abas principais (Cidade, Empresas, Mercado, Administrativo); 13 subáreas internas, com atalhos antigos preservados.
+- **Aceite funcional expresso no Windows** em 02/11/2026, após instalação isolada e teste do jogador.
+- **Versão intermediária:** `2.3.0-alpha.1`. Publicação pela `main` após CI, para permitir `ATUALIZAR_E_JOGAR.bat` normalmente.
+- **Motor:** nenhuma mudança de regras econômicas, contábeis ou fiscais; schema 9 preservado. `VERSION` atualizado somente para identificar a entrega.
+- Próximo passo: **Patch B — Mercado e Reposição Inteligente**; Patch C — Empresas; Patch D — Administrativo e integração final.
+- A homologação do Patch A não é a homologação da V2.3.0 final.

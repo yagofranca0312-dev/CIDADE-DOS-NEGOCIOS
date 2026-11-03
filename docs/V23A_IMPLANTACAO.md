@@ -2,8 +2,8 @@
 
 **Origem:** `releases/v2.2.1-homologada` (`9fbdc2446584c58c4171ebd6db3deaa7ec7c7a7e`).  
 **Branch:** `feature/v2.3-a-navegacao`.  
-**Status:** desenvolvimento candidato; **não homologado**, sem integração à `main`.  
-**Identificação do motor:** `2.2.1` durante os patches; novo número de versão apenas na candidata integrada `v2.3.0-rc.1`.
+**Status:** aceito e homologado funcionalmente pelo jogador em Windows; versão intermediária `2.3.0-alpha.1` aprovada para publicação na `main` após CI. A V2.3.0 final depende dos patches B–D.  
+**Identificação do motor:** `2.3.0-alpha.1` para o Patch A; `schemaVersion=9` preservado. Próximo patch receberá seu próprio identificador pré-final.
 
 ## Mudanças
 
@@ -17,8 +17,8 @@
 
 ## Preservação técnica
 
-`src/core/game.js` não foi modificado. `schemaVersion=9`, contabilidade, RNG, regras fiscais, lançamentos e saves não foram alterados. Versão de produto ainda 2.2.1 até fechamento do ciclo V2.3.
+`src/core/game.js` não foi modificado. `schemaVersion=9`, contabilidade, RNG, regras fiscais, lançamentos e saves não foram alterados. Versão de produto `2.3.0-alpha.1` para a entrega intermediária. Não equivale à homologação final `2.3.0`.
 
 ## Testes/gates
 
-Executar `npm run check`, testar 13 subáreas e quatro destinos principais, navegação legada, compra, preço, abertura, Fiscal, filtros, backup JSON e responsividade. A suíte automatizada não prova persistência nativa Windows `file://`; teste prático pendente. **Sem homologação/merge sem autorização expressa.**
+Executar `npm run check`, testar 13 subáreas e quatro destinos principais, navegação legada, compra, preço, abertura, Fiscal, filtros, backup JSON e responsividade. A suíte automatizada não prova persistência nativa Windows `file://`; teste prático pendente. **Homologação funcional e pedido de publicação expressos pelo titular em 02/11/2026.** Merge condicionado a CI PASS; integração final V2.3.0 continua exigindo homologação separada.

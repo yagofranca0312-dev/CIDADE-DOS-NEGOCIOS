@@ -1,4 +1,29 @@
 /* V2.0: fragmento de visualização, incorporado à mesma closure pelo build. */
+  // Demonstrativo financeiro puro: compara o livro do mesmo recorte, sem novos lançamentos.
+  function renderTreasury(report,q,params){
+    const flow=Core.cashFlowStatement(state,q.period,params.date,params.range,financeScope);
+    const group=financeScope==='all';
+    setText('treasury-period-label',report.label+' · '+(group?'grupo consolidado':'contribuição da unidade '+financeScope)+' · até '+BRDate(report.effectiveEnd));
+    const numbers={'treasury-cash':flow.closingCash,'treasury-inflows':flow.inflows,'treasury-outflows':flow.outflows,'treasury-net':flow.netCash,
+      'treasury-payable':report.closingPayable,'treasury-tax':group?report.closingTaxPayable:null,'treasury-transit':report.closingInTransit};
+    for(const [id,value] of Object.entries(numbers))setText(id,value===null?'Somente grupo':Core.money(value));
+    const cat=flow.categories;
+    const categories=[
+      ['Receitas de vendas efetivamente recebidas',cat.sales],['Aportes de capital',cat.capital],
+      ['Outras entradas',cat.unclassifiedIn],['Pagamentos a fornecedores',cat.suppliers],
+      ['Despesas operacionais pagas',cat.operating],['Custos de abertura pagos',cat.opening],
+      ['Tributos simulados pagos',cat.taxPayments],['Outras saídas',cat.unclassifiedOut]
+    ];
+    $('treasury-categories').innerHTML=categories.map(([title,value])=>'<dt>'+escape(title)+'</dt><dd>'+escape(Core.money(value))+'</dd>').join('');
+    $('treasury-performance').innerHTML=[
+      ['Receita reconhecida no período',report.revenue],['CMV do período',report.cogs],
+      ['Despesas operacionais reconhecidas',report.expenses],['Resultado operacional antes dos tributos',report.revenue-report.cogs-report.expenses]
+    ].map(([title,value])=>'<dt>'+escape(title)+'</dt><dd>'+escape(Core.money(value))+'</dd>').join('');
+    setText('treasury-scope-note',group?
+      'Saldo e fluxo do grupo conciliados pelo razão: '+(flow.reconciled?'SIM':'VERIFICAR')+'. Tributos apresentados apenas se simulados e contabilizados.':
+      'A unidade contribui para entradas e saídas do caixa centralizado. Não existe saldo individual; tributos simulados não são rateados.');
+  }
+
   function renderFinances(){
     if(!state)return;
     const q=ensureFinanceQuery();
@@ -22,6 +47,9 @@
       setText('finance-period-label','Corrija o período selecionado para consultar o demonstrativo.');
       $('finance-summary').innerHTML='';setText('finance-statement-note','Selecione um período válido para consultar os demonstrativos.');setText('journal-count','—');
       $('journal-events').innerHTML='<p class="muted">Período inválido. Nenhum dado foi alterado.</p>';
+      setText('treasury-period-label','Corrija o período selecionado.');
+      for(const id of ['treasury-cash','treasury-inflows','treasury-outflows','treasury-net','treasury-payable','treasury-tax','treasury-transit'])setText(id,'—');
+      $('treasury-categories').innerHTML='';$('treasury-performance').innerHTML='';
       return;
     }
     setText('finance-period-label',`${report.label} · ${financeScope==='all'?'GRUPO CONSOLIDADO':`UNIDADE ${financeScope}`} · lançamentos até ${BRDate(report.effectiveEnd)}. Consulta fixa até você alterar os filtros.`);
@@ -91,6 +119,7 @@
     setText('finance-statement-note',note);
     setText('journal-count',`${report.entries.length} registros`);
     $('journal-events').innerHTML=report.entries.length?report.entries.slice(-8).reverse().map(j=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(j.memo)}</p><small>${escape(BRDate(j.date))} · ${escape(j.id)}</small></div></div>`).join(''):'<p class="muted">Nenhum lançamento neste período.</p>';
+    renderTreasury(report,q,financeQueryDate(q));
     renderStrategy();
   }
   function renderFiscal(){

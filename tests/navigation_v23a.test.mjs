@@ -37,7 +37,8 @@ test('V2.3-A preserva os formulários e relatórios existentes sem duplicação'
 test('V2.3-A expõe placeholders verdadeiros sem simular RH ou Paralegal',()=>{
   assert.match(template,/Funcionários, salários e encargos não são simulados/);
   assert.match(template,/CNPJs, inscrições, licenças e atos societários não são simulados/);
-  assert.match(template,/até o Patch V2\.3-D/);
+  assert.match(template,/data-section-pane="administrativo:contabilidade"/);
+  assert.match(template,/DRE gerencial, balanço consolidado, conciliação e razão/);
 });
 
 test('V2.3-A executa o roteamento legado e subáreas sem alterar estado econômico',()=>{

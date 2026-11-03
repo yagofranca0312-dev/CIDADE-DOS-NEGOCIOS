@@ -8,6 +8,7 @@
   const KEY='cidade-dos-negocios-save-v1';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
   let inspectorOpen=false; // interface somente, nunca persistido
+  let restockDraft=null; // proposta de compra efêmera (não entra em saves)
   const activeSection={empresa:'dashboard',mercado:'compras',administrativo:'financas'}; // somente UI, fora do save
   let mapZoomed=false; // visão ampliada opcional; não altera o save
   let financeQuery=null,strategyHorizon=30,financeScope='all',statementView='summary'; // preferências de interface, independentes do GameState
@@ -18,6 +19,7 @@
     select.replaceChildren(...products.map(p=>{const option=document.createElement('option');option.value=p.id;option.textContent=p.name;return option;}));
     if(products.some(p=>p.id===previous))select.value=previous;
   }
+  /* CDN_RESTOCK_VIEWS */
   /* CDN_MARKET_VIEWS */
   const setText=(id,value)=>{const el=$(id);if(el)el.textContent=String(value)};
   function notify(message,isError=false){
@@ -122,7 +124,7 @@
     if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;financeScope='all';statementView='summary';}
     const result=Core.dispatch(state,{type,id:nextId(),payload});
     if(!result.ok){notify(result.error,true);return false;}
-    if(result.status==='APPLIED'){state=result.state;const chosen=business();if((type==='EMPRESA.ABRIR'||type==='EMPRESA.ATIVAR')&&chosen){viewCityId=chosen.cityId;selectedLot=chosen.lot;inspectorOpen=false;}else viewCityId=viewCityId??state.player.cityId;saveLocal();render();}
+    if(result.status==='APPLIED'){restockDraft=null;state=result.state;const chosen=business();if((type==='EMPRESA.ABRIR'||type==='EMPRESA.ATIVAR')&&chosen){viewCityId=chosen.cityId;selectedLot=chosen.lot;inspectorOpen=false;}else viewCityId=viewCityId??state.player.cityId;saveLocal();render();}
     notify(result.message);
     return true;
   }
@@ -258,7 +260,7 @@
     if(!file)return;
     if(file.size>25_000_000){notify('Save excede 25 MB.',true);return;}
     if(state?.player.cityId&&!confirm('Substituir a carreira atual pelo save importado? Recomendamos exportar antes.'))return;
-    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';saveLocal();render();notify(incoming.message);}
+    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;restockDraft=null;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';saveLocal();render();notify(incoming.message);}
     catch(e){notify(`Importação rejeitada: ${e.message}. A carreira anterior foi preservada.`,true);}
   }
   function launchAuto(){
@@ -363,6 +365,7 @@
       renderFinances();
     });
     $('regional-compare-city').addEventListener('change',()=>renderRegional(Core.cityById(viewCityId)||Core.CITIES[0]));
+    bindRestock();
     $('buy-form').addEventListener('submit',e=>{e.preventDefault();commit('ESTOQUE.COMPRAR',{productId:$('buy-product').value,supplierId:$('buy-supplier').value,quantity:Number($('buy-quantity').value)});});
     $('price-form').addEventListener('submit',e=>{e.preventDefault();const p=chooseProduct('price-product'),value=$('price-value').value,cents=Math.round(Number(value)*100),before=p?.priceCents;if(commit('PRECO.DEFINIR',{productId:p?.id,cents})){const after=business().products.find(x=>x.id===p.id).priceCents;const message=`Preço de ${p.name} atualizado: ${Core.money(before)} → ${Core.money(after)}.`;setText('price-change-feedback',message);notify(message);}});
     $('next-day').addEventListener('click',()=>commit('TEMPO.AVANCAR_DIA'));

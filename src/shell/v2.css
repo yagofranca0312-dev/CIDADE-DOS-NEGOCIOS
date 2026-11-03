@@ -186,3 +186,20 @@ body {background:var(--v2-void);background-image:radial-gradient(ellipse at 70% 
 .v23-pending{max-width:850px;padding:22px}.v23-pending h3{margin:0}.v23-link{margin-top:12px}.v23-subpane>.panel .group-highlights{margin-bottom:16px}
 @media(max-width:800px){.v23-subnav{gap:6px;margin:0 -2px 12px;padding-bottom:10px}.v23-subtab{min-height:46px;padding:10px 12px;font-size:.8rem}.v23-subpane{padding-bottom:15px}}
 @media(max-width:360px){.v23-subtab{font-size:.75rem;padding:9px 10px}}
+
+/* V2.3-B: pedido múltiplo assistido, sem mudar regras do motor econômico. */
+.restock-assistant{margin-bottom:18px;border:1px solid #567b8c}
+.restock-assistant .panel-heading{gap:8px;flex-wrap:wrap}
+.restock-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0}
+.restock-controls label{display:block;margin-bottom:6px;font-weight:700}
+.restock-controls select{width:100%;min-width:0}
+.restock-choice{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0;align-items:center}
+.restock-choice button{min-height:44px}
+.restock-info{font-size:.91rem;padding:11px 13px;border-radius:9px;border:1px solid #43677b;background:#102b3c;color:#e7edf4;margin:11px 0}
+.restock-check{display:flex;gap:7px;align-items:center;min-width:160px;cursor:pointer}
+.restock-check input{width:19px;height:19px;flex:none}
+.restock-table input[type="number"]{width:96px;max-width:none;min-height:42px;padding:6px 8px}
+.restock-table td{vertical-align:middle;white-space:nowrap}
+.restock-table td:first-child{white-space:normal;min-width:180px}
+.restock-inventory-action{display:flex;justify-content:flex-start;margin:10px 0 15px}
+@media(max-width:800px){.restock-controls{grid-template-columns:minmax(0,1fr)}.restock-choice button{flex:1 1 150px}.restock-assistant{min-width:0}.restock-table{min-width:780px}}

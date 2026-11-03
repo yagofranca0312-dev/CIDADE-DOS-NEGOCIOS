@@ -55,6 +55,7 @@
     setText('competitor-price',chosenPrice?Core.money(Math.round(Core.competitorReference(state,chosenPrice,Core.cityById(b.cityId)))):'—');
     if(chosenPrice&&document.activeElement!==$('price-value'))$('price-value').value=(chosenPrice.priceCents/100).toFixed(2);
     updateBuyPreview();
+    renderRestock();
   }
 
   let toastTimer;

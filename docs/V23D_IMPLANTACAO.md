@@ -2,8 +2,8 @@
 
 **Base:** V2.3.0-alpha.3 / Patch C homologado.  
 **Branch:** feature/v2.3-d-administrativo-departamentos.  
-**Status:** implementação isolada para teste, não homologada.  
-**Versão exibida nesta candidata:** 2.3.0-alpha.3 (motor preservado até fechamento final).  
+**Status histórico da candidata:** implementado, publicado para teste na main e posteriormente homologado por solicitação expressa do titular em 03/11/2026. Release final 2.3.0 após gate CI.  
+**Versão histórica da candidata:** 2.3.0-alpha.3; **versão final homologada:** 2.3.0.  
 **Save:** schema 9, sem migração.
 
 ## Distribuição efetiva
@@ -36,3 +36,8 @@
 7. Aceite explícito do titular antes da homologação final da V2.3.0.
 
 **Publicação de candidata para teste na main não significa homologação.**
+
+
+## Encerramento
+
+Homologação final do Patch D e do ciclo A–D expressamente autorizada em 03/11/2026. Nenhum dado de carreira foi migrado; schema 9 mantido. CI da candidata passou com 219/219 testes. A versão final precisa repetir o CI após o versionamento e a publicação. A autorização do titular não deve ser descrita como teste manual independente.

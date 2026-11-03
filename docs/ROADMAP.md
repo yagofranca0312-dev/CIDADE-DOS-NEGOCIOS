@@ -163,3 +163,12 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - Patch B segue com sua condição documental própria; o aceite do Patch C não comprova automaticamente testes manuais específicos do B.
 - Patch D: separar Finanças (tesouraria/fluxo), Contabilidade (DRE, balanço, razão, conciliação), Fiscal já existente e RH/DP e Paralegal declarativos (sem mecanismos simulados).
 - Concluir validação e homologação final V2.3.0 somente após entrega e teste explícito do Patch D.
+
+
+## 03/11/2026 — Homologação final V2.3.0 (ciclo A–D)
+
+- A homologação da V2.3.0 foi solicitada expressamente pelo titular após a publicação do Patch D para teste.
+- Versão final de release: **2.3.0**, preservando schema 9, motor econômico e Fiscal existente. O aceite desta etapa cobre o conjunto funcional A–D.
+- A implementação do Patch D distribui Finanças, Contabilidade, Fiscal, RH/DP e Paralegal sem criar dados econômicos fictícios.
+- Publicação depende de CI PASS, index.html reproduzível e registro em docs/HOMOLOGACAO_V230.md. Preservar snapshot releases/v2.3.0-alpha.3-patch-c-homologada.
+- **Não afirmar teste manual independente no Windows**, salvo evidência documentada. V3.0 permanece dedicada às regras tributárias ampliadas.

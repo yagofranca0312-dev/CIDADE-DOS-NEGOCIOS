@@ -154,3 +154,12 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - Publicação na main serve à atualização normal no Windows, NÃO equivale à homologação. Aguardar teste prático.
 - Patch C: Empresas (Dashboard, Minhas Empresas, Análises, Comparativos) em branch própria sobre versão intermediária.
 - Patch D: Administrativo e integração V2.3.0 final, ainda não implementado.
+
+
+## 03/11/2026 — Patch C homologado e Patch D em preparação
+
+- O jogador solicitou explicitamente homologar o Patch C e avançar ao D.
+- Identificador da homologação intermediária do Patch C: **2.3.0-alpha.3**, schema 9 e economia/fiscal preservados.
+- Patch B segue com sua condição documental própria; o aceite do Patch C não comprova automaticamente testes manuais específicos do B.
+- Patch D: separar Finanças (tesouraria/fluxo), Contabilidade (DRE, balanço, razão, conciliação), Fiscal já existente e RH/DP e Paralegal declarativos (sem mecanismos simulados).
+- Concluir validação e homologação final V2.3.0 somente após entrega e teste explícito do Patch D.

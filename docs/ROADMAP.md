@@ -145,3 +145,12 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - **Motor:** nenhuma mudança de regras econômicas, contábeis ou fiscais; schema 9 preservado. `VERSION` atualizado somente para identificar a entrega.
 - Próximo passo: **Patch B — Mercado e Reposição Inteligente**; Patch C — Empresas; Patch D — Administrativo e integração final.
 - A homologação do Patch A não é a homologação da V2.3.0 final.
+
+
+## Estado 03/11/2026 — V2.3 PATCH B VERSIONADO PARA TESTE
+
+- Identificador intermediário 2.3.0-alpha.2, sem alteração no schema 9 nem nas regras econômico-fiscais.
+- A PR #20 levou à main a candidata do Patch B; esta etapa apenas sincroniza o versionamento.
+- Publicação na main serve à atualização normal no Windows, NÃO equivale à homologação. Aguardar teste prático.
+- Patch C: Empresas (Dashboard, Minhas Empresas, Análises, Comparativos) em branch própria sobre versão intermediária.
+- Patch D: Administrativo e integração V2.3.0 final, ainda não implementado.

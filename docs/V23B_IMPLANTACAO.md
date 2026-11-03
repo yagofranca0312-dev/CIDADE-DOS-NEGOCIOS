@@ -2,8 +2,8 @@
 
 **Base:** main / Patch A homologado (v2.3.0-alpha.1; commit 399a37c9d03abbf884f599621f6b6744e054090b).
 **Branch:** feature/v2.3-b-reposicao-inteligente.
-**Estado:** candidata isolada, não homologada e não integrada à main.
-**Versão exibida:** v2.3.0-alpha.1 até homologação específica do Patch B.
+**Estado:** candidata testada no CI; versão 2.3.0-alpha.2 pronta para publicação na main exclusivamente para validação prática. NÃO HOMOLOGADA funcionalmente.
+**Versão exibida:** v2.3.0-alpha.2; versionamento técnico, não homologação.
 **Save:** schemaVersion 9 preservado.
 
 ## Escopo
@@ -21,8 +21,8 @@
 
 ## Gates
 
-Rodar npm run check (197 testes legados + novos testes B), conferir build reproduzível, validar compra múltipla atômica, limites, ausência de mutação durante proposta, caixa e recebimento. Teste Windows com file:// e persistência de carreira requer validação prática. Nenhuma publicação em main ou homologação sem aprovação do titular.
+Rodar npm run check (197 testes legados + novos testes B), conferir build reproduzível, validar compra múltipla atômica, limites, ausência de mutação durante proposta, caixa e recebimento. Teste Windows com file:// e persistência de carreira requer validação prática. Publicação na main autorizada para teste; homologação depende de aceite expresso posterior do titular.
 
 ## Próximas entregas
 
-Após aceite do Patch B, atualizar a versão intermediária e publicar para uso normal. Patch C trará dashboards de Empresas; Patch D concluirá Administrativo e integração V2.3.0.
+A versão intermediária de teste 2.3.0-alpha.2 pode ser instalada pelo atualizador normal. Após aceite, registrar homologação funcional. Patch C trará dashboards de Empresas; Patch D concluirá Administrativo e integração V2.3.0.

@@ -1,9 +1,9 @@
 # CIDADE DOS NEGÓCIOS — V2.2.1 — IMPLEMENTAÇÃO CANDIDATA / TIANGUÁ
 
 **Data:** 02/11/2026  
-**Estado:** IMPLANTAÇÃO TÉCNICA EM BRANCH, NÃO HOMOLOGADA. **GATE ARTÍSTICO G1/G2 NÃO APROVADO.**  
-**Branch:** `feature/v2.2.1-cidade-tiangua-prerender`  
-**Base:** V2.2.0-rc.1, `main` (schema 9). A versão do motor permanece `2.2.0-rc.1` até uma decisão posterior de lançamento.
+**Estado atual:** HOMOLOGADA POR ACEITE EXPRESSO DO TITULAR em 02/11/2026; as seções históricas abaixo descrevem fases anteriores superadas pelos patches de retomada e responsividade.  
+**Origem de implementação:** `feature/v2.2.1-cidade-tiangua-prerender`, PR #17 integrado à `main`.  
+**Versão final:** `2.2.1` no motor, pacote e HTML; `schemaVersion=9` preservado. **Snapshot de homologação:** `releases/v2.2.1-homologada`.
 
 ## O que já existe
 
@@ -74,3 +74,15 @@ Execute somente uma cópia separada do protótipo/jogo candidato. **Exporte o ba
 **Testes:** 190 testes Node (`npm run check`) aprovados, incluindo 4 verificações novas da UI. Validação em Chromium headless com largura 320, 390, 740 e 1536px (zero exceções JS no fluxo exercitado); ensaio de 3 aberturas reais no motor em 390, 740 e 1440px: Mercado lote 03, Padaria lote 14 e Roupas lote 18. Legenda `15 disponíveis / 3 empresas`, HUD `3/5`, patrimônio do jogo consistente. Panorama inicial sem scroll lateral de documento; zoom opcional amplia mapa para interação. Teste nativo `file://` no Windows e revisão visual do usuário continuam pendentes.
 
 **Regra de release:** permanecer em PR Draft até o usuário confirmar interface e comportamento no próprio computador. Nunca atualizar `main` automaticamente pela candidata.
+## Homologação definitiva — 02/11/2026
+
+**Aprovação:** Yago confirmou expressamente a revisão com correção do lote 03, restauração de aviso/legenda, adaptação mobile e edifícios por ramo; autorizou a implantação e, posteriormente, pediu a homologação e o versionamento final em `v2.2.1`.
+
+**Publicação funcional:** PR #17 integrado em `main`, merge `22dc447ae1b0d529e9c31cd2f346d2be952b8d79`.  
+**Publicação de versão:** PR de homologação posterior, elevando `VERSION`, `package.json`, tela, manifesto e testes para `2.2.1`.  
+**Testes:** suíte de 190 testes automatizados da UI aprovada; CI do versionamento deve confirmar novamente o build byte a byte antes do merge.  
+**Persistência:** manter `schemaVersion=9`, sem migração de saves ou mudança nas regras de gestão, RNG, fiscal e contabilidade.  
+**Escopo:** somente Tianguá recebe nova base pré-renderizada. Outras 29 cidades preservam fallback V2.2.  
+**Limite:** os testes automatizados/Chromium não comprovam Windows nativo `file://`; recomendar backup JSON antes de atualizar.
+
+**Homologada visualmente e funcionalmente pelo titular.** Os bloqueadores visuais listados nas fases preliminares acima foram tratados na sequência de retomada e na candidata aprovada; não são a condição atual da release.

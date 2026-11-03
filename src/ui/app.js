@@ -137,7 +137,7 @@
     if(section&&Object.prototype.hasOwnProperty.call(activeSection,root)&&document.querySelector('[data-section-pane="'+root+':'+section+'"]'))activeSection[root]=section;
     if(root==='administrativo'&&activeSection.administrativo==='contabilidade'&&
        (statementView==='summary'||statementView==='cash'))statementView='dre';
-    const sharedFilters=$('admin-shared-filters');
+    const sharedFilters=document.querySelector('#admin-shared-filters');
     if(sharedFilters)sharedFilters.hidden=!(root==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo));
     tab=root;
     document.body.classList.toggle('v221-city-mode',!!state?.player?.cityId&&root==='cidade');

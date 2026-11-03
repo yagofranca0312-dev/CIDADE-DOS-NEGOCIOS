@@ -1,5 +1,15 @@
 # Histórico de versões — Cidade dos Negócios
 
+## Patch C — candidata de interface, implantação para teste (03/11/2026)
+
+- Dashboard empresarial: receita, margem, resultado operacional e após tributos, estoque, alertas e tributos do grupo.
+- Minhas Empresas com busca e filtros por cidade e ramo, mantendo abertura, seleção e caixa compartilhado.
+- Análises realizadas: filtros por unidade, cidade, ramo e período; tendências por lançamentos.
+- Comparativos: unidade, cidade e ramo, com ordenação por receita, margem, resultado ou estoque.
+- Regras econômico-fiscais, compras do Patch B e save schema 9 intactos; nenhum rateio fictício de impostos/caixa por filial.
+- 212 testes automatizados aprovados na PR; candidata para atualização via main, ainda NÃO HOMOLOGADA pelo jogador.
+- Identificador de tela permanece 2.3.0-alpha.2 até futura homologação/versionamento específico do Patch C.
+
 ## 2.3.0-alpha.2 — Patch B versionado, disponível para teste (03/11/2026)
 
 - Reposição Inteligente em Mercado > Compras: críticos, meta ideal e seleção personalizada.

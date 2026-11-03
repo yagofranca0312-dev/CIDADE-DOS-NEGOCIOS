@@ -15,8 +15,8 @@ const city=old.CITIES.find(c=>c.name==='Tianguá').id;
 function dispatch(c,state,type,payload,id){const r=c.dispatch(state,{type,payload,id:`v21-golden-${id}`});assert.equal(r.ok,true,`${type}: ${r.error}`);return r.state;}
 function drive(c){let s=dispatch(c,null,'CARREIRA.CRIAR',{cityId:city,name:'Teste de Compatibilidade',companyName:'Rede Visual',seed:10540},1);s=dispatch(c,s,'EMPRESA.ABRIR',{cityId:city,sector:'mercado',lot:1},2);s=dispatch(c,s,'ESTOQUE.COMPRAR',{productId:'base',supplierId:'regional',quantity:80},3);s=dispatch(c,s,'TEMPO.AVANCAR_LOTE',{days:29},4);return s;}
 test('V2.2 preserva integralmente core V2.0, alterando apenas VERSION',()=>{
- const normalized=core.replaceAll('2.2.1','2.0.0-rc.1');
- assert.equal(normalized,baseline);assert.equal(now.SCHEMA_VERSION,9);assert.equal(now.VERSION,'2.2.1');
+ const normalized=core.replaceAll('2.3.0-alpha.1','2.0.0-rc.1');
+ assert.equal(normalized,baseline);assert.equal(now.SCHEMA_VERSION,9);assert.equal(now.VERSION,'2.3.0-alpha.1');
 });
 test('V2.0 vs V2.2 economia, rng, fiscal e razão invariáveis',()=>{
  const a=drive(old),b=drive(now);
@@ -47,7 +47,7 @@ test('Limite tributário permanece visível, com detalhe acessível',()=>{
 test('CSS acessibilidade e versão sincronizada, sem depender de fontes externas',()=>{
  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
  assert.match(css,/max-width:800px/);assert.match(css,/max-width:430px/);
- for(const id of ['intro-version','build-version','footer-version'])assert.ok(template.includes(`id="${id}">v2.2.1<`));
+ for(const id of ['intro-version','build-version','footer-version'])assert.ok(template.includes(`id="${id}">v2.3.0-alpha.1<`));
  assert.match(template,/<title>Cidade dos Negócios 1 · v2\.2\.1<\/title>/);
  assert.doesNotMatch(html,/<script[^>]+src=/i);assert.doesNotMatch(html,/<link[^>]+stylesheet/i);
 });

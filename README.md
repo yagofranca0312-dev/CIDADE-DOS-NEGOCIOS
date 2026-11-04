@@ -1,5 +1,16 @@
 # 🏙️ Cidade dos Negócios — Edição 2.2.1
 
+## Release estável 2.4.0 — ciclo administrativo A–C (04/11/2026)
+
+- **Paralegal (Patch A):** regularizações administrativas simuladas por unidade, taxas do jogo e calendário.
+- **RH/DP (Patch B):** funcionários fictícios por unidade, produtividade, folha mensal e pagamentos no caixa compartilhado.
+- **Fiscal Operacional (Patch C):** checklists e fechamentos administrativos mensais, com prazos exclusivamente fictícios; sem cálculos legais ou transmissão.
+- A versão **2.4.0** não acrescenta novas mecânicas em relação à `2.4.0-alpha.3`; promove apenas o identificador e a documentação após a homologação dos patches A, B e C.
+- `schemaVersion: 9` permanece, com salvamentos anteriores compatíveis. Faça backup JSON antes de atualizar com `ATUALIZAR_E_JOGAR.bat`.
+- Os controles fiscais do jogo **não** equivalem a obrigações ou recolhimentos reais; a hipótese tributária didática segue isolada.
+- Consulte `docs/HOMOLOGACAO_V240.md` para a trilha de aprovação e evidências de teste.
+
+
 **Versão homologada:** `2.2.1` — aceite expresso de Yago em 02/11/2026. O mapa original de Tianguá, a seleção corrigida do lote 03, as fachadas dinâmicas, a legenda real e a responsividade para smartphone foram integrados à `main` pelo PR #17 e aprovados pelo titular. **Save schema:** 9, sem migração. O motor econômico e fiscal foi preservado; mudou somente seu identificador de versão. Snapshot de homologação: `releases/v2.2.1-homologada`. A validação nativa de persistência em Windows `file://` não foi comprovada por teste automatizado.
 
 ## V2.2.1 — Tianguá pré-renderizada e responsiva

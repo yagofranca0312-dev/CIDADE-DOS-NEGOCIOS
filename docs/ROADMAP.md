@@ -182,3 +182,12 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - **Distinção de evidência:** aceite formal do jogador é registrado; nenhum teste manual Windows não documentado é declarado como executado.
 - A versão publicada e homologada permanece `2.4.0-alpha.3`. Os checklists fiscais são fictícios, não criam obrigação legal nem substituem apurações fiscais reais.
 - A atualização do registro de homologação é apenas documental; não altera `src/core/game.js`, `src/ui` ou `index.html`.
+
+
+## 04/11/2026 — Consolidação da V2.4.0 estável
+
+- Pedido expresso do titular: consolidar e homologar integralmente o ciclo V2.4 dos patches A (Paralegal), B (RH/DP) e C (Fiscal Operacional).
+- Base de código: `releases/v2.4.0-alpha.3-homologada`, commit `af3f58c4e611131b72ec5290be4fe32357c06780`.
+- Promoção de versão: `2.4.0-alpha.3` → `2.4.0` **sem alterações funcionais no motor ou na interface**, com `schemaVersion=9` preservado; testes de regressão e HTML offline revalidados na nova versão.
+- Homologação formal do titular autorizada em 04/11/2026. Evidência de QA Windows/browser real não documentada, portanto não presumida.
+- O artefato final deve ser preservado em `releases/v2.4.0-homologada`, após a confirmação do CI. Consulte `docs/HOMOLOGACAO_V240.md`.

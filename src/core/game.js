@@ -1,7 +1,7 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.4.0-alpha.3 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.4.0 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '2.4.0-alpha.3';
+  const VERSION = '2.4.0';
   const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;

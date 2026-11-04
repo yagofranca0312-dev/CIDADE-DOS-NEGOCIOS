@@ -18,7 +18,7 @@ function career(C,{extra=false,tax=false}={}){
  return s;
 }
 test('V2.4-A preserva schema 9 e mantém motor fiscal/contábil verificável',()=>{
- assert.equal(now.SCHEMA_VERSION,9);assert.equal(now.VERSION,'2.4.0-alpha.2');
+ assert.equal(now.SCHEMA_VERSION,9);assert.equal(now.VERSION,'2.4.0-alpha.3');
  assert.ok(now.PARALEGAL_SERVICES.cadastro);
  assert.equal(typeof now.balanceSheet,'function');assert.equal(typeof now.taxReport,'function');
 });

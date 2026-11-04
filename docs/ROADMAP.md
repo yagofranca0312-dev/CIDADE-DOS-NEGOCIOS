@@ -190,4 +190,4 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - Base de código: `releases/v2.4.0-alpha.3-homologada`, commit `af3f58c4e611131b72ec5290be4fe32357c06780`.
 - Promoção de versão: `2.4.0-alpha.3` → `2.4.0` **sem alterações funcionais no motor ou na interface**, com `schemaVersion=9` preservado; testes de regressão e HTML offline revalidados na nova versão.
 - Homologação formal do titular autorizada em 04/11/2026. Evidência de QA Windows/browser real não documentada, portanto não presumida.
-- O artefato final deve ser preservado em `releases/v2.4.0-homologada`, após a confirmação do CI. Consulte `docs/HOMOLOGACAO_V240.md`.
+- O build da versão `2.4.0` passou no GitHub Actions 41928503855 (243 PASS / 0 FAIL), com `index.html` reproduzível e SHA-256 `ac31730a695490166404d0dee13fb466925ddf6c687234079e0ac9cf04c5514f`. Checkpoint de homologação final: `releases/v2.4.0-homologada`. A homologação é formal e automatizada; não alegar testes manuais Windows não documentados. Consulte `docs/HOMOLOGACAO_V240.md`.

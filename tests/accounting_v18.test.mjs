@@ -14,7 +14,7 @@ const advance=(s,days)=>{while(days>0){const x=Math.min(30,days);s=act(s,'TEMPO.
 function sample(){let s=init();s=open(s);s=act(s,'ESTOQUE.COMPRAR',{productId:'base',supplierId:'regional',quantity:160});s=advance(s,3);return s;}
 
 test('V1.8: versão visível e plano de contas com sinais, com migração de schema de save 8→9',()=>{
- assert.equal(Core.VERSION,'2.3.0');assert.equal(Core.SCHEMA_VERSION,9);
+ assert.equal(Core.VERSION,'2.4.0-alpha.1');assert.equal(Core.SCHEMA_VERSION,9);
  assert.equal(Core.ACCOUNT_CATALOG.CASH.normal,'DEBIT');
  assert.equal(Core.ACCOUNT_CATALOG.PAYABLE.normal,'CREDIT');
  assert.equal(Core.ACCOUNT_CATALOG.COGS.group,'COST');

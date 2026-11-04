@@ -172,3 +172,13 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - A implementação do Patch D distribui Finanças, Contabilidade, Fiscal, RH/DP e Paralegal sem criar dados econômicos fictícios.
 - Publicação depende de CI PASS, index.html reproduzível e registro em docs/HOMOLOGACAO_V230.md. Preservar snapshot releases/v2.3.0-alpha.3-patch-c-homologada.
 - **Não afirmar teste manual independente no Windows**, salvo evidência documentada. V3.0 permanece dedicada às regras tributárias ampliadas.
+
+## Estado 04/11/2026 — V2.4 Patch C HOMOLOGADO
+
+- **Patch A · Paralegal:** homologado, checkpoint `releases/v2.4.0-alpha.1-homologada`.
+- **Patch B · RH/DP:** homologado, checkpoint `releases/v2.4.0-alpha.2-homologada` (commit `63fd0218f8e18da209b5cd7d4af154d868d1e03f`).
+- **Patch C · Fiscal Operacional:** homologado expressamente pelo jogador em 04/11/2026, checkpoint `releases/v2.4.0-alpha.3-homologada` (commit `af3f58c4e611131b72ec5290be4fe32357c06780`).
+- **Evidências técnicas:** GitHub Actions run 41919994971, 240 testes PASS / 0 FAIL, HTML único reproduzível, schema 9 preservado.
+- **Distinção de evidência:** aceite formal do jogador é registrado; nenhum teste manual Windows não documentado é declarado como executado.
+- A versão publicada e homologada permanece `2.4.0-alpha.3`. Os checklists fiscais são fictícios, não criam obrigação legal nem substituem apurações fiscais reais.
+- A atualização do registro de homologação é apenas documental; não altera `src/core/game.js`, `src/ui` ou `index.html`.

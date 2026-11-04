@@ -16,7 +16,7 @@ function fresh(engine=V16,name='Tianguá',seed=88){
  return run(engine,state,'EMPRESA.ABRIR',{sector:'mercado',lot:1});
 }
 test('V1.6: versão/schema 7, 30 municípios oficiais identificados sem duplicação',()=>{
- assert.equal(V16.VERSION,'2.4.0-alpha.1');assert.equal(V16.SCHEMA_VERSION,9);
+ assert.equal(V16.VERSION,'2.4.0-alpha.2');assert.equal(V16.SCHEMA_VERSION,9);
  assert.equal(V16.CITIES.length,30);
  assert.equal(new Set(V16.CITIES.map(c=>c.ibgeCode)).size,30);
  assert.equal(new Set(V16.CITIES.map(c=>c.id)).size,30);

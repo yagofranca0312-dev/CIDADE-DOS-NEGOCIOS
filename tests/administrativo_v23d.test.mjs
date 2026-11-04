@@ -94,7 +94,7 @@ test('V2.4-A: Fiscal e RH/DP preservados, Paralegal funcional e explicitamente f
   const p=section('administrativo','paralegal',null);
   assert.match(f,/id="fiscal-summary"/);assert.match(f,/id="fiscal-assessments"/);
   assert.match(f,/id="fiscal-activate"/);
-  assert.match(r,/sem cadastro de empregados|cadastro de empregados/);
+  assert.match(r,/id="rh-hire-form"/);assert.match(r,/id="rh-unit-list"/);assert.match(r,/Cadastro de empregados fictícios/);
   assert.match(p,/id="paralegal-unit-list"/);assert.match(p,/não há emissão de CNPJ/);
   assert.doesNotMatch(r+p,/id="buy-form"|id="fiscal-activate"/);
 });

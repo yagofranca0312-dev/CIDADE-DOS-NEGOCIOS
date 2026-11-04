@@ -6,6 +6,7 @@
   const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const BRDate=iso=>iso.split('-').reverse().join('/');
   const KEY='cidade-dos-negocios-save-v1';
+  const SAFETY_KEY='cidade-dos-negocios-prior-save-v241';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
   let inspectorOpen=false; // interface somente, nunca persistido
   let restockDraft=null; // proposta de compra efêmera (não entra em saves)
@@ -29,15 +30,41 @@
     setText('start-message',message);
   }
   function saveLocal(){
-    if(!state)return;
+    if(!state)return false;
+    let ok=false;
     try{
       const contents=Core.exportSave(state);
       localStorage.setItem(KEY,contents);
       if(localStorage.getItem(KEY)!==contents)throw Error('Falha de leitura de retorno');
+      ok=true;
       autosaveStatus='Cópia local verificada neste navegador; mantenha backup JSON externo.';
     }catch(e){autosaveStatus=`Salvamento local indisponível (${e.message}); exporte o JSON.`;notify(autosaveStatus,true);}
     setText('autosave-label',autosaveStatus);
     setText('footer-state',autosaveStatus.startsWith('Cópia')?'Cópia local verificada · backup JSON recomendado':'Salvamento local sem garantia');
+    return ok;
+  }
+  function backupCurrent(){
+    if(!state)return true;
+    try{
+      const raw=Core.exportSave(state);
+      localStorage.setItem(SAFETY_KEY,raw);
+      if(localStorage.getItem(SAFETY_KEY)!==raw)throw Error('Leitura de segurança divergiu');
+      return true;
+    }catch(error){
+      notify('Não foi possível preservar a carreira atual neste navegador ('+error.message+'). Exporte um backup JSON antes de substituí-la.',true);
+      return false;
+    }
+  }
+  function renderSafetyBackup(){
+    const button=$('restore-prior-save-btn');if(!button)return;
+    try{
+      const exists=!!localStorage.getItem(SAFETY_KEY);
+      button.disabled=!exists;
+      setText('safety-backup-status',exists?'Cópia anterior disponível. Recomenda-se também exportar um JSON.':'Nenhuma cópia anterior registrada neste navegador.');
+    }catch(error){
+      button.disabled=true;
+      setText('safety-backup-status','Armazenamento local indisponível. Utilize backup JSON.');
+    }
   }
   function lastAvailableDate(){
     if(!state)return Core.START_DATE;
@@ -146,7 +173,12 @@
       ['Caixa atual cobre despesas fixas por',`${report.cashCoverageDays} dias (sem vendas)`],
       ['Despesa operacional fixa por dia',Core.money(report.dailyFixed)],
       ['Ponto de equilíbrio do mix',report.breakEvenUnits===null?'Sem margem positiva':`${report.breakEvenUnits} un./dia (estimado)`],
-      ['Caixa no fim do cenário',Core.money(report.projectedCash)],
+      ['Caixa no fim do cenário (antes da quitação de dívidas)',Core.money(report.projectedCash)],
+      ['Contas operacionais atualmente a pagar',Core.money(report.knownObligations.operational)],
+      ['Folhas já apuradas e não pagas',Core.money(report.knownObligations.payroll)],
+      ['Tributos didáticos lançados a pagar',Core.money(report.knownObligations.tax)],
+      ['Nova folha estimada da unidade ativa',Core.money(report.projectedPayrollAccrual)],
+      ['Caixa se quitadas todas obrigações atuais',Core.money(report.cashAfterKnownDebtsIfPaid)],
       ['Obrigações no fim do cenário',Core.money(report.projectedPayable)],
       ['Resultado operacional projetado',Core.money(report.projectedProfit)],
       ['Unidades potencialmente não atendidas',String(report.estimatedLostUnits)],
@@ -157,11 +189,13 @@
       ['Receita de vendas',report.recent.revenue,report.projectedRevenue],
       ['(-) CMV / custo variável das mercadorias',report.recent.cogs,report.projectedCogs],
       ['(-) Despesa operacional fixa',report.recent.fixed,report.projectedFixed],
+      ['(-) Nova folha estimada da unidade ativa',null,report.projectedPayrollAccrual],
       ['(-) Despesas de abertura / não recorrentes',report.recent.oneOff,null],
       ['Resultado operacional antes dos tributos',report.recent.operatingResult,report.projectedProfit]
     ];
     $('strategy-cost-rows').innerHTML=rows.map(([label,actual,projected])=>`<tr><td>${escape(label)}</td><td>${escape(Core.money(actual))}</td><td>${projected===null?'Não projetado':escape(Core.money(projected))}</td></tr>`).join('');
-    const risks=[];
+    const risks=[report.forecastNote];
+    if(report.cashAfterKnownDebtsIfPaid<0)risks.push('⚠ Cenário de caixa insuficiente para liquidar obrigações conhecidas; não é previsão consolidada da rede.');
     if(report.breakEvenUnits===null)risks.push('⚠ O mix de produtos não tem margem de contribuição positiva nas condições atuais.');
     if(report.projectedPayable>Core.overview(state).payable)risks.push('⚠ O cenário prevê novas contas a pagar por caixa insuficiente para despesas fixas.');
     if(report.estimatedLostUnits>0)risks.push(`⚠ Projeção de ${report.estimatedLostUnits} unidades não atendidas: avalie reposição e prazos de entrega.`);
@@ -292,6 +326,7 @@
     renderFiscalOperations();
     renderParalegal();
     renderRH();
+    renderSafetyBackup();
     const report=Core.diagnostics(state);
     $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal',state.fiscal.coverageStatus]].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
     setText('turn-message',!b?'Abra sua primeira empresa.':b.stockUnits===0?'Seu estoque está vazio. Reabasteça.':`Sua empresa está operando há ${state.calendar.tick} dia(s).`);
@@ -318,7 +353,18 @@
     if(!file)return;
     if(file.size>25_000_000){notify('Save excede 25 MB.',true);return;}
     if(state?.player.cityId&&!confirm('Substituir a carreira atual pelo save importado? Recomendamos exportar antes.'))return;
-    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;restockDraft=null;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';saveLocal();render();notify(incoming.message);}
+    try{
+      const incoming=Core.importSave(await file.text());
+      if(!backupCurrent())return;
+      const previous=state;resetTimer();state=incoming.state;
+      if(!saveLocal()){
+        state=previous;render();
+        notify('Importação não concluída: o novo save não pôde ser armazenado. A carreira anterior foi preservada.',true);
+        return;
+      }
+      restockDraft=null;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';
+      render();notify(incoming.message);
+    }
     catch(e){notify(`Importação rejeitada: ${e.message}. A carreira anterior foi preservada.`,true);}
   }
   function launchAuto(){
@@ -486,8 +532,35 @@
     $('import-btn').addEventListener('click',()=>$('import-file').click());
     $('start-import').addEventListener('click',()=>$('import-file').click());
     $('import-file').addEventListener('change',async e=>{const f=e.target.files?.[0];try{await importFile(f);}finally{e.target.value='';}});
+    $('restore-prior-save-btn').addEventListener('click',()=>{
+      let raw;
+      try{raw=localStorage.getItem(SAFETY_KEY);}catch(error){notify(error.message,true);return;}
+      if(!raw){notify('Não existe cópia anterior neste navegador.',true);return;}
+      let incoming;
+      try{incoming=Core.importSave(raw);}catch(error){notify('Backup anterior inválido: '+error.message,true);return;}
+      if(!confirm('Restaurar carreira anterior? A atual será preservada como cópia de segurança.'))return;
+      if(!backupCurrent())return;
+      const previous=state;resetTimer();state=incoming.state;
+      if(!saveLocal()){
+        state=previous;
+        try{localStorage.setItem(SAFETY_KEY,raw);}catch(_){}
+        render();notify('Restauração cancelada: salvamento local não confirmado.',true);return;
+      }
+      restockDraft=null;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';
+      render();notify('Carreira anterior restaurada. Faça também um backup JSON.');
+    });
+    $('payable-operating-unit').addEventListener('change',()=>renderFinances());
+    $('payable-operating-form').addEventListener('submit',event=>{
+      event.preventDefault();
+      const cents=Math.round(Number($('payable-operating-amount').value)*100);
+      const unit=$('payable-operating-unit').value;
+      const row=Core.operatingPayablesReport(state).units.find(x=>x.businessId===unit);
+      if(!row||!Number.isSafeInteger(cents)||cents<=0){notify('Selecione a unidade e informe um pagamento válido.',true);return;}
+      if(!confirm('Liquidar '+Core.money(cents)+' do passivo operacional de '+unit+'? O valor reduzirá caixa e obrigação, sem lançar nova despesa.'))return;
+      if(commit('PAYABLES.PAGAR_OPERACIONAL',{businessId:unit,amountCents:cents}))$('payable-operating-amount').value='';
+    });
     $('run-diagnostic').addEventListener('click',()=>{try{const before=JSON.stringify(state),out=Core.diagnostics(state);if(before!==JSON.stringify(state))throw Error('Diagnóstico alterou o estado');setText('diagnostic-result',out.status+' · revisão '+out.revision);notify('Verificação estrutural e contábil aprovada.');}catch(e){setText('diagnostic-result',e.message);notify(e.message,true);}});
-    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financeQuery=null;financeScope='all';statementView='summary';render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
+    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja criar outra carreira? A atual será copiada para recuperação neste navegador; exporte também JSON.'))return;if(!backupCurrent())return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financeQuery=null;financeScope='all';statementView='summary';render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
   }
   function updateOpenPreview(){const s=Core.SECTORS[$('sector-select').value],city=Core.cityById(viewCityId);if(s)setText('open-preview',`Abertura em ${city?.name||'cidade selecionada'} · lote ${String(selectedLot).padStart(2,'0')} · investimento ${Core.money(s.openCost)} do caixa compartilhado · ramo: ${s.name}.`);}
   function start(){
@@ -502,7 +575,7 @@
     cityOptions();bind();updateOpenPreview();
     try{const raw=localStorage.getItem(KEY);if(raw){const loaded=Core.importSave(raw);state=loaded.state;viewCityId=business()?.cityId||state.player.cityId;autosaveStatus='Cópia local verificada neste navegador; mantenha backup JSON externo.';}}
     catch(e){autosaveStatus='Não foi possível recuperar o salvamento local; importe backup JSON.';notify(autosaveStatus+' '+e.message,true);}
-    render();goto('cidade');
+    render();renderSafetyBackup();goto('cidade');
   }
   start();
 })();

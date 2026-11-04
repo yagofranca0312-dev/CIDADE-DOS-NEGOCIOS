@@ -7,11 +7,28 @@
     const numbers={'treasury-cash':flow.closingCash,'treasury-inflows':flow.inflows,'treasury-outflows':flow.outflows,'treasury-net':flow.netCash,
       'treasury-payable':report.closingPayable,'treasury-tax':group?report.closingTaxPayable:null,'treasury-transit':report.closingInTransit};
     for(const [id,value] of Object.entries(numbers))setText(id,value===null?'Somente grupo':Core.money(value));
+    const debts=Core.operatingPayablesReport(state);
+    const chooser=$('payable-operating-unit'),prior=chooser.value;
+    chooser.replaceChildren(...debts.units.map(u=>{
+      const option=document.createElement('option');option.value=u.businessId;
+      option.textContent=u.businessId+' · '+u.city+' · '+Core.money(u.outstanding)+' em aberto';
+      return option;
+    }));
+    if(debts.units.some(u=>u.businessId===prior))chooser.value=prior;
+    const selected=debts.units.find(u=>u.businessId===chooser.value);
+    const canPay=!!selected?.outstanding;
+    chooser.disabled=!debts.units.length;
+    $('payable-operating-amount').disabled=!canPay;
+    $('payable-operating-submit').disabled=!canPay;
+    $('payable-operating-amount').max=canPay?(selected.outstanding/100).toFixed(2):'0';
+    setText('payable-operating-summary','Dívidas operacionais: '+Core.money(debts.total)+
+      ' · caixa compartilhado: '+Core.money(Core.overview(state).cash)+
+      (debts.unclassified?' · outras obrigações fora desta rotina: '+Core.money(debts.unclassified):''));
     const cat=flow.categories;
     const categories=[
       ['Receitas de vendas efetivamente recebidas',cat.sales],['Aportes de capital',cat.capital],
       ['Outras entradas',cat.unclassifiedIn],['Pagamentos a fornecedores',cat.suppliers],
-      ['Despesas operacionais pagas',cat.operating],['Salários fictícios pagos',cat.payroll||0],['Custos de abertura pagos',cat.opening],
+      ['Despesas operacionais pagas',cat.operating],['Salários fictícios pagos',cat.payroll||0],['Liquidação de despesas antigas',cat.operatingSettlements||0],['Custos de abertura pagos',cat.opening],
       ['Tributos simulados pagos',cat.taxPayments],['Outras saídas',cat.unclassifiedOut]
     ];
     $('treasury-categories').innerHTML=categories.map(([title,value])=>'<dt>'+escape(title)+'</dt><dd>'+escape(Core.money(value))+'</dd>').join('');
@@ -100,7 +117,7 @@
       rows.splice(0,rows.length,...[
         ['Caixa inicial do grupo',x.openingCash],['Entradas de vendas',x.categories.sales],
         ['Aportes ao grupo',x.categories.capital],['Outras entradas sem classificação',x.categories.unclassifiedIn],
-        ['Saídas para fornecedores',x.categories.suppliers],['Saídas operacionais',x.categories.operating],['Salários fictícios pagos',x.categories.payroll||0],
+        ['Saídas para fornecedores',x.categories.suppliers],['Saídas operacionais',x.categories.operating],['Salários fictícios pagos',x.categories.payroll||0],['Liquidação de despesas operacionais já reconhecidas',x.categories.operatingSettlements||0],
         ['Aberturas de unidades',x.categories.opening],['Pagamento de tributo simulado',x.categories.taxPayments],['Outras saídas sem classificação',x.categories.unclassifiedOut],
         ['Variação líquida de caixa',x.netCash],['Caixa final do grupo',x.closingCash]
       ]);

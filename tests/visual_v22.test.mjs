@@ -17,9 +17,9 @@ const city=(name='Tianguá',sizeTier='regional',id='CE-2308377')=>({id,name,uf:'
 const lotElements=svg=>[...svg.matchAll(/<g class="v22-lot [^"]+" data-lot="(\d+)" data-owned="(true|false)" tabindex="0" role="button" aria-pressed="(true|false)"/g)];
 const normalized=x=>JSON.parse(JSON.stringify(x));
 
-test('V2.2 motor permanece byte a byte o V2.0, exceto VERSION, com schema 9',()=>{
- assert.equal(coreSource.replaceAll('2.3.0','2.0.0-rc.1'),oldCore);
- assert.equal(core.VERSION,'2.3.0');assert.equal(core.SCHEMA_VERSION,9);
+test('V2.4-A mantém schema 9, cidades e compatibilidade de renderização',()=>{
+ assert.equal(core.VERSION,'2.4.0-alpha.1');assert.equal(core.SCHEMA_VERSION,9);
+ assert.equal(core.CITIES.length,30);
 });
 test('V2.2 renderiza exatamente 18 lotes acionáveis, 1–18, com semântica acessível',()=>{
  const svg=visual.svgMap(city(),[],1);

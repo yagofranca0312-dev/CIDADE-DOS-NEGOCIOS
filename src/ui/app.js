@@ -289,6 +289,7 @@
     renderCommerce();renderPriceHistory();
     if((tab==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo))||financeQuery)renderFinances();
     renderFiscal();
+    renderFiscalOperations();
     renderParalegal();
     renderRH();
     const report=Core.diagnostics(state);
@@ -372,6 +373,29 @@
       const definition=Core.PARALEGAL_SERVICES[service];if(!definition)return;
       if(confirm(`Solicitar ${definition.label} para ${businessId}? Taxa FICTÍCIA de ${Core.money(definition.feeCents)} será debitada do caixa do grupo. Não é documento legal.`))
         commit('PARALEGAL.PROTOCOLAR',{businessId,service});
+    });
+
+    $('fiscal-op-unit-list').addEventListener('click',e=>{
+      const activation=e.target.closest('[data-fiscal-op-activate]');
+      if(activation){
+        if(confirm('Ativar checklist mensal FICTÍCIO da unidade '+activation.dataset.fiscalOpActivate+
+          '? Os prazos são somente do jogo, sem tributos ou exigências reais.'))
+          commit('FISCAL_OP.ATIVAR',{businessId:activation.dataset.fiscalOpActivate,acceptSimulation:true});
+        return;
+      }
+      const task=e.target.closest('[data-fiscal-op-task]');
+      if(task){
+        if(confirm('Confirmar revisão interna fictícia da competência '+task.dataset.fiscalOpPeriod+'?'))
+          commit('FISCAL_OP.CONCLUIR_TAREFA',{businessId:task.dataset.fiscalOpUnit,
+            period:task.dataset.fiscalOpPeriod,task:task.dataset.fiscalOpTask});
+        return;
+      }
+      const closing=e.target.closest('[data-fiscal-op-close]');
+      if(closing&&!closing.disabled){
+        if(confirm('Fechar checklist da competência '+closing.dataset.fiscalOpClose+
+          '? Esta ação é apenas administrativa e NÃO apura nem paga tributos.'))
+          commit('FISCAL_OP.FECHAR',{businessId:closing.dataset.fiscalOpUnit,period:closing.dataset.fiscalOpClose});
+      }
     });
     $('fiscal-acknowledge').addEventListener('change',()=>{$('fiscal-activate').disabled=!$('fiscal-acknowledge').checked;});
     $('fiscal-activate').addEventListener('click',()=>{if(!$('fiscal-acknowledge').checked)return;

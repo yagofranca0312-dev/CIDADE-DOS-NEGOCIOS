@@ -122,6 +122,42 @@
     renderTreasury(report,q,financeQueryDate(q));
     renderStrategy();
   }
+
+  function renderFiscalOperations(){
+    const target=$('fiscal-op-unit-list');if(!target)return;
+    const report=Core.fiscalOperationsReport(state),names={CONCLUIDA:'Concluída',ATRASADA:'Atrasada',PENDENTE:'Pendente'};
+    setText('fiscal-op-summary',report.openPeriods+' competências abertas · '+report.overdueTasks+
+      ' conferências atrasadas · '+report.closedPeriods+' fechamentos registrados');
+    if(!report.units.length){target.innerHTML='<p class="muted">Inaugure uma unidade para ativar rotinas fiscais fictícias.</p>';return;}
+    target.innerHTML=report.units.map(u=>{
+      const heading='<div class="panel-heading"><h4>'+escape(u.businessId)+' · '+escape(u.city)+
+        '</h4><span class="tag-soft">'+(u.activatedAt?'Ativado em '+escape(BRDate(u.activatedAt)):'Não ativado')+'</span></div>';
+      if(!u.activatedAt)return '<article class="panel spaced">'+heading+
+        '<p>Rotinas opcionais: ativar não gera encargos, tributos nem competências anteriores.</p>'+
+        '<button type="button" class="btn btn-outline" data-fiscal-op-activate="'+escape(u.businessId)+
+        '">Ativar checklist desta unidade</button></article>';
+      const visible=u.periods.filter((p,i)=>!p.closed||i>=u.periods.length-3).slice().reverse();
+      const periods=visible.map(p=>{
+        const tasks=p.tasks.map(t=>'<tr><td>'+escape(t.label)+'</td><td>'+escape(BRDate(t.dueDate))+
+          '</td><td>'+escape(names[t.status]||t.status)+'</td><td>'+
+          (t.status!=='CONCLUIDA'&&!p.closed?'<button type="button" class="btn btn-outline" data-fiscal-op-task="'+
+            escape(t.id)+'" data-fiscal-op-period="'+escape(p.period)+'" data-fiscal-op-unit="'+escape(u.businessId)+
+            '">Concluir revisão</button>':'—')+'</td></tr>').join('');
+        const badge=p.closed?'Fechado':p.status==='ATRASADO'?'Fechamento atrasado':'Em andamento';
+        return '<details class="market-drawer finance-drawer"><summary>Competência '+escape(p.period)+
+          ' · '+badge+' · fechamento interno até '+escape(BRDate(p.dueDate))+'</summary>'+
+          '<div class="table-scroll"><table class="catalog-table"><thead><tr><th>Conferência</th><th>Prazo do jogo</th><th>Situação</th><th>Ação</th></tr></thead><tbody>'+
+          tasks+'</tbody></table></div>'+
+          (p.closed?'<p class="field-hint">Fechamento gerencial registrado no histórico auditável.</p>':
+            '<button type="button" class="btn btn-outline" data-fiscal-op-close="'+escape(p.period)+
+            '" data-fiscal-op-unit="'+escape(u.businessId)+'" '+(p.canClose?'':'disabled')+
+            '>Fechar competência do jogo</button>')+'</details>';
+      }).join('');
+      return '<article class="panel spaced">'+heading+
+        (periods||'<p class="field-hint">A primeira competência ficará disponível após a virada do mês do jogo.</p>')+
+        '</article>';
+    }).join('');
+  }
   function renderFiscal(){
     if(!state)return;
     const f=Core.taxReport(state),v=f.estimate,e=f.transition;

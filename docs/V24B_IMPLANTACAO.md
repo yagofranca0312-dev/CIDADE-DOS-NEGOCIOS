@@ -1,6 +1,6 @@
 # Implantação V2.4.0-alpha.2 — RH/DP (Patch B)
 **Base homologada:** Patch A em `releases/v2.4.0-alpha.1-homologada`.
-**Destino autorizado:** `main`. **Patch B:** implementado; homologação prática pendente.
+**Destino autorizado:** `main`. **Patch B:** HOMOLOGADO por autorização expressa de Yago em 04/11/2026, CI 231/231, snapshot `releases/v2.4.0-alpha.2-homologada` no commit `63fd0218f8e18da209b5cd7d4af154d868d1e03f`.
 
 ## Regras da simulação
 - Equipes por unidade: até 4 personagens; cargos Atendimento (R$ 1.500, +6%), Logística (R$ 1.900, +8%), Gestão (R$ 3.000, +4%).
@@ -17,4 +17,4 @@ Projeções estratégicas legadas não antecipam desembolsos manuais de folha; c
 
 ## Gate
 `npm run check` + HTML reproduzível + testes de contratação, pró-rata, pagamento, conciliação, auditoria e save.
-**Não homologar B sem aceite do jogador após teste prático no Windows.**
+**Registro:** aceite explícito de homologação do usuário em 04/11/2026. Não há comprovação independente de testes manuais no Windows; não inferir execução não documentada.

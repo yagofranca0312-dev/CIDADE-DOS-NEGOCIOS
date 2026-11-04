@@ -1,7 +1,7 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.4.0-alpha.2 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.4.0-alpha.3 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '2.4.0-alpha.2';
+  const VERSION = '2.4.0-alpha.3';
   const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -453,6 +453,55 @@ const CidadeCore = (() => {
   function initialFiscal(){return {mode:'DEMONSTRACAO_ECONOMICA',coverageStatus:'NOT_COVERED',rulePackId:null,activatedAt:null,effectiveFrom:null,assessments:[]};}
   function taxMonthNext(period){const [y,m]=period.split('-').map(Number);return m===12?`${y+1}-01`:`${y}-${String(m+1).padStart(2,'0')}`;}
   const periodKey=date=>date.slice(0,7);
+
+  // V2.4-C: fluxo administrativo fiscal do JOGO. Não gera obrigações brasileiras reais.
+  // Datas e tarefas são puramente lúdicas. Não cria valores fiscais nem altera o ledger.
+  const FISCAL_OP_TASKS=Object.freeze([
+    Object.freeze({id:'vendas',label:'Conferir vendas registradas',dueDay:5}),
+    Object.freeze({id:'estoque',label:'Conferir estoque e trânsito',dueDay:8}),
+    Object.freeze({id:'razao',label:'Conferir razão e demonstrativos',dueDay:12})
+  ]);
+  const previousMonth=period=>{
+    const y=Number(period.slice(0,4)),m=Number(period.slice(5,7));
+    return m===1?`${y-1}-12`:`${y}-${String(m-1).padStart(2,'0')}`;
+  };
+  function fiscalOperationsReport(state){
+    if(!state)return {units:[],openPeriods:0,overdueTasks:0,closedPeriods:0};
+    const activated=new Map(),completed=new Set(),closed=new Set();
+    for(const e of state.audit.events){
+      if(e.type==='FISCAL_OP.ATIVADO'&&e.businessId&&!activated.has(e.businessId))
+        activated.set(e.businessId,e);
+      if(e.type==='FISCAL_OP.TAREFA_CONCLUIDA'&&e.businessId)
+        completed.add(e.businessId+'|'+e.data.period+'|'+e.data.task);
+      if(e.type==='FISCAL_OP.FECHADO'&&e.businessId)
+        closed.add(e.businessId+'|'+e.data.period);
+    }
+    const latestPeriod=previousMonth(periodKey(state.calendar.date));
+    const units=businesses(state).map(b=>{
+      const activation=activated.get(b.id),periods=[];
+      if(activation){
+        let period=periodKey(activation.date);
+        while(period<=latestPeriod){
+          const next=taxMonthNext(period),tasks=FISCAL_OP_TASKS.map(def=>{
+            const done=completed.has(b.id+'|'+period+'|'+def.id);
+            const dueDate=next+'-'+String(def.dueDay).padStart(2,'0');
+            return {id:def.id,label:def.label,dueDate,status:done?'CONCLUIDA':dueDate<state.calendar.date?'ATRASADA':'PENDENTE'};
+          });
+          const isClosed=closed.has(b.id+'|'+period),dueDate=next+'-15';
+          periods.push({period,dueDate,tasks,closed:isClosed,
+            status:isClosed?'FECHADO':dueDate<state.calendar.date?'ATRASADO':'EM_ANDAMENTO',
+            canClose:!isClosed&&tasks.every(t=>t.status==='CONCLUIDA')});
+          period=next;
+        }
+      }
+      return {businessId:b.id,city:cityById(b.cityId)?.name||'—',sector:b.sector,
+        activatedAt:activation?.date||null,periods};
+    });
+    return {units,
+      openPeriods:units.reduce((n,u)=>n+u.periods.filter(p=>!p.closed).length,0),
+      overdueTasks:units.reduce((n,u)=>n+u.periods.reduce((m,p)=>m+(p.closed?0:p.tasks.filter(t=>t.status==='ATRASADA').length),0),0),
+      closedPeriods:units.reduce((n,u)=>n+u.periods.filter(p=>p.closed).length,0)};
+  }
   function revenuesInMonth(state,month){return state.economy.ledger.filter(j=>periodKey(j.date)===month).reduce((sum,j)=>sum+j.entries.reduce((n,e)=>n+(e.account==='REVENUE'?e.credit-e.debit:0),0),0);}
   function rbt12Annualized(state,period,currentRevenue){
     // Hipótese de início de atividade: mês inicial receita × 12; meses seguintes média de meses anteriores × 12.
@@ -552,6 +601,48 @@ const CidadeCore = (() => {
   function handler(draft,type,payload) {
     const b=activeBusiness(draft);
 
+
+    if(type==='FISCAL_OP.ATIVAR'){
+      const target=businessById(draft,String(payload.businessId||''));
+      assert(target,'Estabelecimento não encontrado para rotinas fiscais');
+      assert(!draft.audit.events.some(e=>e.type==='FISCAL_OP.ATIVADO'&&e.businessId===target.id),
+        'Rotinas fiscais do jogo já ativadas nesta unidade');
+      assert(payload.acceptSimulation===true,'Confirme que são tarefas inteiramente fictícias, sem efeitos legais');
+      event(draft,'FISCAL_OP.ATIVADO',
+        'Checklist fiscal fictício ativado para '+target.id+' a partir da competência '+periodKey(draft.calendar.date)+'.',
+        {firstPeriod:periodKey(draft.calendar.date)},target.id);
+      return;
+    }
+    if(type==='FISCAL_OP.CONCLUIR_TAREFA'){
+      const target=businessById(draft,String(payload.businessId||''));
+      const period=String(payload.period||''),task=String(payload.task||'');
+      assert(target,'Estabelecimento não encontrado para checklist fiscal');
+      assert(FISCAL_OP_TASKS.some(x=>x.id===task),'Tarefa fiscal fictícia desconhecida');
+      const periodRow=fiscalOperationsReport(draft).units.find(u=>u.businessId===target.id)?.periods
+        .find(p=>p.period===period);
+      assert(periodRow&&!periodRow.closed,'Competência não habilitada, ainda em curso ou já fechada');
+      assert(periodRow.tasks.some(t=>t.id===task&&t.status!=='CONCLUIDA'),'Tarefa já concluída');
+      event(draft,'FISCAL_OP.TAREFA_CONCLUIDA',
+        'Revisão interna '+task+' da competência '+period+' concluída (simulação).',
+        {period,task},target.id);
+      return;
+    }
+    if(type==='FISCAL_OP.FECHAR'){
+      const target=businessById(draft,String(payload.businessId||''));
+      const period=String(payload.period||'');
+      assert(target,'Estabelecimento não encontrado para fechamento fiscal');
+      const row=fiscalOperationsReport(draft).units.find(u=>u.businessId===target.id)?.periods
+        .find(p=>p.period===period);
+      assert(row&&!row.closed,'Competência não habilitada, não encerrada no calendário ou já fechada');
+      assert(row.canClose,'Conclua todas as três conferências antes de fechar');
+      const integrity=reconciliationReport(draft);
+      assert(integrity.ok,'Conciliação contábil do grupo inconsistente; fechamento bloqueado');
+      const summary=monthlyClose(draft,period,target.id);
+      event(draft,'FISCAL_OP.FECHADO',
+        'Fechamento administrativo fictício de '+period+' concluído para '+target.id+'.',
+        {period,operatingResult:summary.operatingResult,netCash:summary.netCash},target.id);
+      return;
+    }
     if(type==='RH.CONTRATAR'){
       const target=businessById(draft,String(payload.businessId||''));
       const role=String(payload.role||''),definition=RH_ROLES[role];
@@ -1185,6 +1276,6 @@ const CidadeCore = (() => {
     return {state,migrated,message:migrated?'Carreira migrada para V1.9: histórico preservado; cenário tributário desativado até confirmação explícita.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();

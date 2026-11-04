@@ -1,7 +1,7 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.3.0 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.4.0-alpha.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '2.3.0';
+  const VERSION = '2.4.0-alpha.1';
   const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -117,6 +117,41 @@ const CidadeCore = (() => {
     Object.freeze({id:'regional',name:'Distribuidora Regional (fictícia)',leadDays:1,priceFactor:100,maxDailyPerSku:200}),
     Object.freeze({id:'atacado',name:'Atacado Comercial (fictício)',leadDays:3,priceFactor:94,maxDailyPerSku:500})
   ]);
+  // V2.4-A: processos administrativos fictícios, sem relação com obrigações legais reais.
+  const PARALEGAL_SERVICES=Object.freeze({
+    cadastro:Object.freeze({label:'Cadastro administrativo fictício',feeCents:12000,processingDays:2,validDays:null}),
+    licenca:Object.freeze({label:'Licença operacional fictícia',feeCents:36000,processingDays:4,validDays:365})
+  });
+  function paralegalReport(state){
+    if(!state)return [];
+    return businesses(state).map(b=>{
+      const processes=Object.entries(PARALEGAL_SERVICES).map(([service,config])=>{
+        const history=state.audit.events.filter(e=>e.businessId===b.id&&
+          (e.type==='PARALEGAL.PROTOCOLADO'||e.type==='PARALEGAL.CONCLUIDO')&&e.data?.service===service);
+        const latest=history.at(-1)||null;
+        let status='PENDENTE',dueDate=null,expiresAt=null;
+        if(latest?.type==='PARALEGAL.PROTOCOLADO'){status='EM_ANALISE';dueDate=latest.data.dueDate;}
+        if(latest?.type==='PARALEGAL.CONCLUIDO'){
+          expiresAt=latest.data.expiresAt||null;
+          status=expiresAt&&expiresAt<state.calendar.date?'VENCIDA':'CONCLUIDO';
+        }
+        return {service,label:config.label,feeCents:config.feeCents,status,dueDate,expiresAt,historyCount:history.length};
+      });
+      return {businessId:b.id,cityId:b.cityId,city:cityById(b.cityId)?.name||'—',
+        sector:b.sector,processes};
+    });
+  }
+  function processParalegalDue(draft){
+    for(const unit of paralegalReport(draft)){
+      for(const p of unit.processes){
+        if(p.status!=='EM_ANALISE'||p.dueDate>draft.calendar.date)continue;
+        const service=PARALEGAL_SERVICES[p.service];
+        const expiresAt=service.validDays?addDays(draft.calendar.date,service.validDays):null;
+        event(draft,'PARALEGAL.CONCLUIDO',`${service.label} concluído para ${unit.businessId} (simulação).`,
+          {service:p.service,expiresAt},unit.businessId);
+      }
+    }
+  }
   function initialProducts(sector,baseStock=0,basePrice=null) {
     const s=SECTORS[sector];
     const base=(id,name,costCents,priceCents,referenceCents,demand,stockUnits)=>({id,name,costCents,priceCents,referenceCents,demand,stockUnits,
@@ -315,7 +350,7 @@ const CidadeCore = (() => {
     TAX_EXPENSE:Object.freeze({name:'Tributo simulado por competência',group:'EXPENSE',normal:'DEBIT'}),
     TAX_PAYABLE:Object.freeze({name:'Tributo simulado a pagar',group:'LIABILITY',normal:'CREDIT'})
   });
-  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','UNCLASSIFIED']);
+  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','UNCLASSIFIED']);
   function transactionKind(j){
     if(TRANSACTION_KINDS.includes(j.kind))return j.kind;
     if(j.memo==='Capital inicial do empreendedor')return 'CAPITAL';
@@ -451,6 +486,25 @@ const CidadeCore = (() => {
   }
   function handler(draft,type,payload) {
     const b=activeBusiness(draft);
+    if(type==='PARALEGAL.PROTOCOLAR'){
+      const target=businessById(draft,String(payload.businessId||''));
+      const serviceId=String(payload.service||''),service=PARALEGAL_SERVICES[serviceId];
+      assert(target,'Estabelecimento não encontrado');
+      assert(service,'Processo paralegal desconhecido');
+      const current=paralegalReport(draft).find(x=>x.businessId===target.id);
+      const task=current.processes.find(x=>x.service===serviceId);
+      assert(['PENDENTE','VENCIDA'].includes(task.status),'Processo em andamento ou já vigente');
+      if(serviceId==='licenca')assert(current.processes.find(x=>x.service==='cadastro').status==='CONCLUIDO',
+        'Conclua o cadastro fictício antes de solicitar a licença');
+      assert(balance(draft,'CASH')>=service.feeCents,'Caixa do grupo insuficiente para a taxa simulada');
+      const dueDate=addDays(draft.calendar.date,service.processingDays);
+      journal(draft,`Paralegal simulado · ${service.label} · ${target.id}`,[
+        {account:'EXPENSE',debit:service.feeCents,credit:0},
+        {account:'CASH',debit:0,credit:service.feeCents}],target.id,'PARALEGAL_FEE');
+      event(draft,'PARALEGAL.PROTOCOLADO',`${service.label} protocolado para ${target.id}; conclusão prevista ${dueDate}.`,
+        {service:serviceId,dueDate,feeCents:service.feeCents},target.id);
+      return;
+    }
     if(type==='FISCAL.ATIVAR_CENARIO'){
       assert(draft.fiscal.mode==='DEMONSTRACAO_ECONOMICA','Cenário fiscal já ativado');
       assert(payload.acceptSimplifications===true,'Confirme que o cenário é didático e não representa apuração fiscal real');
@@ -602,6 +656,7 @@ const CidadeCore = (() => {
     draft.calendar.tick++;
     draft.calendar.date=dateNext(draft.calendar.date);
     for(const b of units)receiveDueOrders(draft,b);
+    processParalegalDue(draft);
   }
   function dispatch(current,cmd) {
     try{
@@ -1020,6 +1075,6 @@ const CidadeCore = (() => {
     return {state,migrated,message:migrated?'Carreira migrada para V1.9: histórico preservado; cenário tributário desativado até confirmação explícita.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();

@@ -15,7 +15,7 @@ const scene=runInNewContext(runtime+'\nCidadeTianguaCena',{});
 const city=core.CITIES.find(c=>c.id==='CE-TIANGUA');
 const units=(data)=>data;
 
-test('V221 preserva o core 2.2 e o save schema 9',()=>{assert.equal(core.VERSION,'2.4.0-alpha.2');assert.equal(core.SCHEMA_VERSION,9);assert.equal(core.CITIES.length,30);});
+test('V221 preserva o core 2.2 e o save schema 9',()=>{assert.equal(core.VERSION,'2.4.0-alpha.3');assert.equal(core.SCHEMA_VERSION,9);assert.equal(core.CITIES.length,30);});
 test('V221 preserva literalmente o renderer de fallback V2.2 para 29 cidades',()=>{assert.equal(old,base);for(const c of core.CITIES.filter(c=>c.id!=='CE-TIANGUA'))assert.notEqual(c.id,'CE-TIANGUA');});
 test('V221 18 lotes únicos e ordenados, com hit areas poligonais e foco',()=>{assert.equal(data.lots.length,18);assert.deepEqual(data.lots.map(x=>x.number),Array.from({length:18},(_,i)=>i+1));const svg=scene.svgMap(city,[],null);assert.equal((svg.match(/role="button" tabindex="0"/g)||[]).length,18);assert.equal((svg.match(/data-lot="/g)||[]).length,18);assert.equal((svg.match(/data-building-for=/g)||[]).length,0);assert.match(svg,/role="group"/);});
 test('V221 cena vazia não contém sprites de empresas',()=>{const svg=scene.svgMap(city,[],null);assert.doesNotMatch(svg,/data-building-for=/);assert.doesNotMatch(svg,/class="v221-selection-line"/);});

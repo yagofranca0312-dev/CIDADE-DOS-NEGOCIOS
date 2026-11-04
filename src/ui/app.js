@@ -64,6 +64,22 @@
     $('unit-rows').innerHTML=rows||'<tr><td colspan="5">Inaugure sua primeira unidade.</td></tr>';
     setText('group-scope-note','Receitas, CMV e despesas atribuídos a cada unidade; caixa pertence ao grupo. Nenhum capital é criado ao abrir filial.');
   }
+  function renderParalegal(){
+    const target=$('paralegal-unit-list');if(!target)return;
+    const units=Core.paralegalReport(state);
+    if(!units.length){target.innerHTML='<p class="muted">Inaugure uma unidade para iniciar os processos simulados.</p>';return;}
+    const names={PENDENTE:'Não solicitado',EM_ANALISE:'Em análise',CONCLUIDO:'Concluído / vigente',VENCIDA:'Vencida'};
+    target.innerHTML=units.map(u=>{
+      const registration=u.processes.find(p=>p.service==='cadastro');
+      return `<article class="panel spaced"><div class="panel-heading"><h4>${escape(u.businessId)} · ${escape(u.city)}</h4><span class="tag-soft">${escape(Core.SECTORS[u.sector].name)}</span></div>
+        <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Processo</th><th>Situação</th><th>Previsão / validade</th><th>Ação</th></tr></thead><tbody>${u.processes.map(p=>{
+          const eligible=['PENDENTE','VENCIDA'].includes(p.status)&&(p.service!=='licenca'||registration.status==='CONCLUIDO');
+          const timeline=p.dueDate?'Conclusão prevista '+BRDate(p.dueDate):p.expiresAt?'Válido até '+BRDate(p.expiresAt):'—';
+          return `<tr><td>${escape(p.label)}<br><small>Taxa do jogo: ${escape(Core.money(p.feeCents))}</small></td>
+            <td>${escape(names[p.status]||p.status)}</td><td>${escape(timeline)}</td>
+            <td><button type="button" class="btn btn-outline" data-paralegal-action="${escape(p.service)}" data-paralegal-unit="${escape(u.businessId)}" ${eligible?'':'disabled'}>${p.status==='VENCIDA'?'Renovar':'Solicitar'}</button></td></tr>`;}).join('')}</tbody></table></div></article>`;
+    }).join('');
+  }
   function renderPriceHistory(){
     const items=Core.priceHistory(state),container=$('price-history');
     setText('price-history-count',`${items.length} alteração(ões)`);
@@ -240,6 +256,7 @@
     renderCommerce();renderPriceHistory();
     if((tab==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo))||financeQuery)renderFinances();
     renderFiscal();
+    renderParalegal();
     const report=Core.diagnostics(state);
     $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal',state.fiscal.coverageStatus]].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
     setText('turn-message',!b?'Abra sua primeira empresa.':b.stockUnits===0?'Seu estoque está vazio. Reabasteça.':`Sua empresa está operando há ${state.calendar.tick} dia(s).`);
@@ -298,6 +315,13 @@
     for(const button of document.querySelectorAll('[data-section-go]'))button.addEventListener('click',()=>goto(...button.dataset.sectionGo.split(':')));
     $('unit-switch').addEventListener('change',e=>{if(e.target.value)commit('EMPRESA.ATIVAR',{businessId:e.target.value});});
     $('finance-scope').addEventListener('change',e=>{financeScope=e.target.value;renderFinances();});
+    $('paralegal-unit-list').addEventListener('click',e=>{
+      const btn=e.target.closest('[data-paralegal-action]');if(!btn||btn.disabled)return;
+      const service=btn.dataset.paralegalAction,businessId=btn.dataset.paralegalUnit;
+      const definition=Core.PARALEGAL_SERVICES[service];if(!definition)return;
+      if(confirm(`Solicitar ${definition.label} para ${businessId}? Taxa FICTÍCIA de ${Core.money(definition.feeCents)} será debitada do caixa do grupo. Não é documento legal.`))
+        commit('PARALEGAL.PROTOCOLAR',{businessId,service});
+    });
     $('fiscal-acknowledge').addEventListener('change',()=>{$('fiscal-activate').disabled=!$('fiscal-acknowledge').checked;});
     $('fiscal-activate').addEventListener('click',()=>{if(!$('fiscal-acknowledge').checked)return;
       if(confirm('Ativar hipótese tributária DIDÁTICA de Simples Anexo I, a partir do mês seguinte? Sem efeitos retroativos nem valor fiscal real.'))commit('FISCAL.ATIVAR_CENARIO',{acceptSimplifications:true});});

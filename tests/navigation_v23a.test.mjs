@@ -34,9 +34,9 @@ test('V2.3-A preserva os formulários e relatórios existentes sem duplicação'
   assert.match(template,/data-section-go="administrativo:financas"/);
 });
 
-test('V2.3-A expõe placeholders verdadeiros sem simular RH ou Paralegal',()=>{
+test('V2.4-A mantém RH/DP como placeholder e Paralegal como departamento simulado',()=>{
   assert.match(template,/Funcionários, salários e encargos não são simulados/);
-  assert.match(template,/CNPJs, inscrições, licenças e atos societários não são simulados/);
+  assert.match(template,/id="paralegal-unit-list"/);assert.match(template,/não há emissão de CNPJ/);
   assert.match(template,/data-section-pane="administrativo:contabilidade"/);
   assert.match(template,/DRE gerencial, balanço consolidado, conciliação e razão/);
 });
@@ -75,7 +75,7 @@ test('V2.3-A build offline contém script compilável e módulo fiscal',()=>{
   const scripts=[...built.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(scripts.length,1);assert.doesNotThrow(()=>new Script(scripts[0][1]));
   assert.match(built,/data-section-pane="administrativo:fiscal"/);
-  assert.match(built,/const VERSION = '2\.3\.0'/);
+  assert.match(built,/const VERSION = '2\.4\.0-alpha\.1'/);
 });
 
 test('V2.3-A: Gerenciar do mapa abre diretamente Minhas Empresas',()=>{

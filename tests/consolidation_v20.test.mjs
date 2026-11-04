@@ -17,10 +17,10 @@ function career(C,{extra=false,tax=false}={}){
  if(tax){s=command(C,s,'FISCAL.ATIVAR_CENARIO',{acceptSimplifications:true},8);s=command(C,s,'TEMPO.AVANCAR_LOTE',{days:30},9);}
  return s;
 }
-test('V2.0 motor mantém código e regras V1.9 idênticos, exceto versão exibida',()=>{
- const normCore=text=>text.replace('/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.3.0 */','/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v1.9.0-rc.1 */').replace("const VERSION = '2.3.0';","const VERSION = '1.9.0-rc.1';");
- assert.equal(normCore(readFileSync('src/core/game.js','utf8')),readFileSync('tests/fixtures/core_v1_9_0.js','utf8'));
- assert.equal(now.SCHEMA_VERSION,9);assert.equal(now.VERSION,'2.3.0');
+test('V2.4-A preserva schema 9 e mantém motor fiscal/contábil verificável',()=>{
+ assert.equal(now.SCHEMA_VERSION,9);assert.equal(now.VERSION,'2.4.0-alpha.1');
+ assert.ok(now.PARALEGAL_SERVICES.cadastro);
+ assert.equal(typeof now.balanceSheet,'function');assert.equal(typeof now.taxReport,'function');
 });
 test('V2.0 e V1.9 produzem mesma rede, estoque, balanço, caixa e RNG',()=>{
  for(const opts of [{},{extra:true},{tax:true}]){

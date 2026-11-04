@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10243E">
   <meta name="description" content="Cidade dos Negócios 1, simulador empresarial brasileiro offline, em um único HTML.">
-  <title>Cidade dos Negócios 1 · v2.4.0-alpha.1</title>
+  <title>Cidade dos Negócios 1 · v2.4.0-alpha.2</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2080%2080%22%3E%3Crect%20width%3D%2280%22%20height%3D%2280%22%20rx%3D%2214%22%20fill%3D%22%2310243e%22%2F%3E%3Cpath%20d%3D%22M9%2069V39L24%2031V69H9ZM28%2069V20L43%2014V69H28ZM47%2069V43L62%2034V69H47Z%22%20fill%3D%22%2351a9df%22%2F%3E%3Cpath%20d%3D%22m8%2060%2022-23%2012%209L70%2013m-14%200%2015-2-2%2016%22%20stroke%3D%22%23e9ad50%22%20stroke-width%3D%226%22%20fill%3D%22none%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
   <style>
 :root{color-scheme:dark;--navy:#10243e;--deep:#091629;--panel:#142b45;--panelhi:#193451;--blue:#51a9df;--gold:#e9ad50;--green:#51bd83;--text:#f4f7fb;--muted:#b8c6d8;--stroke:#2b4860;--red:#ef7070;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:15px}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#091629;color:var(--text)}[hidden]{display:none!important}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.46;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f4d49a;outline-offset:2px}a{color:#9dcee9}h1,h2,h3,p{margin-top:0}h1,h2,h3{letter-spacing:-.025em}h3{font-size:1.12rem;margin-bottom:0}p{line-height:1.65}small,.muted,.field-hint{color:var(--muted)}.field-hint{font-size:.83rem;margin:10px 0 19px;line-height:1.45}.hint-bottom{margin-top:26px}.status-text{font-size:.87rem;margin:13px 0 0;min-height:1.25rem}.overline,.eyebrow,.card-kicker,.nav-label{font-size:.7rem;letter-spacing:.16em;font-weight:800;color:#a3b7cb}.eyebrow-dot,.online-dot{display:inline-block;background:var(--green);width:7px;height:7px;border-radius:50%;margin-right:7px}.btn{border:1px solid #466178;border-radius:10px;padding:12px 16px;background:#24415a;color:var(--text);font-size:.89rem;font-weight:750;transition:transform .15s,filter .15s;min-height:44px}.btn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px)}.btn-primary{background:linear-gradient(135deg,#e9ad50,#f3c775);color:#101d2b;border-color:#f4d49a}.btn-outline{background:#14283b;color:#f2f7fb}.btn-big{width:100%;padding:16px 20px;display:flex;justify-content:space-between;margin-top:18px}.full{width:100%}.spaced{margin-top:9px}.tag-soft,.tag-warning{display:inline-block;letter-spacing:.05em;font-weight:800;font-size:.63rem;background:#203e58;color:#a9dafa;border:1px solid #3b617b;border-radius:8px;padding:8px 10px}.tag-warning{color:#f4d49a;background:#3c301d;border-color:#906c39}.brand-icon{filter:drop-shadow(0 9px 28px #0003)}.onboarding{min-height:100vh;display:grid;grid-template-columns:minmax(390px,1fr) minmax(380px,.78fr);gap:clamp(30px,6vw,100px);align-items:center;max-width:1540px;margin:0 auto;padding:45px clamp(24px,6vw,94px);position:relative;overflow:hidden}.onboarding:before{content:"";background:radial-gradient(ellipse at center,#193e6077,transparent 70%);position:absolute;inset:0 0 0 -30%;pointer-events:none}.onboarding-art{position:absolute;inset:0;opacity:.14;pointer-events:none;overflow:hidden}.skyline{display:flex;align-items:end;gap:18px;position:absolute;bottom:0;left:-2%;height:63%;width:110%;transform:skewY(-7deg)}.skyline i{display:block;flex:1;background:linear-gradient(180deg,#7dbde3,#1d5070);height:65%;border-radius:5px 5px 0 0;box-shadow:inset 10px 0 0 #0a223a}.skyline i:nth-child(2n){height:78%}.skyline i:nth-child(3n){height:44%}.skyline i:nth-child(5n){height:95%}.intro-copy{position:relative;z-index:1}.intro-copy .eyebrow{color:#9ddfe2;margin-bottom:48px}.brand-intro{margin-bottom:15px}.intro-copy h1{font-size:clamp(3.3rem,6vw,6.8rem);line-height:.92;margin-bottom:20px;font-weight:900}.intro-copy h1 em{font-style:normal;background:linear-gradient(120deg,#f6ce82,#d89d41);background-clip:text;-webkit-background-clip:text;color:transparent}.hero-subtitle{font-size:1.55rem;font-weight:700;margin:29px 0 10px}.intro-desc{font-size:1.02rem;color:#c7d3df;max-width:540px}.intro-features{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}.intro-features span{padding:10px 12px;border:1px solid #395875;background:#12304aab;border-radius:8px;font-size:.78rem;color:#b9d6e6}.fine-print{font-size:.72rem;color:#8fa8bb;margin-top:40px}.start-card{position:relative;z-index:1;background:linear-gradient(158deg,#1a3652 0%,#102339 100%);padding:clamp(25px,4vw,42px);border:1px solid #3c5970;box-shadow:0 24px 90px #0007;border-radius:20px}.card-kicker{color:var(--gold);margin-bottom:13px}.start-card h2{font-size:2rem;line-height:1.1;margin-bottom:12px}.start-card label,.panel label{display:block;font-size:.78rem;color:#c5d6e6;font-weight:700;margin:18px 0 7px}.start-card input,.start-card select,.panel input,.panel select,.topbar select{width:100%;background:#0c2136;border:1px solid #3c5a71;color:var(--text);border-radius:9px;min-height:42px;padding:10px 13px;outline-color:var(--gold)}.text-action{border:0;color:#b7d9f5;background:transparent;font-size:.86rem;margin:15px auto 0;display:block;padding:10px}.game-shell{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:100vh}.sidebar{background:linear-gradient(175deg,#0b1b2e,#10243e);border-right:1px solid #203e59;display:flex;flex-direction:column;padding:27px 15px 18px;position:sticky;top:0;height:100vh}.sidebar-brand{display:flex;gap:10px;align-items:center;padding:0 8px 32px}.brand-mark{width:43px;height:43px;border-radius:10px;background:linear-gradient(135deg,#e2a450,#f0c77d);color:#092037;display:grid;place-items:center;font-size:2rem}.sidebar-brand strong{display:block;font-size:.9rem;letter-spacing:.065em;line-height:1.15}.sidebar-brand small{font-size:.59rem;letter-spacing:.16em;color:var(--gold)}.nav-label{padding:0 14px 12px;color:#7896b4}.nav-items{display:grid;gap:5px}.nav-item{width:100%;background:none;border:1px solid transparent;color:#b6c7d8;padding:13px 14px;border-radius:9px;text-align:left;font-weight:650;display:flex;align-items:center;gap:14px;font-size:.88rem}.nav-item span{font-size:1.17rem;width:24px;text-align:center}.nav-item.active{background:#244360;color:#fff;border-color:#3a6080;box-shadow:inset 3px 0 0 var(--gold)}.nav-item:hover{background:#1a3852}.sidebar-bottom{margin-top:auto;padding:17px 11px 0;border-top:1px solid #29425a;font-size:.69rem;letter-spacing:.1em;font-weight:800;color:#bdd4e2}.sidebar-bottom small{display:block;letter-spacing:0;font-weight:400;margin:8px 0 0 16px}.main-pane{min-width:0;display:flex;flex-direction:column}.topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px clamp(16px,3vw,39px);border-bottom:1px solid #28435c;background:#0e2035}.topbar h2{font-size:1.4rem;margin:3px 0 0}.topbar h2 span{color:#95adbf;font-weight:500}.topbar-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.compact-label{font-size:.72rem;color:var(--muted)}.topbar select{width:auto;max-width:195px;font-size:.78rem}.date-box{background:#152f47;border:1px solid #34516c;border-radius:9px;padding:7px 15px;min-width:115px}.date-box small{display:block;font-size:.57rem;letter-spacing:.1em}.date-box strong{display:block;font-size:.93rem;margin-top:3px;font-variant-numeric:tabular-nums}.world-warning{padding:10px clamp(16px,3vw,39px);border-bottom:1px solid #4b492d;background:#2e2b1d;color:#f6d69b;font-size:.76rem;font-weight:600}.legal-warning{background:#132b3a;border-color:#24485b;color:#a7c9d9}.content{padding:30px clamp(16px,3vw,39px);max-width:1720px;width:100%;margin:0 auto;flex:1}.page-title{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:25px}.page-title h1{font-size:clamp(1.5rem,2.6vw,2.2rem);margin:7px 0 2px}.page-title p{color:#a9bacb;font-size:.85rem;margin:0}.build-badge{border:1px solid #3d5a71;color:#a4cce4;padding:8px 11px;border-radius:8px;font-size:.72rem;white-space:nowrap}.stats-bar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:20px}.stat,.panel{border:1px solid #304c63;border-radius:13px;background:linear-gradient(155deg,#17314a,#10273e);box-shadow:0 10px 22px #0002}.stat{padding:21px 20px}.stat span{display:block;font-size:.67rem;letter-spacing:.085em;color:#afc0d2;font-weight:700}.stat strong{display:block;font-size:clamp(1.3rem,2vw,2rem);margin:10px 0 3px;font-variant-numeric:tabular-nums;letter-spacing:-.035em;white-space:nowrap}.stat small{font-size:.68rem}.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(280px,.83fr);gap:17px}.right-column{display:grid;gap:17px;align-content:start}.panel{padding:23px}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.map-panel{padding:0;overflow:hidden;align-self:start}.map-panel .panel-heading{padding:23px 23px 0;margin-bottom:0}.map-panel .overline{margin-bottom:6px}.map-canvas{min-height:350px;background:radial-gradient(ellipse at 55% 37%,#265372 0%,#163751 54%,#0d2436 100%);overflow:hidden}.map-canvas svg{display:block;width:100%;height:auto;min-height:320px;max-height:480px;touch-action:manipulation}.map-canvas svg [data-lot]{cursor:pointer;outline:none;transition:filter .15s}.map-canvas svg [data-lot]:hover,.map-canvas svg [data-lot]:focus{filter:brightness(1.5)}.map-legend{display:flex;gap:20px;flex-wrap:wrap;font-size:.71rem;color:#b8cadd;padding:0 23px 12px}.legend-color{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}.legend-color.lot{background:#537d69}.legend-color.own{background:#e9ad50}.legend-color.sel{background:#51a9df}.map-disclaimer{font-size:.68rem;color:#91b0c0;padding:0 23px 15px;margin:0}.big-number{font-size:2.1rem;font-weight:850;color:var(--gold);letter-spacing:-.06em;margin:12px 0}.event-list{display:grid;gap:13px;max-height:320px;overflow:auto}.event-item{border-bottom:1px solid #264259;padding-bottom:10px;display:flex;gap:10px;align-items:start}.event-item:last-child{border-bottom:0}.event-dot{background:var(--blue);width:7px;height:7px;border-radius:50%;flex:none;margin-top:7px}.event-item p{margin:0;color:#d0dde8;font-size:.81rem;line-height:1.45}.event-item small{display:block;margin-top:4px;font-size:.67rem;color:#8eabc0}.view{min-height:370px}.detail-list,.finance-list{display:grid;grid-template-columns:1fr auto;gap:15px;margin:19px 0}.detail-list dt,.finance-list dt{color:#bed0df}.detail-list dd,.finance-list dd{margin:0;text-align:right;font-weight:800;font-variant-numeric:tabular-nums}.finance-list{border-top:1px solid #3b586c;padding-top:17px}.finance-list dt,.finance-list dd{font-size:.85rem}.finance-list .emphasis{color:var(--gold);font-weight:800;font-size:1rem}.company-emblem{display:flex;align-items:center;gap:16px;background:#102c40;border:1px solid #31526b;border-radius:12px;padding:16px}.company-emblem>span{font-size:2.4rem}.company-emblem h3{margin-bottom:3px}.company-emblem p{margin:0}.button-stack{display:grid;gap:10px;margin:20px 0}.fiscal-panel{display:flex;gap:24px;max-width:920px}.fiscal-icon{font-size:3.2rem;font-weight:850;color:var(--gold)}.turnbar{margin-top:23px;background:linear-gradient(125deg,#173c58,#132b44);border:1px solid #3d6480;border-radius:13px;padding:20px 25px;display:flex;justify-content:space-between;align-items:center;gap:20px}.turnbar h3{margin:6px 0}.turnbar p{font-size:.77rem;color:#a5bfd2;margin:0}.turn-actions{display:flex;gap:8px;flex-wrap:wrap}.game-footer{padding:19px clamp(16px,3vw,39px);display:flex;justify-content:space-between;gap:10px;font-size:.63rem;letter-spacing:.08em;color:#91aabd;border-top:1px solid #213e56}.toast{position:fixed;bottom:25px;right:25px;max-width:min(90vw,460px);z-index:99;pointer-events:none;background:#1b3a52;border:1px solid #5e869e;box-shadow:0 15px 45px #0009;color:#fff;padding:14px 19px;border-radius:11px;font-size:.82rem;transform:translateY(140px);opacity:0;transition:transform .25s,opacity .25s}.toast.visible{transform:none;opacity:1}.toast.error{border-color:var(--red);background:#4c2a34}@media(max-width:1180px){.game-shell{grid-template-columns:190px minmax(0,1fr)}.dashboard-grid{grid-template-columns:1fr}.stats-bar{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar{padding-left:10px;padding-right:10px}}@media(max-width:800px){.onboarding{grid-template-columns:1fr;gap:25px;padding:24px}.intro-copy .eyebrow{margin-bottom:20px}.intro-copy h1{font-size:3.8rem}.fine-print{margin-top:14px}.game-shell{display:block}.sidebar{position:relative;height:auto;padding:14px}.sidebar-brand{padding-bottom:12px}.nav-label,.sidebar-bottom{display:none}.nav-items{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px}.nav-item{width:auto;flex:none;padding:9px 11px;font-size:.75rem;gap:6px}.nav-item span{font-size:1rem;width:18px}.topbar{align-items:flex-start;flex-wrap:wrap}.topbar-controls{width:100%}.compact-label{display:none}.page-title{align-items:start}.turnbar{flex-direction:column;align-items:stretch}.turn-actions{width:100%}.turn-actions .btn{flex:1}.game-footer{flex-direction:column}}@media(max-width:480px){.stat{padding:15px 12px}.stat strong{font-size:1.16rem}.stat small{font-size:.6rem}.stats-bar{gap:8px}.panel{padding:17px}.map-panel .panel-heading{padding:16px 16px 0}.map-legend{padding:0 16px 12px}.map-disclaimer{padding:0 16px 12px}.topbar-controls select{max-width:140px}.page-title{flex-direction:column}.game-footer{font-size:.59rem}.fiscal-panel{flex-direction:column;gap:10px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
@@ -874,7 +874,7 @@ button.v221-hud-cell:hover{background:#1e4254}
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◈ Gestão empresarial</span><span>◈ 30 cidades brasileiras</span><span>◈ Jogue offline</span></div>
       <p class="v21-art-disclaimer">Arte promocional conceitual · As cidades e os lotes do jogo são representações fictícias.</p>
-      <p class="fine-print"><span id="intro-version">v2.4.0-alpha.1</span> — simulador empresarial offline. Dados oficiais e estimativas fictícias identificados.</p>
+      <p class="fine-print"><span id="intro-version">v2.4.0-alpha.2</span> — simulador empresarial offline. Dados oficiais e estimativas fictícias identificados.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -922,7 +922,7 @@ button.v221-hud-cell:hover{background:#1e4254}
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
       <details class="world-warning legal-warning v21-legal-note"><summary>ⓘ SIMULAÇÃO EDUCATIVA <span>Dados econômicos simulados e tributos não oficiais · ver limites</span></summary><p>Indicadores econômicos do jogo são fictícios, salvo população e PIB identificados como oficiais. Cenários tributários não são apuração legal. Regras sem cobertura não representam isenção nem imposto zero.</p></details>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v2.4.0-alpha.1</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v2.4.0-alpha.2</span></div>
         <section id="stats-bar" class="stats-bar v21-hud" aria-label="Indicadores financeiros e operacionais do grupo">
           <div class="stat stat--cash"><span><i class="v21-stat-icon" aria-hidden="true">◇</i> CAIXA DO GRUPO</span><strong id="kpi-cash">—</strong><small>Saldo disponível · não é receita</small></div>
           <div class="stat stat--revenue"><span><i class="v21-stat-icon" aria-hidden="true">↗</i> RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Vendas realizadas · toda a carreira</small></div>
@@ -1158,7 +1158,19 @@ button.v221-hud-cell:hover{background:#1e4254}
             <div id="strategy-risks" class="strategy-risks" aria-live="polite"></div>
             <p class="field-hint">Ponto de equilíbrio estimado = despesa operacional fixa diária ÷ margem de contribuição média do mix, sem impostos. Capital de giro gerencial = caixa + estoque + trânsito + recebíveis − obrigações. A previsão respeita estoque atual e entregas já pagas; não prevê novas compras, crédito, tributos ou alterações futuras da concorrência. Saldo positivo não é promessa de liquidez.</p>
           </article></details></div>
-<div class="v23-subpane" id="v23-pane-administrativo-rh-dp" role="tabpanel" data-section-pane="administrativo:rh-dp" aria-labelledby="v23-tab-administrativo-rh-dp" hidden><article class="panel v23-pending" role="note"><div class="panel-heading"><h3>Recursos Humanos / DP</h3><span class="tag-soft">EM PREPARAÇÃO</span></div><p>Funcionários, salários e encargos não são simulados. Departamento reservado, sem cadastro de empregados, folha ou vínculos trabalhistas; nenhum registro econômico fictício é criado.</p><p class="field-hint">Nenhum dado ou movimento fictício é criado nesta seção.</p></article></div><div class="v23-subpane" id="v23-pane-administrativo-contabilidade" role="tabpanel" data-section-pane="administrativo:contabilidade" aria-labelledby="v23-tab-administrativo-contabilidade" hidden>
+<div class="v23-subpane" id="v23-pane-administrativo-rh-dp" role="tabpanel" data-section-pane="administrativo:rh-dp" aria-labelledby="v23-tab-administrativo-rh-dp" hidden>
+ <article class="panel"><div class="panel-heading"><h3>RH/DP · equipe e folha simuladas</h3><span class="tag-soft">V2.4-B · FICTÍCIO</span></div>
+ <p class="field-hint">Cadastro de empregados fictícios por unidade. Salários e competências são parâmetros do jogo, sem validade trabalhista ou previdenciária. Não são CLT, FGTS, INSS, eSocial ou obrigações reais. Não informe CPF ou dados pessoais reais.</p>
+ <form id="rh-hire-form" class="finance-filters"><div class="dashboard-grid">
+ <label>Unidade <select id="rh-hire-unit" required></select></label>
+ <label>Nome fictício <input id="rh-hire-name" type="text" minlength="2" maxlength="50" required placeholder="Ex.: Marina, personagem do jogo"></label>
+ <label>Cargo <select id="rh-hire-role"><option value="atendimento">Atendimento · R$ 1.500/mês · +6%</option><option value="logistica">Logística · R$ 1.900/mês · +8%</option><option value="gestao">Gestão · R$ 3.000/mês · +4%</option></select></label>
+ </div><button type="submit" class="btn btn-primary" id="rh-hire-submit">Contratar personagem</button></form>
+ <p class="field-hint" id="rh-summary" aria-live="polite">Nenhum funcionário contratado.</p>
+ <p class="field-hint">Máximo de quatro ativos por unidade, bônus combinado limitado a 25% da captação de vendas simuladas. Folha reconhecida no fim do mês (dias trabalhados / 30, máximo 30 dias), com pagamento manual pelo caixa compartilhado. Saves antigos não recebem folhas retroativas.</p>
+ <div id="rh-unit-list" aria-live="polite"><p class="muted">Inaugure a primeira unidade.</p></div>
+ </article>
+</div><div class="v23-subpane" id="v23-pane-administrativo-contabilidade" role="tabpanel" data-section-pane="administrativo:contabilidade" aria-labelledby="v23-tab-administrativo-contabilidade" hidden>
 <div class="view-toolbar"><span>CONTABILIDADE · DEMONSTRATIVOS E RAZÃO</span><button type="button" class="btn btn-outline" data-section-go="administrativo:financas">Ver Finanças ↗</button></div>
 <p class="field-hint">DRE gerencial, balanço consolidado, conciliação e razão do mesmo livro contábil. Os filtros de período acima são compartilhados com Finanças, sem duplicação de demonstrativos.</p>
 <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3 id="finance-statement-title">Resumo realizado</h3><span class="tag-soft">M11 · LEDGER</span></div><div class="statement-switch" role="group" aria-label="Demonstrativos contábeis"><button type="button" data-statement-view="summary" aria-pressed="true">Resumo</button><button type="button" data-statement-view="dre" aria-pressed="false">DRE</button><button type="button" data-statement-view="balance" aria-pressed="false">Balanço</button><button type="button" data-statement-view="cash" aria-pressed="false">Caixa</button><button type="button" data-statement-view="check" aria-pressed="false">Conferência</button></div><dl class="finance-list" id="finance-summary"></dl><p id="finance-statement-note" class="field-hint" aria-live="polite">Demonstrações gerenciais: tributos apenas quando efetivamente simulados e contabilizados.</p><div class="cmv-note"><strong>Entenda o CMV</strong><p>Compras entram primeiro em estoque. Quando há vendas, o custo das unidades vendidas vira <strong>CMV</strong>. Lucro bruto = receita − CMV. Resultado operacional = lucro bruto − despesas. Na hipótese fiscal habilitada, a despesa simulada será apresentada separadamente.</p></div><p class="muted">Fluxos do período filtrado e separados por unidade; saldos de estoque e obrigações são acumulados até o encerramento. O caixa não é repartido artificialmente entre filiais: somente a consulta consolidada exibe o saldo compartilhado.</p></article><article class="panel"><div class="panel-heading"><h3>Lançamentos do período</h3><span class="tag-soft" id="journal-count">—</span></div><div id="journal-events" class="event-list"></div></article></div></div>
@@ -1208,16 +1220,16 @@ button.v221-hud-cell:hover{background:#1e4254}
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v2.4.0-alpha.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v2.4.0-alpha.2</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>
   <div class="toast" id="toast" aria-live="polite" role="status"></div>
   <script>
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.4.0-alpha.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.4.0-alpha.2 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '2.4.0-alpha.1';
+  const VERSION = '2.4.0-alpha.2';
   const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -1366,6 +1378,71 @@ const CidadeCore = (() => {
         event(draft,'PARALEGAL.CONCLUIDO',`${service.label} concluído para ${unit.businessId} (simulação).`,
           {service:p.service,expiresAt},unit.businessId);
       }
+    }
+  }
+
+  // V2.4-B: RH e folha do jogo, armazenados somente em eventos auditados (schema 9).
+  const RH_ROLES=Object.freeze({
+    atendimento:Object.freeze({label:'Atendimento',salaryCents:150000,productivityPercent:6}),
+    logistica:Object.freeze({label:'Logística',salaryCents:190000,productivityPercent:8}),
+    gestao:Object.freeze({label:'Gestão',salaryCents:300000,productivityPercent:4})
+  });
+  function rhEmployees(state,asOf=state?.calendar?.date){
+    if(!state)return [];
+    const rows=new Map();
+    for(const e of state.audit.events){
+      if(e.date>asOf)continue;
+      if(e.type==='RH.CONTRATADO'&&e.data&&RH_ROLES[e.data.role]&&!rows.has(e.data.employeeId)){
+        rows.set(e.data.employeeId,{id:e.data.employeeId,businessId:e.businessId,name:e.data.employeeName,
+          role:e.data.role,hiredAt:e.date,dismissedAt:null,salaryCents:RH_ROLES[e.data.role].salaryCents});
+      }else if(e.type==='RH.DESLIGADO'&&e.data){
+        const employee=rows.get(e.data.employeeId);
+        if(employee)employee.dismissedAt=e.date;
+      }
+    }
+    return [...rows.values()];
+  }
+  function rhProductivity(state,businessId,asOf=state.calendar.date){
+    return Math.min(25,rhEmployees(state,asOf).filter(x=>x.businessId===businessId&&!x.dismissedAt)
+      .reduce((n,x)=>n+RH_ROLES[x.role].productivityPercent,0));
+  }
+  function rhReport(state){
+    if(!state)return {units:[],totalActive:0,pendingCents:0};
+    const employees=rhEmployees(state);
+    const payrollEvents=state.audit.events.filter(e=>e.type==='RH.FOLHA_APURADA');
+    const payments=state.audit.events.filter(e=>e.type==='RH.FOLHA_PAGA');
+    const units=businesses(state).map(b=>{
+      const staff=employees.filter(x=>x.businessId===b.id);
+      const active=staff.filter(x=>!x.dismissedAt);
+      const payrolls=payrollEvents.filter(e=>e.businessId===b.id).map(e=>{
+        const paid=payments.some(p=>p.businessId===b.id&&p.data?.period===e.data.period);
+        return {period:e.data.period,amount:e.data.amount,employees:e.data.employees,status:paid?'PAID':'OPEN'};
+      });
+      return {businessId:b.id,city:cityById(b.cityId)?.name||'—',sector:b.sector,
+        employees:staff,payrolls,activeCount:active.length,monthlyCents:active.reduce((n,x)=>n+x.salaryCents,0),
+        bonusPercent:Math.min(25,active.reduce((n,x)=>n+RH_ROLES[x.role].productivityPercent,0)),
+        pendingCents:payrolls.filter(p=>p.status==='OPEN').reduce((n,p)=>n+p.amount,0)};
+    });
+    return {units,totalActive:units.reduce((n,u)=>n+u.activeCount,0),
+      pendingCents:units.reduce((n,u)=>n+u.pendingCents,0)};
+  }
+  function accruePayrollMonth(draft,period){
+    const start=period+'-01';
+    const end=new Date(Date.UTC(Number(period.slice(0,4)),Number(period.slice(5,7)),0)).toISOString().slice(0,10);
+    const staff=rhEmployees(draft);
+    for(const b of businesses(draft)){
+      if(draft.audit.events.some(e=>e.type==='RH.FOLHA_APURADA'&&e.businessId===b.id&&e.data?.period===period))continue;
+      const eligible=staff.filter(x=>x.businessId===b.id&&x.hiredAt<=end&&(!x.dismissedAt||x.dismissedAt>=start));
+      const amount=eligible.reduce((sum,x)=>{
+        const from=x.hiredAt>start?x.hiredAt:start,to=x.dismissedAt&&x.dismissedAt<end?x.dismissedAt:end;
+        const days=Math.min(30,Math.round((Date.parse(to+'T12:00:00Z')-Date.parse(from+'T12:00:00Z'))/86400000)+1);
+        return sum+Math.round(x.salaryCents*days/30);
+      },0);
+      if(!amount)continue;
+      journal(draft,'RH/DP · folha simulada '+period+' · '+b.id,[
+        {account:'EXPENSE',debit:amount,credit:0},{account:'PAYABLE',debit:0,credit:amount}],b.id,'PAYROLL_ACCRUAL');
+      event(draft,'RH.FOLHA_APURADA','Folha fictícia '+period+' registrada como obrigação: '+money(amount)+'.',
+        {period,amount,employees:eligible.length},b.id);
     }
   }
   function initialProducts(sector,baseStock=0,basePrice=null) {
@@ -1566,7 +1643,7 @@ const CidadeCore = (() => {
     TAX_EXPENSE:Object.freeze({name:'Tributo simulado por competência',group:'EXPENSE',normal:'DEBIT'}),
     TAX_PAYABLE:Object.freeze({name:'Tributo simulado a pagar',group:'LIABILITY',normal:'CREDIT'})
   });
-  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','UNCLASSIFIED']);
+  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','PAYROLL_ACCRUAL','PAYROLL_PAYMENT','UNCLASSIFIED']);
   function transactionKind(j){
     if(TRANSACTION_KINDS.includes(j.kind))return j.kind;
     if(j.memo==='Capital inicial do empreendedor')return 'CAPITAL';
@@ -1702,6 +1779,44 @@ const CidadeCore = (() => {
   }
   function handler(draft,type,payload) {
     const b=activeBusiness(draft);
+
+    if(type==='RH.CONTRATAR'){
+      const target=businessById(draft,String(payload.businessId||''));
+      const role=String(payload.role||''),definition=RH_ROLES[role];
+      const name=String(payload.name||'').trim().replace(/\s+/g,' ');
+      assert(target,'Unidade não encontrada para contratação');
+      assert(definition,'Cargo simulado desconhecido');
+      assert(name.length>=2&&name.length<=50,'Nome fictício deve ter entre 2 e 50 caracteres');
+      assert(rhEmployees(draft).filter(x=>x.businessId===target.id&&!x.dismissedAt).length<4,
+        'Limite de quatro funcionários ativos por unidade');
+      const employeeId='emp-'+(draft.audit.eventSeq+1);
+      event(draft,'RH.CONTRATADO',name+' contratado para '+definition.label+' (simulação).',
+        {employeeId,employeeName:name,role},target.id);
+      return;
+    }
+    if(type==='RH.DESLIGAR'){
+      const employee=rhEmployees(draft).find(x=>x.id===String(payload.employeeId||'')&&!x.dismissedAt);
+      assert(employee,'Funcionário ativo não encontrado');
+      event(draft,'RH.DESLIGADO',employee.name+' desligado do quadro fictício.',
+        {employeeId:employee.id},employee.businessId);
+      return;
+    }
+    if(type==='RH.PAGAR_FOLHA'){
+      const unit=businessById(draft,String(payload.businessId||''));
+      const period=String(payload.period||'');
+      assert(unit,'Unidade inexistente para pagamento');
+      const sheet=rhReport(draft).units.find(x=>x.businessId===unit.id)?.payrolls
+        .find(x=>x.period===period&&x.status==='OPEN');
+      assert(sheet&&sheet.amount>0,'Folha não apurada ou já quitada');
+      assert(balance(draft,'CASH')>=sheet.amount,'Caixa compartilhado insuficiente para quitar a folha');
+      assert(balance(draft,'PAYABLE')>=sheet.amount,'Obrigações contábeis insuficientes para quitar a folha');
+      journal(draft,'RH/DP · pagamento simulado '+period+' · '+unit.id,[
+        {account:'PAYABLE',debit:sheet.amount,credit:0},{account:'CASH',debit:0,credit:sheet.amount}],
+        unit.id,'PAYROLL_PAYMENT');
+      event(draft,'RH.FOLHA_PAGA','Folha fictícia '+period+' paga: '+money(sheet.amount)+'.',
+        {period,amount:sheet.amount},unit.id);
+      return;
+    }
     if(type==='PARALEGAL.PROTOCOLAR'){
       const target=businessById(draft,String(payload.businessId||''));
       const serviceId=String(payload.service||''),service=PARALEGAL_SERVICES[serviceId];
@@ -1834,18 +1949,20 @@ const CidadeCore = (() => {
   function day(draft) {
     const units=businesses(draft);
     const season=1+0.13*Math.sin((draft.calendar.tick%365)/365*Math.PI*2);
+    const staff=rhEmployees(draft);
     for(const b of units){
       const s=SECTORS[b.sector],city=cityById(b.cityId||draft.player.cityId);
       // O mercado endereçável de uma cidade/ramo é compartilhado pelas lojas do jogador.
       const rivals=units.filter(x=>x.cityId===b.cityId&&x.sector===b.sector).length;
       const share=1/rivals;
+      const bonusPercent=Math.min(25,staff.filter(x=>x.businessId===b.id&&!x.dismissedAt).reduce((n,x)=>n+RH_ROLES[x.role].productivityPercent,0));
       const items=[],demandLines=[];
       let estimated=0,fulfilled=0,unmet=0,withoutStock=0;
       for(const p of b.products){
         const competitorPrice=competitorReference(draft,p,city);
         const price=effectivePrice(b,p,draft.calendar.date);
         const elasticity=demandElasticity(price,competitorPrice,city);
-        const base=p.demand*(city.factor/100)*elasticity*season*share;
+        const base=p.demand*(city.factor/100)*elasticity*season*share*(1+bonusPercent/100);
         const demand=Math.max(0,Math.floor(base*(0.75+random(draft)*0.55)));
         const sold=Math.min(p.stockUnits,demand),lost=demand-sold;
         estimated+=demand;fulfilled+=sold;unmet+=lost;
@@ -1855,7 +1972,7 @@ const CidadeCore = (() => {
       }
       if(items.length)registerSale(draft,b,items,'SIMULACAO_DIARIA');
       event(draft,'DEMANDA.SIMULADA',`${b.id} · ${city.name}: ${estimated} un. procuradas, ${fulfilled} vendidas, ${unmet} não atendidas.`,
-        {estimated,fulfilled,unmet,withoutStock,lostPotentialCents:demandLines.reduce((n,x)=>n+x.lostPotentialCents,0),items:demandLines,marketShare:share,regionalFactor:city.factor,regionalDataset:POPULATION_SOURCE.id,regionalGdpDataset:GDP_SOURCE.id,regionalModelId:'REGIONAL-V2-PIB'},b.id);
+        {estimated,fulfilled,unmet,withoutStock,lostPotentialCents:demandLines.reduce((n,x)=>n+x.lostPotentialCents,0),items:demandLines,...(bonusPercent?{staffBonusPercent:bonusPercent}:{}),marketShare:share,regionalFactor:city.factor,regionalDataset:POPULATION_SOURCE.id,regionalGdpDataset:GDP_SOURCE.id,regionalModelId:'REGIONAL-V2-PIB'},b.id);
       const cash=balance(draft,'CASH'),expense=s.dailyCost;
       journal(draft,`Despesa operacional diária · ${b.id}`,[
         {account:'EXPENSE',debit:expense,credit:0},
@@ -1867,7 +1984,10 @@ const CidadeCore = (() => {
       handler(draft,'IA.AJUSTAR_PRECO',{priceIndex:clamp(draft.world.competitor.priceIndex+change,75,125)});
     }
     const finished=draft.calendar.date;
-    if(dateNext(finished).slice(0,7)!==finished.slice(0,7))closeTaxMonth(draft,finished.slice(0,7));
+    if(dateNext(finished).slice(0,7)!==finished.slice(0,7)){
+      accruePayrollMonth(draft,finished.slice(0,7));
+      closeTaxMonth(draft,finished.slice(0,7));
+    }
     event(draft,'DIA.ENCERRADO',`Dia ${finished} concluído.`,{finished});
     draft.calendar.tick++;
     draft.calendar.date=dateNext(draft.calendar.date);
@@ -2098,12 +2218,13 @@ const CidadeCore = (() => {
     const expenseOf=j=>j.entries.reduce((n,e)=>n+(e.account==='EXPENSE'?e.debit-e.credit:0),0);
     const fixed=expenses.filter(j=>transactionKind(j)==='DAILY_EXPENSE').reduce((n,j)=>n+expenseOf(j),0);
     const opening=expenses.filter(j=>transactionKind(j)==='OPENING').reduce((n,j)=>n+expenseOf(j),0);
-    const other=base.expenses-fixed-opening;
+    const payroll=expenses.filter(j=>transactionKind(j)==='PAYROLL_ACCRUAL').reduce((n,j)=>n+expenseOf(j),0);
+    const other=base.expenses-fixed-opening-payroll;
     const corporateResult=base.businessId==='all'?state.economy.ledger.filter(j=>j.date>=base.from&&j.date<=base.effectiveEnd&&
       journalBusinessId(state,j)===null).reduce((n,j)=>n+signedAccount([j],'REVENUE')-signedAccount([j],'COGS')-signedAccount([j],'EXPENSE')-signedAccount([j],'TAX_EXPENSE'),0):0;
     return {period:base.period,from:base.from,to:base.to,effectiveEnd:base.effectiveEnd,label:base.label,
       businessId:base.businessId,revenue:base.revenue,cogs:base.cogs,grossProfit:base.grossProfit,
-      fixedExpenses:fixed,openingExpenses:opening,unclassifiedExpenses:other,
+      fixedExpenses:fixed,openingExpenses:opening,payrollExpenses:payroll,unclassifiedExpenses:other,
       expenses:base.expenses,operatingResult:base.revenue-base.cogs-base.expenses,taxExpense:base.taxExpense,
       resultAfterSimulatedTax:base.profit,corporateResult,
       marginPercent:base.grossMarginPercent,fiscalCoverage:state.fiscal.coverageStatus};
@@ -2124,7 +2245,7 @@ const CidadeCore = (() => {
   }
   function cashFlowStatement(state,period='all',referenceDate=state.calendar.date,range=null,businessId='all'){
     const base=financialReport(state,period,referenceDate,range,businessId);
-    const rows={sales:0,suppliers:0,operating:0,opening:0,taxPayments:0,capital:0,unclassifiedIn:0,unclassifiedOut:0};
+    const rows={sales:0,suppliers:0,operating:0,opening:0,payroll:0,taxPayments:0,capital:0,unclassifiedIn:0,unclassifiedOut:0};
     let inflows=0,outflows=0;
     for(const j of base.entries){
       const debit=j.entries.reduce((n,e)=>n+(e.account==='CASH'?e.debit:0),0);
@@ -2139,6 +2260,7 @@ const CidadeCore = (() => {
       else if(kind==='DAILY_EXPENSE'&&net<0)rows.operating+=-net;
       else if(kind==='OPENING'&&net<0)rows.opening+=-net;
       else if(kind==='TAX_PAYMENT'&&net<0)rows.taxPayments+=-net;
+      else if(kind==='PAYROLL_PAYMENT'&&net<0)rows.payroll+=-net;
       else if(net>0)rows.unclassifiedIn+=net;
       else rows.unclassifiedOut+=-net;
     }
@@ -2291,7 +2413,7 @@ const CidadeCore = (() => {
     return {state,migrated,message:migrated?'Carreira migrada para V1.9: histórico preservado; cenário tributário desativado até confirmação explícita.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();
 
@@ -3017,6 +3139,39 @@ function bindRestock(){
             <td><button type="button" class="btn btn-outline" data-paralegal-action="${escape(p.service)}" data-paralegal-unit="${escape(u.businessId)}" ${eligible?'':'disabled'}>${p.status==='VENCIDA'?'Renovar':'Solicitar'}</button></td></tr>`;}).join('')}</tbody></table></div></article>`;
     }).join('');
   }
+
+  function renderRH(){
+    const target=$('rh-unit-list');if(!target)return;
+    const report=Core.rhReport(state);
+    const selector=$('rh-hire-unit'),previous=selector.value;
+    selector.replaceChildren(...report.units.map(u=>{
+      const opt=document.createElement('option');opt.value=u.businessId;
+      opt.textContent=u.businessId+' · '+u.city;return opt;
+    }));
+    if(report.units.some(u=>u.businessId===previous))selector.value=previous;
+    $('rh-hire-submit').disabled=!report.units.length;
+    setText('rh-summary',report.totalActive+' funcionários ativos · folhas pendentes: '+Core.money(report.pendingCents));
+    if(!report.units.length){target.innerHTML='<p class="muted">Inaugure uma unidade para contratar personagens.</p>';return;}
+    target.innerHTML=report.units.map(u=>{
+      const active=u.employees.filter(x=>!x.dismissedAt),former=u.employees.filter(x=>x.dismissedAt);
+      const workers=active.map(x=>'<tr><td>'+escape(x.name)+'<br><small>'+escape(x.id)+'</small></td><td>'+
+        escape(Core.RH_ROLES[x.role].label)+'</td><td>'+escape(Core.money(x.salaryCents))+
+        '</td><td><button type="button" class="btn btn-outline" data-rh-dismiss="'+escape(x.id)+'">Desligar</button></td></tr>').join('');
+      const sheets=u.payrolls.slice().reverse().map(p=>'<tr><td>'+escape(p.period)+'</td><td>'+escape(Core.money(p.amount))+
+        '</td><td>'+(p.status==='OPEN'?'Em aberto':'Paga')+'</td><td>'+
+        (p.status==='OPEN'?'<button type="button" class="btn btn-outline" data-rh-pay="'+escape(p.period)+'" data-rh-unit="'+escape(u.businessId)+'">Pagar</button>':'—')+
+        '</td></tr>').join('');
+      return '<article class="panel spaced"><div class="panel-heading"><h4>'+escape(u.businessId)+' · '+escape(u.city)+'</h4>'+
+        '<span class="tag-soft">'+u.activeCount+'/4 ativos · bônus '+u.bonusPercent+'%</span></div>'+
+        '<p class="field-hint">Salários-base mensais: '+escape(Core.money(u.monthlyCents))+
+        ' · folhas ainda não pagas: '+escape(Core.money(u.pendingCents))+
+        ' · '+former.length+' desligado(s) no histórico.</p>'+
+        '<h4>Equipe ativa</h4><div class="table-scroll"><table class="catalog-table"><thead><tr><th>Funcionário</th><th>Cargo</th><th>Salário fictício</th><th>Ação</th></tr></thead><tbody>'+
+        (workers||'<tr><td colspan="4">Sem funcionários ativos.</td></tr>')+'</tbody></table></div>'+
+        '<h4>Folhas mensais concluídas</h4><div class="table-scroll"><table class="catalog-table"><thead><tr><th>Mês</th><th>Total</th><th>Situação</th><th>Ação</th></tr></thead><tbody>'+
+        (sheets||'<tr><td colspan="4">A folha é reconhecida no fim do mês do jogo.</td></tr>')+'</tbody></table></div></article>';
+    }).join('');
+  }
   function renderPriceHistory(){
     const items=Core.priceHistory(state),container=$('price-history');
     setText('price-history-count',`${items.length} alteração(ões)`);
@@ -3085,7 +3240,7 @@ function bindRestock(){
     const categories=[
       ['Receitas de vendas efetivamente recebidas',cat.sales],['Aportes de capital',cat.capital],
       ['Outras entradas',cat.unclassifiedIn],['Pagamentos a fornecedores',cat.suppliers],
-      ['Despesas operacionais pagas',cat.operating],['Custos de abertura pagos',cat.opening],
+      ['Despesas operacionais pagas',cat.operating],['Salários fictícios pagos',cat.payroll],['Custos de abertura pagos',cat.opening],
       ['Tributos simulados pagos',cat.taxPayments],['Outras saídas',cat.unclassifiedOut]
     ];
     $('treasury-categories').innerHTML=categories.map(([title,value])=>'<dt>'+escape(title)+'</dt><dd>'+escape(Core.money(value))+'</dd>').join('');
@@ -3154,7 +3309,7 @@ function bindRestock(){
       const x=Core.incomeStatement(state,q.period,financeQueryDate(q).date,financeQueryDate(q).range,financeScope);
       rows.splice(0,rows.length,...[
         ['Receita de vendas',x.revenue],['(-) CMV',x.cogs],['Lucro bruto',x.grossProfit],
-        ['(-) Despesas fixas operacionais',x.fixedExpenses],['(-) Abertura de unidades',x.openingExpenses],
+        ['(-) Despesas fixas operacionais',x.fixedExpenses],['(-) Folha fictícia apurada',x.payrollExpenses],['(-) Abertura de unidades',x.openingExpenses],
         ['(-) Outras despesas não classificadas',x.unclassifiedExpenses],['Resultado antes dos tributos',x.operatingResult],
         ['(-) Tributos simulados lançados no período',x.taxExpense],['Resultado após tributos simulados',x.resultAfterSimulatedTax]
       ]);
@@ -3174,7 +3329,7 @@ function bindRestock(){
       rows.splice(0,rows.length,...[
         ['Caixa inicial do grupo',x.openingCash],['Entradas de vendas',x.categories.sales],
         ['Aportes ao grupo',x.categories.capital],['Outras entradas sem classificação',x.categories.unclassifiedIn],
-        ['Saídas para fornecedores',x.categories.suppliers],['Saídas operacionais',x.categories.operating],
+        ['Saídas para fornecedores',x.categories.suppliers],['Saídas operacionais',x.categories.operating],['Salários fictícios pagos',x.categories.payroll],
         ['Aberturas de unidades',x.categories.opening],['Pagamento de tributo simulado',x.categories.taxPayments],['Outras saídas sem classificação',x.categories.unclassifiedOut],
         ['Variação líquida de caixa',x.netCash],['Caixa final do grupo',x.closingCash]
       ]);
@@ -3347,6 +3502,7 @@ function bindRestock(){
     if((tab==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo))||financeQuery)renderFinances();
     renderFiscal();
     renderParalegal();
+    renderRH();
     const report=Core.diagnostics(state);
     $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal',state.fiscal.coverageStatus]].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
     setText('turn-message',!b?'Abra sua primeira empresa.':b.stockUnits===0?'Seu estoque está vazio. Reabasteça.':`Sua empresa está operando há ${state.calendar.tick} dia(s).`);
@@ -3405,6 +3561,23 @@ function bindRestock(){
     for(const button of document.querySelectorAll('[data-section-go]'))button.addEventListener('click',()=>goto(...button.dataset.sectionGo.split(':')));
     $('unit-switch').addEventListener('change',e=>{if(e.target.value)commit('EMPRESA.ATIVAR',{businessId:e.target.value});});
     $('finance-scope').addEventListener('change',e=>{financeScope=e.target.value;renderFinances();});
+
+    $('rh-hire-form').addEventListener('submit',e=>{
+      e.preventDefault();
+      const name=$('rh-hire-name').value.trim(),role=$('rh-hire-role').value,businessId=$('rh-hire-unit').value;
+      const def=Core.RH_ROLES[role];if(!def)return;
+      if(confirm('Contratar '+name+' como '+def.label+' na unidade '+businessId+'? Salário mensal FICTÍCIO '+Core.money(def.salaryCents)+'.'))
+        if(commit('RH.CONTRATAR',{name,role,businessId}))$('rh-hire-name').value='';
+    });
+    $('rh-unit-list').addEventListener('click',e=>{
+      const dismissal=e.target.closest('[data-rh-dismiss]');
+      if(dismissal&&confirm('Desligar personagem? A folha do mês ainda será apurada proporcionalmente.')){
+        commit('RH.DESLIGAR',{employeeId:dismissal.dataset.rhDismiss});return;
+      }
+      const pay=e.target.closest('[data-rh-pay]');
+      if(pay&&confirm('Pagar folha fictícia '+pay.dataset.rhPay+'? Valor descontado do caixa compartilhado.'))
+        commit('RH.PAGAR_FOLHA',{businessId:pay.dataset.rhUnit,period:pay.dataset.rhPay});
+    });
     $('paralegal-unit-list').addEventListener('click',e=>{
       const btn=e.target.closest('[data-paralegal-action]');if(!btn||btn.disabled)return;
       const service=btn.dataset.paralegalAction,businessId=btn.dataset.paralegalUnit;

@@ -1,7 +1,7 @@
 # Implantação candidata V2.4-alpha.1 — Patch A (Paralegal)
 
 **Base:** V2.3.0 homologada, commit `af1f652515f1f691d0da371ccb82a9301834d49d`.
-**Status:** candidata em validação; não homologada e não integrada à main.
+**Status:** HOMOLOGADA por autorização expressa de Yago em 03/11/2026, integrada à main no merge `34b8a3f85c1e9bd88c5cdcfa75882acff190b873` e preservada em `releases/v2.4.0-alpha.1-homologada`. Aprovação formal pelo jogador.
 **Escopo:** Paralegal operacional simulado. RH/DP é o Patch B, Fiscal Operacional o Patch C.
 
 ## Mecânica implementada
@@ -27,4 +27,4 @@
 - **C — V2.4-alpha.3 Fiscal Operacional:** calendário de tarefas, fechamento, controle de obrigações do jogo e pagamentos simulados, sem inventar regimes ou ampliar cálculo tributário não suportado.
 - **V3:** profundidade tributária adicional.
 
-**Não homologar este patch com base apenas na presença do código ou em CI PASS.** A aprovação da candidata requer validação prática e aceite do jogador.
+**Histórico:** após CI aprovado, o jogador autorizou expressamente homologar A e implantar B diretamente na main. Não alegar teste Windows que não tenha sido documentado.

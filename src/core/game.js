@@ -1,7 +1,7 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.4.0-alpha.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.4.0-alpha.2 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '2.4.0-alpha.1';
+  const VERSION = '2.4.0-alpha.2';
   const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -150,6 +150,71 @@ const CidadeCore = (() => {
         event(draft,'PARALEGAL.CONCLUIDO',`${service.label} concluído para ${unit.businessId} (simulação).`,
           {service:p.service,expiresAt},unit.businessId);
       }
+    }
+  }
+
+  // V2.4-B: RH e folha do jogo, armazenados somente em eventos auditados (schema 9).
+  const RH_ROLES=Object.freeze({
+    atendimento:Object.freeze({label:'Atendimento',salaryCents:150000,productivityPercent:6}),
+    logistica:Object.freeze({label:'Logística',salaryCents:190000,productivityPercent:8}),
+    gestao:Object.freeze({label:'Gestão',salaryCents:300000,productivityPercent:4})
+  });
+  function rhEmployees(state,asOf=state?.calendar?.date){
+    if(!state)return [];
+    const rows=new Map();
+    for(const e of state.audit.events){
+      if(e.date>asOf)continue;
+      if(e.type==='RH.CONTRATADO'&&e.data&&RH_ROLES[e.data.role]&&!rows.has(e.data.employeeId)){
+        rows.set(e.data.employeeId,{id:e.data.employeeId,businessId:e.businessId,name:e.data.employeeName,
+          role:e.data.role,hiredAt:e.date,dismissedAt:null,salaryCents:RH_ROLES[e.data.role].salaryCents});
+      }else if(e.type==='RH.DESLIGADO'&&e.data){
+        const employee=rows.get(e.data.employeeId);
+        if(employee)employee.dismissedAt=e.date;
+      }
+    }
+    return [...rows.values()];
+  }
+  function rhProductivity(state,businessId,asOf=state.calendar.date){
+    return Math.min(25,rhEmployees(state,asOf).filter(x=>x.businessId===businessId&&!x.dismissedAt)
+      .reduce((n,x)=>n+RH_ROLES[x.role].productivityPercent,0));
+  }
+  function rhReport(state){
+    if(!state)return {units:[],totalActive:0,pendingCents:0};
+    const employees=rhEmployees(state);
+    const payrollEvents=state.audit.events.filter(e=>e.type==='RH.FOLHA_APURADA');
+    const payments=state.audit.events.filter(e=>e.type==='RH.FOLHA_PAGA');
+    const units=businesses(state).map(b=>{
+      const staff=employees.filter(x=>x.businessId===b.id);
+      const active=staff.filter(x=>!x.dismissedAt);
+      const payrolls=payrollEvents.filter(e=>e.businessId===b.id).map(e=>{
+        const paid=payments.some(p=>p.businessId===b.id&&p.data?.period===e.data.period);
+        return {period:e.data.period,amount:e.data.amount,employees:e.data.employees,status:paid?'PAID':'OPEN'};
+      });
+      return {businessId:b.id,city:cityById(b.cityId)?.name||'—',sector:b.sector,
+        employees:staff,payrolls,activeCount:active.length,monthlyCents:active.reduce((n,x)=>n+x.salaryCents,0),
+        bonusPercent:Math.min(25,active.reduce((n,x)=>n+RH_ROLES[x.role].productivityPercent,0)),
+        pendingCents:payrolls.filter(p=>p.status==='OPEN').reduce((n,p)=>n+p.amount,0)};
+    });
+    return {units,totalActive:units.reduce((n,u)=>n+u.activeCount,0),
+      pendingCents:units.reduce((n,u)=>n+u.pendingCents,0)};
+  }
+  function accruePayrollMonth(draft,period){
+    const start=period+'-01';
+    const end=new Date(Date.UTC(Number(period.slice(0,4)),Number(period.slice(5,7)),0)).toISOString().slice(0,10);
+    const staff=rhEmployees(draft);
+    for(const b of businesses(draft)){
+      if(draft.audit.events.some(e=>e.type==='RH.FOLHA_APURADA'&&e.businessId===b.id&&e.data?.period===period))continue;
+      const eligible=staff.filter(x=>x.businessId===b.id&&x.hiredAt<=end&&(!x.dismissedAt||x.dismissedAt>=start));
+      const amount=eligible.reduce((sum,x)=>{
+        const from=x.hiredAt>start?x.hiredAt:start,to=x.dismissedAt&&x.dismissedAt<end?x.dismissedAt:end;
+        const days=Math.min(30,Math.round((Date.parse(to+'T12:00:00Z')-Date.parse(from+'T12:00:00Z'))/86400000)+1);
+        return sum+Math.round(x.salaryCents*days/30);
+      },0);
+      if(!amount)continue;
+      journal(draft,'RH/DP · folha simulada '+period+' · '+b.id,[
+        {account:'EXPENSE',debit:amount,credit:0},{account:'PAYABLE',debit:0,credit:amount}],b.id,'PAYROLL_ACCRUAL');
+      event(draft,'RH.FOLHA_APURADA','Folha fictícia '+period+' registrada como obrigação: '+money(amount)+'.',
+        {period,amount,employees:eligible.length},b.id);
     }
   }
   function initialProducts(sector,baseStock=0,basePrice=null) {
@@ -350,7 +415,7 @@ const CidadeCore = (() => {
     TAX_EXPENSE:Object.freeze({name:'Tributo simulado por competência',group:'EXPENSE',normal:'DEBIT'}),
     TAX_PAYABLE:Object.freeze({name:'Tributo simulado a pagar',group:'LIABILITY',normal:'CREDIT'})
   });
-  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','UNCLASSIFIED']);
+  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','PAYROLL_ACCRUAL','PAYROLL_PAYMENT','UNCLASSIFIED']);
   function transactionKind(j){
     if(TRANSACTION_KINDS.includes(j.kind))return j.kind;
     if(j.memo==='Capital inicial do empreendedor')return 'CAPITAL';
@@ -486,6 +551,44 @@ const CidadeCore = (() => {
   }
   function handler(draft,type,payload) {
     const b=activeBusiness(draft);
+
+    if(type==='RH.CONTRATAR'){
+      const target=businessById(draft,String(payload.businessId||''));
+      const role=String(payload.role||''),definition=RH_ROLES[role];
+      const name=String(payload.name||'').trim().replace(/\s+/g,' ');
+      assert(target,'Unidade não encontrada para contratação');
+      assert(definition,'Cargo simulado desconhecido');
+      assert(name.length>=2&&name.length<=50,'Nome fictício deve ter entre 2 e 50 caracteres');
+      assert(rhEmployees(draft).filter(x=>x.businessId===target.id&&!x.dismissedAt).length<4,
+        'Limite de quatro funcionários ativos por unidade');
+      const employeeId='emp-'+(draft.audit.eventSeq+1);
+      event(draft,'RH.CONTRATADO',name+' contratado para '+definition.label+' (simulação).',
+        {employeeId,employeeName:name,role},target.id);
+      return;
+    }
+    if(type==='RH.DESLIGAR'){
+      const employee=rhEmployees(draft).find(x=>x.id===String(payload.employeeId||'')&&!x.dismissedAt);
+      assert(employee,'Funcionário ativo não encontrado');
+      event(draft,'RH.DESLIGADO',employee.name+' desligado do quadro fictício.',
+        {employeeId:employee.id},employee.businessId);
+      return;
+    }
+    if(type==='RH.PAGAR_FOLHA'){
+      const unit=businessById(draft,String(payload.businessId||''));
+      const period=String(payload.period||'');
+      assert(unit,'Unidade inexistente para pagamento');
+      const sheet=rhReport(draft).units.find(x=>x.businessId===unit.id)?.payrolls
+        .find(x=>x.period===period&&x.status==='OPEN');
+      assert(sheet&&sheet.amount>0,'Folha não apurada ou já quitada');
+      assert(balance(draft,'CASH')>=sheet.amount,'Caixa compartilhado insuficiente para quitar a folha');
+      assert(balance(draft,'PAYABLE')>=sheet.amount,'Obrigações contábeis insuficientes para quitar a folha');
+      journal(draft,'RH/DP · pagamento simulado '+period+' · '+unit.id,[
+        {account:'PAYABLE',debit:sheet.amount,credit:0},{account:'CASH',debit:0,credit:sheet.amount}],
+        unit.id,'PAYROLL_PAYMENT');
+      event(draft,'RH.FOLHA_PAGA','Folha fictícia '+period+' paga: '+money(sheet.amount)+'.',
+        {period,amount:sheet.amount},unit.id);
+      return;
+    }
     if(type==='PARALEGAL.PROTOCOLAR'){
       const target=businessById(draft,String(payload.businessId||''));
       const serviceId=String(payload.service||''),service=PARALEGAL_SERVICES[serviceId];
@@ -618,18 +721,20 @@ const CidadeCore = (() => {
   function day(draft) {
     const units=businesses(draft);
     const season=1+0.13*Math.sin((draft.calendar.tick%365)/365*Math.PI*2);
+    const staff=rhEmployees(draft);
     for(const b of units){
       const s=SECTORS[b.sector],city=cityById(b.cityId||draft.player.cityId);
       // O mercado endereçável de uma cidade/ramo é compartilhado pelas lojas do jogador.
       const rivals=units.filter(x=>x.cityId===b.cityId&&x.sector===b.sector).length;
       const share=1/rivals;
+      const bonusPercent=Math.min(25,staff.filter(x=>x.businessId===b.id&&!x.dismissedAt).reduce((n,x)=>n+RH_ROLES[x.role].productivityPercent,0));
       const items=[],demandLines=[];
       let estimated=0,fulfilled=0,unmet=0,withoutStock=0;
       for(const p of b.products){
         const competitorPrice=competitorReference(draft,p,city);
         const price=effectivePrice(b,p,draft.calendar.date);
         const elasticity=demandElasticity(price,competitorPrice,city);
-        const base=p.demand*(city.factor/100)*elasticity*season*share;
+        const base=p.demand*(city.factor/100)*elasticity*season*share*(1+bonusPercent/100);
         const demand=Math.max(0,Math.floor(base*(0.75+random(draft)*0.55)));
         const sold=Math.min(p.stockUnits,demand),lost=demand-sold;
         estimated+=demand;fulfilled+=sold;unmet+=lost;
@@ -639,7 +744,7 @@ const CidadeCore = (() => {
       }
       if(items.length)registerSale(draft,b,items,'SIMULACAO_DIARIA');
       event(draft,'DEMANDA.SIMULADA',`${b.id} · ${city.name}: ${estimated} un. procuradas, ${fulfilled} vendidas, ${unmet} não atendidas.`,
-        {estimated,fulfilled,unmet,withoutStock,lostPotentialCents:demandLines.reduce((n,x)=>n+x.lostPotentialCents,0),items:demandLines,marketShare:share,regionalFactor:city.factor,regionalDataset:POPULATION_SOURCE.id,regionalGdpDataset:GDP_SOURCE.id,regionalModelId:'REGIONAL-V2-PIB'},b.id);
+        {estimated,fulfilled,unmet,withoutStock,lostPotentialCents:demandLines.reduce((n,x)=>n+x.lostPotentialCents,0),items:demandLines,...(bonusPercent?{staffBonusPercent:bonusPercent}:{}),marketShare:share,regionalFactor:city.factor,regionalDataset:POPULATION_SOURCE.id,regionalGdpDataset:GDP_SOURCE.id,regionalModelId:'REGIONAL-V2-PIB'},b.id);
       const cash=balance(draft,'CASH'),expense=s.dailyCost;
       journal(draft,`Despesa operacional diária · ${b.id}`,[
         {account:'EXPENSE',debit:expense,credit:0},
@@ -651,7 +756,10 @@ const CidadeCore = (() => {
       handler(draft,'IA.AJUSTAR_PRECO',{priceIndex:clamp(draft.world.competitor.priceIndex+change,75,125)});
     }
     const finished=draft.calendar.date;
-    if(dateNext(finished).slice(0,7)!==finished.slice(0,7))closeTaxMonth(draft,finished.slice(0,7));
+    if(dateNext(finished).slice(0,7)!==finished.slice(0,7)){
+      accruePayrollMonth(draft,finished.slice(0,7));
+      closeTaxMonth(draft,finished.slice(0,7));
+    }
     event(draft,'DIA.ENCERRADO',`Dia ${finished} concluído.`,{finished});
     draft.calendar.tick++;
     draft.calendar.date=dateNext(draft.calendar.date);
@@ -882,12 +990,13 @@ const CidadeCore = (() => {
     const expenseOf=j=>j.entries.reduce((n,e)=>n+(e.account==='EXPENSE'?e.debit-e.credit:0),0);
     const fixed=expenses.filter(j=>transactionKind(j)==='DAILY_EXPENSE').reduce((n,j)=>n+expenseOf(j),0);
     const opening=expenses.filter(j=>transactionKind(j)==='OPENING').reduce((n,j)=>n+expenseOf(j),0);
-    const other=base.expenses-fixed-opening;
+    const payroll=expenses.filter(j=>transactionKind(j)==='PAYROLL_ACCRUAL').reduce((n,j)=>n+expenseOf(j),0);
+    const other=base.expenses-fixed-opening-payroll;
     const corporateResult=base.businessId==='all'?state.economy.ledger.filter(j=>j.date>=base.from&&j.date<=base.effectiveEnd&&
       journalBusinessId(state,j)===null).reduce((n,j)=>n+signedAccount([j],'REVENUE')-signedAccount([j],'COGS')-signedAccount([j],'EXPENSE')-signedAccount([j],'TAX_EXPENSE'),0):0;
     return {period:base.period,from:base.from,to:base.to,effectiveEnd:base.effectiveEnd,label:base.label,
       businessId:base.businessId,revenue:base.revenue,cogs:base.cogs,grossProfit:base.grossProfit,
-      fixedExpenses:fixed,openingExpenses:opening,unclassifiedExpenses:other,
+      fixedExpenses:fixed,openingExpenses:opening,payrollExpenses:payroll,unclassifiedExpenses:other,
       expenses:base.expenses,operatingResult:base.revenue-base.cogs-base.expenses,taxExpense:base.taxExpense,
       resultAfterSimulatedTax:base.profit,corporateResult,
       marginPercent:base.grossMarginPercent,fiscalCoverage:state.fiscal.coverageStatus};
@@ -908,7 +1017,7 @@ const CidadeCore = (() => {
   }
   function cashFlowStatement(state,period='all',referenceDate=state.calendar.date,range=null,businessId='all'){
     const base=financialReport(state,period,referenceDate,range,businessId);
-    const rows={sales:0,suppliers:0,operating:0,opening:0,taxPayments:0,capital:0,unclassifiedIn:0,unclassifiedOut:0};
+    const rows={sales:0,suppliers:0,operating:0,opening:0,payroll:0,taxPayments:0,capital:0,unclassifiedIn:0,unclassifiedOut:0};
     let inflows=0,outflows=0;
     for(const j of base.entries){
       const debit=j.entries.reduce((n,e)=>n+(e.account==='CASH'?e.debit:0),0);
@@ -923,6 +1032,7 @@ const CidadeCore = (() => {
       else if(kind==='DAILY_EXPENSE'&&net<0)rows.operating+=-net;
       else if(kind==='OPENING'&&net<0)rows.opening+=-net;
       else if(kind==='TAX_PAYMENT'&&net<0)rows.taxPayments+=-net;
+      else if(kind==='PAYROLL_PAYMENT'&&net<0)rows.payroll+=-net;
       else if(net>0)rows.unclassifiedIn+=net;
       else rows.unclassifiedOut+=-net;
     }
@@ -1075,6 +1185,6 @@ const CidadeCore = (() => {
     return {state,migrated,message:migrated?'Carreira migrada para V1.9: histórico preservado; cenário tributário desativado até confirmação explícita.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();

@@ -80,6 +80,39 @@
             <td><button type="button" class="btn btn-outline" data-paralegal-action="${escape(p.service)}" data-paralegal-unit="${escape(u.businessId)}" ${eligible?'':'disabled'}>${p.status==='VENCIDA'?'Renovar':'Solicitar'}</button></td></tr>`;}).join('')}</tbody></table></div></article>`;
     }).join('');
   }
+
+  function renderRH(){
+    const target=$('rh-unit-list');if(!target)return;
+    const report=Core.rhReport(state);
+    const selector=$('rh-hire-unit'),previous=selector.value;
+    selector.replaceChildren(...report.units.map(u=>{
+      const opt=document.createElement('option');opt.value=u.businessId;
+      opt.textContent=u.businessId+' · '+u.city;return opt;
+    }));
+    if(report.units.some(u=>u.businessId===previous))selector.value=previous;
+    $('rh-hire-submit').disabled=!report.units.length;
+    setText('rh-summary',report.totalActive+' funcionários ativos · folhas pendentes: '+Core.money(report.pendingCents));
+    if(!report.units.length){target.innerHTML='<p class="muted">Inaugure uma unidade para contratar personagens.</p>';return;}
+    target.innerHTML=report.units.map(u=>{
+      const active=u.employees.filter(x=>!x.dismissedAt),former=u.employees.filter(x=>x.dismissedAt);
+      const workers=active.map(x=>'<tr><td>'+escape(x.name)+'<br><small>'+escape(x.id)+'</small></td><td>'+
+        escape(Core.RH_ROLES[x.role].label)+'</td><td>'+escape(Core.money(x.salaryCents))+
+        '</td><td><button type="button" class="btn btn-outline" data-rh-dismiss="'+escape(x.id)+'">Desligar</button></td></tr>').join('');
+      const sheets=u.payrolls.slice().reverse().map(p=>'<tr><td>'+escape(p.period)+'</td><td>'+escape(Core.money(p.amount))+
+        '</td><td>'+(p.status==='OPEN'?'Em aberto':'Paga')+'</td><td>'+
+        (p.status==='OPEN'?'<button type="button" class="btn btn-outline" data-rh-pay="'+escape(p.period)+'" data-rh-unit="'+escape(u.businessId)+'">Pagar</button>':'—')+
+        '</td></tr>').join('');
+      return '<article class="panel spaced"><div class="panel-heading"><h4>'+escape(u.businessId)+' · '+escape(u.city)+'</h4>'+
+        '<span class="tag-soft">'+u.activeCount+'/4 ativos · bônus '+u.bonusPercent+'%</span></div>'+
+        '<p class="field-hint">Salários-base mensais: '+escape(Core.money(u.monthlyCents))+
+        ' · folhas ainda não pagas: '+escape(Core.money(u.pendingCents))+
+        ' · '+former.length+' desligado(s) no histórico.</p>'+
+        '<h4>Equipe ativa</h4><div class="table-scroll"><table class="catalog-table"><thead><tr><th>Funcionário</th><th>Cargo</th><th>Salário fictício</th><th>Ação</th></tr></thead><tbody>'+
+        (workers||'<tr><td colspan="4">Sem funcionários ativos.</td></tr>')+'</tbody></table></div>'+
+        '<h4>Folhas mensais concluídas</h4><div class="table-scroll"><table class="catalog-table"><thead><tr><th>Mês</th><th>Total</th><th>Situação</th><th>Ação</th></tr></thead><tbody>'+
+        (sheets||'<tr><td colspan="4">A folha é reconhecida no fim do mês do jogo.</td></tr>')+'</tbody></table></div></article>';
+    }).join('');
+  }
   function renderPriceHistory(){
     const items=Core.priceHistory(state),container=$('price-history');
     setText('price-history-count',`${items.length} alteração(ões)`);
@@ -257,6 +290,7 @@
     if((tab==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo))||financeQuery)renderFinances();
     renderFiscal();
     renderParalegal();
+    renderRH();
     const report=Core.diagnostics(state);
     $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal',state.fiscal.coverageStatus]].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
     setText('turn-message',!b?'Abra sua primeira empresa.':b.stockUnits===0?'Seu estoque está vazio. Reabasteça.':`Sua empresa está operando há ${state.calendar.tick} dia(s).`);
@@ -315,6 +349,23 @@
     for(const button of document.querySelectorAll('[data-section-go]'))button.addEventListener('click',()=>goto(...button.dataset.sectionGo.split(':')));
     $('unit-switch').addEventListener('change',e=>{if(e.target.value)commit('EMPRESA.ATIVAR',{businessId:e.target.value});});
     $('finance-scope').addEventListener('change',e=>{financeScope=e.target.value;renderFinances();});
+
+    $('rh-hire-form').addEventListener('submit',e=>{
+      e.preventDefault();
+      const name=$('rh-hire-name').value.trim(),role=$('rh-hire-role').value,businessId=$('rh-hire-unit').value;
+      const def=Core.RH_ROLES[role];if(!def)return;
+      if(confirm('Contratar '+name+' como '+def.label+' na unidade '+businessId+'? Salário mensal FICTÍCIO '+Core.money(def.salaryCents)+'.'))
+        if(commit('RH.CONTRATAR',{name,role,businessId}))$('rh-hire-name').value='';
+    });
+    $('rh-unit-list').addEventListener('click',e=>{
+      const dismissal=e.target.closest('[data-rh-dismiss]');
+      if(dismissal&&confirm('Desligar personagem? A folha do mês ainda será apurada proporcionalmente.')){
+        commit('RH.DESLIGAR',{employeeId:dismissal.dataset.rhDismiss});return;
+      }
+      const pay=e.target.closest('[data-rh-pay]');
+      if(pay&&confirm('Pagar folha fictícia '+pay.dataset.rhPay+'? Valor descontado do caixa compartilhado.'))
+        commit('RH.PAGAR_FOLHA',{businessId:pay.dataset.rhUnit,period:pay.dataset.rhPay});
+    });
     $('paralegal-unit-list').addEventListener('click',e=>{
       const btn=e.target.closest('[data-paralegal-action]');if(!btn||btn.disabled)return;
       const service=btn.dataset.paralegalAction,businessId=btn.dataset.paralegalUnit;

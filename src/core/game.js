@@ -996,7 +996,7 @@ const CidadeCore = (() => {
       journalBusinessId(state,j)===null).reduce((n,j)=>n+signedAccount([j],'REVENUE')-signedAccount([j],'COGS')-signedAccount([j],'EXPENSE')-signedAccount([j],'TAX_EXPENSE'),0):0;
     return {period:base.period,from:base.from,to:base.to,effectiveEnd:base.effectiveEnd,label:base.label,
       businessId:base.businessId,revenue:base.revenue,cogs:base.cogs,grossProfit:base.grossProfit,
-      fixedExpenses:fixed,openingExpenses:opening,payrollExpenses:payroll,unclassifiedExpenses:other,
+      fixedExpenses:fixed,openingExpenses:opening,...(payroll?{payrollExpenses:payroll}:{}),unclassifiedExpenses:other,
       expenses:base.expenses,operatingResult:base.revenue-base.cogs-base.expenses,taxExpense:base.taxExpense,
       resultAfterSimulatedTax:base.profit,corporateResult,
       marginPercent:base.grossMarginPercent,fiscalCoverage:state.fiscal.coverageStatus};
@@ -1017,7 +1017,7 @@ const CidadeCore = (() => {
   }
   function cashFlowStatement(state,period='all',referenceDate=state.calendar.date,range=null,businessId='all'){
     const base=financialReport(state,period,referenceDate,range,businessId);
-    const rows={sales:0,suppliers:0,operating:0,opening:0,payroll:0,taxPayments:0,capital:0,unclassifiedIn:0,unclassifiedOut:0};
+    const rows={sales:0,suppliers:0,operating:0,opening:0,taxPayments:0,capital:0,unclassifiedIn:0,unclassifiedOut:0};
     let inflows=0,outflows=0;
     for(const j of base.entries){
       const debit=j.entries.reduce((n,e)=>n+(e.account==='CASH'?e.debit:0),0);
@@ -1032,7 +1032,7 @@ const CidadeCore = (() => {
       else if(kind==='DAILY_EXPENSE'&&net<0)rows.operating+=-net;
       else if(kind==='OPENING'&&net<0)rows.opening+=-net;
       else if(kind==='TAX_PAYMENT'&&net<0)rows.taxPayments+=-net;
-      else if(kind==='PAYROLL_PAYMENT'&&net<0)rows.payroll+=-net;
+      else if(kind==='PAYROLL_PAYMENT'&&net<0)rows.payroll=(rows.payroll||0)-net;
       else if(net>0)rows.unclassifiedIn+=net;
       else rows.unclassifiedOut+=-net;
     }

@@ -2224,7 +2224,7 @@ const CidadeCore = (() => {
       journalBusinessId(state,j)===null).reduce((n,j)=>n+signedAccount([j],'REVENUE')-signedAccount([j],'COGS')-signedAccount([j],'EXPENSE')-signedAccount([j],'TAX_EXPENSE'),0):0;
     return {period:base.period,from:base.from,to:base.to,effectiveEnd:base.effectiveEnd,label:base.label,
       businessId:base.businessId,revenue:base.revenue,cogs:base.cogs,grossProfit:base.grossProfit,
-      fixedExpenses:fixed,openingExpenses:opening,payrollExpenses:payroll,unclassifiedExpenses:other,
+      fixedExpenses:fixed,openingExpenses:opening,...(payroll?{payrollExpenses:payroll}:{}),unclassifiedExpenses:other,
       expenses:base.expenses,operatingResult:base.revenue-base.cogs-base.expenses,taxExpense:base.taxExpense,
       resultAfterSimulatedTax:base.profit,corporateResult,
       marginPercent:base.grossMarginPercent,fiscalCoverage:state.fiscal.coverageStatus};
@@ -2245,7 +2245,7 @@ const CidadeCore = (() => {
   }
   function cashFlowStatement(state,period='all',referenceDate=state.calendar.date,range=null,businessId='all'){
     const base=financialReport(state,period,referenceDate,range,businessId);
-    const rows={sales:0,suppliers:0,operating:0,opening:0,payroll:0,taxPayments:0,capital:0,unclassifiedIn:0,unclassifiedOut:0};
+    const rows={sales:0,suppliers:0,operating:0,opening:0,taxPayments:0,capital:0,unclassifiedIn:0,unclassifiedOut:0};
     let inflows=0,outflows=0;
     for(const j of base.entries){
       const debit=j.entries.reduce((n,e)=>n+(e.account==='CASH'?e.debit:0),0);
@@ -2260,7 +2260,7 @@ const CidadeCore = (() => {
       else if(kind==='DAILY_EXPENSE'&&net<0)rows.operating+=-net;
       else if(kind==='OPENING'&&net<0)rows.opening+=-net;
       else if(kind==='TAX_PAYMENT'&&net<0)rows.taxPayments+=-net;
-      else if(kind==='PAYROLL_PAYMENT'&&net<0)rows.payroll+=-net;
+      else if(kind==='PAYROLL_PAYMENT'&&net<0)rows.payroll=(rows.payroll||0)-net;
       else if(net>0)rows.unclassifiedIn+=net;
       else rows.unclassifiedOut+=-net;
     }
@@ -3240,7 +3240,7 @@ function bindRestock(){
     const categories=[
       ['Receitas de vendas efetivamente recebidas',cat.sales],['Aportes de capital',cat.capital],
       ['Outras entradas',cat.unclassifiedIn],['Pagamentos a fornecedores',cat.suppliers],
-      ['Despesas operacionais pagas',cat.operating],['Salários fictícios pagos',cat.payroll],['Custos de abertura pagos',cat.opening],
+      ['Despesas operacionais pagas',cat.operating],['Salários fictícios pagos',cat.payroll||0],['Custos de abertura pagos',cat.opening],
       ['Tributos simulados pagos',cat.taxPayments],['Outras saídas',cat.unclassifiedOut]
     ];
     $('treasury-categories').innerHTML=categories.map(([title,value])=>'<dt>'+escape(title)+'</dt><dd>'+escape(Core.money(value))+'</dd>').join('');
@@ -3309,7 +3309,7 @@ function bindRestock(){
       const x=Core.incomeStatement(state,q.period,financeQueryDate(q).date,financeQueryDate(q).range,financeScope);
       rows.splice(0,rows.length,...[
         ['Receita de vendas',x.revenue],['(-) CMV',x.cogs],['Lucro bruto',x.grossProfit],
-        ['(-) Despesas fixas operacionais',x.fixedExpenses],['(-) Folha fictícia apurada',x.payrollExpenses],['(-) Abertura de unidades',x.openingExpenses],
+        ['(-) Despesas fixas operacionais',x.fixedExpenses],['(-) Folha fictícia apurada',x.payrollExpenses||0],['(-) Abertura de unidades',x.openingExpenses],
         ['(-) Outras despesas não classificadas',x.unclassifiedExpenses],['Resultado antes dos tributos',x.operatingResult],
         ['(-) Tributos simulados lançados no período',x.taxExpense],['Resultado após tributos simulados',x.resultAfterSimulatedTax]
       ]);
@@ -3329,7 +3329,7 @@ function bindRestock(){
       rows.splice(0,rows.length,...[
         ['Caixa inicial do grupo',x.openingCash],['Entradas de vendas',x.categories.sales],
         ['Aportes ao grupo',x.categories.capital],['Outras entradas sem classificação',x.categories.unclassifiedIn],
-        ['Saídas para fornecedores',x.categories.suppliers],['Saídas operacionais',x.categories.operating],['Salários fictícios pagos',x.categories.payroll],
+        ['Saídas para fornecedores',x.categories.suppliers],['Saídas operacionais',x.categories.operating],['Salários fictícios pagos',x.categories.payroll||0],
         ['Aberturas de unidades',x.categories.opening],['Pagamento de tributo simulado',x.categories.taxPayments],['Outras saídas sem classificação',x.categories.unclassifiedOut],
         ['Variação líquida de caixa',x.netCash],['Caixa final do grupo',x.closingCash]
       ]);

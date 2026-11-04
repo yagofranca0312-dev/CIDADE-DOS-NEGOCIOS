@@ -11,7 +11,7 @@
     const categories=[
       ['Receitas de vendas efetivamente recebidas',cat.sales],['Aportes de capital',cat.capital],
       ['Outras entradas',cat.unclassifiedIn],['Pagamentos a fornecedores',cat.suppliers],
-      ['Despesas operacionais pagas',cat.operating],['Salários fictícios pagos',cat.payroll],['Custos de abertura pagos',cat.opening],
+      ['Despesas operacionais pagas',cat.operating],['Salários fictícios pagos',cat.payroll||0],['Custos de abertura pagos',cat.opening],
       ['Tributos simulados pagos',cat.taxPayments],['Outras saídas',cat.unclassifiedOut]
     ];
     $('treasury-categories').innerHTML=categories.map(([title,value])=>'<dt>'+escape(title)+'</dt><dd>'+escape(Core.money(value))+'</dd>').join('');
@@ -80,7 +80,7 @@
       const x=Core.incomeStatement(state,q.period,financeQueryDate(q).date,financeQueryDate(q).range,financeScope);
       rows.splice(0,rows.length,...[
         ['Receita de vendas',x.revenue],['(-) CMV',x.cogs],['Lucro bruto',x.grossProfit],
-        ['(-) Despesas fixas operacionais',x.fixedExpenses],['(-) Folha fictícia apurada',x.payrollExpenses],['(-) Abertura de unidades',x.openingExpenses],
+        ['(-) Despesas fixas operacionais',x.fixedExpenses],['(-) Folha fictícia apurada',x.payrollExpenses||0],['(-) Abertura de unidades',x.openingExpenses],
         ['(-) Outras despesas não classificadas',x.unclassifiedExpenses],['Resultado antes dos tributos',x.operatingResult],
         ['(-) Tributos simulados lançados no período',x.taxExpense],['Resultado após tributos simulados',x.resultAfterSimulatedTax]
       ]);
@@ -100,7 +100,7 @@
       rows.splice(0,rows.length,...[
         ['Caixa inicial do grupo',x.openingCash],['Entradas de vendas',x.categories.sales],
         ['Aportes ao grupo',x.categories.capital],['Outras entradas sem classificação',x.categories.unclassifiedIn],
-        ['Saídas para fornecedores',x.categories.suppliers],['Saídas operacionais',x.categories.operating],['Salários fictícios pagos',x.categories.payroll],
+        ['Saídas para fornecedores',x.categories.suppliers],['Saídas operacionais',x.categories.operating],['Salários fictícios pagos',x.categories.payroll||0],
         ['Aberturas de unidades',x.categories.opening],['Pagamento de tributo simulado',x.categories.taxPayments],['Outras saídas sem classificação',x.categories.unclassifiedOut],
         ['Variação líquida de caixa',x.netCash],['Caixa final do grupo',x.closingCash]
       ]);

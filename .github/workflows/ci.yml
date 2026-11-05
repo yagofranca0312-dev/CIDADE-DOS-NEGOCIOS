@@ -17,6 +17,8 @@ jobs:
         with:
           node-version: '24'
       - run: npm run check
+      - name: Benchmark de carreiras 30, 365 e 1825 dias (1 e 5 unidades)
+        run: npm run bench:stability
       - name: Verificar se index.html gerado corresponde ao commit
         run: git diff --exit-code -- index.html
       - name: SHA-256 do executavel

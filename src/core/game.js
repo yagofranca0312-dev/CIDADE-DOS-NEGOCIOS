@@ -1107,13 +1107,20 @@ const CidadeCore = (() => {
         competitorPurchases+=qty;
       }
       if((tick+rivalHash(rival.id))%7===0){
+        const before=rival.priceIndex;
         const change=rival.strategy==='preco'?-2:rival.strategy==='servico'?1:0;
         const correction=rival.stockUnits<rival.capacityUnits?2:0;
         rival.priceIndex=clamp(rival.priceIndex+change+correction,78,130);
         rival.lastDecisionTick=tick;
+        if(before!==rival.priceIndex&&businesses(draft).some(b=>b.cityId===rival.cityId))
+          event(draft,'RIVAL.PRECO',rival.name+': alterou preço de '+before+'% para '+rival.priceIndex+'% da referência.',
+            {rivalId:rival.id,cityId:rival.cityId,before,after:rival.priceIndex});
       }
       if(tick>0&&(tick+rivalHash(rival.id))%120===0&&rival.expansions<2&&rival.cashCents>1300000){
         rival.cashCents-=500000;rival.capacityUnits+=8;rival.expansions++;
+        if(businesses(draft).some(b=>b.cityId===rival.cityId))
+          event(draft,'RIVAL.EXPANSAO',rival.name+': investiu em capacidade logística e operação.',
+            {rivalId:rival.id,cityId:rival.cityId,capacityUnits:rival.capacityUnits,expansions:rival.expansions});
       }
       assert(Number.isSafeInteger(rival.cashCents)&&rival.cashCents>=0,'Caixa de rival inválido');
     }
@@ -1140,13 +1147,16 @@ const CidadeCore = (() => {
     const units=businesses(state).filter(b=>b.cityId===cityId);
     const demandEvents=state.audit.events.filter(e=>e.type==='DEMANDA.SIMULADA'&&e.date<state.calendar.date&&
       units.some(b=>b.id===e.businessId)).slice(-8);
+    const actions=state.audit.events.filter(e=>['RIVAL.PRECO','RIVAL.EXPANSAO'].includes(e.type)&&
+      e.data?.cityId===cityId).slice(-12).map(e=>({id:e.id,date:e.date,type:e.type,text:e.text}));
     const alerts=[];
     for(const e of active)alerts.push(e.label+': efeito de '+e.effectPct+'% sobre o mercado até '+e.endDate+'.');
+    for(const e of actions.slice(-2))alerts.push(e.text);
     for(const r of rivals)if(r.stockUnits<r.capacityUnits)alerts.push(r.name+': estoque apertado; oportunidade de atender demanda.');
     for(const e of demandEvents.slice(-3))if(e.data.unmet>0)alerts.push(e.businessId+': '+e.data.unmet+' pedidos não atendidos; revisar reposição.');
     if(!alerts.length)alerts.push('Mercado estável: compare preços, estoque e margem antes de expandir.');
     return {enabled:true,modelVersion:econ.modelVersion,cityId,cityName:cityById(cityId).name,
-      rivals,events,alerts:alerts.slice(0,7),lastMarket:econ.lastMarket?{...econ.lastMarket}:null,
+      rivals,events,actions,alerts:alerts.slice(0,7),lastMarket:econ.lastMarket?{...econ.lastMarket}:null,
       note:'Rivais e eventos são simulados; não usam informações privilegiadas nem dados econômicos reais.'};
   }
   function validateRivalEconomy(state){

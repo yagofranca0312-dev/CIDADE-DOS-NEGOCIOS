@@ -145,6 +145,33 @@
     setText('price-history-count',`${items.length} alteração(ões)`);
     container.innerHTML=items.length?items.slice(-12).reverse().map(item=>`<div class="price-history-row"><small>${escape(BRDate(item.date))} · ${escape(item.productName||'Produto base')} · ${escape(item.id)}</small><strong>${escape(Core.money(item.old))} → ${escape(Core.money(item.cents))}</strong></div>`).join(''):'<p class="muted">Nenhuma alteração registrada nesta carreira.</p>';
   }
+  function renderRivals(){
+    const report=Core.rivalMarketReport(state,viewCityId);
+    $('rival-enable').hidden=report.enabled;
+    setText('rival-status',report.enabled?'SIMULAÇÃO ATIVA':'LEGADO SEGURO');
+    if(!report.enabled){
+      setText('rival-summary','Carreira anterior: os rivais não foram aplicados retroativamente. Exporte seu save JSON antes de ativá-los.');
+      $('rival-rows').innerHTML='<tr><td colspan="6">Economia concorrencial ainda não ativada nesta carreira.</td></tr>';
+      $('rival-alerts').innerHTML='<p class="muted">Ative a economia viva para começar a simulação.</p>';
+      $('rival-events').innerHTML='';
+      return;
+    }
+    setText('rival-summary',report.cityName+' · '+report.rivals.length+' rivais locais · '+state.calendar.tick+' dia(s) de carreira. A competição usa caixa e estoque exclusivos dos rivais.');
+    $('rival-rows').innerHTML=report.rivals.map(r=>
+      '<tr><td><strong>'+escape(r.name)+'</strong><br><small>'+escape(r.sector)+'</small></td>'+
+      '<td>'+escape(r.strategy)+'</td><td>'+r.priceIndex+'% da referência</td>'+
+      '<td>'+r.stockUnits+' un.</td><td>'+r.capacityUnits+' un./dia</td>'+
+      '<td>'+r.reputation+'/90</td></tr>'
+    ).join('')||'<tr><td colspan="6">Nenhum rival ativo.</td></tr>';
+    $('rival-alerts').innerHTML=report.alerts.map(a=>
+      '<div class="event-item"><div><p>'+escape(a)+'</p></div></div>').join('');
+    $('rival-events').innerHTML=report.events.slice().reverse().map(e=>
+      '<div class="event-item"><div><strong>'+escape(e.label)+'</strong><p>'+
+      escape(e.effectPct>0?'Demanda favorecida '+e.effectPct+'%':'Demanda reduzida '+Math.abs(e.effectPct)+'%')+
+      '</p><small>'+escape(e.startDate)+' até '+escape(e.endDate)+
+      (e.active?' · EM CURSO':' · Encerrado')+'</small></div></div>').join('')||
+      '<p class="muted">Nenhuma ocorrência local registrada até aqui.</p>';
+  }
   function renderProgression(){
     const p=Core.progressionReport(state);
     setText('progression-level',p.level.label);
@@ -335,7 +362,7 @@
       if(document.activeElement!==$('price-value'))$('price-value').value=(b.unitPrice/100).toFixed(2);
       updateBuyPreview();
     }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('your-current-price','—');setText('competitor-price','—');setText('buy-total','—');}
-    renderCommerce();renderPriceHistory();
+    renderCommerce();renderPriceHistory();renderRivals();
     if((tab==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo))||financeQuery)renderFinances();
     renderFiscal();
     renderFiscalOperations();
@@ -396,7 +423,8 @@
       hudToggle.setAttribute('aria-expanded',String(expanded));
       hudToggle.firstChild.textContent=expanded?'Mostrar apenas os principais ':'Mostrar resultado e estoque ';
     });
-    $('career-form').addEventListener('submit',e=>{e.preventDefault();const name=$('player-name').value,companyName=$('company-name').value,cityId=$('start-city').value;commit('CARREIRA.CRIAR',{name,companyName,cityId,seed:(Date.now()>>>0)});});
+    $('career-form').addEventListener('submit',e=>{e.preventDefault();const name=$('player-name').value,companyName=$('company-name').value,cityId=$('start-city').value;if(commit('CARREIRA.CRIAR',{name,companyName,cityId,seed:(Date.now()>>>0)}))commit('MUNDO.CONCORRENCIA_ATIVAR');});
+    $('rival-enable').addEventListener('click',()=>commit('MUNDO.CONCORRENCIA_ATIVAR'));
     for(const button of document.querySelectorAll('[data-tab]'))button.addEventListener('click',()=>goto(button.dataset.tab));
     for(const button of document.querySelectorAll('[data-go]'))button.addEventListener('click',()=>goto(button.dataset.go));
     for(const button of document.querySelectorAll('[data-section-tab]')){

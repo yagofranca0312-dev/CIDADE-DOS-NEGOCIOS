@@ -1,8 +1,8 @@
-# V2.6.0-rc.1 — Patch integral: Jornada Empresarial + Concorrência e Economia Viva
+# V2.6.0 — Patch integral homologado: Jornada Empresarial + Concorrência e Economia Viva
 
 **Origem:** Roadmap interativo V2 → V3, arquivo do titular de 04/11/2026.
 **Base protegida:** `releases/v2.4.1-homologada`. **Referência de desenvolvimento:** merge da `v2.5.0-alpha.1` (PR #29).
-**Status:** CANDIDATA IMPLEMENTADA; **não homologada** e não equivalente a aprovação no Windows.
+**Status:** HOMOLOGAÇÃO FORMAL DO TITULAR em 05/11/2026, sustentada por CI, **sem comprovação de QA manual Windows**; ver `HOMOLOGACAO_V260.md`.
 **Escopo:** concluir funcionalidades faltantes da V2.5 no mesmo patch V2.6 e implementar os oito tópicos do plano V2.6.
 
 ## Entregas da V2.5 recuperadas no patch integral
@@ -29,7 +29,7 @@
 | 05 Eventos locais | 6 tipos fictícios, início/fim, duração de 3–8 dias, efeitos de −15% a +16%; histórico auditável | Implementado |
 | 06 Alertas estratégicos | Painel no Mercado com rival, situação, evento e oportunidades de reposição | Implementado |
 | 07 Equilíbrio | Regressões determinísticas de 365 dias em Tianguá, Fortaleza e São Paulo; benchmark do motor | Testado automaticamente; avaliação humana pendente |
-| 08 GATE de mundo reativo | Testes e HTML offline verificáveis em CI; QA Windows, balanço lúdico e aceite de Yago | **Pendente de homologação** |
+| 08 GATE de mundo reativo | Testes automáticos + aceite formal de Yago; QA Windows e balanceamento humano ainda sem evidência | **Aceite formal concluído, ressalvas registradas** |
 
 ## Compatibilidade e segurança
 
@@ -41,7 +41,7 @@
 - Não existe rede, requisição HTTP, dinheiro real, autenticação externa, interação com empresas ou tributos reais.
 - `releases/v2.4.1-homologada` permanece a referência de rollback. Fazer backup JSON **antes** da ativação; não regravar sobre o único backup.
 
-## Como testar a versão candidata no Windows
+## Como testar a versão homologada no Windows (validação prática recomendada)
 
 1. Exporte a carreira atual pela tela `Configurações` do jogo antigo; guarde o JSON original fora da pasta do patch.
 2. Abra o novo `index.html` do artefato de CI no navegador como arquivo local; não sobrescreva o jogo antigo até concluir o teste.
@@ -56,11 +56,11 @@
 - 275 testes PASS / 0 FAIL; benchmarks legados PASS.
 - Carreiras de 365 dias com rivais: estilo conservador em Tianguá, equilibrado em Fortaleza, agressivo em São Paulo: 3/3 cenários tecnicamente íntegros.
 - Carreira de 1.825 dias com 5 unidades, 90 rivais e auditoria: importação/exportação íntegra, 13.353.565 bytes no save compacto, abaixo do limite do jogo.
-- Esses cenários comprovam integridade e desempenho nos testes, **não** diversão, justiça percebida nem sobrevivência econômica garantida de toda estratégia. O cenário de Fortaleza finalizou com caixa baixo, exigindo QA de balanceamento antes da homologação.
+- Esses cenários comprovam integridade e desempenho nos testes, **não** diversão, justiça percebida nem sobrevivência econômica garantida de toda estratégia. O cenário de Fortaleza finalizou com caixa baixo, recomendando QA de balanceamento após o aceite formal; tal teste não foi comprovado.
 
-## Critério para homologação V2.6.0 estável
+## Homologação formal e limite de evidência
 
-- Build determinístico: `npm run build`, `npm test`, `npm run bench:stability` e `git diff --exit-code -- index.html` aprovados em PR CI.
-- Confirmação de que saves legados seguem importando e que nenhum comando duplicado multiplica receitas ou passivos.
-- QA real Windows/navegador, leitura de painel, performance e divertido/justo, com aceite formal do titular.
-- **Até o fechamento desses pontos, manter o sufixo `-rc.1`; não criar `releases/v2.6.0-homologada`.**
+- Build determinístico, regressões e benchmarks confirmados na candidata pela CI; o identificador final `2.6.0` exige nova CI e compilação reproduzível antes de ser publicado.
+- Aceite formal e expresso do titular em 05/11/2026. Promover a versão final após CI da release; criar `releases/v2.6.0-homologada` somente a partir do commit final já validado na `main`.
+- QA manual Windows/navegador, persistência efetiva em `file://`, diversão e equilíbrio percebido **não são considerados testes aprovados**; seguem como recomendações de validação prática.
+- A V2.4.1 permanece em checkpoint de recuperação; preservar JSON anterior a qualquer atualização.

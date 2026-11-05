@@ -1072,7 +1072,8 @@ button.v221-hud-cell:hover{background:#1e4254}
 <thead><tr><th>Rival / setor</th><th>Estratégia</th><th>Preço</th><th>Estoque</th><th>Capacidade diária</th><th>Reputação</th></tr></thead>
 <tbody id="rival-rows"><tr><td colspan="6">Ative a economia viva para consultar rivais.</td></tr></tbody></table></div>
 <h4>Alertas e acontecimentos</h4><div id="rival-alerts" class="event-list" role="status" aria-live="polite"></div>
-<h4>Histórico local</h4><div id="rival-events" class="event-list"></div>
+<h4>Decisões dos rivais</h4><div id="rival-actions" class="event-list"></div>
+<h4>Histórico de acontecimentos locais</h4><div id="rival-events" class="event-list"></div>
 </details><nav class="v23-subnav" role="tablist" aria-label="Setores do Mercado"><button type="button" role="tab" class="v23-subtab active" data-section-tab="mercado:compras" id="v23-tab-mercado-compras" aria-controls="v23-pane-mercado-compras" aria-selected="true" tabindex="0">Compras</button><button type="button" role="tab" class="v23-subtab" data-section-tab="mercado:estoque" id="v23-tab-mercado-estoque" aria-controls="v23-pane-mercado-estoque" aria-selected="false" tabindex="-1">Estoque</button><button type="button" role="tab" class="v23-subtab" data-section-tab="mercado:vendas" id="v23-tab-mercado-vendas" aria-controls="v23-pane-mercado-vendas" aria-selected="false" tabindex="-1">Vendas</button><button type="button" role="tab" class="v23-subtab" data-section-tab="mercado:outros" id="v23-tab-mercado-outros" aria-controls="v23-pane-mercado-outros" aria-selected="false" tabindex="-1">Outros</button></nav><div class="v23-subpane" id="v23-pane-mercado-compras" role="tabpanel" data-section-pane="mercado:compras" aria-labelledby="v23-tab-mercado-compras"><article class="panel restock-assistant" id="restock-assistant" aria-labelledby="restock-heading">
   <div class="panel-heading"><h3 id="restock-heading">Reposição inteligente de estoque</h3><span class="tag-soft">V2.3-B · PEDIDO ASSISTIDO</span></div>
   <p class="muted">Monte um pedido de vários produtos automaticamente e revise antes de pagar. Não há compras recorrentes ou sem sua confirmação. O planejamento considera estoque físico, pedidos em trânsito, metas e limites existentes.</p>
@@ -3858,6 +3859,7 @@ function bindRestock(){
       $('rival-rows').innerHTML='<tr><td colspan="6">Economia concorrencial ainda não ativada nesta carreira.</td></tr>';
       $('rival-alerts').innerHTML='<p class="muted">Ative a economia viva para começar a simulação.</p>';
       $('rival-events').innerHTML='';
+      $('rival-actions').innerHTML='';
       return;
     }
     setText('rival-summary',report.cityName+' · '+report.rivals.length+' rivais locais · '+state.calendar.tick+' dia(s) de carreira. A competição usa caixa e estoque exclusivos dos rivais.');
@@ -3869,6 +3871,10 @@ function bindRestock(){
     ).join('')||'<tr><td colspan="6">Nenhum rival ativo.</td></tr>';
     $('rival-alerts').innerHTML=report.alerts.map(a=>
       '<div class="event-item"><div><p>'+escape(a)+'</p></div></div>').join('');
+    $('rival-actions').innerHTML=report.actions.slice().reverse().map(e=>
+      '<div class="event-item"><div><p>'+escape(e.text)+
+      '</p><small>'+escape(e.date)+'</small></div></div>').join('')||
+      '<p class="muted">Ainda não houve decisão concorrente relevante nesta cidade.</p>';
     $('rival-events').innerHTML=report.events.slice().reverse().map(e=>
       '<div class="event-item"><div><strong>'+escape(e.label)+'</strong><p>'+
       escape(e.effectPct>0?'Demanda favorecida '+e.effectPct+'%':'Demanda reduzida '+Math.abs(e.effectPct)+'%')+

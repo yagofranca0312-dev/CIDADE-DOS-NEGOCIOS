@@ -1769,7 +1769,13 @@ const CidadeCore = (() => {
   function exportSave(state) {
     validate(state);const payload=clone(state),raw=JSON.stringify(payload);
     assert(raw.length<MAX_SAVE_CHARS,'Carreira excede limite de exportação');
-    return JSON.stringify({saveFormatVersion:1,app:'Cidade dos Negócios',checksumAlgorithm:'FNV1A32',checksum:hash(raw),payload},null,2);
+    const envelope={saveFormatVersion:1,app:'Cidade dos Negócios',checksumAlgorithm:'FNV1A32',checksum:hash(raw),payload};
+    // Saves grandes preservam o conteúdo, mas eliminam espaços da formatação JSON.
+    // Arquivos menores mantêm byte a byte o formato anterior.
+    const readable=JSON.stringify(envelope,null,2);
+    const output=readable.length<MAX_SAVE_CHARS?readable:JSON.stringify(envelope);
+    assert(output.length<MAX_SAVE_CHARS,'Carreira excede limite seguro de exportação');
+    return output;
   }
   function importSave(raw) {
     assert(typeof raw==='string'&&raw.length<MAX_SAVE_CHARS,'Arquivo muito grande ou inválido');

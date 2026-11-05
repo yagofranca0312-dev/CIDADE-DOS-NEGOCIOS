@@ -1,8 +1,8 @@
-# 🏙️ Cidade dos Negócios — V2.4.1-rc.1 (candidata)
+# 🏙️ Cidade dos Negócios — V2.4.1 (estável)
 
-## Situação atual — V2.4.1-rc.1 (estabilização financeira)
+## Situação atual — V2.4.1 estável (estabilização financeira)
 
-**Base homologada:** V2.4.0, checkpoint `releases/v2.4.0-homologada`. **Versão em teste:** `2.4.1-rc.1`. O código da candidata não equivale a homologação prática no Windows.
+**Versão oficial:** `2.4.1`, homologada formalmente pelo titular em 05/11/2026 após CI (250 PASS, 6 benchmarks). **Limite da evidência:** sem teste manual Windows/browser comprovado; exporte JSON. Checkpoint anterior: `releases/v2.4.0-homologada`.
 
 - **Contas a pagar:** módulo Financeiro liquida despesas diárias reconhecidas em `PAYABLE`, por unidade, com `PAYABLE` a débito e `CASH` a crédito. Não reconhece despesa novamente e não mistura folha de RH ou `TAX_PAYABLE`.
 - **Projeções:** a unidade ativa inclui a nova folha fictícia no resultado e nas obrigações estimadas; informa passivos conhecidos do grupo e cenário de liquidez se fossem quitados. Não liquida automaticamente nem projeta impostos futuros.

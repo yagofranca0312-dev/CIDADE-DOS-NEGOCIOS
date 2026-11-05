@@ -1,5 +1,16 @@
 # Histórico de versões — Cidade dos Negócios
 
+## 2.6.0-rc.1 — Patch integral V2.5 + Economia Viva (candidata, 05/11/2026)
+
+- Incorpora pendências funcionais da V2.5: oito conquistas sem bônus arbitrários, três desbloqueios, tutorial contextual, reputação baseada em amostra e seis dilemas executados por comandos econômicos auditáveis com sete dias de observação.
+- Implementa 90 rivais persistentes por cidade/setor, mercado finito compartilhado, decisões limitadas de preço, estoque, caixa e expansão, seis tipos de acontecimentos locais e painel com alertas.
+- Preserva saves `schemaVersion=9` e migrações antigas; concorrência é opt-in em carreiras anteriores e ativada explicitamente após criação de carreira nova na interface.
+- Formata JSON de backup de modo compacto apenas quando a versão indentada excederia o limite seguro; checksum e conteúdo intactos. Mantém formato histórico para arquivos menores.
+- CI: 275 testes PASS, zero falhas, seis benchmarks legados e quatro cenários de concorrência (365 dias em três estilos/regiões + 1.825 dias com cinco unidades) PASS.
+- **Não homologada:** falta validação real Windows/browser, teste subjetivo de diversão e aceite formal da versão final. Checkpoint estável: `releases/v2.4.1-homologada`.
+- Detalhes e roteiro: [V260_PATCH_INTEGRAL.md](docs/V260_PATCH_INTEGRAL.md).
+
+
 ## 2.5.0-alpha.1 — Jornada Empresarial (candidata, 05/11/2026)
 
 - GDD da jornada documenta investir → decidir → operar → consequência → objetivo; metas de curto, médio e longo prazos.

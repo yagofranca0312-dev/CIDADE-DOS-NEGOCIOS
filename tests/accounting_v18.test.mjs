@@ -14,7 +14,7 @@ const advance=(s,days)=>{while(days>0){const x=Math.min(30,days);s=act(s,'TEMPO.
 function sample(){let s=init();s=open(s);s=act(s,'ESTOQUE.COMPRAR',{productId:'base',supplierId:'regional',quantity:160});s=advance(s,3);return s;}
 
 test('V1.8: versão visível e plano de contas com sinais, com migração de schema de save 8→9',()=>{
- assert.equal(Core.VERSION,'2.5.0-alpha.1');assert.equal(Core.SCHEMA_VERSION,9);
+ assert.equal(Core.VERSION,'2.6.0-rc.1');assert.equal(Core.SCHEMA_VERSION,9);
  assert.equal(Core.ACCOUNT_CATALOG.CASH.normal,'DEBIT');
  assert.equal(Core.ACCOUNT_CATALOG.PAYABLE.normal,'CREDIT');
  assert.equal(Core.ACCOUNT_CATALOG.COGS.group,'COST');
@@ -141,6 +141,6 @@ test('V1.8: uma única área financeira com demonstrativos e verificações de v
  assert.match(ui,/Core\.balanceSheet/);assert.match(ui,/Core\.cashFlowStatement/);
  assert.match(ui,/Core\.reconciliationReport/);assert.match(ui,/Core\.incomeStatement/);
  assert.match(build,/intro-version/);assert.match(build,/footer-version/);
- assert.match(tpl,/id="footer-version">v2\.5\.0-alpha\.1/);
- assert.match(tpl,/<title>Cidade dos Negócios 1 · v2\.5\.0-alpha\.1<\/title>/);
+ assert.match(tpl,/id="footer-version">v2\.6\.0-rc\.1/);
+ assert.match(tpl,/<title>Cidade dos Negócios 1 · v2\.6\.0-rc\.1<\/title>/);
 });

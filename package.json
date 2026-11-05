@@ -3,7 +3,7 @@
   "version": "2.6.0-rc.1",
   "private": true,
   "type": "module",
-  "description": "Cidade dos Negócios 2.5.0: simulador empresarial offline com cidade protagonista",
+  "description": "Cidade dos Negócios 2.6.0: economia viva com rivais e jornada empresarial offline",
   "scripts": {
     "build": "node tools/build.mjs",
     "test": "node --test tests/*.test.mjs",

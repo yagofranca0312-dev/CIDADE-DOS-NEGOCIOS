@@ -846,6 +846,9 @@ const CidadeCore = (() => {
       const p=product(b,payload.productId||'base');const old=p.priceCents;p.priceCents=cents;syncTotals(b);
       event(draft,'PRECO.ALTERADO',`${p.name}: preço de ${money(old)} para ${money(cents)}.`,{old,cents,productId:p.id,productName:p.name},b.id);return;
     }
+    if(type==='DILEMA.ESCOLHER') {
+      chooseDilemma(draft,payload);return;
+    }
     if(type==='MUNDO.CONCORRENCIA_ATIVAR') {
       initializeRivalEconomy(draft);return;
     }
@@ -861,6 +864,121 @@ const CidadeCore = (() => {
       return;
     }
     throw Error(`Comando não implementado: ${type}`);
+  }
+
+
+  // V2.5 concluída dentro da V2.6: seis dilemas vinculados a ações reais,
+  // conquistas não financeiras, reputação com efeitos limitados e tutorial derivado.
+  const DILEMMA_DEFINITIONS=Object.freeze([
+    {id:'caixa-estoque',title:'Caixa x estoque',choices:[['abastecer','Comprar 30 unidades'],['reservar','Proteger o caixa']]},
+    {id:'preco-volume',title:'Preço x volume',choices:[['promover','Promoção de 10% por 7 dias'],['margem','Preservar margem sem desconto']]},
+    {id:'equipe-liquidez',title:'Equipe x liquidez',choices:[['contratar','Contratar atendimento'],['adiar','Adiar despesa com equipe']]},
+    {id:'expansao-reserva',title:'Expansão x robustez',choices:[['expandir','Abrir unidade no próximo lote'],['guardar','Manter reserva para despesas']]},
+    {id:'fornecedor-prazo',title:'Fornecedor x prazo',choices:[['rapido','Fornecedor regional em 1 dia'],['barato','Atacado em 3 dias']]},
+    {id:'passivo-operacao',title:'Quitar passivo x operar',choices:[['quitar','Quitar obrigação existente'],['operar','Comprar estoque essencial']]}
+  ]);
+  function dilemmaReport(state){
+    if(!state)return [];
+    const b=activeBusiness(state),recent=state.audit.events.filter(e=>e.type==='DILEMA.DECIDIDO');
+    return DILEMMA_DEFINITIONS.map(def=>{
+      const last=recent.filter(e=>e.data.dilemmaId===def.id).at(-1);
+      const daysSince=last?state.calendar.tick-last.data.tick:999;
+      const options=def.choices.map(([id,label])=>{
+        let reason='';
+        if(!b)reason='Abra uma empresa.';
+        else if(!state.world.rivalEconomy)reason='Ative a economia viva.';
+        else if(daysSince<7)reason='Decisão anterior em avaliação por 7 dias.';
+        else if(def.id==='equipe-liquidez'&&id==='contratar'&&
+          rhEmployees(state).filter(e=>e.businessId===b.id&&!e.dismissedAt).length>=4)
+          reason='Equipe no limite.';
+        else if(def.id==='expansao-reserva'&&id==='expandir'&&businesses(state).length>=5)
+          reason='Limite de cinco estabelecimentos.';
+        else if(def.id==='expansao-reserva'&&id==='expandir'&&
+          balance(state,'CASH')<SECTORS[b.sector].openCost)reason='Caixa insuficiente para expansão.';
+        else if(def.id==='passivo-operacao'&&id==='quitar'&&
+          !(operatingPayablesReport(state).units.find(x=>x.businessId===b.id)?.outstanding>0))
+          reason='Nenhuma obrigação operacional em aberto.';
+        return {id,label,available:!reason,reason};
+      });
+      return {id:def.id,title:def.title,choices:options,
+        lastChoice:last?.data.choice||null,lastDate:last?.date||null,
+        cooldownDays:Math.max(0,7-daysSince)};
+    });
+  }
+  function chooseDilemma(draft,payload){
+    const definition=DILEMMA_DEFINITIONS.find(x=>x.id===payload.dilemmaId);
+    const choice=String(payload.choice||'');
+    assert(definition&&definition.choices.some(x=>x[0]===choice),'Dilema ou alternativa inválida');
+    const b=activeBusiness(draft);assert(b,'Abra uma empresa para decidir.');
+    assert(draft.world.rivalEconomy,'Ative a economia viva para decisões contextuais.');
+    const row=dilemmaReport(draft).find(x=>x.id===definition.id);
+    const option=row.choices.find(x=>x.id===choice);
+    assert(option.available,option.reason||'Escolha indisponível');
+    let consequence='Decisão estratégica registrada sem gasto imediato.';
+    if(definition.id==='caixa-estoque'&&choice==='abastecer'){
+      handler(draft,'ESTOQUE.COMPRAR',{supplierId:'regional',productId:'base',quantity:30});
+      consequence='Pedido de 30 unidades com custo e entrega real.';
+    } else if(definition.id==='preco-volume'){
+      handler(draft,'PROMO.DEFINIR',{productId:'base',
+        percent:choice==='promover'?10:0,days:choice==='promover'?7:0});
+      consequence=choice==='promover'?'Preço efetivo reduzido por sete dias.':'Promoção encerrada ou mantida em 0%.';
+    } else if(definition.id==='equipe-liquidez'&&choice==='contratar'){
+      handler(draft,'RH.CONTRATAR',{businessId:b.id,role:'atendimento',name:'Apoio fictício '+draft.calendar.tick});
+      consequence='Novo funcionário e despesa futura de folha.';
+    } else if(definition.id==='expansao-reserva'&&choice==='expandir'){
+      const cityId=String(payload.cityId||b.cityId);
+      assert(cityById(cityId),'Cidade inválida para expansão.');
+      const occupied=new Set(businesses(draft).filter(x=>x.cityId===cityId).map(x=>x.lot));
+      const lot=Array.from({length:18},(_,i)=>i+1).find(n=>!occupied.has(n));
+      assert(lot,'Sem lote disponível.');
+      handler(draft,'EMPRESA.ABRIR',{cityId,sector:b.sector,lot});
+      consequence='Filial aberta com custo real do grupo.';
+    } else if(definition.id==='fornecedor-prazo'){
+      handler(draft,'ESTOQUE.COMPRAR',{supplierId:choice==='rapido'?'regional':'atacado',
+        productId:'base',quantity:30});
+      consequence='Pedido contabilizado, com preço e prazo do fornecedor escolhido.';
+    } else if(definition.id==='passivo-operacao'){
+      if(choice==='quitar'){
+        const outstanding=operatingPayablesReport(draft).units.find(x=>x.businessId===b.id)?.outstanding||0;
+        assert(outstanding>0,'Nenhuma obrigação disponível.');
+        handler(draft,'PAYABLES.PAGAR_OPERACIONAL',{businessId:b.id,amountCents:Math.min(outstanding,balance(draft,'CASH'))});
+        consequence='Passivo reduzido e caixa pago, sem lançar nova despesa.';
+      }else{
+        handler(draft,'ESTOQUE.COMPRAR',{supplierId:'regional',productId:'base',quantity:20});
+        consequence='Estoque comprado enquanto passivo permanece aberto.';
+      }
+    }
+    event(draft,'DILEMA.DECIDIDO',definition.title+': '+definition.choices.find(x=>x[0]===choice)[1]+'. '+consequence,
+      {dilemmaId:definition.id,choice,tick:draft.calendar.tick,consequence},b.id);
+  }
+  function reputationReport(state,cityId=state?.player?.cityId){
+    if(!state||!cityId||!cityById(cityId))return {status:'SEM_DADOS',units:[]};
+    const r=state.world.rivalEconomy,units=businesses(state).filter(b=>b.cityId===cityId);
+    const samples=state.audit.events.filter(e=>e.type==='DEMANDA.SIMULADA'&&
+      e.date<state.calendar.date&&units.some(b=>b.id===e.businessId));
+    const sectors=[...new Set(units.map(x=>x.sector))];
+    const findings=sectors.map(sector=>{
+      const key=cityId+'|'+sector,quality=r?.playerReputation[key]??50;
+      const n=samples.filter(e=>businessById(state,e.businessId)?.sector===sector).length;
+      return {sector,samples:n,score:n>=7?quality:null,
+        status:n<7?'AMOSTRA_INSUFICIENTE':quality>=70?'BOA':quality>=40?'REGULAR':'ATENCAO',
+        impactPct:n>=7?Math.round(((.75+quality/200)-1)*100):0,
+        note:'Efeito restrito ao peso competitivo na divisão de demanda; sem gerar caixa.'};
+    });
+    return {status:r?'ATIVA':'SEM_SIMULACAO',cityId,units:findings};
+  }
+  function journeyGuide(state){
+    if(!state)return {stage:'iniciar',title:'Crie uma carreira',next:'Escolha uma cidade e abra a carreira.'};
+    const units=businesses(state),p=progressionReport(state);
+    if(!units.length)return {stage:'abrir',title:'Abra o primeiro negócio',next:'Selecione um lote na cidade e escolha seu ramo.'};
+    if(!units.some(x=>x.purchaseOrders.length>0))
+      return {stage:'comprar',title:'Compre seu primeiro estoque',next:'Acesse Mercado → Compras e peça mercadorias.'};
+    if(p.goals.find(g=>g.id==='primeira-venda')?.completed!==true)
+      return {stage:'vender',title:'Aguarde a entrega e realize vendas',next:'Avance os dias para receber estoque e gerar vendas automáticas.'};
+    if(!state.world.rivalEconomy)return {stage:'concorrencia',title:'Ative a concorrência',next:'No painel de Mercado, ative a economia viva com backup JSON.'};
+    if(p.metrics.days<30)return {stage:'estabilizar',title:'Mantenha caixa e abastecimento',next:'Compare margem, estoque e rivais enquanto completa 30 dias.'};
+    if(units.length<2)return {stage:'expandir',title:'Planeje a primeira filial',next:'Compare caixa, passivos e estratégia antes de abrir unidade.'};
+    return {stage:'evoluir',title:'Construa sua rede',next:'Acompanhe objetivos, reputação e dilemas para escolher o próximo risco.'};
   }
 
   // V2.6 — mundo concorrencial fictício. Não usa rede, saldo do jogador ou dados privados.
@@ -1607,8 +1725,24 @@ const CidadeCore = (() => {
       {id:'primeira-filial',label:'Primeira filial',completed:units.length>=2,source:'Pelo menos duas unidades abertas'},
       {id:'primeiro-saneamento',label:'Primeiro passivo quitado',completed:settlements>0,source:'Liquidação OPERATING_SETTLEMENT'}
     ];
+    // Conquistas e desbloqueios: reconhecimento derivado, sem bônus de moedas.
+    const hasDecision=id=>state.audit.events.some(e=>e.type==='DILEMA.DECIDIDO'&&e.data.dilemmaId===id);
+    const unlocks=[
+      {id:'observatorio',label:'Observatório de mercado',unlocked:days>=7,reason:'Sete dias operados'},
+      {id:'dilemas',label:'Escolhas estratégicas',unlocked:!!state.world.rivalEconomy,reason:'Economia viva ativada'},
+      {id:'expansao',label:'Rotas de expansão',unlocked:units.length>=2,reason:'Primeira filial confirmada'}
+    ];
+    achievements.push(
+      {id:'primeira-reposicao',label:'Primeira reposição',completed:state.economy.ledger.some(j=>transactionKind(j)==='PURCHASE'),
+        source:'Compra registrada no livro contábil'},
+      {id:'mes-operado',label:'Um mês de empreendedorismo',completed:days>=30,source:'Calendário operacional'},
+      {id:'estrategista',label:'Primeira decisão estratégica',completed:hasDecision('caixa-estoque')||
+        state.audit.events.some(e=>e.type==='DILEMA.DECIDIDO'),source:'Dilema resolvido no motor'},
+      {id:'rede-regional',label:'Rede regional',completed:level.order>=2,source:'Todos os critérios simultâneos confirmados'},
+      {id:'conglomerado',label:'Conglomerado',completed:level.order>=3,source:'Patamar máximo verificado'}
+    );
     const completed=goals.filter(g=>g.completed).length;
-    return {level,goals,achievements,completed,total:goals.length,
+    return {level,goals,achievements,unlocks,completed,total:goals.length,
       metrics:{days,units:units.length,cities:cityCount,revenueCents:revenue,cashCents:cash,
         recentRevenueCents:revenue30,recentResultCents:recentResult,margin30,dailyFixedCents:dailyFixed},
       note:'Missões e selos são leituras do histórico confirmado. Não concedem dinheiro, pontos arbitrários ou bônus econômicos.'};
@@ -1634,6 +1768,6 @@ const CidadeCore = (() => {
     return {state,migrated,message:migrated?'Carreira migrada para V1.9: histórico preservado; cenário tributário desativado até confirmação explícita.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({rivalMarketReport,RIVAL_EVENT_TYPES,progressionReport,operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({journeyGuide,reputationReport,dilemmaReport,DILEMMA_DEFINITIONS,rivalMarketReport,RIVAL_EVENT_TYPES,progressionReport,operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();

@@ -1,6 +1,14 @@
-# 🏙️ Cidade dos Negócios — V2.4.1 (estável)
+# 🏙️ Cidade dos Negócios — V2.5.0-alpha.1 (candidata)
 
-## Situação atual — V2.4.1 estável (estabilização financeira)
+## V2.5 — Jornada empresarial (alpha.1, ainda não homologada)
+
+A candidata `2.5.0-alpha.1` introduz o **painel Jornada Empresarial**, em **Empresas → Dashboard**. O módulo lê o histórico real do jogo para apresentar níveis (`Em preparação`, `Negócio local`, `Rede regional`, `Conglomerado`), **12 objetivos mensuráveis** e **3 marcos históricos**. Inclui instruções opcionais de início. Não cria dinheiro, pontos, vendas, estoque, bônus ou lançamentos; nenhuma estrutura de salvamento foi alterada (`schemaVersion 9`).
+
+**Situação:** protótipo incremental em avaliação. Os demais checkpoints da V2.5 (reputação com efeitos, seis dilemas de escolha, conquistas avançadas, equilíbrio e QA manual) **não foram concluídos**. Regras: [GDD da V2.5](docs/V250_GDD_PROGRESSAO.md) e [implantação alpha.1](docs/V250_ALPHA1_IMPLANTACAO.md).
+
+**Checkpoint de recuperação:** `releases/v2.4.1-homologada`. A V2.4.1 continua sendo a versão estável de referência. Como `ATUALIZAR_E_JOGAR.bat` usa `main`, uma alpha publicada nela é para teste e não deve ser descrita como versão final homologada. Faça backup JSON antes de atualizar.
+
+## Situação anterior — V2.4.1 estável (estabilização financeira)
 
 **Versão oficial:** `2.4.1`, homologada formalmente pelo titular em 05/11/2026 após CI (250 PASS, 6 benchmarks). **Limite da evidência:** sem teste manual Windows/browser comprovado; exporte JSON. Checkpoint anterior: `releases/v2.4.0-homologada`.
 

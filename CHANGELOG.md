@@ -1,5 +1,15 @@
 # Histórico de versões — Cidade dos Negócios
 
+## 2.5.0-alpha.1 — Jornada Empresarial (candidata, 05/11/2026)
+
+- GDD da jornada documenta investir → decidir → operar → consequência → objetivo; metas de curto, médio e longo prazos.
+- Relatório determinístico `progressionReport` lê unidades, calendário e lançamentos efetivos; 12 objetivos e níveis calculados, com comprovação e progresso.
+- Painel em **Empresas → Dashboard**, com marcos, metas e tutorial opcional, sem alterar navegação principal.
+- Nenhuma recompensa econômica ou nova obrigação tributária; `schemaVersion 9` preservado.
+- Reputação com efeitos, seis dilemas e homologação V2.5.0 **não** estão implementados nesta alpha.
+- **Estado inicial:** testes e CI pendentes; ver `docs/V250_ALPHA1_IMPLANTACAO.md`.
+
+
 ## 2.4.1 — Estabilização financeira e qualidade (homologação formal, 05/11/2026)
 
 - Baixa explícita e idempotente de despesas operacionais reconhecidas anteriormente como contas a pagar: débito em `PAYABLE`, crédito em `CASH`, sem duplicar `EXPENSE`. Pagamento parcial por estabelecimento; RH/DP e tributos simulados mantêm seus próprios pagamentos.

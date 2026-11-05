@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10243E">
   <meta name="description" content="Cidade dos Negócios 1, simulador empresarial brasileiro offline, em um único HTML.">
-  <title>Cidade dos Negócios 1 · v2.4.0</title>
+  <title>Cidade dos Negócios 1 · v2.4.1-rc.1</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2080%2080%22%3E%3Crect%20width%3D%2280%22%20height%3D%2280%22%20rx%3D%2214%22%20fill%3D%22%2310243e%22%2F%3E%3Cpath%20d%3D%22M9%2069V39L24%2031V69H9ZM28%2069V20L43%2014V69H28ZM47%2069V43L62%2034V69H47Z%22%20fill%3D%22%2351a9df%22%2F%3E%3Cpath%20d%3D%22m8%2060%2022-23%2012%209L70%2013m-14%200%2015-2-2%2016%22%20stroke%3D%22%23e9ad50%22%20stroke-width%3D%226%22%20fill%3D%22none%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
   <style>
 :root{color-scheme:dark;--navy:#10243e;--deep:#091629;--panel:#142b45;--panelhi:#193451;--blue:#51a9df;--gold:#e9ad50;--green:#51bd83;--text:#f4f7fb;--muted:#b8c6d8;--stroke:#2b4860;--red:#ef7070;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:15px}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#091629;color:var(--text)}[hidden]{display:none!important}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.46;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f4d49a;outline-offset:2px}a{color:#9dcee9}h1,h2,h3,p{margin-top:0}h1,h2,h3{letter-spacing:-.025em}h3{font-size:1.12rem;margin-bottom:0}p{line-height:1.65}small,.muted,.field-hint{color:var(--muted)}.field-hint{font-size:.83rem;margin:10px 0 19px;line-height:1.45}.hint-bottom{margin-top:26px}.status-text{font-size:.87rem;margin:13px 0 0;min-height:1.25rem}.overline,.eyebrow,.card-kicker,.nav-label{font-size:.7rem;letter-spacing:.16em;font-weight:800;color:#a3b7cb}.eyebrow-dot,.online-dot{display:inline-block;background:var(--green);width:7px;height:7px;border-radius:50%;margin-right:7px}.btn{border:1px solid #466178;border-radius:10px;padding:12px 16px;background:#24415a;color:var(--text);font-size:.89rem;font-weight:750;transition:transform .15s,filter .15s;min-height:44px}.btn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px)}.btn-primary{background:linear-gradient(135deg,#e9ad50,#f3c775);color:#101d2b;border-color:#f4d49a}.btn-outline{background:#14283b;color:#f2f7fb}.btn-big{width:100%;padding:16px 20px;display:flex;justify-content:space-between;margin-top:18px}.full{width:100%}.spaced{margin-top:9px}.tag-soft,.tag-warning{display:inline-block;letter-spacing:.05em;font-weight:800;font-size:.63rem;background:#203e58;color:#a9dafa;border:1px solid #3b617b;border-radius:8px;padding:8px 10px}.tag-warning{color:#f4d49a;background:#3c301d;border-color:#906c39}.brand-icon{filter:drop-shadow(0 9px 28px #0003)}.onboarding{min-height:100vh;display:grid;grid-template-columns:minmax(390px,1fr) minmax(380px,.78fr);gap:clamp(30px,6vw,100px);align-items:center;max-width:1540px;margin:0 auto;padding:45px clamp(24px,6vw,94px);position:relative;overflow:hidden}.onboarding:before{content:"";background:radial-gradient(ellipse at center,#193e6077,transparent 70%);position:absolute;inset:0 0 0 -30%;pointer-events:none}.onboarding-art{position:absolute;inset:0;opacity:.14;pointer-events:none;overflow:hidden}.skyline{display:flex;align-items:end;gap:18px;position:absolute;bottom:0;left:-2%;height:63%;width:110%;transform:skewY(-7deg)}.skyline i{display:block;flex:1;background:linear-gradient(180deg,#7dbde3,#1d5070);height:65%;border-radius:5px 5px 0 0;box-shadow:inset 10px 0 0 #0a223a}.skyline i:nth-child(2n){height:78%}.skyline i:nth-child(3n){height:44%}.skyline i:nth-child(5n){height:95%}.intro-copy{position:relative;z-index:1}.intro-copy .eyebrow{color:#9ddfe2;margin-bottom:48px}.brand-intro{margin-bottom:15px}.intro-copy h1{font-size:clamp(3.3rem,6vw,6.8rem);line-height:.92;margin-bottom:20px;font-weight:900}.intro-copy h1 em{font-style:normal;background:linear-gradient(120deg,#f6ce82,#d89d41);background-clip:text;-webkit-background-clip:text;color:transparent}.hero-subtitle{font-size:1.55rem;font-weight:700;margin:29px 0 10px}.intro-desc{font-size:1.02rem;color:#c7d3df;max-width:540px}.intro-features{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}.intro-features span{padding:10px 12px;border:1px solid #395875;background:#12304aab;border-radius:8px;font-size:.78rem;color:#b9d6e6}.fine-print{font-size:.72rem;color:#8fa8bb;margin-top:40px}.start-card{position:relative;z-index:1;background:linear-gradient(158deg,#1a3652 0%,#102339 100%);padding:clamp(25px,4vw,42px);border:1px solid #3c5970;box-shadow:0 24px 90px #0007;border-radius:20px}.card-kicker{color:var(--gold);margin-bottom:13px}.start-card h2{font-size:2rem;line-height:1.1;margin-bottom:12px}.start-card label,.panel label{display:block;font-size:.78rem;color:#c5d6e6;font-weight:700;margin:18px 0 7px}.start-card input,.start-card select,.panel input,.panel select,.topbar select{width:100%;background:#0c2136;border:1px solid #3c5a71;color:var(--text);border-radius:9px;min-height:42px;padding:10px 13px;outline-color:var(--gold)}.text-action{border:0;color:#b7d9f5;background:transparent;font-size:.86rem;margin:15px auto 0;display:block;padding:10px}.game-shell{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:100vh}.sidebar{background:linear-gradient(175deg,#0b1b2e,#10243e);border-right:1px solid #203e59;display:flex;flex-direction:column;padding:27px 15px 18px;position:sticky;top:0;height:100vh}.sidebar-brand{display:flex;gap:10px;align-items:center;padding:0 8px 32px}.brand-mark{width:43px;height:43px;border-radius:10px;background:linear-gradient(135deg,#e2a450,#f0c77d);color:#092037;display:grid;place-items:center;font-size:2rem}.sidebar-brand strong{display:block;font-size:.9rem;letter-spacing:.065em;line-height:1.15}.sidebar-brand small{font-size:.59rem;letter-spacing:.16em;color:var(--gold)}.nav-label{padding:0 14px 12px;color:#7896b4}.nav-items{display:grid;gap:5px}.nav-item{width:100%;background:none;border:1px solid transparent;color:#b6c7d8;padding:13px 14px;border-radius:9px;text-align:left;font-weight:650;display:flex;align-items:center;gap:14px;font-size:.88rem}.nav-item span{font-size:1.17rem;width:24px;text-align:center}.nav-item.active{background:#244360;color:#fff;border-color:#3a6080;box-shadow:inset 3px 0 0 var(--gold)}.nav-item:hover{background:#1a3852}.sidebar-bottom{margin-top:auto;padding:17px 11px 0;border-top:1px solid #29425a;font-size:.69rem;letter-spacing:.1em;font-weight:800;color:#bdd4e2}.sidebar-bottom small{display:block;letter-spacing:0;font-weight:400;margin:8px 0 0 16px}.main-pane{min-width:0;display:flex;flex-direction:column}.topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px clamp(16px,3vw,39px);border-bottom:1px solid #28435c;background:#0e2035}.topbar h2{font-size:1.4rem;margin:3px 0 0}.topbar h2 span{color:#95adbf;font-weight:500}.topbar-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.compact-label{font-size:.72rem;color:var(--muted)}.topbar select{width:auto;max-width:195px;font-size:.78rem}.date-box{background:#152f47;border:1px solid #34516c;border-radius:9px;padding:7px 15px;min-width:115px}.date-box small{display:block;font-size:.57rem;letter-spacing:.1em}.date-box strong{display:block;font-size:.93rem;margin-top:3px;font-variant-numeric:tabular-nums}.world-warning{padding:10px clamp(16px,3vw,39px);border-bottom:1px solid #4b492d;background:#2e2b1d;color:#f6d69b;font-size:.76rem;font-weight:600}.legal-warning{background:#132b3a;border-color:#24485b;color:#a7c9d9}.content{padding:30px clamp(16px,3vw,39px);max-width:1720px;width:100%;margin:0 auto;flex:1}.page-title{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:25px}.page-title h1{font-size:clamp(1.5rem,2.6vw,2.2rem);margin:7px 0 2px}.page-title p{color:#a9bacb;font-size:.85rem;margin:0}.build-badge{border:1px solid #3d5a71;color:#a4cce4;padding:8px 11px;border-radius:8px;font-size:.72rem;white-space:nowrap}.stats-bar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:20px}.stat,.panel{border:1px solid #304c63;border-radius:13px;background:linear-gradient(155deg,#17314a,#10273e);box-shadow:0 10px 22px #0002}.stat{padding:21px 20px}.stat span{display:block;font-size:.67rem;letter-spacing:.085em;color:#afc0d2;font-weight:700}.stat strong{display:block;font-size:clamp(1.3rem,2vw,2rem);margin:10px 0 3px;font-variant-numeric:tabular-nums;letter-spacing:-.035em;white-space:nowrap}.stat small{font-size:.68rem}.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(280px,.83fr);gap:17px}.right-column{display:grid;gap:17px;align-content:start}.panel{padding:23px}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.map-panel{padding:0;overflow:hidden;align-self:start}.map-panel .panel-heading{padding:23px 23px 0;margin-bottom:0}.map-panel .overline{margin-bottom:6px}.map-canvas{min-height:350px;background:radial-gradient(ellipse at 55% 37%,#265372 0%,#163751 54%,#0d2436 100%);overflow:hidden}.map-canvas svg{display:block;width:100%;height:auto;min-height:320px;max-height:480px;touch-action:manipulation}.map-canvas svg [data-lot]{cursor:pointer;outline:none;transition:filter .15s}.map-canvas svg [data-lot]:hover,.map-canvas svg [data-lot]:focus{filter:brightness(1.5)}.map-legend{display:flex;gap:20px;flex-wrap:wrap;font-size:.71rem;color:#b8cadd;padding:0 23px 12px}.legend-color{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}.legend-color.lot{background:#537d69}.legend-color.own{background:#e9ad50}.legend-color.sel{background:#51a9df}.map-disclaimer{font-size:.68rem;color:#91b0c0;padding:0 23px 15px;margin:0}.big-number{font-size:2.1rem;font-weight:850;color:var(--gold);letter-spacing:-.06em;margin:12px 0}.event-list{display:grid;gap:13px;max-height:320px;overflow:auto}.event-item{border-bottom:1px solid #264259;padding-bottom:10px;display:flex;gap:10px;align-items:start}.event-item:last-child{border-bottom:0}.event-dot{background:var(--blue);width:7px;height:7px;border-radius:50%;flex:none;margin-top:7px}.event-item p{margin:0;color:#d0dde8;font-size:.81rem;line-height:1.45}.event-item small{display:block;margin-top:4px;font-size:.67rem;color:#8eabc0}.view{min-height:370px}.detail-list,.finance-list{display:grid;grid-template-columns:1fr auto;gap:15px;margin:19px 0}.detail-list dt,.finance-list dt{color:#bed0df}.detail-list dd,.finance-list dd{margin:0;text-align:right;font-weight:800;font-variant-numeric:tabular-nums}.finance-list{border-top:1px solid #3b586c;padding-top:17px}.finance-list dt,.finance-list dd{font-size:.85rem}.finance-list .emphasis{color:var(--gold);font-weight:800;font-size:1rem}.company-emblem{display:flex;align-items:center;gap:16px;background:#102c40;border:1px solid #31526b;border-radius:12px;padding:16px}.company-emblem>span{font-size:2.4rem}.company-emblem h3{margin-bottom:3px}.company-emblem p{margin:0}.button-stack{display:grid;gap:10px;margin:20px 0}.fiscal-panel{display:flex;gap:24px;max-width:920px}.fiscal-icon{font-size:3.2rem;font-weight:850;color:var(--gold)}.turnbar{margin-top:23px;background:linear-gradient(125deg,#173c58,#132b44);border:1px solid #3d6480;border-radius:13px;padding:20px 25px;display:flex;justify-content:space-between;align-items:center;gap:20px}.turnbar h3{margin:6px 0}.turnbar p{font-size:.77rem;color:#a5bfd2;margin:0}.turn-actions{display:flex;gap:8px;flex-wrap:wrap}.game-footer{padding:19px clamp(16px,3vw,39px);display:flex;justify-content:space-between;gap:10px;font-size:.63rem;letter-spacing:.08em;color:#91aabd;border-top:1px solid #213e56}.toast{position:fixed;bottom:25px;right:25px;max-width:min(90vw,460px);z-index:99;pointer-events:none;background:#1b3a52;border:1px solid #5e869e;box-shadow:0 15px 45px #0009;color:#fff;padding:14px 19px;border-radius:11px;font-size:.82rem;transform:translateY(140px);opacity:0;transition:transform .25s,opacity .25s}.toast.visible{transform:none;opacity:1}.toast.error{border-color:var(--red);background:#4c2a34}@media(max-width:1180px){.game-shell{grid-template-columns:190px minmax(0,1fr)}.dashboard-grid{grid-template-columns:1fr}.stats-bar{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar{padding-left:10px;padding-right:10px}}@media(max-width:800px){.onboarding{grid-template-columns:1fr;gap:25px;padding:24px}.intro-copy .eyebrow{margin-bottom:20px}.intro-copy h1{font-size:3.8rem}.fine-print{margin-top:14px}.game-shell{display:block}.sidebar{position:relative;height:auto;padding:14px}.sidebar-brand{padding-bottom:12px}.nav-label,.sidebar-bottom{display:none}.nav-items{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px}.nav-item{width:auto;flex:none;padding:9px 11px;font-size:.75rem;gap:6px}.nav-item span{font-size:1rem;width:18px}.topbar{align-items:flex-start;flex-wrap:wrap}.topbar-controls{width:100%}.compact-label{display:none}.page-title{align-items:start}.turnbar{flex-direction:column;align-items:stretch}.turn-actions{width:100%}.turn-actions .btn{flex:1}.game-footer{flex-direction:column}}@media(max-width:480px){.stat{padding:15px 12px}.stat strong{font-size:1.16rem}.stat small{font-size:.6rem}.stats-bar{gap:8px}.panel{padding:17px}.map-panel .panel-heading{padding:16px 16px 0}.map-legend{padding:0 16px 12px}.map-disclaimer{padding:0 16px 12px}.topbar-controls select{max-width:140px}.page-title{flex-direction:column}.game-footer{font-size:.59rem}.fiscal-panel{flex-direction:column;gap:10px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
@@ -874,7 +874,7 @@ button.v221-hud-cell:hover{background:#1e4254}
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◈ Gestão empresarial</span><span>◈ 30 cidades brasileiras</span><span>◈ Jogue offline</span></div>
       <p class="v21-art-disclaimer">Arte promocional conceitual · As cidades e os lotes do jogo são representações fictícias.</p>
-      <p class="fine-print"><span id="intro-version">v2.4.0</span> — simulador empresarial offline. Dados oficiais e estimativas fictícias identificados.</p>
+      <p class="fine-print"><span id="intro-version">v2.4.1-rc.1</span> — simulador empresarial offline. Dados oficiais e estimativas fictícias identificados.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -922,7 +922,7 @@ button.v221-hud-cell:hover{background:#1e4254}
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
       <details class="world-warning legal-warning v21-legal-note"><summary>ⓘ SIMULAÇÃO EDUCATIVA <span>Dados econômicos simulados e tributos não oficiais · ver limites</span></summary><p>Indicadores econômicos do jogo são fictícios, salvo população e PIB identificados como oficiais. Cenários tributários não são apuração legal. Regras sem cobertura não representam isenção nem imposto zero.</p></details>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v2.4.0</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v2.4.1-rc.1</span></div>
         <section id="stats-bar" class="stats-bar v21-hud" aria-label="Indicadores financeiros e operacionais do grupo">
           <div class="stat stat--cash"><span><i class="v21-stat-icon" aria-hidden="true">◇</i> CAIXA DO GRUPO</span><strong id="kpi-cash">—</strong><small>Saldo disponível · não é receita</small></div>
           <div class="stat stat--revenue"><span><i class="v21-stat-icon" aria-hidden="true">↗</i> RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Vendas realizadas · toda a carreira</small></div>
@@ -1149,14 +1149,23 @@ button.v221-hud-cell:hover{background:#1e4254}
 <div class="dashboard-grid"><div><h4>Entradas e saídas por natureza</h4><dl class="finance-list" id="treasury-categories"></dl></div>
 <div><h4>Receita e resultado operacional</h4><dl class="finance-list" id="treasury-performance"></dl></div></div>
 <p id="treasury-scope-note" class="field-hint">Caixa e tributos do grupo não são rateados entre filiais.</p></article>
+<article class="panel spaced" aria-labelledby="operating-payables-heading">
+<div class="panel-heading"><h3 id="operating-payables-heading">V2.4.1 · Liquidação de contas a pagar operacionais</h3><span class="tag-soft">SEM DUPLICAR DESPESAS</span></div>
+<p class="muted">Despesas diárias já reconhecidas como contas a pagar podem ser liquidadas. Esta operação reduz o caixa compartilhado e o passivo da unidade, sem repetir a despesa. Folha e tributos simulados seguem rotinas próprias.</p>
+<p class="field-hint" id="payable-operating-summary">Sem obrigações operacionais em aberto.</p>
+<form id="payable-operating-form" class="finance-filters"><div class="dashboard-grid">
+<label for="payable-operating-unit">Unidade de origem<select id="payable-operating-unit"></select></label>
+<label for="payable-operating-amount">Valor da quitação (R$)<input type="number" id="payable-operating-amount" min="0.01" step="0.01" required></label>
+</div><button type="submit" class="btn btn-primary" id="payable-operating-submit">Liquidar passivo operacional</button></form>
+</article>
 <div class="admin-department-links"><button type="button" class="btn btn-outline" data-section-go="administrativo:contabilidade">Abrir DRE, balanço, razão e conciliação</button><button type="button" class="btn btn-outline" data-tab="fiscal">Ver tributos simulados</button></div>
 <details class="market-drawer finance-drawer"><summary>▥ Projeções e estratégia <span>Cenários hipotéticos, não lançamentos</span></summary><article class="panel strategy-panel"><div class="panel-heading"><h3>Gestão estratégica e equilíbrio econômico</h3><span class="tag-soft">V1.4 · ANÁLISE E PROJEÇÃO</span></div>
-            <p class="muted">Resultados realizados vêm exclusivamente do livro contábil. Projeções são cenários hipotéticos, não lançamentos. A projeção estratégica considera a unidade ativa e o caixa compartilhado atual, sem projetar simultaneamente as demais unidades; não é uma projeção consolidada da rede. Esses cenários não realizam novas compras nem liquidam obrigações existentes. Não gera lançamentos.</p>
+            <p class="muted">Resultados realizados vêm exclusivamente do livro contábil. Projeções são cenários hipotéticos, não lançamentos. A projeção estratégica considera apenas a unidade ativa e o caixa compartilhado atual, sem projetar simultaneamente as demais unidades. Inclui folha futura estimada como passivo e identifica dívidas operacionais, folhas já apuradas e tributos didáticos conhecidos. Não há pagamento automático dessas obrigações, novas compras ou tributos futuros na projeção. Não gera lançamentos.</p>
             <div class="strategy-controls"><label for="strategy-horizon">Horizonte de projeção (dias)</label><select id="strategy-horizon"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option></select></div>
             <div id="strategy-metrics" class="strategy-metrics" aria-live="polite"><p class="muted">Abra uma empresa para gerar indicadores.</p></div>
             <div class="table-scroll"><table class="strategy-table"><thead><tr><th>Tipo de custo / resultado</th><th>Realizado: últimos 30 dias encerrados</th><th>Projeção: horizonte escolhido</th></tr></thead><tbody id="strategy-cost-rows"></tbody></table></div>
             <div id="strategy-risks" class="strategy-risks" aria-live="polite"></div>
-            <p class="field-hint">Ponto de equilíbrio estimado = despesa operacional fixa diária ÷ margem de contribuição média do mix, sem impostos. Capital de giro gerencial = caixa + estoque + trânsito + recebíveis − obrigações. A previsão respeita estoque atual e entregas já pagas; não prevê novas compras, crédito, tributos ou alterações futuras da concorrência. Saldo positivo não é promessa de liquidez.</p>
+            <p class="field-hint">Ponto de equilíbrio estimado = despesa operacional fixa diária ÷ margem de contribuição média do mix, sem impostos. Capital de giro gerencial = caixa + estoque + trânsito + recebíveis − obrigações. A previsão respeita estoque atual e entregas já pagas; reconhece folha futura estimada da unidade, mas não projeta novos tributos, contratações, compras, crédito, vendas das demais unidades ou alterações futuras da concorrência. O caixa após pagamentos é apenas um teste hipotético. Saldo positivo não é promessa de liquidez.</p>
           </article></details></div>
 <div class="v23-subpane" id="v23-pane-administrativo-rh-dp" role="tabpanel" data-section-pane="administrativo:rh-dp" aria-labelledby="v23-tab-administrativo-rh-dp" hidden>
  <article class="panel"><div class="panel-heading"><h3>RH/DP · equipe e folha simuladas</h3><span class="tag-soft">V2.4-B · FICTÍCIO</span></div>
@@ -1222,21 +1231,21 @@ button.v221-hud-cell:hover{background:#1e4254}
   </article>
 </div></section>
 <section data-view="sistema" class="view" hidden>
-          <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Salvamento e recuperação</h3><span class="tag-soft">M05</span></div><p class="muted">O backup JSON é o método portátil recomendado, especialmente ao atualizar o HTML no Windows.</p><div class="button-stack"><button class="btn btn-primary" type="button" id="export-btn">Exportar minha carreira (.json)</button><button class="btn btn-outline" type="button" id="import-btn">Importar carreira (.json)</button><button class="btn btn-outline" type="button" id="new-career-btn">Começar uma nova carreira</button></div><p class="field-hint" id="autosave-label">Verificando salvamento local…</p></article>
+          <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Salvamento e recuperação</h3><span class="tag-soft">M05</span></div><p class="muted">O backup JSON é o método portátil recomendado, especialmente ao atualizar o HTML no Windows.</p><div class="button-stack"><button class="btn btn-primary" type="button" id="export-btn">Exportar minha carreira (.json)</button><button class="btn btn-outline" type="button" id="import-btn">Importar carreira (.json)</button><button class="btn btn-outline" type="button" id="restore-prior-save-btn">Recuperar cópia anterior do navegador</button><button class="btn btn-outline" type="button" id="new-career-btn">Começar uma nova carreira</button></div><p class="field-hint" id="safety-backup-status">Verificando cópia anterior…</p><p class="field-hint" id="autosave-label">Verificando salvamento local…</p></article>
           <article class="panel"><div class="panel-heading"><h3>Diagnóstico e integridade</h3><span class="tag-soft">M06</span></div><dl class="detail-list" id="diagnostic-details"></dl><button class="btn btn-outline spaced" id="run-diagnostic" type="button">Executar verificação</button><p class="field-hint" id="diagnostic-result">—</p></article></div>
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v2.4.0</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v2.4.1-rc.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>
   <div class="toast" id="toast" aria-live="polite" role="status"></div>
   <script>
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.4.0 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.4.1-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '2.4.0';
+  const VERSION = '2.4.1-rc.1';
   const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -1432,6 +1441,39 @@ const CidadeCore = (() => {
     });
     return {units,totalActive:units.reduce((n,u)=>n+u.activeCount,0),
       pendingCents:units.reduce((n,u)=>n+u.pendingCents,0)};
+  }
+  // V2.4.1: baixa de passivos OPERACIONAIS por unidade, sem reapuração de despesas.
+  // Folhas RH e TAX_PAYABLE mantêm rotinas independentes; históricos sem origem certa não são liquidados aqui.
+  function operatingPayablesReport(state){
+    if(!state)return {units:[],total:0,unclassified:0};
+    const units=businesses(state).map(b=>({businessId:b.id,city:cityById(b.cityId)?.name||'—',
+      recognized:0,paid:0,outstanding:0}));
+    const byId=new Map(units.map(u=>[u.businessId,u]));
+    for(const j of state.economy.ledger){
+      const row=byId.get(journalBusinessId(state,j));if(!row)continue;
+      const kind=transactionKind(j);
+      if(kind==='DAILY_EXPENSE')for(const e of j.entries)
+        if(e.account==='PAYABLE')row.recognized+=e.credit-e.debit;
+      if(kind==='OPERATING_SETTLEMENT')for(const e of j.entries)
+        if(e.account==='PAYABLE')row.paid+=e.debit-e.credit;
+    }
+    for(const u of units)u.outstanding=u.recognized-u.paid;
+    const total=units.reduce((n,u)=>n+u.outstanding,0);
+    const payroll=rhReport(state).pendingCents;
+    return {units,total,unclassified:balance(state,'PAYABLE')-total-payroll,
+      note:'Somente despesas diárias identificadas no razão podem ser quitadas nesta rotina. A folha possui baixa independente.'};
+  }
+  // Estimativa de folha futura da unidade ativa: mesmo critério pró-rata do reconhecimento mensal.
+  // Nenhuma consulta gera folha no livro; cenário presume equipe inalterada.
+  function estimatedPayrollMonth(state,businessId,period){
+    const start=period+'-01';
+    const end=new Date(Date.UTC(Number(period.slice(0,4)),Number(period.slice(5,7)),0)).toISOString().slice(0,10);
+    return rhEmployees(state).filter(x=>x.businessId===businessId&&x.hiredAt<=end&&(!x.dismissedAt||x.dismissedAt>=start))
+      .reduce((sum,x)=>{
+        const from=x.hiredAt>start?x.hiredAt:start,to=x.dismissedAt&&x.dismissedAt<end?x.dismissedAt:end;
+        const days=Math.min(30,Math.round((Date.parse(to+'T12:00:00Z')-Date.parse(from+'T12:00:00Z'))/86400000)+1);
+        return sum+Math.round(x.salaryCents*days/30);
+      },0);
   }
   function accruePayrollMonth(draft,period){
     const start=period+'-01';
@@ -1650,7 +1692,7 @@ const CidadeCore = (() => {
     TAX_EXPENSE:Object.freeze({name:'Tributo simulado por competência',group:'EXPENSE',normal:'DEBIT'}),
     TAX_PAYABLE:Object.freeze({name:'Tributo simulado a pagar',group:'LIABILITY',normal:'CREDIT'})
   });
-  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','PAYROLL_ACCRUAL','PAYROLL_PAYMENT','UNCLASSIFIED']);
+  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','PAYROLL_ACCRUAL','PAYROLL_PAYMENT','OPERATING_SETTLEMENT','UNCLASSIFIED']);
   function transactionKind(j){
     if(TRANSACTION_KINDS.includes(j.kind))return j.kind;
     if(j.memo==='Capital inicial do empreendedor')return 'CAPITAL';
@@ -1876,6 +1918,23 @@ const CidadeCore = (() => {
       event(draft,'FISCAL_OP.FECHADO',
         'Fechamento administrativo fictício de '+period+' concluído para '+target.id+'.',
         {period,operatingResult:summary.operatingResult,netCash:summary.netCash},target.id);
+      return;
+    }
+    if(type==='PAYABLES.PAGAR_OPERACIONAL'){
+      const unit=businessById(draft,String(payload.businessId||''));
+      const amount=Number(payload.amountCents);
+      assert(unit,'Unidade não encontrada para liquidação operacional');
+      assert(Number.isSafeInteger(amount)&&amount>0,'Valor de pagamento operacional inválido');
+      const row=operatingPayablesReport(draft).units.find(x=>x.businessId===unit.id);
+      assert(row&&row.outstanding>=amount,'Pagamento excede despesas operacionais em aberto da unidade');
+      assert(balance(draft,'PAYABLE')>=amount,'Passivo operacional insuficiente no razão');
+      assert(balance(draft,'CASH')>=amount,'Caixa compartilhado insuficiente para liquidar a obrigação');
+      journal(draft,'Quitação de despesa operacional já reconhecida · '+unit.id,[
+        {account:'PAYABLE',debit:amount,credit:0},{account:'CASH',debit:0,credit:amount}
+      ],unit.id,'OPERATING_SETTLEMENT');
+      event(draft,'PAYABLES.OPERACIONAL_PAGO',
+        'Obrigação operacional quitada: '+money(amount)+' · '+unit.id+'.',
+        {amountCents:amount},unit.id);
       return;
     }
     if(type==='RH.CONTRATAR'){
@@ -2359,6 +2418,7 @@ const CidadeCore = (() => {
       else if(kind==='OPENING'&&net<0)rows.opening+=-net;
       else if(kind==='TAX_PAYMENT'&&net<0)rows.taxPayments+=-net;
       else if(kind==='PAYROLL_PAYMENT'&&net<0)rows.payroll=(rows.payroll||0)-net;
+      else if(kind==='OPERATING_SETTLEMENT'&&net<0)rows.operatingSettlements=(rows.operatingSettlements||0)-net;
       else if(net>0)rows.unclassifiedIn+=net;
       else rows.unclassifiedOut+=-net;
     }
@@ -2440,7 +2500,10 @@ const CidadeCore = (() => {
     }
     const contributionPerUnit=weightedDemand?weightedContribution/weightedDemand:0;
     const breakEvenUnits=contributionPerUnit>0?Math.ceil(fixedDaily/contributionPerUnit):null;
-    let cash=current.cash,creditors=current.payable,projectedRevenue=0,projectedCogs=0,unitsSold=0,missed=0,lowestCash=cash;
+    const operatingDebts=operatingPayablesReport(state),payrollDebts=rhReport(state);
+    const knownObligations={operational:operatingDebts.total,payroll:payrollDebts.pendingCents,
+      tax:balance(state,'TAX_PAYABLE'),unclassified:operatingDebts.unclassified};
+    let cash=current.cash,creditors=current.payable,projectedRevenue=0,projectedCogs=0,unitsSold=0,missed=0,lowestCash=cash,projectedPayrollAccrual=0;
     let date=state.calendar.date;
     for(let d=0;d<horizonDays;d++){
       // Encomendas anteriores já estão pagas; entrega futura não provoca segunda saída de caixa.
@@ -2457,12 +2520,21 @@ const CidadeCore = (() => {
       }
       if(cash>=fixedDaily)cash-=fixedDaily;
       else creditors+=fixedDaily;
+      if(dateNext(date).slice(0,7)!==date.slice(0,7)){
+        const payroll=estimatedPayrollMonth(state,b.id,periodKey(date));
+        projectedPayrollAccrual+=payroll;
+        creditors+=payroll; // folha a pagar: sem pagamento automático nem saída de caixa duplicada
+      }
       lowestCash=Math.min(lowestCash,cash);
       date=dateNext(date);
     }
-    const profit=projectedRevenue-projectedCogs-fixedDaily*horizonDays;
+    const profit=projectedRevenue-projectedCogs-fixedDaily*horizonDays-projectedPayrollAccrual;
     return {horizonDays,projectedRevenue,projectedCogs,projectedFixed:fixedDaily*horizonDays,
       projectedProfit:profit,projectedCash:cash,projectedPayable:creditors,lowestCash,estimatedLostUnits:missed,estimatedSoldUnits:unitsSold,
+      projectedPayrollAccrual,knownObligations,
+      cashAfterKnownDebtsIfPaid:cash-knownObligations.operational-knownObligations.payroll-knownObligations.tax-Math.max(0,knownObligations.unclassified),
+      forecastCoverage:'SIMULACAO_UNIDADE_ATIVA_SEM_LIQUIDACAO_AUTOMATICA',
+      forecastNote:'Projeta vendas e despesas fixas da unidade ativa; inclui folha futura estimada como passivo. Não inclui vendas e custos das demais unidades, pagamentos futuros, novos tributos ou novas contratações. Dívidas atuais NÃO são liquidadas automaticamente.',
       workingCapital,cashCoverageDays:fixedDaily?Math.floor(current.cash/fixedDaily):null,
       dailyFixed:fixedDaily,breakEvenUnits,contributionPerUnit,projectionEnd:date,
       recent:{from:beginning,to:endDate,revenue:recentRevenue,cogs:recentCogs,fixed:recentFixed,oneOff:recentOneOff,
@@ -2511,7 +2583,7 @@ const CidadeCore = (() => {
     return {state,migrated,message:migrated?'Carreira migrada para V1.9: histórico preservado; cenário tributário desativado até confirmação explícita.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();
 
@@ -2756,6 +2828,7 @@ const CidadeTianguaCena=(()=>{
   const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const BRDate=iso=>iso.split('-').reverse().join('/');
   const KEY='cidade-dos-negocios-save-v1';
+  const SAFETY_KEY='cidade-dos-negocios-prior-save-v241';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
   let inspectorOpen=false; // interface somente, nunca persistido
   let restockDraft=null; // proposta de compra efêmera (não entra em saves)
@@ -3186,15 +3259,41 @@ function bindRestock(){
     setText('start-message',message);
   }
   function saveLocal(){
-    if(!state)return;
+    if(!state)return false;
+    let ok=false;
     try{
       const contents=Core.exportSave(state);
       localStorage.setItem(KEY,contents);
       if(localStorage.getItem(KEY)!==contents)throw Error('Falha de leitura de retorno');
+      ok=true;
       autosaveStatus='Cópia local verificada neste navegador; mantenha backup JSON externo.';
     }catch(e){autosaveStatus=`Salvamento local indisponível (${e.message}); exporte o JSON.`;notify(autosaveStatus,true);}
     setText('autosave-label',autosaveStatus);
     setText('footer-state',autosaveStatus.startsWith('Cópia')?'Cópia local verificada · backup JSON recomendado':'Salvamento local sem garantia');
+    return ok;
+  }
+  function backupCurrent(){
+    if(!state)return true;
+    try{
+      const raw=Core.exportSave(state);
+      localStorage.setItem(SAFETY_KEY,raw);
+      if(localStorage.getItem(SAFETY_KEY)!==raw)throw Error('Leitura de segurança divergiu');
+      return true;
+    }catch(error){
+      notify('Não foi possível preservar a carreira atual neste navegador ('+error.message+'). Exporte um backup JSON antes de substituí-la.',true);
+      return false;
+    }
+  }
+  function renderSafetyBackup(){
+    const button=$('restore-prior-save-btn');if(!button)return;
+    try{
+      const exists=!!localStorage.getItem(SAFETY_KEY);
+      button.disabled=!exists;
+      setText('safety-backup-status',exists?'Cópia anterior disponível. Recomenda-se também exportar um JSON.':'Nenhuma cópia anterior registrada neste navegador.');
+    }catch(error){
+      button.disabled=true;
+      setText('safety-backup-status','Armazenamento local indisponível. Utilize backup JSON.');
+    }
   }
   function lastAvailableDate(){
     if(!state)return Core.START_DATE;
@@ -3303,7 +3402,12 @@ function bindRestock(){
       ['Caixa atual cobre despesas fixas por',`${report.cashCoverageDays} dias (sem vendas)`],
       ['Despesa operacional fixa por dia',Core.money(report.dailyFixed)],
       ['Ponto de equilíbrio do mix',report.breakEvenUnits===null?'Sem margem positiva':`${report.breakEvenUnits} un./dia (estimado)`],
-      ['Caixa no fim do cenário',Core.money(report.projectedCash)],
+      ['Caixa no fim do cenário (antes da quitação de dívidas)',Core.money(report.projectedCash)],
+      ['Contas operacionais atualmente a pagar',Core.money(report.knownObligations.operational)],
+      ['Folhas já apuradas e não pagas',Core.money(report.knownObligations.payroll)],
+      ['Tributos didáticos lançados a pagar',Core.money(report.knownObligations.tax)],
+      ['Nova folha estimada da unidade ativa',Core.money(report.projectedPayrollAccrual)],
+      ['Caixa se quitadas todas obrigações atuais',Core.money(report.cashAfterKnownDebtsIfPaid)],
       ['Obrigações no fim do cenário',Core.money(report.projectedPayable)],
       ['Resultado operacional projetado',Core.money(report.projectedProfit)],
       ['Unidades potencialmente não atendidas',String(report.estimatedLostUnits)],
@@ -3314,11 +3418,13 @@ function bindRestock(){
       ['Receita de vendas',report.recent.revenue,report.projectedRevenue],
       ['(-) CMV / custo variável das mercadorias',report.recent.cogs,report.projectedCogs],
       ['(-) Despesa operacional fixa',report.recent.fixed,report.projectedFixed],
+      ['(-) Nova folha estimada da unidade ativa',null,report.projectedPayrollAccrual],
       ['(-) Despesas de abertura / não recorrentes',report.recent.oneOff,null],
       ['Resultado operacional antes dos tributos',report.recent.operatingResult,report.projectedProfit]
     ];
     $('strategy-cost-rows').innerHTML=rows.map(([label,actual,projected])=>`<tr><td>${escape(label)}</td><td>${escape(Core.money(actual))}</td><td>${projected===null?'Não projetado':escape(Core.money(projected))}</td></tr>`).join('');
-    const risks=[];
+    const risks=[report.forecastNote];
+    if(report.cashAfterKnownDebtsIfPaid<0)risks.push('⚠ Cenário de caixa insuficiente para liquidar obrigações conhecidas; não é previsão consolidada da rede.');
     if(report.breakEvenUnits===null)risks.push('⚠ O mix de produtos não tem margem de contribuição positiva nas condições atuais.');
     if(report.projectedPayable>Core.overview(state).payable)risks.push('⚠ O cenário prevê novas contas a pagar por caixa insuficiente para despesas fixas.');
     if(report.estimatedLostUnits>0)risks.push(`⚠ Projeção de ${report.estimatedLostUnits} unidades não atendidas: avalie reposição e prazos de entrega.`);
@@ -3334,11 +3440,28 @@ function bindRestock(){
     const numbers={'treasury-cash':flow.closingCash,'treasury-inflows':flow.inflows,'treasury-outflows':flow.outflows,'treasury-net':flow.netCash,
       'treasury-payable':report.closingPayable,'treasury-tax':group?report.closingTaxPayable:null,'treasury-transit':report.closingInTransit};
     for(const [id,value] of Object.entries(numbers))setText(id,value===null?'Somente grupo':Core.money(value));
+    const debts=Core.operatingPayablesReport(state);
+    const chooser=$('payable-operating-unit'),prior=chooser.value;
+    chooser.replaceChildren(...debts.units.map(u=>{
+      const option=document.createElement('option');option.value=u.businessId;
+      option.textContent=u.businessId+' · '+u.city+' · '+Core.money(u.outstanding)+' em aberto';
+      return option;
+    }));
+    if(debts.units.some(u=>u.businessId===prior))chooser.value=prior;
+    const selected=debts.units.find(u=>u.businessId===chooser.value);
+    const canPay=!!selected?.outstanding;
+    chooser.disabled=!debts.units.length;
+    $('payable-operating-amount').disabled=!canPay;
+    $('payable-operating-submit').disabled=!canPay;
+    $('payable-operating-amount').max=canPay?(selected.outstanding/100).toFixed(2):'0';
+    setText('payable-operating-summary','Dívidas operacionais: '+Core.money(debts.total)+
+      ' · caixa compartilhado: '+Core.money(Core.overview(state).cash)+
+      (debts.unclassified?' · outras obrigações fora desta rotina: '+Core.money(debts.unclassified):''));
     const cat=flow.categories;
     const categories=[
       ['Receitas de vendas efetivamente recebidas',cat.sales],['Aportes de capital',cat.capital],
       ['Outras entradas',cat.unclassifiedIn],['Pagamentos a fornecedores',cat.suppliers],
-      ['Despesas operacionais pagas',cat.operating],['Salários fictícios pagos',cat.payroll||0],['Custos de abertura pagos',cat.opening],
+      ['Despesas operacionais pagas',cat.operating],['Salários fictícios pagos',cat.payroll||0],['Liquidação de despesas antigas',cat.operatingSettlements||0],['Custos de abertura pagos',cat.opening],
       ['Tributos simulados pagos',cat.taxPayments],['Outras saídas',cat.unclassifiedOut]
     ];
     $('treasury-categories').innerHTML=categories.map(([title,value])=>'<dt>'+escape(title)+'</dt><dd>'+escape(Core.money(value))+'</dd>').join('');
@@ -3427,7 +3550,7 @@ function bindRestock(){
       rows.splice(0,rows.length,...[
         ['Caixa inicial do grupo',x.openingCash],['Entradas de vendas',x.categories.sales],
         ['Aportes ao grupo',x.categories.capital],['Outras entradas sem classificação',x.categories.unclassifiedIn],
-        ['Saídas para fornecedores',x.categories.suppliers],['Saídas operacionais',x.categories.operating],['Salários fictícios pagos',x.categories.payroll||0],
+        ['Saídas para fornecedores',x.categories.suppliers],['Saídas operacionais',x.categories.operating],['Salários fictícios pagos',x.categories.payroll||0],['Liquidação de despesas operacionais já reconhecidas',x.categories.operatingSettlements||0],
         ['Aberturas de unidades',x.categories.opening],['Pagamento de tributo simulado',x.categories.taxPayments],['Outras saídas sem classificação',x.categories.unclassifiedOut],
         ['Variação líquida de caixa',x.netCash],['Caixa final do grupo',x.closingCash]
       ]);
@@ -3638,6 +3761,7 @@ function bindRestock(){
     renderFiscalOperations();
     renderParalegal();
     renderRH();
+    renderSafetyBackup();
     const report=Core.diagnostics(state);
     $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal',state.fiscal.coverageStatus]].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
     setText('turn-message',!b?'Abra sua primeira empresa.':b.stockUnits===0?'Seu estoque está vazio. Reabasteça.':`Sua empresa está operando há ${state.calendar.tick} dia(s).`);
@@ -3664,7 +3788,18 @@ function bindRestock(){
     if(!file)return;
     if(file.size>25_000_000){notify('Save excede 25 MB.',true);return;}
     if(state?.player.cityId&&!confirm('Substituir a carreira atual pelo save importado? Recomendamos exportar antes.'))return;
-    try{const incoming=Core.importSave(await file.text());resetTimer();state=incoming.state;restockDraft=null;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';saveLocal();render();notify(incoming.message);}
+    try{
+      const incoming=Core.importSave(await file.text());
+      if(!backupCurrent())return;
+      const previous=state;resetTimer();state=incoming.state;
+      if(!saveLocal()){
+        state=previous;render();
+        notify('Importação não concluída: o novo save não pôde ser armazenado. A carreira anterior foi preservada.',true);
+        return;
+      }
+      restockDraft=null;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';
+      render();notify(incoming.message);
+    }
     catch(e){notify(`Importação rejeitada: ${e.message}. A carreira anterior foi preservada.`,true);}
   }
   function launchAuto(){
@@ -3832,8 +3967,35 @@ function bindRestock(){
     $('import-btn').addEventListener('click',()=>$('import-file').click());
     $('start-import').addEventListener('click',()=>$('import-file').click());
     $('import-file').addEventListener('change',async e=>{const f=e.target.files?.[0];try{await importFile(f);}finally{e.target.value='';}});
+    $('restore-prior-save-btn').addEventListener('click',()=>{
+      let raw;
+      try{raw=localStorage.getItem(SAFETY_KEY);}catch(error){notify(error.message,true);return;}
+      if(!raw){notify('Não existe cópia anterior neste navegador.',true);return;}
+      let incoming;
+      try{incoming=Core.importSave(raw);}catch(error){notify('Backup anterior inválido: '+error.message,true);return;}
+      if(!confirm('Restaurar carreira anterior? A atual será preservada como cópia de segurança.'))return;
+      if(!backupCurrent())return;
+      const previous=state;resetTimer();state=incoming.state;
+      if(!saveLocal()){
+        state=previous;
+        try{localStorage.setItem(SAFETY_KEY,raw);}catch(_){}
+        render();notify('Restauração cancelada: salvamento local não confirmado.',true);return;
+      }
+      restockDraft=null;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';
+      render();notify('Carreira anterior restaurada. Faça também um backup JSON.');
+    });
+    $('payable-operating-unit').addEventListener('change',()=>renderFinances());
+    $('payable-operating-form').addEventListener('submit',event=>{
+      event.preventDefault();
+      const cents=Math.round(Number($('payable-operating-amount').value)*100);
+      const unit=$('payable-operating-unit').value;
+      const row=Core.operatingPayablesReport(state).units.find(x=>x.businessId===unit);
+      if(!row||!Number.isSafeInteger(cents)||cents<=0){notify('Selecione a unidade e informe um pagamento válido.',true);return;}
+      if(!confirm('Liquidar '+Core.money(cents)+' do passivo operacional de '+unit+'? O valor reduzirá caixa e obrigação, sem lançar nova despesa.'))return;
+      if(commit('PAYABLES.PAGAR_OPERACIONAL',{businessId:unit,amountCents:cents}))$('payable-operating-amount').value='';
+    });
     $('run-diagnostic').addEventListener('click',()=>{try{const before=JSON.stringify(state),out=Core.diagnostics(state);if(before!==JSON.stringify(state))throw Error('Diagnóstico alterou o estado');setText('diagnostic-result',out.status+' · revisão '+out.revision);notify('Verificação estrutural e contábil aprovada.');}catch(e){setText('diagnostic-result',e.message);notify(e.message,true);}});
-    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja abandonar a carreira atual? Exporte um backup JSON antes de começar outra.'))return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financeQuery=null;financeScope='all';statementView='summary';render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
+    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja criar outra carreira? A atual será copiada para recuperação neste navegador; exporte também JSON.'))return;if(!backupCurrent())return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financeQuery=null;financeScope='all';statementView='summary';render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
   }
   function updateOpenPreview(){const s=Core.SECTORS[$('sector-select').value],city=Core.cityById(viewCityId);if(s)setText('open-preview',`Abertura em ${city?.name||'cidade selecionada'} · lote ${String(selectedLot).padStart(2,'0')} · investimento ${Core.money(s.openCost)} do caixa compartilhado · ramo: ${s.name}.`);}
   function start(){
@@ -3848,7 +4010,7 @@ function bindRestock(){
     cityOptions();bind();updateOpenPreview();
     try{const raw=localStorage.getItem(KEY);if(raw){const loaded=Core.importSave(raw);state=loaded.state;viewCityId=business()?.cityId||state.player.cityId;autosaveStatus='Cópia local verificada neste navegador; mantenha backup JSON externo.';}}
     catch(e){autosaveStatus='Não foi possível recuperar o salvamento local; importe backup JSON.';notify(autosaveStatus+' '+e.message,true);}
-    render();goto('cidade');
+    render();renderSafetyBackup();goto('cidade');
   }
   start();
 })();

@@ -66,3 +66,11 @@
 - [ ] Aceite de homologação do titular e release 2.4.1 estável.
 
 **Status:** publicação no GitHub é candidata de teste, não homologação. Não marcar gates sem evidência.
+
+## Encerramento formal de 05/11/2026
+
+- O jogador autorizou expressamente a homologação da V2.4.1 e o início da V2.5.0.
+- A candidata `2.4.1-rc.1` passou CI `42005354318`, 250 PASS/0 FAIL, seis benchmarks e build reproduzível. A versão `2.4.1` receberá nova checagem CI após a promoção.
+- **Homologação formal:** autorizada. **Teste manual no Windows e navegador:** não comprovado; gate prático continua não verificado, conforme contrato do projeto. Isso não deve ser apresentado como validação manual.
+- **Risco de saves longos:** permanece: 21,3 MB na simulação de 1.825 dias/5 lojas, próximo do limite de 25 MB e sujeito a quota menor de `localStorage`.
+- Não há migração; `schemaVersion 9` preservado, e checkpoint da V2.4.0 mantido para recuperação.

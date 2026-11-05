@@ -1,12 +1,12 @@
 # Histórico de versões — Cidade dos Negócios
 
-## 2.4.1-rc.1 — Estabilização financeira e qualidade (candidata, 04/11/2026)
+## 2.4.1 — Estabilização financeira e qualidade (homologação formal, 05/11/2026)
 
 - Baixa explícita e idempotente de despesas operacionais reconhecidas anteriormente como contas a pagar: débito em `PAYABLE`, crédito em `CASH`, sem duplicar `EXPENSE`. Pagamento parcial por estabelecimento; RH/DP e tributos simulados mantêm seus próprios pagamentos.
 - Projeção da unidade ativa inclui despesa estimada de folha no resultado e passivo futuro; informa obrigações operacionais, salários já apurados e tributos didáticos já contabilizados, com ressalvas de escopo.
 - Cópia de segurança local verificada antes de importar ou descartar uma carreira, opção de recuperação e tratamento de falha de armazenamento.
 - Testes novos para integridade, idempotência, histórico e saves; benchmark de 30/365/1.825 dias com 1 e 5 unidades no CI.
-- **Status:** candidata em validação. A execução local no Windows, comparação após reinício e aceite de homologação ainda não estão comprovados.
+- **Status final:** aceite formal de homologação expresso pelo titular em 05/11/2026; CI da RC1 aprovado (250/250, seis benchmarks e HTML reproduzível), a ser repetido na release estável. Teste manual Windows/browser ainda não possui evidência documentada.
 - **Origem:** V2.4.0 estável preservada. Sem mudança no `schemaVersion 9`.
 
 ## 2.4.0 — Homologação final dos patches administrativos A–C (04/11/2026)

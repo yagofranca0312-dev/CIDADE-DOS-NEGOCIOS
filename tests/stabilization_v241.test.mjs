@@ -107,13 +107,13 @@ test('V2.4.1: novos controles ficam no HTML único e script compilado é sintati
   const tpl=readFileSync('src/shell/index.template.html','utf8');
   const app=readFileSync('src/ui/app.js','utf8'),html=readFileSync('index.html','utf8');
   const pkg=JSON.parse(readFileSync('package.json','utf8'));
-  assert.equal(pkg.version,'2.4.1-rc.1');
+  assert.equal(pkg.version,'2.4.1');
   for(const id of ['payable-operating-form','payable-operating-unit','restore-prior-save-btn','safety-backup-status'])
     assert.ok(tpl.includes('id="'+id+'"'));
   assert.match(app,/SAFETY_KEY/);
   assert.match(app,/backupCurrent\(\)/);
   assert.match(app,/if\(!saveLocal\(\)\)/);
-  assert.match(html,/const VERSION = '2\.4\.1-rc\.1'/);
+  assert.match(html,/const VERSION = '2\.4\.1'/);
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(scripts.length,1);
   assert.doesNotThrow(()=>new Script(scripts[0][1]));

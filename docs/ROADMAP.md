@@ -205,3 +205,11 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - [ ] **08** Gate final de homologação pelo jogador e checkpoint estável V2.4.1: **NÃO CONCEDIDO**.
 - **Atalho:** `docs/V241_ESTABILIZACAO.md`.
 - **Observação QA:** homologa-se somente após teste manual Windows e aceite; a V2.4.1 RC1 pode ser publicada para avaliação, mas não se presume persistência de saves grandes em `file://`.
+
+## 05/11/2026 — V2.4.1: homologação formal e promoção estável
+
+- O titular pediu expressamente **homologação da V2.4.1** e início do ciclo V2.5.0.
+- Candidata `2.4.1-rc.1` (PR #27, CI 42005354318) teve 250 PASS/0 FAIL, seis cenários de performance aprovados e artefato HTML reproduzível. A promoção `2.4.1` muda apenas a identificação de versão.
+- Gate de aceite **formal**: aprovado pelo titular. Teste manual Windows/browser não documentado: **não realizado/verificado nesta execução**. Persistência `localStorage` e saves grandes continuam como risco conhecido; não presumir quitação deste risco.
+- Checkpoint final planejado: `releases/v2.4.1-homologada`, criado após CI da versão estável. Manter `releases/v2.4.0-homologada` intocada.
+- Próximo ciclo: V2.5.0, objetivos e progressão derivados de evidências econômicas e eventos do próprio jogo, sem adulterar ledger ou saves.

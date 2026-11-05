@@ -182,9 +182,30 @@
       '<progress max="100" value="'+g.progressPct+'" aria-label="'+escape(g.label)+'"></progress></div></div>'
     ).join('');
     const won=p.achievements.filter(a=>a.completed);
-    $('progression-achievements').innerHTML=won.length?won.map(a=>
-      '<div class="event-item"><div><strong>✦ '+escape(a.label)+'</strong><small>'+escape(a.source)+'</small></div></div>'
-    ).join(''):'<p class="muted">Os primeiros marcos aparecem após ações confirmadas. Nenhum selo adiciona dinheiro ou estoque.</p>';
+    $('progression-achievements').innerHTML=p.achievements.map(a=>
+      '<div class="event-item"><div><strong>'+escape(a.completed?'✓ '+a.label:'○ '+a.label)+
+      '</strong><small>'+escape(a.source)+'</small></div></div>').join('');
+    const guide=Core.journeyGuide(state);
+    setText('journey-next-action',guide.title+' — '+guide.next);
+    $('journey-unlocks').innerHTML=p.unlocks.map(u=>
+      '<div class="event-item"><div><strong>'+escape(u.unlocked?'✓ '+u.label:'○ '+u.label)+
+      '</strong><small>'+escape(u.reason)+'</small></div></div>').join('');
+    const rep=Core.reputationReport(state,viewCityId);
+    $('journey-reputation').innerHTML=rep.units.length?rep.units.map(u=>
+      '<div class="event-item"><div><strong>'+escape(Core.SECTORS[u.sector].name)+
+      '</strong><p>'+escape(u.score===null?'Em observação: menos de 7 dias de amostra':
+      'Reputação '+u.score+'/90 · '+u.status+' · impacto no peso competitivo '+u.impactPct+'%')+
+      '</p></div></div>').join(''):'<p class="muted">Abra uma unidade nesta cidade para acompanhar sua reputação.</p>';
+    $('journey-dilemmas').innerHTML=Core.dilemmaReport(state).map(d=>
+      '<article class="panel spaced"><h4>'+escape(d.title)+'</h4>'+
+      (d.cooldownDays?'<p class="field-hint">Nova decisão em '+d.cooldownDays+' dia(s).</p>':'')+
+      '<div class="restock-choice">'+d.choices.map(c=>
+      '<button type="button" class="btn btn-outline" data-dilemma="'+escape(d.id)+
+      '" data-choice="'+escape(c.id)+'" '+(c.available?'':'disabled')+
+      ' title="'+escape(c.reason||c.label)+'">'+escape(c.label)+'</button>').join('')+'</div>'+
+      (d.lastChoice?'<small>Última escolha: '+escape(d.lastChoice)+' · '+escape(d.lastDate)+'</small>':'')+
+      '</article>').join('');
+
   }
   function initialFinanceQuery(){
     const date=lastAvailableDate(),year=Number(date.slice(0,4)),month=Number(date.slice(5,7));
@@ -425,6 +446,7 @@
     });
     $('career-form').addEventListener('submit',e=>{e.preventDefault();const name=$('player-name').value,companyName=$('company-name').value,cityId=$('start-city').value;if(commit('CARREIRA.CRIAR',{name,companyName,cityId,seed:(Date.now()>>>0)}))commit('MUNDO.CONCORRENCIA_ATIVAR');});
     $('rival-enable').addEventListener('click',()=>commit('MUNDO.CONCORRENCIA_ATIVAR'));
+    $('journey-dilemmas').addEventListener('click',e=>{const t=e.target.closest('button[data-dilemma]');if(t&&!t.disabled)commit('DILEMA.ESCOLHER',{dilemmaId:t.dataset.dilemma,choice:t.dataset.choice});});
     for(const button of document.querySelectorAll('[data-tab]'))button.addEventListener('click',()=>goto(button.dataset.tab));
     for(const button of document.querySelectorAll('[data-go]'))button.addEventListener('click',()=>goto(button.dataset.go));
     for(const button of document.querySelectorAll('[data-section-tab]')){

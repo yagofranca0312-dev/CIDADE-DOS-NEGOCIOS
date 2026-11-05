@@ -32,6 +32,8 @@ jobs:
         run: npm test
       - name: Benchmarks de estabilidade
         run: npm run bench:stability
+      - name: Benchmark completo de concorrência V2.6
+        run: npm run bench:competition
       - name: SHA-256 da compilacao
         run: sha256sum index.html
       - name: Publicar pacote testavel (não homologado)

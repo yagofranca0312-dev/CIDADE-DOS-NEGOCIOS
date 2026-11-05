@@ -34,3 +34,12 @@ jobs:
         run: npm run bench:stability
       - name: SHA-256 da compilacao
         run: sha256sum index.html
+      - name: Publicar pacote testavel (não homologado)
+        uses: actions/upload-artifact@v4
+        with:
+          name: CIDADE_DOS_NEGOCIOS_V260_RC1_HTML_OFFLINE
+          path: |
+            index.html
+            docs/V260_PATCH_INTEGRAL.md
+            README.md
+          if-no-files-found: error

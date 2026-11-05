@@ -97,7 +97,11 @@ const CidadeCore = (() => {
         note:'Índice comercial simulado; PIB em R$ mil; não representa lucro ou renda domiciliar.'};
     });
   }
-  function competitorReference(state,p,city){return p.referenceCents*state.world.competitor.priceIndex/100*city.competitionFactor/100;}
+  function competitorReference(state,p,city,sectorId=activeBusiness(state)?.sector){
+    const rival=state.world.rivalEconomy?.rivals.find(r=>r.cityId===city.id&&r.sector===sectorId);
+    return rival?p.referenceCents*rival.priceIndex/100:
+      p.referenceCents*state.world.competitor.priceIndex/100*city.competitionFactor/100;
+  }
   function demandElasticity(price,reference,city){return clamp(1.32-(price/reference-1)*city.priceElasticity,.08,1.85);}
 
   const SECTORS = Object.freeze({
@@ -1583,7 +1587,12 @@ const CidadeCore = (() => {
     for(const row of products){
       const p=row.p,unitPrice=effectivePrice(b,p,state.calendar.date),unitCost=p.stockUnits?Math.round(p.stockValueCents/p.stockUnits):p.costCents;
       const reference=competitorReference(state,p,city);
-      const demand=Math.max(0,Math.round(p.demand*city.factor/100/businesses(state).filter(x=>x.cityId===b.cityId&&x.sector===b.sector).length*demandElasticity(unitPrice,reference,city)));
+      const forecastPlan=state.world.rivalEconomy?rivalAllocation(state,businesses(state),
+        1+.13*Math.sin((state.calendar.tick%365)/365*Math.PI*2)):null;
+      const quota=forecastPlan?.quotas.get(b.id+'|'+p.id);
+      const demand=quota?quota.demand:Math.max(0,Math.round(p.demand*city.factor/100/
+        businesses(state).filter(x=>x.cityId===b.cityId&&x.sector===b.sector).length*
+        demandElasticity(unitPrice,reference,city)));
       weightedDemand+=demand;weightedContribution+=demand*(unitPrice-unitCost);
     }
     const contributionPerUnit=weightedDemand?weightedContribution/weightedDemand:0;

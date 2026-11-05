@@ -191,3 +191,16 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - Promoção de versão: `2.4.0-alpha.3` → `2.4.0` **sem alterações funcionais no motor ou na interface**, com `schemaVersion=9` preservado; testes de regressão e HTML offline revalidados na nova versão.
 - Homologação formal do titular autorizada em 04/11/2026. Evidência de QA Windows/browser real não documentada, portanto não presumida.
 - O build da versão `2.4.0` passou no GitHub Actions 41928503855 (243 PASS / 0 FAIL), com `index.html` reproduzível e SHA-256 `ac31730a695490166404d0dee13fb466925ddf6c687234079e0ac9cf04c5514f`. Checkpoint de homologação final: `releases/v2.4.0-homologada`. A homologação é formal e automatizada; não alegar testes manuais Windows não documentados. Consulte `docs/HOMOLOGACAO_V240.md`.
+
+## V2.4.1-rc.1 — estabilização financeira e integridade (candidata de 04/11/2026)
+
+- **Contrato:** estabilização cirúrgica, sem novos sistemas de gameplay, regras fiscais ou migração de save. Base recuperável: `releases/v2.4.0-homologada`.
+- [x] **01** Inventário das origens de `PAYABLE`, com segregação entre despesa diária, folha e históricos não classificáveis.
+- [x] **02** Baixa opcional das despesas operacionais antigas, sem duplicar `EXPENSE`, com guarda de saldo, caixa e idempotência.
+- [x] **03** Cenário inclui folha estimada da unidade ativa, apresenta compromissos conhecidos e ressalva outras unidades, pagamentos e tributos futuros.
+- [x] **04** README, CHANGELOG e documentação específica reestruturados para distinguir versão ativa de histórico.
+- [ ] **05** QA manual Windows `file://`, fechamento/reabertura, importação JSON e recuperação: **DEPENDE DE TESTE DO JOGADOR**.
+- [ ] **06** Benchmark 30/365/1825 com 1/5 unidades: script CI implantado; registrar tempos e tamanhos observados após execução.
+- [ ] **07** Regressões, CI e checksum do HTML reproduzível: em validação; fechar somente com CI PASS.
+- [ ] **08** Gate final de homologação pelo jogador e checkpoint estável V2.4.1: **NÃO CONCEDIDO**.
+- **Atalho:** `docs/V241_ESTABILIZACAO.md`.

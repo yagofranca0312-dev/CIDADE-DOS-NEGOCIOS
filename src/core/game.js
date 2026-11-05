@@ -198,7 +198,7 @@ const CidadeCore = (() => {
     return {units,totalActive:units.reduce((n,u)=>n+u.activeCount,0),
       pendingCents:units.reduce((n,u)=>n+u.pendingCents,0)};
   }
-  // V2.5.0-alpha.1: baixa de passivos OPERACIONAIS por unidade, sem reapuração de despesas.
+  // V2.4.1: baixa de passivos OPERACIONAIS por unidade, sem reapuração de despesas.
   // Folhas RH e TAX_PAYABLE mantêm rotinas independentes; históricos sem origem certa não são liquidados aqui.
   function operatingPayablesReport(state){
     if(!state)return {units:[],total:0,unclassified:0};

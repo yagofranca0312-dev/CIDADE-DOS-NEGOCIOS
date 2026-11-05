@@ -1,7 +1,7 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.4.0 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.4.1-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '2.4.0';
+  const VERSION = '2.4.1-rc.1';
   const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -197,6 +197,39 @@ const CidadeCore = (() => {
     });
     return {units,totalActive:units.reduce((n,u)=>n+u.activeCount,0),
       pendingCents:units.reduce((n,u)=>n+u.pendingCents,0)};
+  }
+  // V2.4.1: baixa de passivos OPERACIONAIS por unidade, sem reapuração de despesas.
+  // Folhas RH e TAX_PAYABLE mantêm rotinas independentes; históricos sem origem certa não são liquidados aqui.
+  function operatingPayablesReport(state){
+    if(!state)return {units:[],total:0,unclassified:0};
+    const units=businesses(state).map(b=>({businessId:b.id,city:cityById(b.cityId)?.name||'—',
+      recognized:0,paid:0,outstanding:0}));
+    const byId=new Map(units.map(u=>[u.businessId,u]));
+    for(const j of state.economy.ledger){
+      const row=byId.get(journalBusinessId(state,j));if(!row)continue;
+      const kind=transactionKind(j);
+      if(kind==='DAILY_EXPENSE')for(const e of j.entries)
+        if(e.account==='PAYABLE')row.recognized+=e.credit-e.debit;
+      if(kind==='OPERATING_SETTLEMENT')for(const e of j.entries)
+        if(e.account==='PAYABLE')row.paid+=e.debit-e.credit;
+    }
+    for(const u of units)u.outstanding=u.recognized-u.paid;
+    const total=units.reduce((n,u)=>n+u.outstanding,0);
+    const payroll=rhReport(state).pendingCents;
+    return {units,total,unclassified:balance(state,'PAYABLE')-total-payroll,
+      note:'Somente despesas diárias identificadas no razão podem ser quitadas nesta rotina. A folha possui baixa independente.'};
+  }
+  // Estimativa de folha futura da unidade ativa: mesmo critério pró-rata do reconhecimento mensal.
+  // Nenhuma consulta gera folha no livro; cenário presume equipe inalterada.
+  function estimatedPayrollMonth(state,businessId,period){
+    const start=period+'-01';
+    const end=new Date(Date.UTC(Number(period.slice(0,4)),Number(period.slice(5,7)),0)).toISOString().slice(0,10);
+    return rhEmployees(state).filter(x=>x.businessId===businessId&&x.hiredAt<=end&&(!x.dismissedAt||x.dismissedAt>=start))
+      .reduce((sum,x)=>{
+        const from=x.hiredAt>start?x.hiredAt:start,to=x.dismissedAt&&x.dismissedAt<end?x.dismissedAt:end;
+        const days=Math.min(30,Math.round((Date.parse(to+'T12:00:00Z')-Date.parse(from+'T12:00:00Z'))/86400000)+1);
+        return sum+Math.round(x.salaryCents*days/30);
+      },0);
   }
   function accruePayrollMonth(draft,period){
     const start=period+'-01';
@@ -415,7 +448,7 @@ const CidadeCore = (() => {
     TAX_EXPENSE:Object.freeze({name:'Tributo simulado por competência',group:'EXPENSE',normal:'DEBIT'}),
     TAX_PAYABLE:Object.freeze({name:'Tributo simulado a pagar',group:'LIABILITY',normal:'CREDIT'})
   });
-  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','PAYROLL_ACCRUAL','PAYROLL_PAYMENT','UNCLASSIFIED']);
+  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','PAYROLL_ACCRUAL','PAYROLL_PAYMENT','OPERATING_SETTLEMENT','UNCLASSIFIED']);
   function transactionKind(j){
     if(TRANSACTION_KINDS.includes(j.kind))return j.kind;
     if(j.memo==='Capital inicial do empreendedor')return 'CAPITAL';
@@ -641,6 +674,23 @@ const CidadeCore = (() => {
       event(draft,'FISCAL_OP.FECHADO',
         'Fechamento administrativo fictício de '+period+' concluído para '+target.id+'.',
         {period,operatingResult:summary.operatingResult,netCash:summary.netCash},target.id);
+      return;
+    }
+    if(type==='PAYABLES.PAGAR_OPERACIONAL'){
+      const unit=businessById(draft,String(payload.businessId||''));
+      const amount=Number(payload.amountCents);
+      assert(unit,'Unidade não encontrada para liquidação operacional');
+      assert(Number.isSafeInteger(amount)&&amount>0,'Valor de pagamento operacional inválido');
+      const row=operatingPayablesReport(draft).units.find(x=>x.businessId===unit.id);
+      assert(row&&row.outstanding>=amount,'Pagamento excede despesas operacionais em aberto da unidade');
+      assert(balance(draft,'PAYABLE')>=amount,'Passivo operacional insuficiente no razão');
+      assert(balance(draft,'CASH')>=amount,'Caixa compartilhado insuficiente para liquidar a obrigação');
+      journal(draft,'Quitação de despesa operacional já reconhecida · '+unit.id,[
+        {account:'PAYABLE',debit:amount,credit:0},{account:'CASH',debit:0,credit:amount}
+      ],unit.id,'OPERATING_SETTLEMENT');
+      event(draft,'PAYABLES.OPERACIONAL_PAGO',
+        'Obrigação operacional quitada: '+money(amount)+' · '+unit.id+'.',
+        {amountCents:amount},unit.id);
       return;
     }
     if(type==='RH.CONTRATAR'){
@@ -1124,6 +1174,7 @@ const CidadeCore = (() => {
       else if(kind==='OPENING'&&net<0)rows.opening+=-net;
       else if(kind==='TAX_PAYMENT'&&net<0)rows.taxPayments+=-net;
       else if(kind==='PAYROLL_PAYMENT'&&net<0)rows.payroll=(rows.payroll||0)-net;
+      else if(kind==='OPERATING_SETTLEMENT'&&net<0)rows.operatingSettlements=(rows.operatingSettlements||0)-net;
       else if(net>0)rows.unclassifiedIn+=net;
       else rows.unclassifiedOut+=-net;
     }
@@ -1205,7 +1256,10 @@ const CidadeCore = (() => {
     }
     const contributionPerUnit=weightedDemand?weightedContribution/weightedDemand:0;
     const breakEvenUnits=contributionPerUnit>0?Math.ceil(fixedDaily/contributionPerUnit):null;
-    let cash=current.cash,creditors=current.payable,projectedRevenue=0,projectedCogs=0,unitsSold=0,missed=0,lowestCash=cash;
+    const operatingDebts=operatingPayablesReport(state),payrollDebts=rhReport(state);
+    const knownObligations={operational:operatingDebts.total,payroll:payrollDebts.pendingCents,
+      tax:balance(state,'TAX_PAYABLE'),unclassified:operatingDebts.unclassified};
+    let cash=current.cash,creditors=current.payable,projectedRevenue=0,projectedCogs=0,unitsSold=0,missed=0,lowestCash=cash,projectedPayrollAccrual=0;
     let date=state.calendar.date;
     for(let d=0;d<horizonDays;d++){
       // Encomendas anteriores já estão pagas; entrega futura não provoca segunda saída de caixa.
@@ -1222,12 +1276,21 @@ const CidadeCore = (() => {
       }
       if(cash>=fixedDaily)cash-=fixedDaily;
       else creditors+=fixedDaily;
+      if(dateNext(date).slice(0,7)!==date.slice(0,7)){
+        const payroll=estimatedPayrollMonth(state,b.id,periodKey(date));
+        projectedPayrollAccrual+=payroll;
+        creditors+=payroll; // folha a pagar: sem pagamento automático nem saída de caixa duplicada
+      }
       lowestCash=Math.min(lowestCash,cash);
       date=dateNext(date);
     }
-    const profit=projectedRevenue-projectedCogs-fixedDaily*horizonDays;
+    const profit=projectedRevenue-projectedCogs-fixedDaily*horizonDays-projectedPayrollAccrual;
     return {horizonDays,projectedRevenue,projectedCogs,projectedFixed:fixedDaily*horizonDays,
       projectedProfit:profit,projectedCash:cash,projectedPayable:creditors,lowestCash,estimatedLostUnits:missed,estimatedSoldUnits:unitsSold,
+      projectedPayrollAccrual,knownObligations,
+      cashAfterKnownDebtsIfPaid:cash-knownObligations.operational-knownObligations.payroll-knownObligations.tax-Math.max(0,knownObligations.unclassified),
+      forecastCoverage:'SIMULACAO_UNIDADE_ATIVA_SEM_LIQUIDACAO_AUTOMATICA',
+      forecastNote:'Projeta vendas e despesas fixas da unidade ativa; inclui folha futura estimada como passivo. Não inclui vendas e custos das demais unidades, pagamentos futuros, novos tributos ou novas contratações. Dívidas atuais NÃO são liquidadas automaticamente.',
       workingCapital,cashCoverageDays:fixedDaily?Math.floor(current.cash/fixedDaily):null,
       dailyFixed:fixedDaily,breakEvenUnits,contributionPerUnit,projectionEnd:date,
       recent:{from:beginning,to:endDate,revenue:recentRevenue,cogs:recentCogs,fixed:recentFixed,oneOff:recentOneOff,
@@ -1276,6 +1339,6 @@ const CidadeCore = (() => {
     return {state,migrated,message:migrated?'Carreira migrada para V1.9: histórico preservado; cenário tributário desativado até confirmação explícita.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();

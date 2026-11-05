@@ -1,4 +1,15 @@
-# 🏙️ Cidade dos Negócios — Edição 2.2.1
+# 🏙️ Cidade dos Negócios — V2.4.1-rc.1 (candidata)
+
+## Situação atual — V2.4.1-rc.1 (estabilização financeira)
+
+**Base homologada:** V2.4.0, checkpoint `releases/v2.4.0-homologada`. **Versão em teste:** `2.4.1-rc.1`. O código da candidata não equivale a homologação prática no Windows.
+
+- **Contas a pagar:** módulo Financeiro liquida despesas diárias reconhecidas em `PAYABLE`, por unidade, com `PAYABLE` a débito e `CASH` a crédito. Não reconhece despesa novamente e não mistura folha de RH ou `TAX_PAYABLE`.
+- **Projeções:** a unidade ativa inclui a nova folha fictícia no resultado e nas obrigações estimadas; informa passivos conhecidos do grupo e cenário de liquidez se fossem quitados. Não liquida automaticamente nem projeta impostos futuros.
+- **Proteção da carreira:** importação ou nova carreira guarda cópia local verificável da carreira atual; sistema oferece recuperação da cópia anterior e recomenda backup JSON externo. `localStorage` em `file://` continua dependente do navegador.
+- **Qualidade:** novos testes de regressão e benchmark automatizado de 30, 365 e 1.825 dias com 1 e 5 unidades, incluindo integridade contábil, salvamento e importação.
+- **Contrato preservado:** `schemaVersion 9`, regras fiscais anteriores, motor determinístico, HTML único offline e salvamentos antigos; nenhuma nova forma de crédito ou simulação tributária.
+- **Evidências e roteiro de QA Windows:** [docs/V241_ESTABILIZACAO.md](docs/V241_ESTABILIZACAO.md). A homologação exige confirmação posterior do jogador.
 
 ## Release estável 2.4.0 — ciclo administrativo A–C (04/11/2026)
 
@@ -11,7 +22,7 @@
 - Consulte `docs/HOMOLOGACAO_V240.md` para a trilha de aprovação e evidências de teste.
 
 
-**Versão homologada:** `2.2.1` — aceite expresso de Yago em 02/11/2026. O mapa original de Tianguá, a seleção corrigida do lote 03, as fachadas dinâmicas, a legenda real e a responsividade para smartphone foram integrados à `main` pelo PR #17 e aprovados pelo titular. **Save schema:** 9, sem migração. O motor econômico e fiscal foi preservado; mudou somente seu identificador de versão. Snapshot de homologação: `releases/v2.2.1-homologada`. A validação nativa de persistência em Windows `file://` não foi comprovada por teste automatizado.
+**Versão histórica homologada:** `2.2.1` — aceite expresso de Yago em 02/11/2026. O mapa original de Tianguá, a seleção corrigida do lote 03, as fachadas dinâmicas, a legenda real e a responsividade para smartphone foram integrados à `main` pelo PR #17 e aprovados pelo titular. **Save schema:** 9, sem migração. O motor econômico e fiscal foi preservado; mudou somente seu identificador de versão. Snapshot de homologação: `releases/v2.2.1-homologada`. A validação nativa de persistência em Windows `file://` não foi comprovada por teste automatizado.
 
 ## V2.2.1 — Tianguá pré-renderizada e responsiva
 

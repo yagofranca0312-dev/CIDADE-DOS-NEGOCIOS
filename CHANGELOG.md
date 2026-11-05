@@ -1,5 +1,19 @@
 # Histórico de versões — Cidade dos Negócios
 
+## 2.4.1-rc.1 — Estabilização financeira e qualidade (candidata, 04/11/2026)
+
+- Baixa explícita e idempotente de despesas operacionais reconhecidas anteriormente como contas a pagar: débito em `PAYABLE`, crédito em `CASH`, sem duplicar `EXPENSE`. Pagamento parcial por estabelecimento; RH/DP e tributos simulados mantêm seus próprios pagamentos.
+- Projeção da unidade ativa inclui despesa estimada de folha no resultado e passivo futuro; informa obrigações operacionais, salários já apurados e tributos didáticos já contabilizados, com ressalvas de escopo.
+- Cópia de segurança local verificada antes de importar ou descartar uma carreira, opção de recuperação e tratamento de falha de armazenamento.
+- Testes novos para integridade, idempotência, histórico e saves; benchmark de 30/365/1.825 dias com 1 e 5 unidades no CI.
+- **Status:** candidata em validação. A execução local no Windows, comparação após reinício e aceite de homologação ainda não estão comprovados.
+- **Origem:** V2.4.0 estável preservada. Sem mudança no `schemaVersion 9`.
+
+## 2.4.0 — Homologação final dos patches administrativos A–C (04/11/2026)
+
+- Paralegal, RH/DP e Fiscal Operacional fictícios homologados formalmente, com 243 testes automatizados aprovados e HTML offline reproduzível.
+- Checkpoint `releases/v2.4.0-homologada`; sem presumir QA manual Windows não documentada.
+
 ## 2.3.0 — Homologação final do ciclo A–D (03/11/2026)
 
 - **Patch A — Navegação:** Cidade, Empresas, Mercado e Administrativo, 13 subáreas e atalhos legados preservados.

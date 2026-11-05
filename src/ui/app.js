@@ -145,6 +145,38 @@
     setText('price-history-count',`${items.length} alteração(ões)`);
     container.innerHTML=items.length?items.slice(-12).reverse().map(item=>`<div class="price-history-row"><small>${escape(BRDate(item.date))} · ${escape(item.productName||'Produto base')} · ${escape(item.id)}</small><strong>${escape(Core.money(item.old))} → ${escape(Core.money(item.cents))}</strong></div>`).join(''):'<p class="muted">Nenhuma alteração registrada nesta carreira.</p>';
   }
+  function renderRivals(){
+    const report=Core.rivalMarketReport(state,viewCityId);
+    $('rival-enable').hidden=report.enabled;
+    setText('rival-status',report.enabled?'SIMULAÇÃO ATIVA':'LEGADO SEGURO');
+    if(!report.enabled){
+      setText('rival-summary','Carreira anterior: os rivais não foram aplicados retroativamente. Exporte seu save JSON antes de ativá-los.');
+      $('rival-rows').innerHTML='<tr><td colspan="6">Economia concorrencial ainda não ativada nesta carreira.</td></tr>';
+      $('rival-alerts').innerHTML='<p class="muted">Ative a economia viva para começar a simulação.</p>';
+      $('rival-events').innerHTML='';
+      $('rival-actions').innerHTML='';
+      return;
+    }
+    setText('rival-summary',report.cityName+' · '+report.rivals.length+' rivais locais · '+state.calendar.tick+' dia(s) de carreira. A competição usa caixa e estoque exclusivos dos rivais.');
+    $('rival-rows').innerHTML=report.rivals.map(r=>
+      '<tr><td><strong>'+escape(r.name)+'</strong><br><small>'+escape(r.sector)+'</small></td>'+
+      '<td>'+escape(r.strategy)+'</td><td>'+r.priceIndex+'% da referência</td>'+
+      '<td>'+r.stockUnits+' un.</td><td>'+r.capacityUnits+' un./dia</td>'+
+      '<td>'+r.reputation+'/90</td></tr>'
+    ).join('')||'<tr><td colspan="6">Nenhum rival ativo.</td></tr>';
+    $('rival-alerts').innerHTML=report.alerts.map(a=>
+      '<div class="event-item"><div><p>'+escape(a)+'</p></div></div>').join('');
+    $('rival-actions').innerHTML=report.actions.slice().reverse().map(e=>
+      '<div class="event-item"><div><p>'+escape(e.text)+
+      '</p><small>'+escape(e.date)+'</small></div></div>').join('')||
+      '<p class="muted">Ainda não houve decisão concorrente relevante nesta cidade.</p>';
+    $('rival-events').innerHTML=report.events.slice().reverse().map(e=>
+      '<div class="event-item"><div><strong>'+escape(e.label)+'</strong><p>'+
+      escape(e.effectPct>0?'Demanda favorecida '+e.effectPct+'%':'Demanda reduzida '+Math.abs(e.effectPct)+'%')+
+      '</p><small>'+escape(e.startDate)+' até '+escape(e.endDate)+
+      (e.active?' · EM CURSO':' · Encerrado')+'</small></div></div>').join('')||
+      '<p class="muted">Nenhuma ocorrência local registrada até aqui.</p>';
+  }
   function renderProgression(){
     const p=Core.progressionReport(state);
     setText('progression-level',p.level.label);
@@ -155,9 +187,30 @@
       '<progress max="100" value="'+g.progressPct+'" aria-label="'+escape(g.label)+'"></progress></div></div>'
     ).join('');
     const won=p.achievements.filter(a=>a.completed);
-    $('progression-achievements').innerHTML=won.length?won.map(a=>
-      '<div class="event-item"><div><strong>✦ '+escape(a.label)+'</strong><small>'+escape(a.source)+'</small></div></div>'
-    ).join(''):'<p class="muted">Os primeiros marcos aparecem após ações confirmadas. Nenhum selo adiciona dinheiro ou estoque.</p>';
+    $('progression-achievements').innerHTML=p.achievements.map(a=>
+      '<div class="event-item"><div><strong>'+escape(a.completed?'✓ '+a.label:'○ '+a.label)+
+      '</strong><small>'+escape(a.source)+'</small></div></div>').join('');
+    const guide=Core.journeyGuide(state);
+    setText('journey-next-action',guide.title+' — '+guide.next);
+    $('journey-unlocks').innerHTML=p.unlocks.map(u=>
+      '<div class="event-item"><div><strong>'+escape(u.unlocked?'✓ '+u.label:'○ '+u.label)+
+      '</strong><small>'+escape(u.reason)+'</small></div></div>').join('');
+    const rep=Core.reputationReport(state,viewCityId);
+    $('journey-reputation').innerHTML=rep.units.length?rep.units.map(u=>
+      '<div class="event-item"><div><strong>'+escape(Core.SECTORS[u.sector].name)+
+      '</strong><p>'+escape(u.score===null?'Em observação: menos de 7 dias de amostra':
+      'Reputação '+u.score+'/90 · '+u.status+' · impacto no peso competitivo '+u.impactPct+'%')+
+      '</p></div></div>').join(''):'<p class="muted">Abra uma unidade nesta cidade para acompanhar sua reputação.</p>';
+    $('journey-dilemmas').innerHTML=Core.dilemmaReport(state).map(d=>
+      '<article class="panel spaced"><h4>'+escape(d.title)+'</h4>'+
+      (d.cooldownDays?'<p class="field-hint">Nova decisão em '+d.cooldownDays+' dia(s).</p>':'')+
+      '<div class="restock-choice">'+d.choices.map(c=>
+      '<button type="button" class="btn btn-outline" data-dilemma="'+escape(d.id)+
+      '" data-choice="'+escape(c.id)+'" '+(c.available?'':'disabled')+
+      ' title="'+escape(c.reason||c.label)+'">'+escape(c.label)+'</button>').join('')+'</div>'+
+      (d.lastChoice?'<small>Última escolha: '+escape(d.lastChoice)+' · '+escape(d.lastDate)+'</small>':'')+
+      '</article>').join('');
+
   }
   function initialFinanceQuery(){
     const date=lastAvailableDate(),year=Number(date.slice(0,4)),month=Number(date.slice(5,7));
@@ -335,7 +388,7 @@
       if(document.activeElement!==$('price-value'))$('price-value').value=(b.unitPrice/100).toFixed(2);
       updateBuyPreview();
     }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('your-current-price','—');setText('competitor-price','—');setText('buy-total','—');}
-    renderCommerce();renderPriceHistory();
+    renderCommerce();renderPriceHistory();renderRivals();
     if((tab==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo))||financeQuery)renderFinances();
     renderFiscal();
     renderFiscalOperations();
@@ -396,7 +449,9 @@
       hudToggle.setAttribute('aria-expanded',String(expanded));
       hudToggle.firstChild.textContent=expanded?'Mostrar apenas os principais ':'Mostrar resultado e estoque ';
     });
-    $('career-form').addEventListener('submit',e=>{e.preventDefault();const name=$('player-name').value,companyName=$('company-name').value,cityId=$('start-city').value;commit('CARREIRA.CRIAR',{name,companyName,cityId,seed:(Date.now()>>>0)});});
+    $('career-form').addEventListener('submit',e=>{e.preventDefault();const name=$('player-name').value,companyName=$('company-name').value,cityId=$('start-city').value;if(commit('CARREIRA.CRIAR',{name,companyName,cityId,seed:(Date.now()>>>0)}))commit('MUNDO.CONCORRENCIA_ATIVAR');});
+    $('rival-enable').addEventListener('click',()=>commit('MUNDO.CONCORRENCIA_ATIVAR'));
+    $('journey-dilemmas').addEventListener('click',e=>{const t=e.target.closest('button[data-dilemma]');if(t&&!t.disabled)commit('DILEMA.ESCOLHER',{dilemmaId:t.dataset.dilemma,choice:t.dataset.choice});});
     for(const button of document.querySelectorAll('[data-tab]'))button.addEventListener('click',()=>goto(button.dataset.tab));
     for(const button of document.querySelectorAll('[data-go]'))button.addEventListener('click',()=>goto(button.dataset.go));
     for(const button of document.querySelectorAll('[data-section-tab]')){

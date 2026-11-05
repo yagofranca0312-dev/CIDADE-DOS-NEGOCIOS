@@ -1,4 +1,15 @@
-# 🏙️ Cidade dos Negócios — V2.5.0-alpha.1 (candidata)
+# 🏙️ Cidade dos Negócios — V2.6.0-rc.1 (patch integral em validação)
+
+## Atualização integral V2.5 + V2.6 — Economia Viva
+
+A **V2.6.0-rc.1** reúne os pendentes da Jornada Empresarial V2.5 e a concorrência reativa do plano diretor: 12 objetivos, 8 conquistas, 3 desbloqueios de orientação, seis dilemas com efeitos operacionais, tutorial contextual, reputação com influência limitada e 90 rivais persistentes em 30 cidades e três setores. Mercado finito por produto, seis eventos locais fictícios, alertas e decisões concorrentes auditadas.
+
+**Validação automatizada em 05/11/2026:** 275 testes PASS, 0 FAIL; cenários com três estilos em 365 dias e cinco unidades durante 1.825 dias PASS; HTML offline produzido em CI. O benchmark prolongado revelou limite de tamanho do JSON formatado e foi corrigido por serialização compacta automática apenas quando necessária, sem truncar dados ou remover checksum.
+
+**Status:** candidata técnica. A V2.6 **não** é homologada enquanto QA Windows/navegador, equilíbrio percebido e aceite de Yago não forem concluídos. A branch `releases/v2.4.1-homologada` segue como rollback. `schemaVersion 9` preservado. Saves antigos não ativam a concorrência retroativamente: usar o botão do Mercado após fazer backup JSON.
+
+**Documentação de entrega:** [Patch integral V2.6](docs/V260_PATCH_INTEGRAL.md). A seção da V2.5 abaixo é **histórico da alpha.1**, não descreve as funcionalidades já incorporadas nesta candidata.
+
 
 ## V2.5 — Jornada empresarial (alpha.1, ainda não homologada)
 

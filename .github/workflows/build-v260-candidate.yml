@@ -1,0 +1,47 @@
+name: Compilar e testar candidata V2.6 integral
+on:
+  push:
+    branches:
+      - feature/v2.6.0-economia-viva-integral
+permissions:
+  contents: write
+jobs:
+  rebuild:
+    name: HTML unico, testes e benchmarks
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Reconstruir executavel offline
+        run: npm run build
+      - name: Gravar HTML reproduzivel na branch de testes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet -- index.html; then
+            git add index.html
+            git commit -m "build(v2.6): sincronizar HTML offline de candidata integral [skip ci]"
+            git push origin HEAD:feature/v2.6.0-economia-viva-integral
+          fi
+      - name: Regressao automatizada
+        run: npm test
+      - name: Benchmarks de estabilidade
+        run: npm run bench:stability
+      - name: Benchmark completo de concorrência V2.6
+        run: npm run bench:competition
+      - name: SHA-256 da compilacao
+        run: sha256sum index.html
+      - name: Publicar pacote testavel (não homologado)
+        uses: actions/upload-artifact@v4
+        with:
+          name: CIDADE_DOS_NEGOCIOS_V260_RC1_HTML_OFFLINE
+          path: |
+            index.html
+            docs/V260_PATCH_INTEGRAL.md
+            README.md
+          if-no-files-found: error

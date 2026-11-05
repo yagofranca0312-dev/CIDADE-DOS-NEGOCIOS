@@ -1,7 +1,7 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.5.0-alpha.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.6.0-rc.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '2.5.0-alpha.1';
+  const VERSION = '2.6.0-rc.1';
   const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -97,7 +97,11 @@ const CidadeCore = (() => {
         note:'Índice comercial simulado; PIB em R$ mil; não representa lucro ou renda domiciliar.'};
     });
   }
-  function competitorReference(state,p,city){return p.referenceCents*state.world.competitor.priceIndex/100*city.competitionFactor/100;}
+  function competitorReference(state,p,city,sectorId=activeBusiness(state)?.sector){
+    const rival=state.world.rivalEconomy?.rivals.find(r=>r.cityId===city.id&&r.sector===sectorId);
+    return rival?p.referenceCents*rival.priceIndex/100:
+      p.referenceCents*state.world.competitor.priceIndex/100*city.competitionFactor/100;
+  }
   function demandElasticity(price,reference,city){return clamp(1.32-(price/reference-1)*city.priceElasticity,.08,1.85);}
 
   const SECTORS = Object.freeze({
@@ -846,6 +850,12 @@ const CidadeCore = (() => {
       const p=product(b,payload.productId||'base');const old=p.priceCents;p.priceCents=cents;syncTotals(b);
       event(draft,'PRECO.ALTERADO',`${p.name}: preço de ${money(old)} para ${money(cents)}.`,{old,cents,productId:p.id,productName:p.name},b.id);return;
     }
+    if(type==='DILEMA.ESCOLHER') {
+      chooseDilemma(draft,payload);return;
+    }
+    if(type==='MUNDO.CONCORRENCIA_ATIVAR') {
+      initializeRivalEconomy(draft);return;
+    }
     if(type==='IA.AJUSTAR_PRECO') {
       assert(Number.isInteger(payload.priceIndex)&&payload.priceIndex>=70&&payload.priceIndex<=140,'Estratégia IA inválida');
       draft.world.competitor.priceIndex=payload.priceIndex;
@@ -859,10 +869,334 @@ const CidadeCore = (() => {
     }
     throw Error(`Comando não implementado: ${type}`);
   }
+
+
+  // V2.5 concluída dentro da V2.6: seis dilemas vinculados a ações reais,
+  // conquistas não financeiras, reputação com efeitos limitados e tutorial derivado.
+  const DILEMMA_DEFINITIONS=Object.freeze([
+    {id:'caixa-estoque',title:'Caixa x estoque',choices:[['abastecer','Comprar 30 unidades'],['reservar','Proteger o caixa']]},
+    {id:'preco-volume',title:'Preço x volume',choices:[['promover','Promoção de 10% por 7 dias'],['margem','Preservar margem sem desconto']]},
+    {id:'equipe-liquidez',title:'Equipe x liquidez',choices:[['contratar','Contratar atendimento'],['adiar','Adiar despesa com equipe']]},
+    {id:'expansao-reserva',title:'Expansão x robustez',choices:[['expandir','Abrir unidade no próximo lote'],['guardar','Manter reserva para despesas']]},
+    {id:'fornecedor-prazo',title:'Fornecedor x prazo',choices:[['rapido','Fornecedor regional em 1 dia'],['barato','Atacado em 3 dias']]},
+    {id:'passivo-operacao',title:'Quitar passivo x operar',choices:[['quitar','Quitar obrigação existente'],['operar','Comprar estoque essencial']]}
+  ]);
+  function dilemmaReport(state){
+    if(!state)return [];
+    const b=activeBusiness(state),recent=state.audit.events.filter(e=>e.type==='DILEMA.DECIDIDO');
+    return DILEMMA_DEFINITIONS.map(def=>{
+      const last=recent.filter(e=>e.data.dilemmaId===def.id).at(-1);
+      const daysSince=last?state.calendar.tick-last.data.tick:999;
+      const options=def.choices.map(([id,label])=>{
+        let reason='';
+        if(!b)reason='Abra uma empresa.';
+        else if(!state.world.rivalEconomy)reason='Ative a economia viva.';
+        else if(daysSince<7)reason='Decisão anterior em avaliação por 7 dias.';
+        else if(def.id==='equipe-liquidez'&&id==='contratar'&&
+          rhEmployees(state).filter(e=>e.businessId===b.id&&!e.dismissedAt).length>=4)
+          reason='Equipe no limite.';
+        else if(def.id==='expansao-reserva'&&id==='expandir'&&businesses(state).length>=5)
+          reason='Limite de cinco estabelecimentos.';
+        else if(def.id==='expansao-reserva'&&id==='expandir'&&
+          balance(state,'CASH')<SECTORS[b.sector].openCost)reason='Caixa insuficiente para expansão.';
+        else if(def.id==='passivo-operacao'&&id==='quitar'&&
+          !(operatingPayablesReport(state).units.find(x=>x.businessId===b.id)?.outstanding>0))
+          reason='Nenhuma obrigação operacional em aberto.';
+        return {id,label,available:!reason,reason};
+      });
+      return {id:def.id,title:def.title,choices:options,
+        lastChoice:last?.data.choice||null,lastDate:last?.date||null,
+        cooldownDays:Math.max(0,7-daysSince)};
+    });
+  }
+  function chooseDilemma(draft,payload){
+    const definition=DILEMMA_DEFINITIONS.find(x=>x.id===payload.dilemmaId);
+    const choice=String(payload.choice||'');
+    assert(definition&&definition.choices.some(x=>x[0]===choice),'Dilema ou alternativa inválida');
+    const b=activeBusiness(draft);assert(b,'Abra uma empresa para decidir.');
+    assert(draft.world.rivalEconomy,'Ative a economia viva para decisões contextuais.');
+    const row=dilemmaReport(draft).find(x=>x.id===definition.id);
+    const option=row.choices.find(x=>x.id===choice);
+    assert(option.available,option.reason||'Escolha indisponível');
+    let consequence='Decisão estratégica registrada sem gasto imediato.';
+    if(definition.id==='caixa-estoque'&&choice==='abastecer'){
+      handler(draft,'ESTOQUE.COMPRAR',{supplierId:'regional',productId:'base',quantity:30});
+      consequence='Pedido de 30 unidades com custo e entrega real.';
+    } else if(definition.id==='preco-volume'){
+      handler(draft,'PROMO.DEFINIR',{productId:'base',
+        percent:choice==='promover'?10:0,days:choice==='promover'?7:0});
+      consequence=choice==='promover'?'Preço efetivo reduzido por sete dias.':'Promoção encerrada ou mantida em 0%.';
+    } else if(definition.id==='equipe-liquidez'&&choice==='contratar'){
+      handler(draft,'RH.CONTRATAR',{businessId:b.id,role:'atendimento',name:'Apoio fictício '+draft.calendar.tick});
+      consequence='Novo funcionário e despesa futura de folha.';
+    } else if(definition.id==='expansao-reserva'&&choice==='expandir'){
+      const cityId=String(payload.cityId||b.cityId);
+      assert(cityById(cityId),'Cidade inválida para expansão.');
+      const occupied=new Set(businesses(draft).filter(x=>x.cityId===cityId).map(x=>x.lot));
+      const lot=Array.from({length:18},(_,i)=>i+1).find(n=>!occupied.has(n));
+      assert(lot,'Sem lote disponível.');
+      handler(draft,'EMPRESA.ABRIR',{cityId,sector:b.sector,lot});
+      consequence='Filial aberta com custo real do grupo.';
+    } else if(definition.id==='fornecedor-prazo'){
+      handler(draft,'ESTOQUE.COMPRAR',{supplierId:choice==='rapido'?'regional':'atacado',
+        productId:'base',quantity:30});
+      consequence='Pedido contabilizado, com preço e prazo do fornecedor escolhido.';
+    } else if(definition.id==='passivo-operacao'){
+      if(choice==='quitar'){
+        const outstanding=operatingPayablesReport(draft).units.find(x=>x.businessId===b.id)?.outstanding||0;
+        assert(outstanding>0,'Nenhuma obrigação disponível.');
+        handler(draft,'PAYABLES.PAGAR_OPERACIONAL',{businessId:b.id,amountCents:Math.min(outstanding,balance(draft,'CASH'))});
+        consequence='Passivo reduzido e caixa pago, sem lançar nova despesa.';
+      }else{
+        handler(draft,'ESTOQUE.COMPRAR',{supplierId:'regional',productId:'base',quantity:20});
+        consequence='Estoque comprado enquanto passivo permanece aberto.';
+      }
+    }
+    event(draft,'DILEMA.DECIDIDO',definition.title+': '+definition.choices.find(x=>x[0]===choice)[1]+'. '+consequence,
+      {dilemmaId:definition.id,choice,tick:draft.calendar.tick,consequence},b.id);
+  }
+  function reputationReport(state,cityId=state?.player?.cityId){
+    if(!state||!cityId||!cityById(cityId))return {status:'SEM_DADOS',units:[]};
+    const r=state.world.rivalEconomy,units=businesses(state).filter(b=>b.cityId===cityId);
+    const samples=state.audit.events.filter(e=>e.type==='DEMANDA.SIMULADA'&&
+      e.date<state.calendar.date&&units.some(b=>b.id===e.businessId));
+    const sectors=[...new Set(units.map(x=>x.sector))];
+    const findings=sectors.map(sector=>{
+      const key=cityId+'|'+sector,quality=r?.playerReputation[key]??50;
+      const n=samples.filter(e=>businessById(state,e.businessId)?.sector===sector).length;
+      return {sector,samples:n,score:n>=7?quality:null,
+        status:n<7?'AMOSTRA_INSUFICIENTE':quality>=70?'BOA':quality>=40?'REGULAR':'ATENCAO',
+        impactPct:n>=7?Math.round(((.75+quality/200)-1)*100):0,
+        note:'Efeito restrito ao peso competitivo na divisão de demanda; sem gerar caixa.'};
+    });
+    return {status:r?'ATIVA':'SEM_SIMULACAO',cityId,units:findings};
+  }
+  function journeyGuide(state){
+    if(!state)return {stage:'iniciar',title:'Crie uma carreira',next:'Escolha uma cidade e abra a carreira.'};
+    const units=businesses(state),p=progressionReport(state);
+    if(!units.length)return {stage:'abrir',title:'Abra o primeiro negócio',next:'Selecione um lote na cidade e escolha seu ramo.'};
+    if(!units.some(x=>x.purchaseOrders.length>0))
+      return {stage:'comprar',title:'Compre seu primeiro estoque',next:'Acesse Mercado → Compras e peça mercadorias.'};
+    if(p.goals.find(g=>g.id==='primeira-venda')?.completed!==true)
+      return {stage:'vender',title:'Aguarde a entrega e realize vendas',next:'Avance os dias para receber estoque e gerar vendas automáticas.'};
+    if(!state.world.rivalEconomy)return {stage:'concorrencia',title:'Ative a concorrência',next:'No painel de Mercado, ative a economia viva com backup JSON.'};
+    if(p.metrics.days<30)return {stage:'estabilizar',title:'Mantenha caixa e abastecimento',next:'Compare margem, estoque e rivais enquanto completa 30 dias.'};
+    if(units.length<2)return {stage:'expandir',title:'Planeje a primeira filial',next:'Compare caixa, passivos e estratégia antes de abrir unidade.'};
+    return {stage:'evoluir',title:'Construa sua rede',next:'Acompanhe objetivos, reputação e dilemas para escolher o próximo risco.'};
+  }
+
+  // V2.6 — mundo concorrencial fictício. Não usa rede, saldo do jogador ou dados privados.
+  const RIVAL_EVENT_TYPES=Object.freeze([
+    {id:'FESTA',label:'Festa regional',effectPct:16},
+    {id:'OBRAS',label:'Obras e interrupções',effectPct:-12},
+    {id:'LOGISTICA',label:'Atrasos de abastecimento',effectPct:-10},
+    {id:'FEIRA',label:'Feira comercial',effectPct:12},
+    {id:'CRISE',label:'Retração local temporária',effectPct:-15},
+    {id:'FERIADO',label:'Movimento sazonal',effectPct:9}
+  ]);
+  const RIVAL_SECTORS=Object.freeze(['mercado','padaria','roupas']);
+  function rivalHash(value) {
+    let h=2166136261;
+    for(let i=0;i<value.length;i++)h=Math.imul(h^value.charCodeAt(i),16777619)>>>0;
+    return h>>>0;
+  }
+  const rivalNoise=(seed,tick,key)=>rivalHash(String(seed)+'|'+tick+'|'+key)/4294967296;
+  function initializeRivalEconomy(draft) {
+    assert(!draft.world.rivalEconomy,'Economia concorrencial já ativada');
+    const seed=rivalHash(draft.worldId+'|V260-RIVAIS-1');
+    const rivals=[];
+    for(const city of CITIES)for(const sector of RIVAL_SECTORS){
+      const index=rivalHash(city.id+'|'+sector+'|'+seed);
+      rivals.push({id:'rival-'+city.id+'-'+sector,cityId:city.id,sector,
+        name:'Rede '+SECTORS[sector].name+' · '+city.name,
+        strategy:['preco','equilibrio','servico'][index%3],
+        cashCents:1100000+index%1200000,stockUnits:110+index%90,
+        capacityUnits:25+index%18,priceIndex:90+index%22,reputation:50,
+        soldUnits:0,restockedUnits:0,expansions:0,lastDecisionTick:draft.calendar.tick});
+    }
+    draft.world.rivalEconomy={modelVersion:1,seed,activatedAt:draft.calendar.date,
+      activatedTick:draft.calendar.tick,rivals,events:[],playerReputation:{},lastMarket:null};
+    event(draft,'MUNDO.CONCORRENCIA_ATIVADA','Economia viva fictícia ativada; 90 rivais auditáveis, sem efeitos retroativos.',
+      {modelVersion:1,seed,rivals:rivals.length});
+  }
+  function rivalStartEvents(draft){
+    const econ=draft.world.rivalEconomy,tick=draft.calendar.tick;
+    for(let i=0;i<CITIES.length;i++){
+      const city=CITIES[i];
+      if((tick+i*11)%47!==0)continue;
+      const kind=RIVAL_EVENT_TYPES[Math.floor(rivalNoise(econ.seed,tick,city.id)*RIVAL_EVENT_TYPES.length)];
+      const duration=3+Math.floor(rivalNoise(econ.seed,tick,'duracao-'+city.id)*6);
+      const id='local-'+city.id+'-'+tick;
+      econ.events.push({id,cityId:city.id,type:kind.id,label:kind.label,
+        startTick:tick,endTick:tick+duration,startDate:draft.calendar.date,
+        endDate:addDays(draft.calendar.date,duration-1),effectPct:kind.effectPct});
+      if(businesses(draft).some(b=>b.cityId===city.id))
+        event(draft,'MUNDO.EVENTO_INICIADO',city.name+': '+kind.label+' ('+kind.effectPct+'% na demanda).',
+          {eventId:id,cityId:city.id,until:addDays(draft.calendar.date,duration-1),effectPct:kind.effectPct});
+    }
+  }
+  function rivalCurrentEvent(econ,cityId,tick){
+    for(let i=econ.events.length-1;i>=0;i--){
+      const e=econ.events[i];
+      if(e.cityId===cityId&&e.startTick<=tick&&e.endTick>tick)return e;
+    }
+    return null;
+  }
+  function rivalAllocation(draft,units,season){
+    const econ=draft.world.rivalEconomy,tick=draft.calendar.tick;
+    const byGroup=new Map(),quotas=new Map(),requestedRival=new Map();
+    for(const b of units)for(const p of b.products){
+      const key=b.cityId+'|'+b.sector+'|'+p.id;
+      if(!byGroup.has(key))byGroup.set(key,[]);
+      byGroup.get(key).push({b,p});
+    }
+    for(const [key,participants] of byGroup){
+      const [cityId,sector,productId]=key.split('|');
+      const city=cityById(cityId),rival=econ.rivals.find(r=>r.cityId===cityId&&r.sector===sector);
+      const active=rivalCurrentEvent(econ,cityId,tick),effect=active?active.effectPct:0;
+      const base=participants[0].p.demand*city.factor/100*season*(1+effect/100);
+      const total=Math.max(0,Math.round(base*1.72*(0.90+0.20*rivalNoise(econ.seed,tick,key))));
+      const priceRef=participants[0].p.referenceCents;
+      const rivalPrice=Math.max(1,priceRef*rival.priceIndex/100);
+      const rivalWeight=Math.max(.15,Math.min(2.4,demandElasticity(rivalPrice,priceRef,city)*(0.75+rival.reputation/200)));
+      const weights=participants.map(({b,p})=>{
+        const quality=econ.playerReputation[cityId+'|'+sector]??50;
+        const weight=demandElasticity(effectivePrice(b,p,draft.calendar.date),rivalPrice,city)*(0.75+quality/200);
+        return {id:b.id,weight:Math.max(.1,weight)};
+      });
+      weights.push({id:rival.id,weight:rivalWeight});
+      const sum=weights.reduce((n,x)=>n+x.weight,0);
+      const shares=weights.map((x,i)=>({id:x.id,exact:total*x.weight/sum,index:i}));
+      const counts=shares.map(x=>Math.floor(x.exact));
+      let remainder=total-counts.reduce((a,b)=>a+b,0);
+      const order=shares.map((x,i)=>({i,frac:x.exact-counts[i]})).sort((a,b)=>b.frac-a.frac||a.i-b.i);
+      for(let j=0;j<remainder;j++)counts[order[j].i]++;
+      const rivalQuota=counts[counts.length-1];
+      requestedRival.set(rival.id,(requestedRival.get(rival.id)||0)+rivalQuota);
+      participants.forEach(({b,p},i)=>{
+        quotas.set(b.id+'|'+p.id,{demand:counts[i],marketTotal:total,rivalQuota,
+          eventEffectPct:effect,eventId:active?.id||null,marketKey:key});
+      });
+    }
+    return {quotas,requestedRival};
+  }
+  function rivalCompleteDay(draft,plan,season){
+    const econ=draft.world.rivalEconomy,tick=draft.calendar.tick;
+    let competitorSales=0,competitorPurchases=0;
+    for(const rival of econ.rivals){
+      const city=cityById(rival.cityId),sector=SECTORS[rival.sector];
+      const active=rivalCurrentEvent(econ,rival.cityId,tick);
+      const factor=1+(active?.effectPct||0)/100;
+      const fallback=Math.round(sector.demand*city.factor/100*season*factor*
+        (0.9+0.2*rivalNoise(econ.seed,tick,rival.id)));
+      const requested=plan.requestedRival.get(rival.id)??fallback;
+      const sold=Math.max(0,Math.min(requested,rival.capacityUnits,rival.stockUnits));
+      const price=Math.max(1,Math.round(sector.recommended*rival.priceIndex/100));
+      const overhead=Math.max(200,Math.round(sector.dailyCost*.18));
+      rival.stockUnits-=sold;
+      rival.soldUnits+=sold;
+      rival.cashCents+=sold*price;
+      rival.cashCents=Math.max(0,rival.cashCents-Math.min(rival.cashCents,overhead));
+      competitorSales+=sold;
+      rival.reputation=clamp(Math.round(rival.reputation*.92+(requested?100*sold/requested:50)*.08),10,90);
+      if((tick+rivalHash(rival.id))%4===0){
+        const cost=Math.max(1,Math.round(sector.cost*.97));
+        const target=Math.min(300,Math.max(100,rival.capacityUnits*5));
+        const qty=Math.max(0,Math.min(target-rival.stockUnits,Math.floor(rival.cashCents/cost)));
+        rival.cashCents-=qty*cost;rival.stockUnits+=qty;rival.restockedUnits+=qty;
+        competitorPurchases+=qty;
+      }
+      if((tick+rivalHash(rival.id))%7===0){
+        const before=rival.priceIndex;
+        const change=rival.strategy==='preco'?-2:rival.strategy==='servico'?1:0;
+        const correction=rival.stockUnits<rival.capacityUnits?2:0;
+        rival.priceIndex=clamp(rival.priceIndex+change+correction,78,130);
+        rival.lastDecisionTick=tick;
+        if(before!==rival.priceIndex&&businesses(draft).some(b=>b.cityId===rival.cityId))
+          event(draft,'RIVAL.PRECO',rival.name+': alterou preço de '+before+'% para '+rival.priceIndex+'% da referência.',
+            {rivalId:rival.id,cityId:rival.cityId,before,after:rival.priceIndex});
+      }
+      if(tick>0&&(tick+rivalHash(rival.id))%120===0&&rival.expansions<2&&rival.cashCents>1300000){
+        rival.cashCents-=500000;rival.capacityUnits+=8;rival.expansions++;
+        if(businesses(draft).some(b=>b.cityId===rival.cityId))
+          event(draft,'RIVAL.EXPANSAO',rival.name+': investiu em capacidade logística e operação.',
+            {rivalId:rival.id,cityId:rival.cityId,capacityUnits:rival.capacityUnits,expansions:rival.expansions});
+      }
+      assert(Number.isSafeInteger(rival.cashCents)&&rival.cashCents>=0,'Caixa de rival inválido');
+    }
+    const daily=Array.from(plan.quotas.values());
+    econ.lastMarket={tick,date:draft.calendar.date,playerAllocated:daily.reduce((n,q)=>n+q.demand,0),
+      rivalAllocated:[...plan.requestedRival.values()].reduce((n,x)=>n+x,0),
+      competitorSales,competitorPurchases};
+    const ownCities=new Set(businesses(draft).map(b=>b.cityId));
+    for(const e of econ.events){
+      if(e.endTick===tick+1&&ownCities.has(e.cityId))
+        event(draft,'MUNDO.EVENTO_ENCERRADO',cityById(e.cityId).name+': '+e.label+' encerrado.',
+          {eventId:e.id,cityId:e.cityId});
+    }
+  }
+  function rivalMarketReport(state,cityId=state?.player?.cityId){
+    if(!state||!cityId||!cityById(cityId))return {enabled:false,rivals:[],events:[],alerts:[]};
+    const econ=state.world.rivalEconomy;
+    if(!econ)return {enabled:false,cityId,cityName:cityById(cityId).name,rivals:[],events:[],
+      alerts:['Ative a economia viva para competir com empresas persistentes nesta carreira.']};
+    const rivals=econ.rivals.filter(r=>r.cityId===cityId).map(r=>({...r}));
+    const events=econ.events.filter(e=>e.cityId===cityId).slice(-8).map(e=>({...e,
+      active:e.startTick<=state.calendar.tick&&e.endTick>state.calendar.tick}));
+    const active=events.filter(e=>e.active);
+    const units=businesses(state).filter(b=>b.cityId===cityId);
+    const demandEvents=state.audit.events.filter(e=>e.type==='DEMANDA.SIMULADA'&&e.date<state.calendar.date&&
+      units.some(b=>b.id===e.businessId)).slice(-8);
+    const actions=state.audit.events.filter(e=>['RIVAL.PRECO','RIVAL.EXPANSAO'].includes(e.type)&&
+      e.data?.cityId===cityId).slice(-12).map(e=>({id:e.id,date:e.date,type:e.type,text:e.text}));
+    const alerts=[];
+    for(const e of active)alerts.push(e.label+': efeito de '+e.effectPct+'% sobre o mercado até '+e.endDate+'.');
+    for(const e of actions.slice(-2))alerts.push(e.text);
+    for(const r of rivals)if(r.stockUnits<r.capacityUnits)alerts.push(r.name+': estoque apertado; oportunidade de atender demanda.');
+    for(const e of demandEvents.slice(-3))if(e.data.unmet>0)alerts.push(e.businessId+': '+e.data.unmet+' pedidos não atendidos; revisar reposição.');
+    if(!alerts.length)alerts.push('Mercado estável: compare preços, estoque e margem antes de expandir.');
+    return {enabled:true,modelVersion:econ.modelVersion,cityId,cityName:cityById(cityId).name,
+      rivals,events,actions,alerts:alerts.slice(0,7),lastMarket:econ.lastMarket?{...econ.lastMarket}:null,
+      note:'Rivais e eventos são simulados; não usam informações privilegiadas nem dados econômicos reais.'};
+  }
+  function validateRivalEconomy(state){
+    const x=state.world.rivalEconomy;
+    if(x===undefined||x===null)return;
+    assert(plain(x)&&x.modelVersion===1&&int(x.seed)&&Array.isArray(x.rivals)&&x.rivals.length===90&&
+      Array.isArray(x.events)&&x.events.length<=25000&&plain(x.playerReputation),
+      'Contrato do mundo concorrencial inválido');
+    assert(isoDate(x.activatedAt)&&x.activatedAt<=state.calendar.date&&int(x.activatedTick)&&
+      x.activatedTick<=state.calendar.tick,'Data de ativação de rivais inválida');
+    const ids=new Set();
+    for(const r of x.rivals){
+      assert(plain(r)&&!ids.has(r.id)&&r.id==='rival-'+r.cityId+'-'+r.sector&&
+        cityById(r.cityId)&&RIVAL_SECTORS.includes(r.sector),'Identidade de rival inválida');
+      ids.add(r.id);
+      assert(['preco','equilibrio','servico'].includes(r.strategy)&&int(r.cashCents)&&
+        Number.isSafeInteger(r.cashCents)&&int(r.stockUnits)&&int(r.capacityUnits)&&
+        r.capacityUnits>=1&&r.capacityUnits<=100&&r.stockUnits<=500&&
+        int(r.priceIndex)&&r.priceIndex>=78&&r.priceIndex<=130&&
+        int(r.reputation)&&r.reputation>=10&&r.reputation<=90&&
+        int(r.soldUnits)&&int(r.restockedUnits)&&int(r.expansions)&&r.expansions<=2,
+        'Recursos ou estratégia de rival inválidos');
+    }
+    const eventIds=new Set();
+    for(const e of x.events){
+      assert(!eventIds.has(e.id)&&cityById(e.cityId)&&
+        RIVAL_EVENT_TYPES.some(t=>t.id===e.type&&t.effectPct===e.effectPct)&&
+        int(e.startTick)&&int(e.endTick)&&e.startTick>=x.activatedTick&&
+        e.endTick>e.startTick&&e.startTick<=state.calendar.tick&&
+        isoDate(e.startDate)&&isoDate(e.endDate),'Evento local inválido');
+      eventIds.add(e.id);
+    }
+  }
+
   function day(draft) {
     const units=businesses(draft);
     const season=1+0.13*Math.sin((draft.calendar.tick%365)/365*Math.PI*2);
     const staff=rhEmployees(draft);
+    if(draft.world.rivalEconomy)rivalStartEvents(draft);
+    const rivalPlan=draft.world.rivalEconomy?rivalAllocation(draft,units,season):null;
     for(const b of units){
       const s=SECTORS[b.sector],city=cityById(b.cityId||draft.player.cityId);
       // O mercado endereçável de uma cidade/ramo é compartilhado pelas lojas do jogador.
@@ -876,11 +1210,13 @@ const CidadeCore = (() => {
         const price=effectivePrice(b,p,draft.calendar.date);
         const elasticity=demandElasticity(price,competitorPrice,city);
         const base=p.demand*(city.factor/100)*elasticity*season*share*(1+bonusPercent/100);
-        const demand=Math.max(0,Math.floor(base*(0.75+random(draft)*0.55)));
+        const quota=rivalPlan?.quotas.get(b.id+'|'+p.id);
+        const demand=quota?quota.demand:Math.max(0,Math.floor(base*(0.75+random(draft)*0.55)));
         const sold=Math.min(p.stockUnits,demand),lost=demand-sold;
         estimated+=demand;fulfilled+=sold;unmet+=lost;
         if(!p.stockUnits)withoutStock++;
-        demandLines.push({productId:p.id,name:p.name,stockBefore:p.stockUnits,estimated:demand,fulfilled:sold,unmet:lost,lostPotentialCents:lost*price});
+        demandLines.push({productId:p.id,name:p.name,stockBefore:p.stockUnits,estimated:demand,fulfilled:sold,unmet:lost,lostPotentialCents:lost*price,
+          ...(quota?{marketTotal:quota.marketTotal,rivalQuota:quota.rivalQuota,eventEffectPct:quota.eventEffectPct,eventId:quota.eventId}:{} )});
         if(sold>0)items.push({productId:p.id,quantity:sold});
       }
       if(items.length)registerSale(draft,b,items,'SIMULACAO_DIARIA');
@@ -892,7 +1228,16 @@ const CidadeCore = (() => {
         {account:cash>=expense?'CASH':'PAYABLE',debit:0,credit:expense}],b.id,'DAILY_EXPENSE');
       if(cash<expense)event(draft,'CONTAS.A_PAGAR',`${b.id}: despesa de ${money(expense)} registrada a pagar.`,{},b.id);
     }
-    if(units.length&&(draft.calendar.tick+1)%7===0){
+    if(rivalPlan){
+      rivalCompleteDay(draft,rivalPlan,season);
+      for(const b of units){
+        const e=draft.audit.events.findLast(x=>x.type==='DEMANDA.SIMULADA'&&x.businessId===b.id&&x.date===draft.calendar.date);
+        if(!e)continue;
+        const key=b.cityId+'|'+b.sector,old=draft.world.rivalEconomy.playerReputation[key]??50;
+        draft.world.rivalEconomy.playerReputation[key]=clamp(Math.round(old*.9+(e.data.estimated?100*e.data.fulfilled/e.data.estimated:50)*.1),10,90);
+      }
+    }
+    if(!rivalPlan&&units.length&&(draft.calendar.tick+1)%7===0){
       const change=Math.floor(random(draft)*17)-8;
       handler(draft,'IA.AJUSTAR_PRECO',{priceIndex:clamp(draft.world.competitor.priceIndex+change,75,125)});
     }
@@ -939,6 +1284,7 @@ const CidadeCore = (() => {
     assert(state.world.cities.every(id=>!!cityById(id)),'Cidade inválida');
     assert(state.player.cityId===null||!!cityById(state.player.cityId),'Cidade de carreira inválida');
     assert(plain(state.world.competitor)&&int(state.world.competitor.priceIndex),'Concorrente inválido');
+    validateRivalEconomy(state);
     if(state.schemaVersion>=7){
       const regional=state.world.regional;
       assert(plain(regional)&&regional.datasetId===POPULATION_SOURCE.id&&
@@ -1251,7 +1597,12 @@ const CidadeCore = (() => {
     for(const row of products){
       const p=row.p,unitPrice=effectivePrice(b,p,state.calendar.date),unitCost=p.stockUnits?Math.round(p.stockValueCents/p.stockUnits):p.costCents;
       const reference=competitorReference(state,p,city);
-      const demand=Math.max(0,Math.round(p.demand*city.factor/100/businesses(state).filter(x=>x.cityId===b.cityId&&x.sector===b.sector).length*demandElasticity(unitPrice,reference,city)));
+      const forecastPlan=state.world.rivalEconomy?rivalAllocation(state,businesses(state),
+        1+.13*Math.sin((state.calendar.tick%365)/365*Math.PI*2)):null;
+      const quota=forecastPlan?.quotas.get(b.id+'|'+p.id);
+      const demand=quota?quota.demand:Math.max(0,Math.round(p.demand*city.factor/100/
+        businesses(state).filter(x=>x.cityId===b.cityId&&x.sector===b.sector).length*
+        demandElasticity(unitPrice,reference,city)));
       weightedDemand+=demand;weightedContribution+=demand*(unitPrice-unitCost);
     }
     const contributionPerUnit=weightedDemand?weightedContribution/weightedDemand:0;
@@ -1393,8 +1744,24 @@ const CidadeCore = (() => {
       {id:'primeira-filial',label:'Primeira filial',completed:units.length>=2,source:'Pelo menos duas unidades abertas'},
       {id:'primeiro-saneamento',label:'Primeiro passivo quitado',completed:settlements>0,source:'Liquidação OPERATING_SETTLEMENT'}
     ];
+    // Conquistas e desbloqueios: reconhecimento derivado, sem bônus de moedas.
+    const hasDecision=id=>state.audit.events.some(e=>e.type==='DILEMA.DECIDIDO'&&e.data.dilemmaId===id);
+    const unlocks=[
+      {id:'observatorio',label:'Observatório de mercado',unlocked:days>=7,reason:'Sete dias operados'},
+      {id:'dilemas',label:'Escolhas estratégicas',unlocked:!!state.world.rivalEconomy,reason:'Economia viva ativada'},
+      {id:'expansao',label:'Rotas de expansão',unlocked:units.length>=2,reason:'Primeira filial confirmada'}
+    ];
+    achievements.push(
+      {id:'primeira-reposicao',label:'Primeira reposição',completed:state.economy.ledger.some(j=>transactionKind(j)==='PURCHASE'),
+        source:'Compra registrada no livro contábil'},
+      {id:'mes-operado',label:'Um mês de empreendedorismo',completed:days>=30,source:'Calendário operacional'},
+      {id:'estrategista',label:'Primeira decisão estratégica',completed:hasDecision('caixa-estoque')||
+        state.audit.events.some(e=>e.type==='DILEMA.DECIDIDO'),source:'Dilema resolvido no motor'},
+      {id:'rede-regional',label:'Rede regional',completed:level.order>=2,source:'Todos os critérios simultâneos confirmados'},
+      {id:'conglomerado',label:'Conglomerado',completed:level.order>=3,source:'Patamar máximo verificado'}
+    );
     const completed=goals.filter(g=>g.completed).length;
-    return {level,goals,achievements,completed,total:goals.length,
+    return {level,goals,achievements,unlocks,completed,total:goals.length,
       metrics:{days,units:units.length,cities:cityCount,revenueCents:revenue,cashCents:cash,
         recentRevenueCents:revenue30,recentResultCents:recentResult,margin30,dailyFixedCents:dailyFixed},
       note:'Missões e selos são leituras do histórico confirmado. Não concedem dinheiro, pontos arbitrários ou bônus econômicos.'};
@@ -1402,7 +1769,13 @@ const CidadeCore = (() => {
   function exportSave(state) {
     validate(state);const payload=clone(state),raw=JSON.stringify(payload);
     assert(raw.length<MAX_SAVE_CHARS,'Carreira excede limite de exportação');
-    return JSON.stringify({saveFormatVersion:1,app:'Cidade dos Negócios',checksumAlgorithm:'FNV1A32',checksum:hash(raw),payload},null,2);
+    const envelope={saveFormatVersion:1,app:'Cidade dos Negócios',checksumAlgorithm:'FNV1A32',checksum:hash(raw),payload};
+    // Saves grandes preservam o conteúdo, mas eliminam espaços da formatação JSON.
+    // Arquivos menores mantêm byte a byte o formato anterior.
+    const readable=JSON.stringify(envelope,null,2);
+    const output=readable.length<MAX_SAVE_CHARS?readable:JSON.stringify(envelope);
+    assert(output.length<MAX_SAVE_CHARS,'Carreira excede limite seguro de exportação');
+    return output;
   }
   function importSave(raw) {
     assert(typeof raw==='string'&&raw.length<MAX_SAVE_CHARS,'Arquivo muito grande ou inválido');
@@ -1420,6 +1793,6 @@ const CidadeCore = (() => {
     return {state,migrated,message:migrated?'Carreira migrada para V1.9: histórico preservado; cenário tributário desativado até confirmação explícita.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({progressionReport,operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({journeyGuide,reputationReport,dilemmaReport,DILEMMA_DEFINITIONS,rivalMarketReport,RIVAL_EVENT_TYPES,progressionReport,operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();

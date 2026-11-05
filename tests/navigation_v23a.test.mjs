@@ -75,7 +75,7 @@ test('V2.3-A build offline contém script compilável e módulo fiscal',()=>{
   const scripts=[...built.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(scripts.length,1);assert.doesNotThrow(()=>new Script(scripts[0][1]));
   assert.match(built,/data-section-pane="administrativo:fiscal"/);
-  assert.match(built,/const VERSION = '2\.4\.1'/);
+  assert.match(built,/const VERSION = '2\.5\.0-alpha\.1'/);
 });
 
 test('V2.3-A: Gerenciar do mapa abre diretamente Minhas Empresas',()=>{

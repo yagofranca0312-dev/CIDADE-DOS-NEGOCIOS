@@ -145,6 +145,20 @@
     setText('price-history-count',`${items.length} alteração(ões)`);
     container.innerHTML=items.length?items.slice(-12).reverse().map(item=>`<div class="price-history-row"><small>${escape(BRDate(item.date))} · ${escape(item.productName||'Produto base')} · ${escape(item.id)}</small><strong>${escape(Core.money(item.old))} → ${escape(Core.money(item.cents))}</strong></div>`).join(''):'<p class="muted">Nenhuma alteração registrada nesta carreira.</p>';
   }
+  function renderProgression(){
+    const p=Core.progressionReport(state);
+    setText('progression-level',p.level.label);
+    setText('progression-goal-status',p.completed+' de '+p.total+' objetivos alcançados · '+p.metrics.days+' dia(s) operados');
+    $('progression-goals').innerHTML=p.goals.map(g=>
+      '<div class="event-item"><div><strong>'+escape(g.completed?'✓ '+g.label:g.label)+'</strong>'+
+      '<p>'+escape(g.details)+'</p><small>'+escape(g.evidence)+' · '+g.progressPct+'% do requisito mais distante</small>'+
+      '<progress max="100" value="'+g.progressPct+'" aria-label="'+escape(g.label)+'"></progress></div></div>'
+    ).join('');
+    const won=p.achievements.filter(a=>a.completed);
+    $('progression-achievements').innerHTML=won.length?won.map(a=>
+      '<div class="event-item"><div><strong>✦ '+escape(a.label)+'</strong><small>'+escape(a.source)+'</small></div></div>'
+    ).join(''):'<p class="muted">Os primeiros marcos aparecem após ações confirmadas. Nenhum selo adiciona dinheiro ou estoque.</p>';
+  }
   function initialFinanceQuery(){
     const date=lastAvailableDate(),year=Number(date.slice(0,4)),month=Number(date.slice(5,7));
     return {period:'all',asOf:date,day:date,month:date.slice(0,7),
@@ -311,6 +325,7 @@
     $('company-empty').hidden=units.length>=5;$('company-active').hidden=!b;
     renderGroup();
     renderCompanyPanels();
+    if(tab==='empresa'&&activeSection.empresa==='dashboard')renderProgression();
     setText('company-status',b?'EM OPERAÇÃO':'NÃO INAUGURADA');
     $('buy-form').querySelector('button').disabled=!b;$('price-form').querySelector('button').disabled=!b;
     if(b){const s=Core.SECTORS[b.sector];setText('company-glyph',s.glyph);setText('company-title',`${state.player.companyName} · ${b.id} · ${s.name}`);setText('company-product',`${b.products.length} produto(s) cadastrados`);setText('company-location',`${Core.cityById(b.cityId).name} / ${Core.cityById(b.cityId).uf} · lote ${String(b.lot).padStart(2,'0')}`);setText('company-sold',b.totalSold);setText('company-price',Core.money(b.unitPrice));setText('company-payable',Core.money(info.payable));

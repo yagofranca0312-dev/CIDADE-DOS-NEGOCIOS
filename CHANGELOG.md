@@ -7,7 +7,7 @@
 - Painel em **Empresas → Dashboard**, com marcos, metas e tutorial opcional, sem alterar navegação principal.
 - Nenhuma recompensa econômica ou nova obrigação tributária; `schemaVersion 9` preservado.
 - Reputação com efeitos, seis dilemas e homologação V2.5.0 **não** estão implementados nesta alpha.
-- **Estado inicial:** testes e CI pendentes; ver `docs/V250_ALPHA1_IMPLANTACAO.md`.
+- **Estado verificado:** CI 42120265061 PASS, 257 testes aprovados, 6 benchmarks, HTML reproduzível; QA Windows e homologação final da V2.5 pendentes. Ver `docs/V250_ALPHA1_IMPLANTACAO.md`.
 
 
 ## 2.4.1 — Estabilização financeira e qualidade (homologação formal, 05/11/2026)

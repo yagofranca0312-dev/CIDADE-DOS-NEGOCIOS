@@ -2,7 +2,7 @@
 
 ## V2.5 — Jornada empresarial (alpha.1, ainda não homologada)
 
-A candidata `2.5.0-alpha.1` introduz o **painel Jornada Empresarial**, em **Empresas → Dashboard**. O módulo lê o histórico real do jogo para apresentar níveis (`Em preparação`, `Negócio local`, `Rede regional`, `Conglomerado`), **12 objetivos mensuráveis** e **3 marcos históricos**. Inclui instruções opcionais de início. Não cria dinheiro, pontos, vendas, estoque, bônus ou lançamentos; nenhuma estrutura de salvamento foi alterada (`schemaVersion 9`).
+A candidata `2.5.0-alpha.1` (CI **257/257 PASS**, seis benchmarks, HTML reproduzível) introduz o **painel Jornada Empresarial**, em **Empresas → Dashboard**. O módulo lê o histórico real do jogo para apresentar níveis (`Em preparação`, `Negócio local`, `Rede regional`, `Conglomerado`), **12 objetivos mensuráveis** e **3 marcos históricos**. Inclui instruções opcionais de início. Não cria dinheiro, pontos, vendas, estoque, bônus ou lançamentos; nenhuma estrutura de salvamento foi alterada (`schemaVersion 9`).
 
 **Situação:** protótipo incremental em avaliação. Os demais checkpoints da V2.5 (reputação com efeitos, seis dilemas de escolha, conquistas avançadas, equilíbrio e QA manual) **não foram concluídos**. Regras: [GDD da V2.5](docs/V250_GDD_PROGRESSAO.md) e [implantação alpha.1](docs/V250_ALPHA1_IMPLANTACAO.md).
 

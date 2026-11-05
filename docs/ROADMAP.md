@@ -221,3 +221,11 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - **Patch inicial:** `2.5.0-alpha.1` em `feature/v2.5-alpha.1-gdd-progressao`, GDD + níveis + objetivos de leitura; não altera schema 9, economia, saldo, preço, tributos nem RNG.
 - Checkpoint 01 GDD concluído; demais checkpoints só após implementação/testes individualizados. Plano detalhado: `docs/V250_GDD_PROGRESSAO.md`.
 - Regra: V2.5 não pode ser declarada homologada sem CI, testes de equilíbrio de 30/90 dias, QA no Windows/navegador e aceite formal do titular.
+
+## 05/11/2026 — V2.5.0-alpha.1: implementação inicial validada
+
+- GDD, quatro patamares, 12 objetivos baseados no ledger e três marcos de reconhecimento em **Empresas → Dashboard → Jornada empresarial**.
+- Checkpoints técnicos V2.5: **01 GDD, 02 Níveis e 03 Objetivos concluídos (3/8)**. Conquistas complexas, reputação, seis dilemas, tutorial com QA real e gate de diversão **não concluídos**.
+- GitHub Actions 42120265061: **257 PASS / 0 FAIL**, seis cenários de estabilidade, HTML offline compilado identicamente, SHA-256 `21d4f8856d4bff1fd7af2eb9c496aa5cec3a8cc2fa75e67bdde10efb67df511c`.
+- A meta de reserva pode ser coberta por capital próprio, mas capital não conta como receita nem desbloqueia conquistas de faturamento.
+- `schemaVersion 9` e mecânica de V2.4.1 preservados. **V2.5.0-alpha.1 segue candidata para teste, NÃO homologada como V2.5.0 estável.** QA Windows não verificado.

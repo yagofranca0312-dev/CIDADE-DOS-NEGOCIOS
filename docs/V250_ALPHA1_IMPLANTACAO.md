@@ -1,7 +1,7 @@
 # Implantação V2.5.0-alpha.1 — Jornada Empresarial
 
 **Data:** 05/11/2026. **Base protegida:** `releases/v2.4.1-homologada`.
-**Status de início:** candidato, sujeito a regressões e CI. **Sem homologação da V2.5.0.**
+**Status técnico:** alpha.1 aprovada em CI, para avaliação do jogador. Não homologada como versão final. **Sem homologação da V2.5.0.**
 
 ## O que foi implementado
 - Relatório puro `Core.progressionReport(state)`, sem gravar estado: constata 4 patamares, 12 metas e 3 selos históricos, derivados de contas, empresas e tempo.
@@ -20,9 +20,9 @@
 ## Gates
 - [x] GDD inicial documentado.
 - [x] Núcleo de progressão e interface implementados na branch de trabalho.
-- [ ] Testes específicos e regressão global da alpha.1: aguardando CI.
-- [ ] Reconstrução reprodutível de `index.html`: aguardando CI.
-- [ ] Benchmark de 30/90 dias específico para progressão: ainda não registrado.
+- [x] Testes específicos e regressão global da alpha.1: GitHub Actions 42120265061, **257 PASS / 0 FAIL**.
+- [x] Reconstrução reprodutível de `index.html`: `git diff --exit-code -- index.html` sem diferenças e SHA-256 `21d4f8856d4bff1fd7af2eb9c496aa5cec3a8cc2fa75e67bdde10efb67df511c`.
+- [x] Regressões de progressão com **30, 90 e 365 dias** em fixtures determinísticas; o benchmark geral adicional de 30/365/1.825 dias (1 e 5 lojas) também passou (6/6). **Não equivale a avaliação humana de diversão/equilíbrio**.
 - [ ] QA manual de leitura da jornada no Windows/navegador: não comprovado.
 - [ ] Aceite para homologação da alpha.1: não solicitado/registrado.
 - [ ] Gate V2.5.0 final: não realizado.
@@ -41,4 +41,4 @@
 3. Compare metas com resultados e calendário. Teste com uma carreira de poucos dias e com uma antiga.
 4. Se houver divergência, preserve o JSON e retorne ao checkpoint V2.4.1; não edite manualmente o save.
 
-**Próxima etapa:** corrigir eventuais regressões, registrar CI e balanceamento; somente depois considerar publicar a alpha.1 na `main` para teste.
+**Próxima etapa:** publicar a alpha.1 na `main` somente após o CI validado; testar a interface no Windows e observar metas nos dias 30/90. Em seguida implementar patch alpha.2 (conquistas e tutorial contextual).

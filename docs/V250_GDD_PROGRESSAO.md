@@ -84,17 +84,17 @@ O roteiro inicial sugerido é: abrir → comprar → aguardar entrega → avanç
 
 | Patch | Entrega | Status inicial |
 |---|---|---|
-| **alpha.1** | GDD, relatório de níveis/metas derivadas e apresentação inicial da Jornada | Em implementação |
+| **alpha.1** | GDD, relatório de níveis/metas derivadas e apresentação inicial da Jornada | Implementado e validado no CI; QA manual pendente |
 | **alpha.2** | Conquistas auditáveis, feedback contextual e tutorial opcional | Planejado |
 | **alpha.3** | Reputação inicial com efeitos explícitos e limites | Planejado |
 | **alpha.4** | Seis dilemas integrados aos comandos econômicos reais | Planejado |
 | **RC / 2.5.0** | Equilíbrio 30/90 dias, QA real no navegador/Windows, saves, aceite | Planejado |
 
-## Checkpoints do usuário (0/8 → registrar apenas o verificado)
+## Checkpoints do usuário (3/8 técnicos comprovados; gate final pendente)
 
 - [x] **01 GDD do ciclo de jogo** — loop, horizontes e papel do empreendedor documentados aqui.
-- [ ] **02 Níveis empresariais** — implementar e testar patamares sem prêmio duplicado.
-- [ ] **03 Objetivos de finanças e operações** — implementar progresso rastreável, testes de fonte e save.
+- [x] **02 Níveis empresariais** — patamares por requisitos simultâneos, testados com cenários de rede regional e conglomerado; sem prêmio duplicado ou campo novo no save.
+- [x] **03 Objetivos de finanças e operações** — 12 objetivos rastreáveis em ledger/unidades/calendário; testes de receita x capital, primeira venda, margem, tempo e importação/exportação.
 - [ ] **04 Conquistas e desbloqueios** — selos visuais não contam como sistema completo de desbloqueios.
 - [ ] **05 Reputação empresarial inicial** — implementar impactos de pequena escala e medir.
 - [ ] **06 Desafios com escolhas** — seis dilemas operacionais com alternativas e efeitos testados.
@@ -102,3 +102,11 @@ O roteiro inicial sugerido é: abrir → comprar → aguardar entrega → avanç
 - [ ] **08 GATE diversão e equilíbrio** — 30/90 dias, regressões, QA Windows e aceite formal do titular.
 
 **Regra de release:** uma candidata pode estar na branch ou publicada para testes sem estar homologada. **Somente `2.5.0` estável** após gates e aceite expresso. Saves reais nunca usados nas fixtures de QA.
+
+### Evidência da alpha.1 — 05/11/2026
+
+- GitHub Actions [42120265061](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42120265061): **257 testes PASS, 0 FAIL**, 6 benchmarks PASS, HTML compilado reproduzível.
+- SHA-256 do HTML da candidata: `21d4f8856d4bff1fd7af2eb9c496aa5cec3a8cc2fa75e67bdde10efb67df511c`.
+- Foi identificada e corrigida uma expectativa de teste: reserva de caixa legítima pode vir do capital próprio, mas esse capital **não constitui receita**. Os objetivos de venda não o computam.
+- **3/8 checkpoints documentados:** GDD, níveis e objetivos. Tutorial somente inicial (texto opcional); conquistas completas/desbloqueios, reputação, seis dilemas e gate de diversão continuam pendentes.
+- Evidência restrita ao ambiente CI/Linux; não presumir validação manual no Windows ou aprovação final do usuário.

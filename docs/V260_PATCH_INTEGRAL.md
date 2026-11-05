@@ -33,7 +33,7 @@
 
 ## Compatibilidade e segurança
 
-- `SCHEMA_VERSION=9` preservado; exportação/importação com checksum e reversibilidade mantidas.
+- `SCHEMA_VERSION=9` preservado; exportação/importação com checksum e reversibilidade mantidas. Em carreiras longas, o exportador passa automaticamente a JSON compacto apenas se o JSON indentado exceder o limite de importação, preservando todos os dados.
 - Carreiras antigas **não recebem rivais retroativos** apenas por importar; a ativação é explícita pelo botão do Mercado e grava evento `MUNDO.CONCORRENCIA_ATIVADA`.
 - Em novas carreiras criadas pela interface, o novo mundo é ativado após a criação; o domínio mantém um comando explícito para auditar o momento de início.
 - Estado de rivais e eventos não é uma nova receita, despesa, conta, empresa própria nem fonte pública; é simulação estritamente local.
@@ -50,6 +50,13 @@
 5. Importe um save antigo com backup preservado. Confira que o mundo concorrencial requer ativação explícita; depois confira caixa, contas a pagar e vendas antes/depois.
 6. Rode pelo menos um cenário de 30 dias e outro de 90 dias para verificar se a progressão é compreensível e se uma estratégia economicamente prudente permite recuperação.
 7. Se houver erro em vendas, save, UI, histórico ou desempenho, preservar JSON e logs; voltar ao checkpoint V2.4.1 sem reimportar save modificado.
+
+## Evidências de benchmark em CI — 05/11/2026
+
+- 275 testes PASS / 0 FAIL; benchmarks legados PASS.
+- Carreiras de 365 dias com rivais: estilo conservador em Tianguá, equilibrado em Fortaleza, agressivo em São Paulo: 3/3 cenários tecnicamente íntegros.
+- Carreira de 1.825 dias com 5 unidades, 90 rivais e auditoria: importação/exportação íntegra, 13.353.565 bytes no save compacto, abaixo do limite do jogo.
+- Esses cenários comprovam integridade e desempenho nos testes, **não** diversão, justiça percebida nem sobrevivência econômica garantida de toda estratégia. O cenário de Fortaleza finalizou com caixa baixo, exigindo QA de balanceamento antes da homologação.
 
 ## Critério para homologação V2.6.0 estável
 

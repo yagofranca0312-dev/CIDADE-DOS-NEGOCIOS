@@ -4,8 +4,8 @@ import {readFileSync} from 'node:fs';
 import {runInNewContext,Script} from 'node:vm';
 const source=readFileSync('src/core/game.js','utf8');
 const core=runInNewContext(source+'\nCidadeCore',{});
-test('V2.6.0-rc.1: identifica versão estável, mantém schema 9 e três departamentos ativos',()=>{
-  assert.equal(core.VERSION,'2.6.0-rc.1');
+test('V2.6.0: identifica versão estável, mantém schema 9 e três departamentos ativos',()=>{
+  assert.equal(core.VERSION,'2.6.0');
   assert.equal(core.SCHEMA_VERSION,9);
   assert.equal(typeof core.paralegalReport,'function');
   assert.equal(typeof core.rhReport,'function');
@@ -16,24 +16,24 @@ test('V2.6.0-rc.1: identifica versão estável, mantém schema 9 e três departa
   assert.equal(Object.keys(core.RH_ROLES).length,3);
   assert.equal(core.FISCAL_OP_TASKS.length,3);
 });
-test('V2.6.0-rc.1: HTML único offline contém os três departamentos e versão no cabeçalho, início e rodapé',()=>{
+test('V2.6.0: HTML único offline contém os três departamentos e versão no cabeçalho, início e rodapé',()=>{
   const html=readFileSync('index.html','utf8');
   const template=readFileSync('src/shell/index.template.html','utf8');
   const pkg=JSON.parse(readFileSync('package.json','utf8'));
-  assert.equal(pkg.version,'2.6.0-rc.1');
-  assert.match(template,/<title>Cidade dos Negócios 1 · v2\.6\.0-rc\.1<\/title>/);
+  assert.equal(pkg.version,'2.6.0');
+  assert.match(template,/<title>Cidade dos Negócios 1 · v2\.6\.0<\/title>/);
   for(const id of ['intro-version','build-version','footer-version'])
-    assert.ok(template.includes('id="'+id+'">v2.6.0-rc.1<'),id);
+    assert.ok(template.includes('id="'+id+'">v2.6.0<'),id);
   for(const id of ['paralegal-unit-list','rh-hire-form','fiscal-op-unit-list'])
     assert.ok(html.includes('id="'+id+'"'),id);
-  assert.match(html,/const VERSION = '2\.6\.0-rc\.1'/);
+  assert.match(html,/const VERSION = '2\.6\.0'/);
   assert.equal((html.match(/<script\b/g)||[]).length,1);
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(scripts.length,1);
   assert.doesNotThrow(()=>new Script(scripts[0][1]));
   assert.doesNotMatch(html,/2\.4\.0-alpha\.3/);
 });
-test('V2.6.0-rc.1: módulos do jogo não criam registros retroativos ao carregar saves novos',()=>{
+test('V2.6.0: módulos do jogo não criam registros retroativos ao carregar saves novos',()=>{
   let r=core.dispatch(null,{id:'release-create',type:'CARREIRA.CRIAR',payload:{
     name:'Usuário Teste',companyName:'Comércio Teste',cityId:'CE-TIANGUA',seed:20261104}});
   assert.equal(r.ok,true,r.error);

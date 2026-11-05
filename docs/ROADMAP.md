@@ -200,7 +200,8 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - [x] **03** Cenário inclui folha estimada da unidade ativa, apresenta compromissos conhecidos e ressalva outras unidades, pagamentos e tributos futuros.
 - [x] **04** README, CHANGELOG e documentação específica reestruturados para distinguir versão ativa de histórico.
 - [ ] **05** QA manual Windows `file://`, fechamento/reabertura, importação JSON e recuperação: **DEPENDE DE TESTE DO JOGADOR**.
-- [ ] **06** Benchmark 30/365/1825 com 1/5 unidades: script CI implantado; registrar tempos e tamanhos observados após execução.
-- [ ] **07** Regressões, CI e checksum do HTML reproduzível: em validação; fechar somente com CI PASS.
+- [x] **06** Benchmark 30/365/1825 com 1/5 unidades: seis cenários PASS, de 76.931 a 21.321.317 bytes de save; 16 a 8.245 ms de simulação no runner (GitHub Actions 41939407785). **Risco pendente:** quota localStorage e limite de 25 MB do arquivo.
+- [x] **07** Regressões, CI e checksum do HTML reproduzível: CI PASS (250/250), HTML reproduzível, SHA-256 `d233d55932f3ca20e81db2fb5f2659946adb9e1ae97e33f158e3947f1e96ff71`.
 - [ ] **08** Gate final de homologação pelo jogador e checkpoint estável V2.4.1: **NÃO CONCEDIDO**.
 - **Atalho:** `docs/V241_ESTABILIZACAO.md`.
+- **Observação QA:** homologa-se somente após teste manual Windows e aceite; a V2.4.1 RC1 pode ser publicada para avaliação, mas não se presume persistência de saves grandes em `file://`.

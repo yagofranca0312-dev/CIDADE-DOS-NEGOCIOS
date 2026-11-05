@@ -32,7 +32,21 @@
 
 ## Benchmark de performance
 - `npm run bench:stability` mede 30, 365 e 1.825 dias com 1 e 5 unidades, integração fiscal opt-in, folha, conciliação, exportação/importação e tamanho de save. A fixture de 5 lojas injeta capital apenas para viabilizar o cenário; **não é funcionalidade do jogo**.
-- Registrar tempos observados por cenário e gargalos ao concluir o CI. Métricas dependem do hardware do runner; sem alegar SLA universal.
+- **Medições observadas no runner GitHub Actions em 05/11/2026**, workflow [41939407785](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/41939407785), commit `3ce78a7e764291b94e3206e2659e4ea9fb9e8a82`:
+
+| Dias simulados | Unidades | Tempo de simulação | Exportação JSON | Integridade |
+| ---: | ---: | ---: | ---: | --- |
+| 30 | 1 | 16 ms | 76.931 bytes | PASS |
+| 30 | 5 | 8 ms | 340.784 bytes | PASS |
+| 365 | 1 | 66 ms | 914.913 bytes | PASS |
+| 365 | 5 | 448 ms | 4.252.859 bytes | PASS |
+| 1.825 | 1 | 1.016 ms | 4.715.902 bytes | PASS |
+| 1.825 | 5 | 8.245 ms | 21.321.317 bytes | PASS |
+
+- Valores são de um runner Linux, não de computador Windows nem navegador. Tempos pequenos variam conforme aquecimento de execução e ambiente.
+- **Risco aberto — saves grandes:** o exportador/importador ainda possuem limite de aproximadamente 25 MB; o quinto ano com cinco empresas produziu 21,3 MB. O armazenamento `localStorage` disponível em navegadores pode ser menor que esse arquivo. Assim, **não é seguro prometer autosave em carreiras longas**. Exportar JSON regularmente e preservá-lo externamente; revisar estratégia de persistência/capacidade em evolução própria antes de declarar suporte a carreiras de décadas.
+- A implementação atual avisa quando o `localStorage` falha, mas o roteiro de QA no Windows precisa cobrir também o comportamento com o armazenamento indisponível. Não há teste E2E de quota de navegador comprovado.
+- As medições estabelecem apenas uma referência de desempenho; nenhum SLA universal foi definido.
 - Não alterar leis, economia ou estrutura de save para alcançar números de benchmark.
 
 ## QA manual indispensável (Windows)
@@ -46,8 +60,8 @@
 
 ## Checklist de gates
 - [x] Motor, interface e procedimentos implementados na candidata.
-- [ ] CI e HTML offline reproduzível aprovados nesta revisão.
-- [ ] Benchmark com 6 cenários executado e resultados documentados.
+- [x] CI e HTML offline reproduzível aprovados nesta revisão: 250 PASS / 0 FAIL, build sincronizado; workflow 41939407785.
+- [x] Benchmark com 6 cenários executado e resultados documentados acima; risco de tamanho de save permanece aberto.
 - [ ] Teste real Windows e recuperação após reinício comprovados.
 - [ ] Aceite de homologação do titular e release 2.4.1 estável.
 

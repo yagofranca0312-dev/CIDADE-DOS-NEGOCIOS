@@ -8,6 +8,7 @@
       'treasury-payable':report.closingPayable,'treasury-tax':group?report.closingTaxPayable:null,'treasury-transit':report.closingInTransit};
     for(const [id,value] of Object.entries(numbers))setText(id,value===null?'Somente grupo':Core.money(value));
     const debts=Core.operatingPayablesReport(state);
+    if(typeof document!=='undefined'&&$('payable-operating-unit')){
     const chooser=$('payable-operating-unit'),prior=chooser.value;
     chooser.replaceChildren(...debts.units.map(u=>{
       const option=document.createElement('option');option.value=u.businessId;
@@ -24,6 +25,7 @@
     setText('payable-operating-summary','Dívidas operacionais: '+Core.money(debts.total)+
       ' · caixa compartilhado: '+Core.money(Core.overview(state).cash)+
       (debts.unclassified?' · outras obrigações fora desta rotina: '+Core.money(debts.unclassified):''));
+    }
     const cat=flow.categories;
     const categories=[
       ['Receitas de vendas efetivamente recebidas',cat.sales],['Aportes de capital',cat.capital],

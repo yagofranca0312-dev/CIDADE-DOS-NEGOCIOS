@@ -1,7 +1,7 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.4.1 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.5.0-alpha.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '2.4.1';
+  const VERSION = '2.5.0-alpha.1';
   const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -198,7 +198,7 @@ const CidadeCore = (() => {
     return {units,totalActive:units.reduce((n,u)=>n+u.activeCount,0),
       pendingCents:units.reduce((n,u)=>n+u.pendingCents,0)};
   }
-  // V2.4.1: baixa de passivos OPERACIONAIS por unidade, sem reapuração de despesas.
+  // V2.5.0-alpha.1: baixa de passivos OPERACIONAIS por unidade, sem reapuração de despesas.
   // Folhas RH e TAX_PAYABLE mantêm rotinas independentes; históricos sem origem certa não são liquidados aqui.
   function operatingPayablesReport(state){
     if(!state)return {units:[],total:0,unclassified:0};
@@ -1318,6 +1318,87 @@ const CidadeCore = (() => {
     return {units:result,count:units.length,group:{cash:total.cash,revenue:total.revenue,cogs:total.cogs,expenses:total.expenses,
       taxExpense:total.taxExpense,taxPayable:total.taxPayable,profit:total.profit,stock:total.stock,inventoryValue:total.inventoryValue,inTransit:total.inTransit,payable:total.payable}};
   }
+  // V2.5-alpha.1: objetivos e patamares derivam de evidências do próprio jogo.
+  // Consulta pura: nenhum crédito, XP, comando, evento, RNG ou campo novo no save.
+  function progressionReport(state){
+    if(!state)return {level:{id:'preparacao',label:'Em preparação'},goals:[],achievements:[],completed:0,total:0};
+    const units=businesses(state),cityCount=new Set(units.map(b=>b.cityId)).size;
+    const days=state.calendar.tick,dailyFixed=units.reduce((n,b)=>n+SECTORS[b.sector].dailyCost,0);
+    const last=new Date(state.calendar.date+'T12:00:00Z');last.setUTCDate(last.getUTCDate()-1);
+    const first=new Date(last);first.setUTCDate(first.getUTCDate()-29);
+    const from=first.toISOString().slice(0,10),to=last.toISOString().slice(0,10);
+    let revenue=0,revenue30=0,cogs30=0,expense30=0,firstSales=0,settlements=0;
+    for(const j of state.economy.ledger){
+      const kind=transactionKind(j);
+      if(kind==='SALE')firstSales++;
+      if(kind==='OPERATING_SETTLEMENT')settlements++;
+      const recent=j.date>=from&&j.date<=to;
+      for(const e of j.entries){
+        if(e.account==='REVENUE'){
+          const amount=e.credit-e.debit;
+          revenue+=amount;if(recent)revenue30+=amount;
+        }else if(recent&&e.account==='COGS')cogs30+=e.debit-e.credit;
+        else if(recent&&e.account==='EXPENSE')expense30+=e.debit-e.credit;
+      }
+    }
+    const cash=balance(state,'CASH');
+    const recentResult=revenue30-cogs30-expense30;
+    const margin30=revenue30>0?Math.round(recentResult*10000/revenue30)/100:0;
+    const regionalRequirements=[{actual:units.length,target:3},{actual:cityCount,target:2},
+      {actual:days,target:90},{actual:revenue,target:10000000}];
+    const conglomerateRequirements=[{actual:units.length,target:5},{actual:cityCount,target:3},
+      {actual:days,target:365},{actual:revenue,target:75000000}];
+    const qualified=items=>items.every(x=>x.actual>=x.target);
+    const level=qualified(conglomerateRequirements)?
+      {id:'conglomerado',label:'Conglomerado empresarial',order:3}:
+      qualified(regionalRequirements)?{id:'rede-regional',label:'Rede regional',order:2}:
+      units.length?{id:'negocio-local',label:'Negócio local',order:1}:
+      {id:'preparacao',label:'Em preparação',order:0};
+    // Missões compostas só fecham quando TODOS os requisitos têm evidência.
+    const create=(id,label,details,requirements,evidence)=>{
+      const progressPct=Math.round(Math.min(...requirements.map(x=>Math.min(1,Math.max(0,x.actual/x.target))))*100);
+      return {id,label,details,evidence,requirements,progressPct,completed:requirements.every(x=>x.actual>=x.target)};
+    };
+    const goals=[
+      create('primeira-empresa','Inaugurar a primeira empresa','Abrir uma unidade em lote disponível.',
+        [{actual:units.length,target:1}],units.length+' de 1 unidade'),
+      create('primeira-venda','Realizar a primeira venda','Vendas automáticas confirmadas no livro, nunca faturamento potencial.',
+        [{actual:firstSales,target:1}],firstSales+' registro(s) SALE'),
+      create('semana-operando','Completar sete dias de operação','Avançar o calendário da carreira.',
+        [{actual:days,target:7}],days+' de 7 dias'),
+      create('primeiro-mes','Completar 30 dias','Observar um mês de decisões e consequências.',
+        [{actual:days,target:30}],days+' de 30 dias'),
+      create('receita-20k','Realizar R$ 20 mil em vendas','Aportes e compra de estoque não contam como receita.',
+        [{actual:revenue,target:2000000}],money(revenue)+' de R$ 20.000'),
+      create('primeira-filial','Abrir a primeira filial','Expandir para duas unidades sem capital fictício por filial.',
+        [{actual:units.length,target:2}],units.length+' de 2 unidades'),
+      create('duas-cidades','Operar em duas cidades','Ter unidades efetivamente abertas em duas cidades diferentes.',
+        [{actual:cityCount,target:2}],cityCount+' de 2 cidades'),
+      create('margem-30dias','Atingir margem operacional de 10% em 30 dias','Exige 30 dias, receita recente de R$ 10 mil e margem depois de CMV e despesas.',
+        [{actual:days,target:30},{actual:revenue30,target:1000000},{actual:margin30,target:10}],
+        'Margem '+margin30.toFixed(2)+'% · receita 30d '+money(revenue30)),
+      create('reserva-30dias','Manter caixa para 30 dias de despesas fixas','Exige ao menos 30 dias jogados e reserva do grupo para lojas atuais.',
+        [{actual:units.length,target:1},{actual:days,target:30},{actual:cash,target:Math.max(1,dailyFixed*30)}],
+        'Caixa '+money(cash)+' · reserva '+money(dailyFixed*30)),
+      create('faturamento-90','Operar 90 dias e vender R$ 100 mil','Exige simultaneamente tempo e vendas realizadas.',
+        [{actual:days,target:90},{actual:revenue,target:10000000}],
+        days+' dias · '+money(revenue)+' em vendas'),
+      create('rede-regional','Construir rede regional','Três unidades, duas cidades, 90 dias e R$ 100 mil vendidos.',
+        regionalRequirements,units.length+' lojas · '+cityCount+' cidades · '+days+' dias · '+money(revenue)),
+      create('conglomerado','Constituir conglomerado','Cinco unidades, três cidades, 365 dias e R$ 750 mil vendidos.',
+        conglomerateRequirements,units.length+' lojas · '+cityCount+' cidades · '+days+' dias · '+money(revenue))
+    ];
+    const achievements=[
+      {id:'primeira-venda',label:'Primeira venda',completed:firstSales>0,source:'Lançamento SALE confirmado'},
+      {id:'primeira-filial',label:'Primeira filial',completed:units.length>=2,source:'Pelo menos duas unidades abertas'},
+      {id:'primeiro-saneamento',label:'Primeiro passivo quitado',completed:settlements>0,source:'Liquidação OPERATING_SETTLEMENT'}
+    ];
+    const completed=goals.filter(g=>g.completed).length;
+    return {level,goals,achievements,completed,total:goals.length,
+      metrics:{days,units:units.length,cities:cityCount,revenueCents:revenue,cashCents:cash,
+        recentRevenueCents:revenue30,recentResultCents:recentResult,margin30,dailyFixedCents:dailyFixed},
+      note:'Missões e selos são leituras do histórico confirmado. Não concedem dinheiro, pontos arbitrários ou bônus econômicos.'};
+  }
   function exportSave(state) {
     validate(state);const payload=clone(state),raw=JSON.stringify(payload);
     assert(raw.length<MAX_SAVE_CHARS,'Carreira excede limite de exportação');
@@ -1339,6 +1420,6 @@ const CidadeCore = (() => {
     return {state,migrated,message:migrated?'Carreira migrada para V1.9: histórico preservado; cenário tributário desativado até confirmação explícita.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({progressionReport,operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();

@@ -213,3 +213,11 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - Gate de aceite **formal**: aprovado pelo titular. Teste manual Windows/browser não documentado: **não realizado/verificado nesta execução**. Persistência `localStorage` e saves grandes continuam como risco conhecido; não presumir quitação deste risco.
 - Checkpoint final planejado: `releases/v2.4.1-homologada`, criado após CI da versão estável. Manter `releases/v2.4.0-homologada` intocada.
 - Próximo ciclo: V2.5.0, objetivos e progressão derivados de evidências econômicas e eventos do próprio jogo, sem adulterar ledger ou saves.
+
+## Ciclo V2.5.0 — aberto em 05/11/2026
+
+- Dependência satisfeita: V2.4.1 estável homologada formalmente, branch `releases/v2.4.1-homologada`; CI 42111708574 PASS. Teste manual Windows continua sem evidência documentada.
+- Foco: jornada do empreendedor, progressão derivada do ledger/eventos existentes, metas de curto/médio/longo prazo e informações de conquistas.
+- **Patch inicial:** `2.5.0-alpha.1` em `feature/v2.5-alpha.1-gdd-progressao`, GDD + níveis + objetivos de leitura; não altera schema 9, economia, saldo, preço, tributos nem RNG.
+- Checkpoint 01 GDD concluído; demais checkpoints só após implementação/testes individualizados. Plano detalhado: `docs/V250_GDD_PROGRESSAO.md`.
+- Regra: V2.5 não pode ser declarada homologada sem CI, testes de equilíbrio de 30/90 dias, QA no Windows/navegador e aceite formal do titular.

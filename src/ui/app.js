@@ -154,6 +154,7 @@
       $('rival-rows').innerHTML='<tr><td colspan="6">Economia concorrencial ainda não ativada nesta carreira.</td></tr>';
       $('rival-alerts').innerHTML='<p class="muted">Ative a economia viva para começar a simulação.</p>';
       $('rival-events').innerHTML='';
+      $('rival-actions').innerHTML='';
       return;
     }
     setText('rival-summary',report.cityName+' · '+report.rivals.length+' rivais locais · '+state.calendar.tick+' dia(s) de carreira. A competição usa caixa e estoque exclusivos dos rivais.');
@@ -165,6 +166,10 @@
     ).join('')||'<tr><td colspan="6">Nenhum rival ativo.</td></tr>';
     $('rival-alerts').innerHTML=report.alerts.map(a=>
       '<div class="event-item"><div><p>'+escape(a)+'</p></div></div>').join('');
+    $('rival-actions').innerHTML=report.actions.slice().reverse().map(e=>
+      '<div class="event-item"><div><p>'+escape(e.text)+
+      '</p><small>'+escape(e.date)+'</small></div></div>').join('')||
+      '<p class="muted">Ainda não houve decisão concorrente relevante nesta cidade.</p>';
     $('rival-events').innerHTML=report.events.slice().reverse().map(e=>
       '<div class="event-item"><div><strong>'+escape(e.label)+'</strong><p>'+
       escape(e.effectPct>0?'Demanda favorecida '+e.effectPct+'%':'Demanda reduzida '+Math.abs(e.effectPct)+'%')+

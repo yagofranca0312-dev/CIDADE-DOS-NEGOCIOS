@@ -1,0 +1,50 @@
+name: Validar V2.8.0 produção, logística e integração
+on:
+  push:
+    branches:
+      - feature/v2.8.0-producao-logistica-integral
+permissions:
+  contents: write
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Compilar HTML offline
+        run: npm run build
+      - name: Comitar HTML determinístico da candidata
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet -- index.html; then
+            git add index.html
+            git commit -m "build(v2.8): atualizar HTML offline candidato [skip ci]"
+            git push origin HEAD:feature/v2.8.0-producao-logistica-integral
+          fi
+      - name: Testes de regressão e logística
+        run: npm test
+      - name: Benchmark V2.4.1 estabilidade
+        run: npm run bench:stability
+      - name: Benchmark V2.6 concorrência
+        run: npm run bench:competition
+      - name: Benchmark V2.7 crédito e contratos
+        run: npm run bench:finance
+      - name: Benchmark V2.8 transferências, CD e 3–5 unidades
+        run: npm run bench:logistics
+      - name: SHA-256 do HTML offline
+        run: sha256sum index.html
+      - name: Artefato testável, ainda não homologado
+        uses: actions/upload-artifact@v4
+        with:
+          name: CIDADE_DOS_NEGOCIOS_V280_ALPHA1_HTML_OFFLINE
+          path: |
+            index.html
+            docs/V280_PRODUCAO_LOGISTICA.md
+            README.md
+          if-no-files-found: error

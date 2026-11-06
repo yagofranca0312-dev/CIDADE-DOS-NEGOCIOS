@@ -1,15 +1,16 @@
 {
   "name": "cidade-dos-negocios",
-  "version": "2.6.0",
+  "version": "2.7.0-alpha.1",
   "private": true,
   "type": "module",
-  "description": "Cidade dos Negócios 2.6.0: economia viva com rivais e jornada empresarial offline",
+  "description": "Cidade dos Negócios 2.7.0: crédito, contratos, riscos financeiros e economia viva offline",
   "scripts": {
     "build": "node tools/build.mjs",
     "test": "node --test tests/*.test.mjs",
     "check": "npm run build && npm test",
     "bench:stability": "node tools/benchmark-v241.mjs",
-    "bench:competition": "node tools/benchmark-v260.mjs"
+    "bench:competition": "node tools/benchmark-v260.mjs",
+    "bench:finance": "node tools/benchmark-v270.mjs"
   },
   "engines": {
     "node": ">=22"

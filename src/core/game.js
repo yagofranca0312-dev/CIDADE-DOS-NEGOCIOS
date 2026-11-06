@@ -1,7 +1,7 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.7.0 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.8.0-alpha.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '2.7.0';
+  const VERSION = '2.8.0-alpha.1';
   const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -322,7 +322,7 @@ const CidadeCore = (() => {
   // Journals antigos pertencem à matriz, exceto aporte inicial, que pertence ao grupo.
   function journalBusinessId(state,j){
     if(j.businessId)return j.businessId;
-    return j.memo==='Capital inicial do empreendedor'||['LOAN_DRAW','LOAN_INTEREST','LOAN_LATE_FEE','LOAN_PAYMENT'].includes(transactionKind(j))?null:state.world.business?.id??null;
+    return j.memo==='Capital inicial do empreendedor'||['LOAN_DRAW','LOAN_INTEREST','LOAN_LATE_FEE','LOAN_PAYMENT','LOGISTICS_CD_OPEN','LOGISTICS_CD_DAILY','LOGISTICS_CD_PURCHASE','LOGISTICS_CD_VENDOR_RECEIPT','LOGISTICS_CD_DISPATCH','LOGISTICS_CD_CLEAR','LOGISTICS_CD_RECEIVE','LOGISTICS_CD_FEE','LOGISTICS_CD_WASTE'].includes(transactionKind(j))?null:state.world.business?.id??null;
   }
   function product(b,id) {const p=b.products.find(x=>x.id===(id??'base'));assert(p,'Produto não cadastrado');return p;}
   function promotionDiscount(b,p,date){
@@ -375,6 +375,7 @@ const CidadeCore = (() => {
         p.stockUnits+=line.quantity;p.stockValueCents+=line.total;
       }
       syncTotals(b);
+      if(draft.economy.logistics)for(const line of order.items)logisticsAddLot(draft,b.id,b.sector,line.productId,line.quantity,draft.calendar.date);
       order.status='RECEIVED';order.receivedAt=draft.calendar.date;
       journal(draft,`Recebimento ${order.id} em estoque`,[
         {account:'INVENTORY',debit:order.total,credit:0},{account:'IN_TRANSIT',debit:0,credit:order.total}],b.id,'RECEIPT');
@@ -409,6 +410,7 @@ const CidadeCore = (() => {
     assert(Number.isSafeInteger(total)&&Number.isSafeInteger(cost),'Valor da venda excede limite');
     assert(b.sales.length<20000,'Limite de histórico de vendas atingido');
     for(const line of lines){const p=product(b,line.productId);p.stockUnits-=line.quantity;p.stockValueCents-=line.cogs;}
+    logisticsConsumeSale(draft,b,lines);
     b.totalSold+=qtyTotal;syncTotals(b);const id=`vd-${++b.saleSeq}`;
     b.sales.push({id,date:draft.calendar.date,kind,items:lines,total,cogs:cost});
     journal(draft,`Venda ${id} (${kind}): ${lines.map(x=>`${x.quantity} ${x.name}`).join(', ')}`,[
@@ -455,9 +457,10 @@ const CidadeCore = (() => {
     LOAN_PAYABLE:Object.freeze({name:'Principal de financiamento',group:'LIABILITY',normal:'CREDIT'}),
     INTEREST_PAYABLE:Object.freeze({name:'Juros de financiamento a pagar',group:'LIABILITY',normal:'CREDIT'}),
     LOAN_FEES_PAYABLE:Object.freeze({name:'Multas fictícias de financiamento',group:'LIABILITY',normal:'CREDIT'}),
-    CONTRACT_PAYABLE:Object.freeze({name:'Multas de contratos de fornecimento',group:'LIABILITY',normal:'CREDIT'})
+    CONTRACT_PAYABLE:Object.freeze({name:'Multas de contratos de fornecimento',group:'LIABILITY',normal:'CREDIT'}),
+    INTERNAL_CLEARING:Object.freeze({name:'Compensação interna de estoques',group:'ASSET',normal:'DEBIT'})
   });
-  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','PAYROLL_ACCRUAL','PAYROLL_PAYMENT','OPERATING_SETTLEMENT','LOAN_DRAW','LOAN_INTEREST','LOAN_LATE_FEE','LOAN_PAYMENT','CONTRACT_PENALTY','CONTRACT_PAYMENT','UNCLASSIFIED']);
+  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','PAYROLL_ACCRUAL','PAYROLL_PAYMENT','OPERATING_SETTLEMENT','LOAN_DRAW','LOAN_INTEREST','LOAN_LATE_FEE','LOAN_PAYMENT','CONTRACT_PENALTY','CONTRACT_PAYMENT','LOGISTICS_DISPATCH','LOGISTICS_CLEAR','LOGISTICS_RECEIVE','LOGISTICS_SHIP_FEE','LOGISTICS_WASTE','LOGISTICS_PRODUCTION','LOGISTICS_CD_OPEN','LOGISTICS_CD_DAILY','LOGISTICS_CD_PURCHASE','LOGISTICS_CD_VENDOR_RECEIPT','LOGISTICS_CD_DISPATCH','LOGISTICS_CD_CLEAR','LOGISTICS_CD_RECEIVE','LOGISTICS_CD_FEE','LOGISTICS_CD_WASTE','UNCLASSIFIED']);
   function transactionKind(j){
     if(TRANSACTION_KINDS.includes(j.kind))return j.kind;
     if(j.memo==='Capital inicial do empreendedor')return 'CAPITAL';
@@ -613,7 +616,7 @@ const CidadeCore = (() => {
     if(!draft)return null;
     const revenue=balance(draft,'REVENUE'),cogs=balance(draft,'COGS'),expenses=balance(draft,'EXPENSE');
     const taxExpense=balance(draft,'TAX_EXPENSE'),taxPayable=balance(draft,'TAX_PAYABLE');
-    return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),inTransit:balance(draft,'IN_TRANSIT'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),...(draft.economy.financing?{loanPayable:balance(draft,'LOAN_PAYABLE'),interestPayable:balance(draft,'INTEREST_PAYABLE'),loanFeesPayable:balance(draft,'LOAN_FEES_PAYABLE'),contractPayable:balance(draft,'CONTRACT_PAYABLE')}:{}),taxPayable,taxExpense,revenue,cogs,expenses,profit:revenue-cogs-expenses-taxExpense,stock:businesses(draft).reduce((n,b)=>n+b.stockUnits,0),unitPrice:activeBusiness(draft)?.unitPrice??null,units:businesses(draft).length,tick:draft.calendar.tick,city:cityById(activeBusiness(draft)?.cityId||draft.player.cityId)?.name??'—'};
+    return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),inTransit:balance(draft,'IN_TRANSIT'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),...(draft.economy.financing?{loanPayable:balance(draft,'LOAN_PAYABLE'),interestPayable:balance(draft,'INTEREST_PAYABLE'),loanFeesPayable:balance(draft,'LOAN_FEES_PAYABLE'),contractPayable:balance(draft,'CONTRACT_PAYABLE')}:{}),taxPayable,taxExpense,revenue,cogs,expenses,profit:revenue-cogs-expenses-taxExpense,stock:businesses(draft).reduce((n,b)=>n+b.stockUnits,0)+(draft.economy.logistics?.depot?.stock.reduce((n,p)=>n+p.stockUnits,0)||0),unitPrice:activeBusiness(draft)?.unitPrice??null,units:businesses(draft).length,tick:draft.calendar.tick,city:cityById(activeBusiness(draft)?.cityId||draft.player.cityId)?.name??'—'};
   }
   function emptyLegacy(seed) {return {
     schemaVersion:9,worldId:`legacy-${seed}`,revision:0,
@@ -644,6 +647,7 @@ const CidadeCore = (() => {
     const b=activeBusiness(draft);
 
 
+    if(type.startsWith('LOGISTICA.')){handleLogisticsCommand(draft,type,payload);return;}
     if(type==='FISCAL_OP.ATIVAR'){
       const target=businessById(draft,String(payload.businessId||''));
       assert(target,'Estabelecimento não encontrado para rotinas fiscais');
@@ -1200,6 +1204,8 @@ const CidadeCore = (() => {
   }
 
   function day(draft) {
+    logisticsExpireSites(draft);
+    logisticsChargeDepot(draft);
     const units=businesses(draft);
     const season=1+0.13*Math.sin((draft.calendar.tick%365)/365*Math.PI*2);
     const staff=rhEmployees(draft);
@@ -1258,6 +1264,7 @@ const CidadeCore = (() => {
     draft.calendar.tick++;
     draft.calendar.date=dateNext(draft.calendar.date);
     for(const b of units)receiveDueOrders(draft,b);
+    logisticsDue(draft);
     processParalegalDue(draft);
     processFinancingDay(draft);
   }
@@ -2072,6 +2079,7 @@ const CidadeCore = (() => {
     assert(plain(state.world.competitor)&&int(state.world.competitor.priceIndex),'Concorrente inválido');
     validateRivalEconomy(state);
     validateFinancing(state);
+    validateLogistics(state);
     if(state.schemaVersion>=7){
       const regional=state.world.regional;
       assert(plain(regional)&&regional.datasetId===POPULATION_SOURCE.id&&
@@ -2137,7 +2145,8 @@ const CidadeCore = (() => {
         assert(unitStock===b.stockUnits&&unitStock<=100000&&b.unitPrice===product(b,'base').priceCents,'Saldos da unidade inválidos');
         assert(Object.keys(b.promotions).length<=40,'Excesso de promoções');
         for(const [id,pr] of Object.entries(b.promotions))assert(pids.has(id)&&plain(pr)&&[5,10,15].includes(pr.percent)&&isoDate(pr.until),'Promoção inválida');
-        let unitTransit=0;
+        let unitTransit=logisticsRead(state).transfers.filter(t=>t.status==='PENDING'&&t.fromId===b.id)
+          .reduce((n,t)=>n+t.valueCents,0);
         for(const o of b.purchaseOrders){
           assert(o&&['PENDING','RECEIVED'].includes(o.status)&&isoDate(o.date)&&isoDate(o.dueDate)&&o.dueDate>=o.date,'Pedido ou prazo inválido');
           assert(Array.isArray(o.items)&&int(o.total)&&o.items.reduce((n,l)=>n+l.total,0)===o.total,'Itens de compra inválidos');
@@ -2151,7 +2160,11 @@ const CidadeCore = (() => {
         assert(acc('INVENTORY')===unitGoods&&acc('IN_TRANSIT')===unitTransit,'Contabilidade da filial não concilia estoque/trânsito');
       }
       assert(!units.length?state.world.activeBusinessId===null:ids.has(state.world.activeBusinessId),'Unidade ativa inválida');
-      assert(physical===units.reduce((n,x)=>n+x.stockUnits,0)&&goods===inventory&&pending===balance(state,'IN_TRANSIT'),'Estoque consolidado não conciliado');
+      const lg=logisticsRead(state),depotGoods=lg.depot?.stock.reduce((n,p)=>n+p.stockValueCents,0)||0;
+      const depotTransit=lg.depotPurchases.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.total,0)+
+        lg.transfers.filter(t=>t.status==='PENDING'&&t.fromId===LOGISTICS_DEPOT_ID).reduce((n,t)=>n+t.valueCents,0);
+      assert(physical===units.reduce((n,x)=>n+x.stockUnits,0)&&goods+depotGoods===inventory&&
+        pending+depotTransit===balance(state,'IN_TRANSIT'),'Estoque consolidado não conciliado');
       for(const j of state.economy.ledger)if(j.businessId)assert(ids.has(j.businessId),'Lançamento aponta para unidade inexistente');
       for(const e of state.audit.events)if(e.businessId)assert(ids.has(e.businessId),'Evento aponta para unidade inexistente');
       return true;
@@ -2283,10 +2296,11 @@ const CidadeCore = (() => {
     const journals=state.economy.ledger.filter(j=>j.date<=asOf);
     const financeAccounts=['LOAN_PAYABLE','INTEREST_PAYABLE','LOAN_FEES_PAYABLE','CONTRACT_PAYABLE'];
     const amounts=Object.fromEntries(Object.keys(ACCOUNT_CATALOG)
-      .filter(code=>state.economy.financing||!financeAccounts.includes(code))
+      .filter(code=>(state.economy.financing||!financeAccounts.includes(code))&&
+        (state.economy.logistics||code!=='INTERNAL_CLEARING'))
       .map(code=>[code,signedAccount(journals,code)]));
     const unknown=Object.keys(ACCOUNT_CATALOG).length===0?[]:[...new Set(journals.flatMap(j=>j.entries.map(e=>e.account)))].filter(a=>!ACCOUNT_CATALOG[a]);
-    const assets=amounts.CASH+amounts.INVENTORY+amounts.IN_TRANSIT+amounts.RECEIVABLE;
+    const assets=amounts.CASH+amounts.INVENTORY+amounts.IN_TRANSIT+amounts.RECEIVABLE+(amounts.INTERNAL_CLEARING||0);
     const liabilities=amounts.PAYABLE+amounts.TAX_PAYABLE+(amounts.LOAN_PAYABLE||0)+(amounts.INTEREST_PAYABLE||0)+(amounts.LOAN_FEES_PAYABLE||0)+(amounts.CONTRACT_PAYABLE||0),retainedEarnings=amounts.REVENUE-amounts.COGS-amounts.EXPENSE-amounts.TAX_EXPENSE;
     const equity=amounts.CAPITAL+retainedEarnings,difference=assets-liabilities-equity;
     return {asOf,accounts:amounts,assets,liabilities,paidInCapital:amounts.CAPITAL,
@@ -2342,7 +2356,9 @@ const CidadeCore = (() => {
       let physical=0,transit=0;
       for(const b of businesses(state)){
         const inventory=b.products.reduce((n,p)=>n+p.stockValueCents,0);
-        const inTransit=b.purchaseOrders.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.total,0);
+        const inTransit=b.purchaseOrders.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.total,0)+
+          logisticsRead(state).transfers.filter(t=>t.status==='PENDING'&&t.fromId===b.id)
+            .reduce((n,t)=>n+t.valueCents,0);
         const local=journals.filter(j=>journalBusinessId(state,j)===b.id);
         const ledgerInventory=signedAccount(local,'INVENTORY'),ledgerTransit=signedAccount(local,'IN_TRANSIT');
         const ok=inventory===ledgerInventory&&inTransit===ledgerTransit;
@@ -2350,7 +2366,16 @@ const CidadeCore = (() => {
         unitRows.push({id:b.id,inventory,inTransit,ledgerInventory,ledgerTransit,ok});
         physical+=inventory;transit+=inTransit;
       }
-      if(physical!==sheet.accounts.INVENTORY||transit!==sheet.accounts.IN_TRANSIT)errors.push('Estoque consolidado diverge do razão contábil');
+      const lg=logisticsRead(state),depotGoods=lg.depot?.stock.reduce((n,p)=>n+p.stockValueCents,0)||0;
+      const depotTransit=lg.depotPurchases.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.total,0)+
+        lg.transfers.filter(t=>t.status==='PENDING'&&t.fromId===LOGISTICS_DEPOT_ID).reduce((n,t)=>n+t.valueCents,0);
+      if(physical+depotGoods!==sheet.accounts.INVENTORY||transit+depotTransit!==sheet.accounts.IN_TRANSIT||
+        (sheet.accounts.INTERNAL_CLEARING||0)!==0)errors.push('Estoque consolidado, trânsito ou compensação interfilial diverge do razão contábil');
+      if(lg.depot)unitRows.push({id:LOGISTICS_DEPOT_ID,inventory:depotGoods,inTransit:depotTransit,
+        ledgerInventory:signedAccount(journals.filter(j=>journalBusinessId(state,j)===null),'INVENTORY'),
+        ledgerTransit:signedAccount(journals.filter(j=>journalBusinessId(state,j)===null),'IN_TRANSIT'),
+        ok:depotGoods===signedAccount(journals.filter(j=>journalBusinessId(state,j)===null),'INVENTORY')&&
+          depotTransit===signedAccount(journals.filter(j=>journalBusinessId(state,j)===null),'IN_TRANSIT')});
     }
     return {asOf,balanced:sheet.balanced,statementDifference:sheet.difference,
       snapshotAvailable,unitRows,unknownAccounts:sheet.unknownAccounts,errors,ok:errors.length===0,
@@ -2588,6 +2613,6 @@ const CidadeCore = (() => {
     return {state,migrated,message:migrated?'Carreira migrada para V1.9: histórico preservado; cenário tributário desativado até confirmação explícita.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({creditReport,financialCommitmentsReport,journeyGuide,reputationReport,dilemmaReport,DILEMMA_DEFINITIONS,rivalMarketReport,RIVAL_EVENT_TYPES,progressionReport,operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({logisticsReport,logisticsRouteQuote,logisticsSuggestions,creditReport,financialCommitmentsReport,journeyGuide,reputationReport,dilemmaReport,DILEMMA_DEFINITIONS,rivalMarketReport,RIVAL_EVENT_TYPES,progressionReport,operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();

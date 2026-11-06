@@ -73,6 +73,8 @@
         '/2.000 un. · despesa diária '+Core.money(report.depotDailyCents):
       'Nenhum CD ativo. Exige duas lojas, custo de abertura e manutenção fictícios.');
     $('logistics-depot-open').disabled=units.length<2||!!report.depot;
+    setText('logistics-depot-payable','Manutenção do CD já reconhecida a pagar: '+Core.money(report.depotPayableCents||0)+'. Pagamento não repete despesa.');
+    $('logistics-depot-settle').disabled=!report.depot||!report.depotPayableCents||Core.overview(state).cash<report.depotPayableCents;
     setCreditOptions('logistics-depot-unit',units.map(b=>[b.id,b.id+' · '+Core.SECTORS[b.sector].name]));
     logisticsRefillProducts('logistics-depot-unit','logistics-depot-product');
     $('logistics-depot-buy').disabled=!report.depot||!units.length;
@@ -141,6 +143,11 @@
       if(confirm('Instalar CD em '+Core.cityById(cityId).name+
         '? R$ 800 de implantação e R$ 8,50 por dia, somente no jogo.'))
         commit('LOGISTICA.CD.ABRIR',{cityId});
+    });
+    $('logistics-depot-settle').addEventListener('click',()=>{
+      const amountCents=Core.logisticsReport(state).depotPayableCents||0;
+      if(amountCents>0&&confirm('Quitar '+Core.money(amountCents)+' de manutenção já registrada como obrigação do CD? A despesa NÃO será repetida.'))
+        commit('LOGISTICA.CD.PAGAR_DESPESAS',{amountCents});
     });
     $('logistics-depot-unit').addEventListener('change',()=>logisticsRefillProducts('logistics-depot-unit','logistics-depot-product'));
     $('logistics-depot-buy-form').addEventListener('submit',e=>{

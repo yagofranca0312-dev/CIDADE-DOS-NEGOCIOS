@@ -1,0 +1,48 @@
+name: Validar candidata V2.7 de Crédito e Contratos
+on:
+  push:
+    branches:
+      - feature/v2.7.0-credito-contratos-riscos
+permissions:
+  contents: write
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Reconstruir HTML offline
+        run: npm run build
+      - name: Registrar HTML reproduzível na candidata
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet -- index.html; then
+            git add index.html
+            git commit -m "build(v2.7): sincronizar HTML offline [skip ci]"
+            git push origin HEAD:feature/v2.7.0-credito-contratos-riscos
+          fi
+      - name: Testes de regressão e V2.7
+        run: npm test
+      - name: Benchmark histórico V2.4.1
+        run: npm run bench:stability
+      - name: Benchmark concorrência V2.6
+        run: npm run bench:competition
+      - name: Benchmark de crédito, contratos e risco V2.7
+        run: npm run bench:finance
+      - name: Checksum do HTML final
+        run: sha256sum index.html
+      - name: Publicar pacote candidato (não homologado)
+        uses: actions/upload-artifact@v4
+        with:
+          name: CIDADE_DOS_NEGOCIOS_V270_ALPHA1_HTML_OFFLINE
+          path: |
+            index.html
+            docs/V270_CREDITO_CONTRATOS_RISCOS.md
+            README.md
+          if-no-files-found: error

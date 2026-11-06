@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10243E">
   <meta name="description" content="Cidade dos Negócios 1, simulador empresarial brasileiro offline, em um único HTML.">
-  <title>Cidade dos Negócios 1 · v2.7.0</title>
+  <title>Cidade dos Negócios 1 · v2.8.0-alpha.1</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2080%2080%22%3E%3Crect%20width%3D%2280%22%20height%3D%2280%22%20rx%3D%2214%22%20fill%3D%22%2310243e%22%2F%3E%3Cpath%20d%3D%22M9%2069V39L24%2031V69H9ZM28%2069V20L43%2014V69H28ZM47%2069V43L62%2034V69H47Z%22%20fill%3D%22%2351a9df%22%2F%3E%3Cpath%20d%3D%22m8%2060%2022-23%2012%209L70%2013m-14%200%2015-2-2%2016%22%20stroke%3D%22%23e9ad50%22%20stroke-width%3D%226%22%20fill%3D%22none%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
   <style>
 :root{color-scheme:dark;--navy:#10243e;--deep:#091629;--panel:#142b45;--panelhi:#193451;--blue:#51a9df;--gold:#e9ad50;--green:#51bd83;--text:#f4f7fb;--muted:#b8c6d8;--stroke:#2b4860;--red:#ef7070;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:15px}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#091629;color:var(--text)}[hidden]{display:none!important}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.46;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f4d49a;outline-offset:2px}a{color:#9dcee9}h1,h2,h3,p{margin-top:0}h1,h2,h3{letter-spacing:-.025em}h3{font-size:1.12rem;margin-bottom:0}p{line-height:1.65}small,.muted,.field-hint{color:var(--muted)}.field-hint{font-size:.83rem;margin:10px 0 19px;line-height:1.45}.hint-bottom{margin-top:26px}.status-text{font-size:.87rem;margin:13px 0 0;min-height:1.25rem}.overline,.eyebrow,.card-kicker,.nav-label{font-size:.7rem;letter-spacing:.16em;font-weight:800;color:#a3b7cb}.eyebrow-dot,.online-dot{display:inline-block;background:var(--green);width:7px;height:7px;border-radius:50%;margin-right:7px}.btn{border:1px solid #466178;border-radius:10px;padding:12px 16px;background:#24415a;color:var(--text);font-size:.89rem;font-weight:750;transition:transform .15s,filter .15s;min-height:44px}.btn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px)}.btn-primary{background:linear-gradient(135deg,#e9ad50,#f3c775);color:#101d2b;border-color:#f4d49a}.btn-outline{background:#14283b;color:#f2f7fb}.btn-big{width:100%;padding:16px 20px;display:flex;justify-content:space-between;margin-top:18px}.full{width:100%}.spaced{margin-top:9px}.tag-soft,.tag-warning{display:inline-block;letter-spacing:.05em;font-weight:800;font-size:.63rem;background:#203e58;color:#a9dafa;border:1px solid #3b617b;border-radius:8px;padding:8px 10px}.tag-warning{color:#f4d49a;background:#3c301d;border-color:#906c39}.brand-icon{filter:drop-shadow(0 9px 28px #0003)}.onboarding{min-height:100vh;display:grid;grid-template-columns:minmax(390px,1fr) minmax(380px,.78fr);gap:clamp(30px,6vw,100px);align-items:center;max-width:1540px;margin:0 auto;padding:45px clamp(24px,6vw,94px);position:relative;overflow:hidden}.onboarding:before{content:"";background:radial-gradient(ellipse at center,#193e6077,transparent 70%);position:absolute;inset:0 0 0 -30%;pointer-events:none}.onboarding-art{position:absolute;inset:0;opacity:.14;pointer-events:none;overflow:hidden}.skyline{display:flex;align-items:end;gap:18px;position:absolute;bottom:0;left:-2%;height:63%;width:110%;transform:skewY(-7deg)}.skyline i{display:block;flex:1;background:linear-gradient(180deg,#7dbde3,#1d5070);height:65%;border-radius:5px 5px 0 0;box-shadow:inset 10px 0 0 #0a223a}.skyline i:nth-child(2n){height:78%}.skyline i:nth-child(3n){height:44%}.skyline i:nth-child(5n){height:95%}.intro-copy{position:relative;z-index:1}.intro-copy .eyebrow{color:#9ddfe2;margin-bottom:48px}.brand-intro{margin-bottom:15px}.intro-copy h1{font-size:clamp(3.3rem,6vw,6.8rem);line-height:.92;margin-bottom:20px;font-weight:900}.intro-copy h1 em{font-style:normal;background:linear-gradient(120deg,#f6ce82,#d89d41);background-clip:text;-webkit-background-clip:text;color:transparent}.hero-subtitle{font-size:1.55rem;font-weight:700;margin:29px 0 10px}.intro-desc{font-size:1.02rem;color:#c7d3df;max-width:540px}.intro-features{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}.intro-features span{padding:10px 12px;border:1px solid #395875;background:#12304aab;border-radius:8px;font-size:.78rem;color:#b9d6e6}.fine-print{font-size:.72rem;color:#8fa8bb;margin-top:40px}.start-card{position:relative;z-index:1;background:linear-gradient(158deg,#1a3652 0%,#102339 100%);padding:clamp(25px,4vw,42px);border:1px solid #3c5970;box-shadow:0 24px 90px #0007;border-radius:20px}.card-kicker{color:var(--gold);margin-bottom:13px}.start-card h2{font-size:2rem;line-height:1.1;margin-bottom:12px}.start-card label,.panel label{display:block;font-size:.78rem;color:#c5d6e6;font-weight:700;margin:18px 0 7px}.start-card input,.start-card select,.panel input,.panel select,.topbar select{width:100%;background:#0c2136;border:1px solid #3c5a71;color:var(--text);border-radius:9px;min-height:42px;padding:10px 13px;outline-color:var(--gold)}.text-action{border:0;color:#b7d9f5;background:transparent;font-size:.86rem;margin:15px auto 0;display:block;padding:10px}.game-shell{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:100vh}.sidebar{background:linear-gradient(175deg,#0b1b2e,#10243e);border-right:1px solid #203e59;display:flex;flex-direction:column;padding:27px 15px 18px;position:sticky;top:0;height:100vh}.sidebar-brand{display:flex;gap:10px;align-items:center;padding:0 8px 32px}.brand-mark{width:43px;height:43px;border-radius:10px;background:linear-gradient(135deg,#e2a450,#f0c77d);color:#092037;display:grid;place-items:center;font-size:2rem}.sidebar-brand strong{display:block;font-size:.9rem;letter-spacing:.065em;line-height:1.15}.sidebar-brand small{font-size:.59rem;letter-spacing:.16em;color:var(--gold)}.nav-label{padding:0 14px 12px;color:#7896b4}.nav-items{display:grid;gap:5px}.nav-item{width:100%;background:none;border:1px solid transparent;color:#b6c7d8;padding:13px 14px;border-radius:9px;text-align:left;font-weight:650;display:flex;align-items:center;gap:14px;font-size:.88rem}.nav-item span{font-size:1.17rem;width:24px;text-align:center}.nav-item.active{background:#244360;color:#fff;border-color:#3a6080;box-shadow:inset 3px 0 0 var(--gold)}.nav-item:hover{background:#1a3852}.sidebar-bottom{margin-top:auto;padding:17px 11px 0;border-top:1px solid #29425a;font-size:.69rem;letter-spacing:.1em;font-weight:800;color:#bdd4e2}.sidebar-bottom small{display:block;letter-spacing:0;font-weight:400;margin:8px 0 0 16px}.main-pane{min-width:0;display:flex;flex-direction:column}.topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px clamp(16px,3vw,39px);border-bottom:1px solid #28435c;background:#0e2035}.topbar h2{font-size:1.4rem;margin:3px 0 0}.topbar h2 span{color:#95adbf;font-weight:500}.topbar-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.compact-label{font-size:.72rem;color:var(--muted)}.topbar select{width:auto;max-width:195px;font-size:.78rem}.date-box{background:#152f47;border:1px solid #34516c;border-radius:9px;padding:7px 15px;min-width:115px}.date-box small{display:block;font-size:.57rem;letter-spacing:.1em}.date-box strong{display:block;font-size:.93rem;margin-top:3px;font-variant-numeric:tabular-nums}.world-warning{padding:10px clamp(16px,3vw,39px);border-bottom:1px solid #4b492d;background:#2e2b1d;color:#f6d69b;font-size:.76rem;font-weight:600}.legal-warning{background:#132b3a;border-color:#24485b;color:#a7c9d9}.content{padding:30px clamp(16px,3vw,39px);max-width:1720px;width:100%;margin:0 auto;flex:1}.page-title{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:25px}.page-title h1{font-size:clamp(1.5rem,2.6vw,2.2rem);margin:7px 0 2px}.page-title p{color:#a9bacb;font-size:.85rem;margin:0}.build-badge{border:1px solid #3d5a71;color:#a4cce4;padding:8px 11px;border-radius:8px;font-size:.72rem;white-space:nowrap}.stats-bar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:20px}.stat,.panel{border:1px solid #304c63;border-radius:13px;background:linear-gradient(155deg,#17314a,#10273e);box-shadow:0 10px 22px #0002}.stat{padding:21px 20px}.stat span{display:block;font-size:.67rem;letter-spacing:.085em;color:#afc0d2;font-weight:700}.stat strong{display:block;font-size:clamp(1.3rem,2vw,2rem);margin:10px 0 3px;font-variant-numeric:tabular-nums;letter-spacing:-.035em;white-space:nowrap}.stat small{font-size:.68rem}.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(280px,.83fr);gap:17px}.right-column{display:grid;gap:17px;align-content:start}.panel{padding:23px}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.map-panel{padding:0;overflow:hidden;align-self:start}.map-panel .panel-heading{padding:23px 23px 0;margin-bottom:0}.map-panel .overline{margin-bottom:6px}.map-canvas{min-height:350px;background:radial-gradient(ellipse at 55% 37%,#265372 0%,#163751 54%,#0d2436 100%);overflow:hidden}.map-canvas svg{display:block;width:100%;height:auto;min-height:320px;max-height:480px;touch-action:manipulation}.map-canvas svg [data-lot]{cursor:pointer;outline:none;transition:filter .15s}.map-canvas svg [data-lot]:hover,.map-canvas svg [data-lot]:focus{filter:brightness(1.5)}.map-legend{display:flex;gap:20px;flex-wrap:wrap;font-size:.71rem;color:#b8cadd;padding:0 23px 12px}.legend-color{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}.legend-color.lot{background:#537d69}.legend-color.own{background:#e9ad50}.legend-color.sel{background:#51a9df}.map-disclaimer{font-size:.68rem;color:#91b0c0;padding:0 23px 15px;margin:0}.big-number{font-size:2.1rem;font-weight:850;color:var(--gold);letter-spacing:-.06em;margin:12px 0}.event-list{display:grid;gap:13px;max-height:320px;overflow:auto}.event-item{border-bottom:1px solid #264259;padding-bottom:10px;display:flex;gap:10px;align-items:start}.event-item:last-child{border-bottom:0}.event-dot{background:var(--blue);width:7px;height:7px;border-radius:50%;flex:none;margin-top:7px}.event-item p{margin:0;color:#d0dde8;font-size:.81rem;line-height:1.45}.event-item small{display:block;margin-top:4px;font-size:.67rem;color:#8eabc0}.view{min-height:370px}.detail-list,.finance-list{display:grid;grid-template-columns:1fr auto;gap:15px;margin:19px 0}.detail-list dt,.finance-list dt{color:#bed0df}.detail-list dd,.finance-list dd{margin:0;text-align:right;font-weight:800;font-variant-numeric:tabular-nums}.finance-list{border-top:1px solid #3b586c;padding-top:17px}.finance-list dt,.finance-list dd{font-size:.85rem}.finance-list .emphasis{color:var(--gold);font-weight:800;font-size:1rem}.company-emblem{display:flex;align-items:center;gap:16px;background:#102c40;border:1px solid #31526b;border-radius:12px;padding:16px}.company-emblem>span{font-size:2.4rem}.company-emblem h3{margin-bottom:3px}.company-emblem p{margin:0}.button-stack{display:grid;gap:10px;margin:20px 0}.fiscal-panel{display:flex;gap:24px;max-width:920px}.fiscal-icon{font-size:3.2rem;font-weight:850;color:var(--gold)}.turnbar{margin-top:23px;background:linear-gradient(125deg,#173c58,#132b44);border:1px solid #3d6480;border-radius:13px;padding:20px 25px;display:flex;justify-content:space-between;align-items:center;gap:20px}.turnbar h3{margin:6px 0}.turnbar p{font-size:.77rem;color:#a5bfd2;margin:0}.turn-actions{display:flex;gap:8px;flex-wrap:wrap}.game-footer{padding:19px clamp(16px,3vw,39px);display:flex;justify-content:space-between;gap:10px;font-size:.63rem;letter-spacing:.08em;color:#91aabd;border-top:1px solid #213e56}.toast{position:fixed;bottom:25px;right:25px;max-width:min(90vw,460px);z-index:99;pointer-events:none;background:#1b3a52;border:1px solid #5e869e;box-shadow:0 15px 45px #0009;color:#fff;padding:14px 19px;border-radius:11px;font-size:.82rem;transform:translateY(140px);opacity:0;transition:transform .25s,opacity .25s}.toast.visible{transform:none;opacity:1}.toast.error{border-color:var(--red);background:#4c2a34}@media(max-width:1180px){.game-shell{grid-template-columns:190px minmax(0,1fr)}.dashboard-grid{grid-template-columns:1fr}.stats-bar{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar{padding-left:10px;padding-right:10px}}@media(max-width:800px){.onboarding{grid-template-columns:1fr;gap:25px;padding:24px}.intro-copy .eyebrow{margin-bottom:20px}.intro-copy h1{font-size:3.8rem}.fine-print{margin-top:14px}.game-shell{display:block}.sidebar{position:relative;height:auto;padding:14px}.sidebar-brand{padding-bottom:12px}.nav-label,.sidebar-bottom{display:none}.nav-items{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px}.nav-item{width:auto;flex:none;padding:9px 11px;font-size:.75rem;gap:6px}.nav-item span{font-size:1rem;width:18px}.topbar{align-items:flex-start;flex-wrap:wrap}.topbar-controls{width:100%}.compact-label{display:none}.page-title{align-items:start}.turnbar{flex-direction:column;align-items:stretch}.turn-actions{width:100%}.turn-actions .btn{flex:1}.game-footer{flex-direction:column}}@media(max-width:480px){.stat{padding:15px 12px}.stat strong{font-size:1.16rem}.stat small{font-size:.6rem}.stats-bar{gap:8px}.panel{padding:17px}.map-panel .panel-heading{padding:16px 16px 0}.map-legend{padding:0 16px 12px}.map-disclaimer{padding:0 16px 12px}.topbar-controls select{max-width:140px}.page-title{flex-direction:column}.game-footer{font-size:.59rem}.fiscal-panel{flex-direction:column;gap:10px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
@@ -874,7 +874,7 @@ button.v221-hud-cell:hover{background:#1e4254}
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◈ Gestão empresarial</span><span>◈ 30 cidades brasileiras</span><span>◈ Jogue offline</span></div>
       <p class="v21-art-disclaimer">Arte promocional conceitual · As cidades e os lotes do jogo são representações fictícias.</p>
-      <p class="fine-print"><span id="intro-version">v2.7.0</span> — simulador empresarial offline. Dados oficiais e estimativas fictícias identificados.</p>
+      <p class="fine-print"><span id="intro-version">v2.8.0-alpha.1</span> — simulador empresarial offline. Dados oficiais e estimativas fictícias identificados.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -922,7 +922,7 @@ button.v221-hud-cell:hover{background:#1e4254}
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
       <details class="world-warning legal-warning v21-legal-note"><summary>ⓘ SIMULAÇÃO EDUCATIVA <span>Dados econômicos simulados e tributos não oficiais · ver limites</span></summary><p>Indicadores econômicos do jogo são fictícios, salvo população e PIB identificados como oficiais. Cenários tributários não são apuração legal. Regras sem cobertura não representam isenção nem imposto zero.</p></details>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v2.7.0</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v2.8.0-alpha.1</span></div>
         <section id="stats-bar" class="stats-bar v21-hud" aria-label="Indicadores financeiros e operacionais do grupo">
           <div class="stat stat--cash"><span><i class="v21-stat-icon" aria-hidden="true">◇</i> CAIXA DO GRUPO</span><strong id="kpi-cash">—</strong><small>Saldo disponível · não é receita</small></div>
           <div class="stat stat--revenue"><span><i class="v21-stat-icon" aria-hidden="true">↗</i> RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Vendas realizadas · toda a carreira</small></div>
@@ -1132,7 +1132,7 @@ button.v221-hud-cell:hover{background:#1e4254}
             <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Produto</th><th>Estoque</th><th>Custo un.</th><th>Venda un.</th><th>Vendido*</th><th>Receita*</th><th>CMV*</th></tr></thead><tbody id="catalog-rows"></tbody></table></div>
             <p class="field-hint">* Desempenho por produto registrado a partir desta edição. Vendas antigas continuam preservadas no total contábil, sem distribuição fictícia entre SKUs.</p>
           </article></div></section>
-<section data-view="administrativo" class="view" hidden><div class="view-toolbar"><span>DEPARTAMENTOS ADMINISTRATIVOS</span><span class="toolbar-hint">Gestão financeira, contábil e fiscal da rede.</span></div><nav class="v23-subnav" role="tablist" aria-label="Departamentos administrativos"><button type="button" role="tab" class="v23-subtab active" data-section-tab="administrativo:financas" id="v23-tab-administrativo-financas" aria-controls="v23-pane-administrativo-financas" aria-selected="true" tabindex="0">Finanças</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:rh-dp" id="v23-tab-administrativo-rh-dp" aria-controls="v23-pane-administrativo-rh-dp" aria-selected="false" tabindex="-1">RH / DP</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:contabilidade" id="v23-tab-administrativo-contabilidade" aria-controls="v23-pane-administrativo-contabilidade" aria-selected="false" tabindex="-1">Contabilidade</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:fiscal" id="v23-tab-administrativo-fiscal" aria-controls="v23-pane-administrativo-fiscal" aria-selected="false" tabindex="-1">Fiscal</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:paralegal" id="v23-tab-administrativo-paralegal" aria-controls="v23-pane-administrativo-paralegal" aria-selected="false" tabindex="-1">Paralegal</button></nav><div class="admin-shared-filters" id="admin-shared-filters" aria-label="Filtros de Finanças e Contabilidade"><article class="panel finance-filters">
+<section data-view="administrativo" class="view" hidden><div class="view-toolbar"><span>DEPARTAMENTOS ADMINISTRATIVOS</span><span class="toolbar-hint">Gestão financeira, contábil e fiscal da rede.</span></div><nav class="v23-subnav" role="tablist" aria-label="Departamentos administrativos"><button type="button" role="tab" class="v23-subtab active" data-section-tab="administrativo:financas" id="v23-tab-administrativo-financas" aria-controls="v23-pane-administrativo-financas" aria-selected="true" tabindex="0">Finanças</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:logistica" id="v23-tab-administrativo-logistica" aria-controls="v23-pane-administrativo-logistica" aria-selected="false" tabindex="-1">Logística</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:rh-dp" id="v23-tab-administrativo-rh-dp" aria-controls="v23-pane-administrativo-rh-dp" aria-selected="false" tabindex="-1">RH / DP</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:contabilidade" id="v23-tab-administrativo-contabilidade" aria-controls="v23-pane-administrativo-contabilidade" aria-selected="false" tabindex="-1">Contabilidade</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:fiscal" id="v23-tab-administrativo-fiscal" aria-controls="v23-pane-administrativo-fiscal" aria-selected="false" tabindex="-1">Fiscal</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:paralegal" id="v23-tab-administrativo-paralegal" aria-controls="v23-pane-administrativo-paralegal" aria-selected="false" tabindex="-1">Paralegal</button></nav><div class="admin-shared-filters" id="admin-shared-filters" aria-label="Filtros de Finanças e Contabilidade"><article class="panel finance-filters">
             <div class="panel-heading"><h3>Consulta por período · Finanças e Contabilidade</h3><span class="tag-soft">M11 · NÃO ALTERA A CARREIRA</span></div>
             <div class="filter-fields">
               <div><label for="finance-scope">Estabelecimento ou grupo</label><select id="finance-scope"><option value="all">Grupo consolidado</option></select></div>
@@ -1250,6 +1250,88 @@ button.v221-hud-cell:hover{background:#1e4254}
             <div id="strategy-risks" class="strategy-risks" aria-live="polite"></div>
             <p class="field-hint">Ponto de equilíbrio estimado = despesa operacional fixa diária ÷ margem de contribuição média do mix, sem impostos. Capital de giro gerencial = caixa + estoque + trânsito + recebíveis − obrigações. A previsão respeita estoque atual e entregas já pagas; reconhece folha futura estimada da unidade, mas não projeta novos tributos, contratações, compras, crédito, vendas das demais unidades ou alterações futuras da concorrência. O caixa após pagamentos é apenas um teste hipotético. Saldo positivo não é promessa de liquidez.</p>
           </article></details></div>
+
+<div class="v23-subpane" id="v23-pane-administrativo-logistica" role="tabpanel" data-section-pane="administrativo:logistica" aria-labelledby="v23-tab-administrativo-logistica" hidden>
+ <div class="view-toolbar"><span>LOGÍSTICA · REDE DE UNIDADES</span><span class="tag-soft">V2.8 · OPERAÇÕES FICTÍCIAS</span></div>
+ <article class="panel spaced" aria-labelledby="logistics-overview-title">
+  <div class="panel-heading"><h3 id="logistics-overview-title">Rede, mercadorias e movimentação física</h3><span class="tag-soft">SEM FATURAMENTO ENTRE FILIAIS</span></div>
+  <p class="field-hint">Remanejamento entre empresas e centro de distribuição: baixa na origem → estoque em trânsito → entrada no destino. O estoque mantém valor contábil; só o frete gera despesa. Toda distância exibida é <strong>índice abstrato de jogo, não quilômetros nem tempo rodoviário real</strong>. Transferências dependem de confirmação.</p>
+  <dl class="finance-list" id="logistics-summary"></dl>
+  <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Instalação</th><th>Cidade</th><th>Estoque (un.)</th><th>Valor contábil</th></tr></thead><tbody id="logistics-sites"></tbody></table></div>
+  <form id="logistics-transfer-form" class="finance-filters">
+   <h4>Programar transferência interna</h4>
+   <div class="dashboard-grid">
+    <label>Origem<select id="logistics-transfer-from" required></select></label>
+    <label>Destino<select id="logistics-transfer-to" required></select></label>
+    <label>Produto / setor<select id="logistics-transfer-product" required></select></label>
+    <label>Quantidade<input id="logistics-transfer-quantity" type="number" min="1" max="250" value="10" required></label>
+   </div>
+   <p id="logistics-route-preview" class="field-hint" aria-live="polite">Selecione origem, destino, produto e quantidade.</p>
+   <button type="submit" class="btn btn-primary" id="logistics-transfer-submit">Confirmar e pagar frete fictício</button>
+  </form>
+  <h4>Entregas internas e mercadorias em trânsito</h4>
+  <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Viagem</th><th>Origem → destino</th><th>Mercadoria</th><th>Prazo</th><th>Valor / frete</th><th>Situação</th></tr></thead><tbody id="logistics-trip-rows"></tbody></table></div>
+ </article>
+ <article class="panel spaced" aria-labelledby="logistics-depot-heading">
+  <div class="panel-heading"><h3 id="logistics-depot-heading">Centro de distribuição opcional</h3><span class="tag-soft">CAPACIDADE 2.000 UNIDADES</span></div>
+  <p class="field-hint">Abrir o CD custa R$ 800 fictícios e manter custa R$ 8,50/dia. A ponta com CD tem desconto simulado de 25% sobre o frete daquela rota (não é garantia de economia na rede inteira). Compras consolidadas são pagas pelo caixa e recebidas no CD antes do envio às lojas.</p>
+  <p id="logistics-depot-status" class="field-hint" aria-live="polite"></p>
+  <form id="logistics-depot-open-form" class="finance-filters">
+   <label>Instalar centro em<select id="logistics-depot-city" required></select></label>
+   <button type="submit" class="btn btn-primary" id="logistics-depot-open">Abrir CD simulado</button>
+  </form>
+  <form id="logistics-depot-buy-form" class="finance-filters">
+   <h4>Compra consolidada para o CD</h4>
+   <div class="dashboard-grid">
+    <label>Catálogo da unidade<select id="logistics-depot-unit" required></select></label>
+    <label>Produto<select id="logistics-depot-product" required></select></label>
+    <label>Fornecedor<select id="logistics-depot-supplier"><option value="regional">Distribuidora Regional</option><option value="atacado">Atacado Comercial</option></select></label>
+    <label>Quantidade<input id="logistics-depot-quantity" type="number" min="1" max="200" value="20" required></label>
+   </div>
+   <button type="submit" class="btn btn-outline" id="logistics-depot-buy">Confirmar compra e trânsito ao CD</button>
+  </form>
+  <p class="field-hint">Estoque CD e pedidos são reais para o jogo; o CD não realiza vendas automáticas. É preciso transferir fisicamente às unidades.</p>
+  <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Produto do CD</th><th>Unidades</th><th>Valor</th></tr></thead><tbody id="logistics-depot-stock"></tbody></table></div>
+  <div id="logistics-depot-orders" class="event-list" aria-live="polite"></div>
+ </article>
+ <article class="panel spaced" aria-labelledby="logistics-production-heading">
+  <div class="panel-heading"><h3 id="logistics-production-heading">Produção piloto da padaria</h3><span class="tag-soft">INSUMO → TRANSFORMAÇÃO → ACABADO</span></div>
+  <p class="field-hint">Habilite farinha para a padaria e compre do fornecedor. Cada 1 insumo produz 3 pães, consumindo custo da farinha e R$ 1,20 fictícios de produção. Limite de 25 insumos/dia por padaria. Pães produzidos vencem em 3 dias simulados; bolos recebidos vencem em 5 dias. Estoque histórico anterior não recebe validade retroativa.</p>
+  <label>Padaria da rede<select id="logistics-bakery-unit"></select></label>
+  <div class="filter-action-row"><button type="button" class="btn btn-outline" id="logistics-enable-production">Habilitar farinha</button></div>
+  <form id="logistics-input-buy-form" class="finance-filters">
+   <div class="dashboard-grid">
+    <label>Fornecedor de farinha<select id="logistics-input-supplier"><option value="regional">Regional · 1 dia</option><option value="atacado">Atacado · 3 dias</option></select></label>
+    <label>Comprar farinha (un.)<input id="logistics-input-quantity" type="number" min="1" max="200" value="25" required></label>
+   </div>
+   <button type="submit" class="btn btn-outline" id="logistics-input-buy">Confirmar compra do insumo</button>
+  </form>
+  <form id="logistics-produce-form" class="finance-filters">
+   <label>Consumir farinha (unidades de insumo)<input type="number" id="logistics-input-use" min="1" max="25" value="10" required></label>
+   <button type="submit" class="btn btn-primary" id="logistics-produce">Produzir lote físico e contabilizar custos</button>
+  </form>
+  <p id="logistics-production-status" class="field-hint" aria-live="polite"></p>
+  <h4>Rastreio de validades (apenas lotes novos)</h4>
+  <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Instalação</th><th>Produto</th><th>Quantidade rastreada</th><th>Validade simulada</th></tr></thead><tbody id="logistics-lot-rows"></tbody></table></div>
+ </article>
+ <article class="panel spaced" aria-labelledby="logistics-proposals-heading">
+  <div class="panel-heading"><h3 id="logistics-proposals-heading">Sugestões editáveis e conciliação</h3><span class="tag-soft">SEM COMPRA AUTOMÁTICA</span></div>
+  <p class="field-hint">Propostas usam estoque mínimo e meta atual das lojas; clique para carregar no formulário correspondente, revise quantidade, custo e rota e confirme manualmente. Nenhum gasto nasce de uma sugestão.</p>
+  <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Destino</th><th>Produto</th><th>Proposta</th><th>Ação</th></tr></thead><tbody id="logistics-proposal-rows"></tbody></table></div>
+  <form id="logistics-restock-form" class="finance-filters">
+   <h4>Compra direta proposta (sem execução automática)</h4>
+   <div class="dashboard-grid">
+    <label>Unidade<select id="logistics-restock-unit"></select></label>
+    <label>Produto<select id="logistics-restock-product"></select></label>
+    <label>Fornecedor<select id="logistics-restock-supplier"><option value="regional">Regional</option><option value="atacado">Atacado</option></select></label>
+    <label>Quantidade<input id="logistics-restock-quantity" type="number" min="1" max="200" value="20" required></label>
+   </div>
+   <button type="submit" class="btn btn-outline">Confirmar compra direta</button>
+  </form>
+  <p id="logistics-integrity" class="field-hint" aria-live="polite"></p>
+  <p class="muted">Conferência: estoque físico das unidades e CD + mercadorias em trânsito = ativos do razão, com compensação interfilial zerada. Perdas de validade são despesa uma única vez, nunca CMV de venda interna.</p>
+ </article>
+</div>
 <div class="v23-subpane" id="v23-pane-administrativo-rh-dp" role="tabpanel" data-section-pane="administrativo:rh-dp" aria-labelledby="v23-tab-administrativo-rh-dp" hidden>
  <article class="panel"><div class="panel-heading"><h3>RH/DP · equipe e folha simuladas</h3><span class="tag-soft">V2.4-B · FICTÍCIO</span></div>
  <p class="field-hint">Cadastro de empregados fictícios por unidade. Salários e competências são parâmetros do jogo, sem validade trabalhista ou previdenciária. Não são CLT, FGTS, INSS, eSocial ou obrigações reais. Não informe CPF ou dados pessoais reais.</p>
@@ -1319,16 +1401,16 @@ button.v221-hud-cell:hover{background:#1e4254}
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v2.7.0</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v2.8.0-alpha.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>
   <div class="toast" id="toast" aria-live="polite" role="status"></div>
   <script>
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.7.0 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.8.0-alpha.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '2.7.0';
+  const VERSION = '2.8.0-alpha.1';
   const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -1649,7 +1731,7 @@ const CidadeCore = (() => {
   // Journals antigos pertencem à matriz, exceto aporte inicial, que pertence ao grupo.
   function journalBusinessId(state,j){
     if(j.businessId)return j.businessId;
-    return j.memo==='Capital inicial do empreendedor'||['LOAN_DRAW','LOAN_INTEREST','LOAN_LATE_FEE','LOAN_PAYMENT'].includes(transactionKind(j))?null:state.world.business?.id??null;
+    return j.memo==='Capital inicial do empreendedor'||['LOAN_DRAW','LOAN_INTEREST','LOAN_LATE_FEE','LOAN_PAYMENT','LOGISTICS_CD_OPEN','LOGISTICS_CD_DAILY','LOGISTICS_CD_PURCHASE','LOGISTICS_CD_VENDOR_RECEIPT','LOGISTICS_CD_DISPATCH','LOGISTICS_CD_CLEAR','LOGISTICS_CD_RECEIVE','LOGISTICS_CD_FEE','LOGISTICS_CD_WASTE'].includes(transactionKind(j))?null:state.world.business?.id??null;
   }
   function product(b,id) {const p=b.products.find(x=>x.id===(id??'base'));assert(p,'Produto não cadastrado');return p;}
   function promotionDiscount(b,p,date){
@@ -1702,6 +1784,7 @@ const CidadeCore = (() => {
         p.stockUnits+=line.quantity;p.stockValueCents+=line.total;
       }
       syncTotals(b);
+      if(draft.economy.logistics)for(const line of order.items)logisticsAddLot(draft,b.id,b.sector,line.productId,line.quantity,draft.calendar.date);
       order.status='RECEIVED';order.receivedAt=draft.calendar.date;
       journal(draft,`Recebimento ${order.id} em estoque`,[
         {account:'INVENTORY',debit:order.total,credit:0},{account:'IN_TRANSIT',debit:0,credit:order.total}],b.id,'RECEIPT');
@@ -1736,6 +1819,7 @@ const CidadeCore = (() => {
     assert(Number.isSafeInteger(total)&&Number.isSafeInteger(cost),'Valor da venda excede limite');
     assert(b.sales.length<20000,'Limite de histórico de vendas atingido');
     for(const line of lines){const p=product(b,line.productId);p.stockUnits-=line.quantity;p.stockValueCents-=line.cogs;}
+    logisticsConsumeSale(draft,b,lines);
     b.totalSold+=qtyTotal;syncTotals(b);const id=`vd-${++b.saleSeq}`;
     b.sales.push({id,date:draft.calendar.date,kind,items:lines,total,cogs:cost});
     journal(draft,`Venda ${id} (${kind}): ${lines.map(x=>`${x.quantity} ${x.name}`).join(', ')}`,[
@@ -1782,9 +1866,10 @@ const CidadeCore = (() => {
     LOAN_PAYABLE:Object.freeze({name:'Principal de financiamento',group:'LIABILITY',normal:'CREDIT'}),
     INTEREST_PAYABLE:Object.freeze({name:'Juros de financiamento a pagar',group:'LIABILITY',normal:'CREDIT'}),
     LOAN_FEES_PAYABLE:Object.freeze({name:'Multas fictícias de financiamento',group:'LIABILITY',normal:'CREDIT'}),
-    CONTRACT_PAYABLE:Object.freeze({name:'Multas de contratos de fornecimento',group:'LIABILITY',normal:'CREDIT'})
+    CONTRACT_PAYABLE:Object.freeze({name:'Multas de contratos de fornecimento',group:'LIABILITY',normal:'CREDIT'}),
+    INTERNAL_CLEARING:Object.freeze({name:'Compensação interna de estoques',group:'ASSET',normal:'DEBIT'})
   });
-  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','PAYROLL_ACCRUAL','PAYROLL_PAYMENT','OPERATING_SETTLEMENT','LOAN_DRAW','LOAN_INTEREST','LOAN_LATE_FEE','LOAN_PAYMENT','CONTRACT_PENALTY','CONTRACT_PAYMENT','UNCLASSIFIED']);
+  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','PAYROLL_ACCRUAL','PAYROLL_PAYMENT','OPERATING_SETTLEMENT','LOAN_DRAW','LOAN_INTEREST','LOAN_LATE_FEE','LOAN_PAYMENT','CONTRACT_PENALTY','CONTRACT_PAYMENT','LOGISTICS_DISPATCH','LOGISTICS_CLEAR','LOGISTICS_RECEIVE','LOGISTICS_SHIP_FEE','LOGISTICS_WASTE','LOGISTICS_PRODUCTION','LOGISTICS_CD_OPEN','LOGISTICS_CD_DAILY','LOGISTICS_CD_PURCHASE','LOGISTICS_CD_VENDOR_RECEIPT','LOGISTICS_CD_DISPATCH','LOGISTICS_CD_CLEAR','LOGISTICS_CD_RECEIVE','LOGISTICS_CD_FEE','LOGISTICS_CD_WASTE','UNCLASSIFIED']);
   function transactionKind(j){
     if(TRANSACTION_KINDS.includes(j.kind))return j.kind;
     if(j.memo==='Capital inicial do empreendedor')return 'CAPITAL';
@@ -1940,7 +2025,7 @@ const CidadeCore = (() => {
     if(!draft)return null;
     const revenue=balance(draft,'REVENUE'),cogs=balance(draft,'COGS'),expenses=balance(draft,'EXPENSE');
     const taxExpense=balance(draft,'TAX_EXPENSE'),taxPayable=balance(draft,'TAX_PAYABLE');
-    return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),inTransit:balance(draft,'IN_TRANSIT'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),...(draft.economy.financing?{loanPayable:balance(draft,'LOAN_PAYABLE'),interestPayable:balance(draft,'INTEREST_PAYABLE'),loanFeesPayable:balance(draft,'LOAN_FEES_PAYABLE'),contractPayable:balance(draft,'CONTRACT_PAYABLE')}:{}),taxPayable,taxExpense,revenue,cogs,expenses,profit:revenue-cogs-expenses-taxExpense,stock:businesses(draft).reduce((n,b)=>n+b.stockUnits,0),unitPrice:activeBusiness(draft)?.unitPrice??null,units:businesses(draft).length,tick:draft.calendar.tick,city:cityById(activeBusiness(draft)?.cityId||draft.player.cityId)?.name??'—'};
+    return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),inTransit:balance(draft,'IN_TRANSIT'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),...(draft.economy.financing?{loanPayable:balance(draft,'LOAN_PAYABLE'),interestPayable:balance(draft,'INTEREST_PAYABLE'),loanFeesPayable:balance(draft,'LOAN_FEES_PAYABLE'),contractPayable:balance(draft,'CONTRACT_PAYABLE')}:{}),taxPayable,taxExpense,revenue,cogs,expenses,profit:revenue-cogs-expenses-taxExpense,stock:businesses(draft).reduce((n,b)=>n+b.stockUnits,0)+(draft.economy.logistics?.depot?.stock.reduce((n,p)=>n+p.stockUnits,0)||0),unitPrice:activeBusiness(draft)?.unitPrice??null,units:businesses(draft).length,tick:draft.calendar.tick,city:cityById(activeBusiness(draft)?.cityId||draft.player.cityId)?.name??'—'};
   }
   function emptyLegacy(seed) {return {
     schemaVersion:9,worldId:`legacy-${seed}`,revision:0,
@@ -1971,6 +2056,7 @@ const CidadeCore = (() => {
     const b=activeBusiness(draft);
 
 
+    if(type.startsWith('LOGISTICA.')){handleLogisticsCommand(draft,type,payload);return;}
     if(type==='FISCAL_OP.ATIVAR'){
       const target=businessById(draft,String(payload.businessId||''));
       assert(target,'Estabelecimento não encontrado para rotinas fiscais');
@@ -2527,6 +2613,8 @@ const CidadeCore = (() => {
   }
 
   function day(draft) {
+    logisticsExpireSites(draft);
+    logisticsChargeDepot(draft);
     const units=businesses(draft);
     const season=1+0.13*Math.sin((draft.calendar.tick%365)/365*Math.PI*2);
     const staff=rhEmployees(draft);
@@ -2585,6 +2673,7 @@ const CidadeCore = (() => {
     draft.calendar.tick++;
     draft.calendar.date=dateNext(draft.calendar.date);
     for(const b of units)receiveDueOrders(draft,b);
+    logisticsDue(draft);
     processParalegalDue(draft);
     processFinancingDay(draft);
   }
@@ -2914,6 +3003,473 @@ const CidadeCore = (() => {
       'Financiamento diverge dos saldos reconhecidos no razão.');
   }
 
+
+  // V2.8 — Operações físicas do grupo. Distância é índice simulado, NÃO quilometragem.
+  // Os serviços são opt-in por comando. Saves V2.7 ou anteriores permanecem intactos.
+  const LOGISTICS_DEPOT_ID='CD-1', LOGISTICS_DEPOT_CAPACITY=2000;
+  const LOGISTICS_DEPOT_OPEN_CENTS=80000, LOGISTICS_DEPOT_DAILY_CENTS=850;
+  const LOGISTICS_BAKERY_INPUT='raw-farinha', LOGISTICS_PRODUCTION_MAX=25;
+  const LOGISTICS_SHELF_DAYS=Object.freeze({base:3,'extra-1':5});
+  function logisticsRead(state){
+    return state?.economy?.logistics||{modelVersion:1,seq:0,depot:null,transfers:[],depotPurchases:[],batches:[],production:{},metrics:{fees:0,waste:0,produced:0}};
+  }
+  function logisticsState(draft){
+    if(!draft.economy.logistics)draft.economy.logistics={
+      modelVersion:1,seq:0,depot:null,transfers:[],depotPurchases:[],batches:[],production:{},
+      metrics:{fees:0,waste:0,produced:0}
+    };
+    return draft.economy.logistics;
+  }
+  function logisticsSite(state,id){
+    const lg=logisticsRead(state);
+    if(id===LOGISTICS_DEPOT_ID&&lg.depot)return {id,cityId:lg.depot.cityId,depot:true,location:lg.depot};
+    const b=businessById(state,id);
+    return b?{id,cityId:b.cityId,depot:false,location:b}:null;
+  }
+  function logisticsRouteQuote(state,fromId,toId,quantity=1){
+    const from=logisticsSite(state,fromId),to=logisticsSite(state,toId);
+    assert(from&&to&&from.id!==to.id,'Rota exige duas instalações distintas.');
+    assert(Number.isSafeInteger(quantity)&&quantity>=1&&quantity<=250,'Volume por viagem deve ser de 1 a 250 unidades.');
+    const a=cityById(from.cityId),b=cityById(to.cityId);
+    const ia=CITIES.findIndex(c=>c.id===a.id),ib=CITIES.findIndex(c=>c.id===b.id);
+    // Índice abstrato: NÃO corresponde a km, tempo de viagem nem frete rodoviário real.
+    const distanceUnits=a.id===b.id?0:a.uf===b.uf?8+Math.abs(ia-ib)%12:20+Math.abs(ia-ib)%28;
+    const baseDays=distanceUnits===0?1:Math.min(5,1+Math.floor(distanceUnits/12));
+    const days=Math.max(1,baseDays-((from.depot||to.depot)?1:0));
+    const standardCents=650+distanceUnits*85+quantity*22;
+    const feeCents=(from.depot||to.depot)?Math.round(standardCents*.75):standardCents;
+    return {fromId,toId,originCity:a.name,destinationCity:b.name,
+      distanceUnits,days,quantity,baseFeeCents:standardCents,feeCents,
+      discountCents:standardCents-feeCents,
+      distanceType:'SIMULATED_INDEX_NOT_KM',
+      note:'Índice logístico, custo e prazo exclusivamente simulados; não são distância geográfica ou cotação de frete real.'};
+  }
+  function logisticsProductLocation(draft,site,sector,productId,name,create=false){
+    if(!site.depot){
+      assert(site.location.sector===sector,'Transferência entre setores incompatíveis.');
+      const p=product(site.location,productId);
+      assert(p.name===name,'Produtos distintos não podem ser remanejados pelo mesmo identificador.');
+      return p;
+    }
+    let p=site.location.stock.find(x=>x.sector===sector&&x.productId===productId);
+    if(p)assert(p.name===name,'O CD não aceita misturar produtos distintos com o mesmo código.');
+    if(!p&&create){
+      p={sector,productId,name,stockUnits:0,stockValueCents:0};
+      site.location.stock.push(p);
+    }
+    return p;
+  }
+  function logisticsAddStock(draft,site,sector,productId,name,quantity,valueCents){
+    const p=logisticsProductLocation(draft,site,sector,productId,name,true);
+    assert(p,'Produto de destino inexistente.');
+    assert(p.stockUnits+quantity<=100000,'Capacidade do produto de destino excedida.');
+    p.stockUnits+=quantity;p.stockValueCents+=valueCents;
+    if(!site.depot)syncTotals(site.location);
+  }
+  function logisticsRemoveStock(draft,site,sector,productId,name,quantity){
+    const p=logisticsProductLocation(draft,site,sector,productId,name);
+    assert(p&&p.stockUnits>=quantity,'Estoque da instalação de origem insuficiente.');
+    const valueCents=quantity===p.stockUnits?p.stockValueCents:Math.round(p.stockValueCents*quantity/p.stockUnits);
+    assert(Number.isSafeInteger(valueCents)&&valueCents>=0,'Valor de estoque de origem inválido.');
+    p.stockUnits-=quantity;p.stockValueCents-=valueCents;
+    if(!site.depot)syncTotals(site.location);
+    return valueCents;
+  }
+  function logisticsSiteCapacity(state,site){
+    if(!site.depot){
+      const inbound=logisticsRead(state).transfers.filter(t=>t.status==='PENDING'&&t.toId===site.id).reduce((n,t)=>n+t.quantity,0);
+      const supplierPending=site.location.purchaseOrders.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.items.reduce((x,l)=>x+l.quantity,0),0);
+      return {used:site.location.stockUnits+inbound+supplierPending,capacity:100000};
+    }
+    const lg=logisticsRead(state);
+    const inboundTransfers=lg.transfers.filter(t=>t.status==='PENDING'&&t.toId===LOGISTICS_DEPOT_ID).reduce((n,t)=>n+t.quantity,0);
+    const pendingOrders=lg.depotPurchases.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.quantity,0);
+    return {used:lg.depot.stock.reduce((n,p)=>n+p.stockUnits,0)+inboundTransfers+pendingOrders,
+      capacity:LOGISTICS_DEPOT_CAPACITY};
+  }
+  function logisticsShelfLife(sector,productId){
+    return sector==='padaria'?(LOGISTICS_SHELF_DAYS[productId]||0):0;
+  }
+  function logisticsAddLot(draft,locationId,sector,productId,quantity,receivedAt,expiresAt=null){
+    if(!quantity)return;
+    const days=logisticsShelfLife(sector,productId);
+    if(!days&&!expiresAt)return;
+    const lg=logisticsState(draft);
+    assert(lg.batches.length<30000,'Limite de lotes rastreáveis atingido.');
+    lg.batches.push({id:'lote-'+(++lg.seq),locationId,sector,productId,quantity,
+      receivedAt,expiresAt:expiresAt||addDays(receivedAt,days)});
+  }
+  function logisticsTakeLots(draft,locationId,sector,productId,quantity){
+    const lg=draft.economy.logistics;if(!lg)return [];
+    const sorted=lg.batches.filter(b=>b.locationId===locationId&&b.sector===sector&&b.productId===productId&&b.quantity>0)
+      .sort((a,b)=>a.expiresAt.localeCompare(b.expiresAt)||a.id.localeCompare(b.id));
+    let remaining=quantity;const pieces=[];
+    for(const lot of sorted){
+      const q=Math.min(remaining,lot.quantity);
+      if(q){lot.quantity-=q;pieces.push({quantity:q,expiresAt:lot.expiresAt});remaining-=q;}
+      if(!remaining)break;
+    }
+    lg.batches=lg.batches.filter(x=>x.quantity>0);
+    return pieces;
+  }
+  function logisticsConsumeSale(draft,b,lines){
+    if(!draft.economy.logistics)return;
+    for(const line of lines)logisticsTakeLots(draft,b.id,b.sector,line.productId,line.quantity);
+  }
+  function logisticsWaste(draft,site,sector,productId,name,quantity,label){
+    if(!quantity)return 0;
+    const valueCents=logisticsRemoveStock(draft,site,sector,productId,name,quantity);
+    if(valueCents){
+      journal(draft,'Perda física / validade '+label,[
+        {account:'EXPENSE',debit:valueCents,credit:0},{account:'INVENTORY',debit:0,credit:valueCents}],
+        site.depot?null:site.id,site.depot?'LOGISTICS_CD_WASTE':'LOGISTICS_WASTE');
+      logisticsState(draft).metrics.waste+=valueCents;
+    }
+    event(draft,'LOGISTICA.DESPERDICIO',quantity+' unidade(s) vencidas em '+site.id+'; custo baixado '+money(valueCents)+'.',
+      {siteId:site.id,sector,productId,quantity,valueCents},site.depot?null:site.id);
+    return valueCents;
+  }
+  function logisticsExpireSites(draft){
+    const lg=draft.economy.logistics;if(!lg)return;
+    const due=lg.batches.filter(b=>b.expiresAt<=draft.calendar.date);
+    for(const lot of due){
+      const site=logisticsSite(draft,lot.locationId);
+      assert(site,'Lote perecível aponta para instalação inexistente.');
+      const source=logisticsProductLocation(draft,site,lot.sector,lot.productId,
+        site.depot?site.location.stock.find(p=>p.sector===lot.sector&&p.productId===lot.productId)?.name:
+          product(site.location,lot.productId).name);
+      assert(source&&source.stockUnits>=lot.quantity,'Lote vencido sem estoque físico suficiente.');
+      logisticsWaste(draft,site,lot.sector,lot.productId,source.name,lot.quantity,lot.id);
+    }
+    lg.batches=lg.batches.filter(b=>b.expiresAt>draft.calendar.date);
+  }
+  function logisticsChargeDepot(draft){
+    const depot=draft.economy.logistics?.depot;
+    if(!depot||depot.lastChargedDate===draft.calendar.date)return;
+    const cash=balance(draft,'CASH'),account=cash>=LOGISTICS_DEPOT_DAILY_CENTS?'CASH':'PAYABLE';
+    journal(draft,'Custo diário do CD fictício',[
+      {account:'EXPENSE',debit:LOGISTICS_DEPOT_DAILY_CENTS,credit:0},
+      {account,debit:0,credit:LOGISTICS_DEPOT_DAILY_CENTS}],null,'LOGISTICS_CD_DAILY');
+    depot.lastChargedDate=draft.calendar.date;
+  }
+  function logisticsReceiveTransfer(draft,t){
+    const from=logisticsSite(draft,t.fromId),to=logisticsSite(draft,t.toId);
+    assert(from&&to&&t.status==='PENDING','Viagem inválida para entrega.');
+    const expiredPieces=t.lotPieces.filter(x=>x.expiresAt<=draft.calendar.date);
+    const loss=expiredPieces.reduce((n,x)=>n+x.quantity,0);
+    let remainingValue=t.valueCents;
+    if(loss){
+      const waste=loss===t.quantity?t.valueCents:Math.min(t.valueCents-1,Math.round(t.valueCents*loss/t.quantity));
+      if(waste){
+        journal(draft,'Perda perecível durante transporte '+t.id,[
+          {account:'EXPENSE',debit:waste,credit:0},{account:'IN_TRANSIT',debit:0,credit:waste}],
+          from.depot?null:from.id,from.depot?'LOGISTICS_CD_WASTE':'LOGISTICS_WASTE');
+        logisticsState(draft).metrics.waste+=waste;
+      }
+      remainingValue-=waste;
+      event(draft,'LOGISTICA.PERDA_EM_TRANSITO','Viagem '+t.id+': '+loss+' unidade(s) vencidas em trânsito.',
+        {tripId:t.id,loss,lossCents:waste},from.depot?null:from.id);
+    }
+    const delivered=t.quantity-loss;
+    if(delivered){
+      // A compensação INTERNA é zerada entre os dois centros, sem venda e sem CMV.
+      journal(draft,'Baixa de trânsito interno '+t.id,[
+        {account:'INTERNAL_CLEARING',debit:remainingValue,credit:0},
+        {account:'IN_TRANSIT',debit:0,credit:remainingValue}],
+        from.depot?null:from.id,from.depot?'LOGISTICS_CD_CLEAR':'LOGISTICS_CLEAR');
+      logisticsAddStock(draft,to,t.sector,t.productId,t.productName,delivered,remainingValue);
+      journal(draft,'Entrada física entre instalações '+t.id,[
+        {account:'INVENTORY',debit:remainingValue,credit:0},
+        {account:'INTERNAL_CLEARING',debit:0,credit:remainingValue}],
+        to.depot?null:to.id,to.depot?'LOGISTICS_CD_RECEIVE':'LOGISTICS_RECEIVE');
+      for(const lot of t.lotPieces.filter(x=>x.expiresAt>draft.calendar.date)){
+        logisticsAddLot(draft,to.id,t.sector,t.productId,lot.quantity,draft.calendar.date,lot.expiresAt);
+      }
+    }
+    t.status='RECEIVED';t.receivedAt=draft.calendar.date;t.deliveredQuantity=delivered;
+    t.lostQuantity=loss;t.deliveredValueCents=remainingValue;
+    event(draft,'LOGISTICA.TRANSFERENCIA_RECEBIDA','Remanejamento '+t.id+': '+delivered+' unidade(s) recebidas, '+loss+' perdidas.',
+      {tripId:t.id,delivered,loss,remainingValue},to.depot?null:to.id);
+  }
+  function logisticsReceiveDepotPurchase(draft,o){
+    assert(o.status==='PENDING','Pedido do CD já recebido.');
+    const site=logisticsSite(draft,LOGISTICS_DEPOT_ID);
+    assert(site,'Centro de distribuição indisponível.');
+    logisticsAddStock(draft,site,o.sector,o.productId,o.productName,o.quantity,o.total);
+    journal(draft,'Entrada em estoque do CD '+o.id,[
+      {account:'INVENTORY',debit:o.total,credit:0},{account:'IN_TRANSIT',debit:0,credit:o.total}],
+      null,'LOGISTICS_CD_VENDOR_RECEIPT');
+    logisticsAddLot(draft,LOGISTICS_DEPOT_ID,o.sector,o.productId,o.quantity,draft.calendar.date);
+    o.status='RECEIVED';o.receivedAt=draft.calendar.date;
+    event(draft,'LOGISTICA.CD_PEDIDO_RECEBIDO','Recebimento do CD '+o.id+' com '+o.quantity+' unidade(s).',
+      {orderId:o.id,valueCents:o.total});
+  }
+  function logisticsDue(draft){
+    const lg=draft.economy.logistics;if(!lg)return;
+    for(const o of lg.depotPurchases){
+      if(o.status==='PENDING'&&o.dueDate<=draft.calendar.date)logisticsReceiveDepotPurchase(draft,o);
+    }
+    for(const t of lg.transfers){
+      if(t.status==='PENDING'&&t.dueDate<=draft.calendar.date)logisticsReceiveTransfer(draft,t);
+    }
+  }
+  function logisticsReport(state){
+    if(!state)return {enabled:false,depot:null,transfers:[],depotPurchases:[],batches:[],metrics:{}};
+    const lg=logisticsRead(state);
+    return {enabled:!!state.economy.logistics,depot:clone(lg.depot),transfers:clone(lg.transfers),
+      depotPurchases:clone(lg.depotPurchases),batches:clone(lg.batches),metrics:clone(lg.metrics),
+      totalPhysicalUnits:businesses(state).reduce((n,b)=>n+b.stockUnits,0)+(lg.depot?.stock.reduce((n,p)=>n+p.stockUnits,0)||0),
+      depotCapacity:LOGISTICS_DEPOT_CAPACITY,depotOpeningCents:LOGISTICS_DEPOT_OPEN_CENTS,
+      depotDailyCents:LOGISTICS_DEPOT_DAILY_CENTS,productionLimit:LOGISTICS_PRODUCTION_MAX,
+      note:'Todas as distâncias, entregas, prazos e custos logísticos são índices de jogo fictícios.'};
+  }
+  function logisticsSuggestions(state){
+    if(!state)return [];
+    const lg=logisticsRead(state),rows=[];
+    for(const dest of businesses(state)){
+      for(const p of dest.products){
+        if(p.id===LOGISTICS_BAKERY_INPUT)continue;
+        const inbound=lg.transfers.filter(t=>t.status==='PENDING'&&t.toId===dest.id&&t.productId===p.id&&t.sector===dest.sector)
+          .reduce((n,t)=>n+t.quantity,0);
+        const available=p.stockUnits+pendingQuantity(dest,p.id)+inbound;
+        if(available>p.reorderPoint)continue;
+        const need=Math.max(0,Math.min(100,p.targetStock-available));if(!need)continue;
+        const donors=businesses(state).filter(b=>b.id!==dest.id&&b.sector===dest.sector)
+          .map(b=>({fromId:b.id,stock:b.products.find(x=>x.id===p.id&&x.name===p.name)?.stockUnits||0}))
+          .filter(x=>x.stock>p.reorderPoint);
+        const depotProduct=lg.depot?.stock.find(x=>x.sector===dest.sector&&x.productId===p.id&&x.name===p.name);
+        if(depotProduct?.stockUnits){
+          const quantity=Math.min(need,depotProduct.stockUnits);
+          rows.push({kind:'TRANSFER',fromId:LOGISTICS_DEPOT_ID,toId:dest.id,productId:p.id,
+            sector:dest.sector,quantity,route:logisticsRouteQuote(state,LOGISTICS_DEPOT_ID,dest.id,quantity)});
+        }else if(donors.length){
+          const donor=donors.sort((a,b)=>b.stock-a.stock)[0],quantity=Math.min(need,Math.max(1,donor.stock-p.reorderPoint));
+          rows.push({kind:'TRANSFER',fromId:donor.fromId,toId:dest.id,productId:p.id,
+            sector:dest.sector,quantity,route:logisticsRouteQuote(state,donor.fromId,dest.id,quantity)});
+        }else{
+          rows.push({kind:'SUPPLIER',toId:dest.id,productId:p.id,sector:dest.sector,quantity:need,
+            approximateValueCents:need*p.costCents,note:'Proposta de compra normal; exige confirmação manual.'});
+        }
+      }
+    }
+    return rows.slice(0,60);
+  }
+  function handleLogisticsCommand(draft,type,payload){
+    const lg=logisticsState(draft);
+    if(type==='LOGISTICA.CD.ABRIR'){
+      assert(!lg.depot,'Já existe centro de distribuição no grupo.');
+      assert(businesses(draft).length>=2,'Abra duas unidades antes de instalar um centro de distribuição.');
+      const cityId=String(payload.cityId||'');
+      assert(cityById(cityId),'Cidade inválida para CD fictício.');
+      assert(balance(draft,'CASH')>=LOGISTICS_DEPOT_OPEN_CENTS,'Caixa insuficiente para implantação do CD.');
+      lg.depot={id:LOGISTICS_DEPOT_ID,cityId,stock:[],openedAt:draft.calendar.date,lastChargedDate:null};
+      journal(draft,'Implantação do CD fictício',[
+        {account:'EXPENSE',debit:LOGISTICS_DEPOT_OPEN_CENTS,credit:0},
+        {account:'CASH',debit:0,credit:LOGISTICS_DEPOT_OPEN_CENTS}],null,'LOGISTICS_CD_OPEN');
+      event(draft,'LOGISTICA.CD_ABERTO','Centro de distribuição fictício em '+cityById(cityId).name+' (2.000 unidades de capacidade).',
+        {cityId,capacity:LOGISTICS_DEPOT_CAPACITY,openingCents:LOGISTICS_DEPOT_OPEN_CENTS});
+      return;
+    }
+    if(type==='LOGISTICA.CD.COMPRAR'){
+      const depot=logisticsSite(draft,LOGISTICS_DEPOT_ID);
+      assert(depot,'Abra um CD antes de consolidar compras.');
+      const origin=businessById(draft,String(payload.businessId||''));
+      const supplier=supplierById(String(payload.supplierId||'regional'));
+      const productId=String(payload.productId||'base'),quantity=Number(payload.quantity);
+      assert(origin&&supplier,'Unidade de referência ou fornecedor inexistente.');
+      assert(Number.isSafeInteger(quantity)&&quantity>=1&&quantity<=Math.min(250,supplier.maxDailyPerSku),
+        'Volume excede a capacidade simulada do fornecedor.');
+      const p=product(origin,productId);
+      const used=lg.depotPurchases.filter(o=>o.status==='PENDING'&&o.date===draft.calendar.date&&o.supplierId===supplier.id&&o.sector===origin.sector&&o.productId===p.id)
+        .reduce((n,o)=>n+o.quantity,0);
+      assert(quantity+used<=supplier.maxDailyPerSku,'Capacidade diária consolidada do fornecedor excedida.');
+      const cap=logisticsSiteCapacity(draft,depot);
+      assert(cap.used+quantity<=cap.capacity,'Capacidade do CD, incluindo trânsito, excedida.');
+      const unitCost=Math.round(p.costCents*supplier.priceFactor/100),total=quantity*unitCost;
+      assert(Number.isSafeInteger(total)&&balance(draft,'CASH')>=total,'Caixa insuficiente para encomenda ao CD.');
+      assert(lg.depotPurchases.length<10000,'Limite de compras do CD atingido.');
+      const id='cdp-'+(++lg.seq),dueDate=addDays(draft.calendar.date,supplier.leadDays);
+      lg.depotPurchases.push({id,businessId:origin.id,sector:origin.sector,productId:p.id,productName:p.name,
+        supplierId:supplier.id,quantity,unitCost,total,date:draft.calendar.date,dueDate,
+        receivedAt:null,status:'PENDING'});
+      journal(draft,'Compra consolidada de mercadorias no CD '+id,[
+        {account:'IN_TRANSIT',debit:total,credit:0},{account:'CASH',debit:0,credit:total}],
+        null,'LOGISTICS_CD_PURCHASE');
+      event(draft,'LOGISTICA.CD_PEDIDO','Compra do CD '+id+' paga; '+quantity+' unidade(s) em trânsito.',
+        {orderId:id,total,quantity,dueDate});
+      return;
+    }
+    if(type==='LOGISTICA.TRANSFERIR'){
+      const from=logisticsSite(draft,String(payload.fromId||'')),to=logisticsSite(draft,String(payload.toId||''));
+      const quantity=Number(payload.quantity),productId=String(payload.productId||'base');
+      assert(from&&to&&from.id!==to.id,'Selecione origem e destino diferentes e válidos.');
+      const sector=from.depot?String(payload.sector||''):from.location.sector;
+      assert(SECTORS[sector],'Setor de mercadoria inválido.');
+      const fromP=from.depot?from.location.stock.find(p=>p.sector===sector&&p.productId===productId):
+        product(from.location,productId);
+      assert(fromP&&fromP.stockUnits>=quantity,'Origem não possui estoque suficiente para transferência.');
+      const toProduct=to.depot?null:product(to.location,productId);
+      assert(to.depot||(to.location.sector===sector&&toProduct.name===fromP.name),
+        'Destino sem produto equivalente; transferências não transformam mercadorias.');
+      const quote=logisticsRouteQuote(draft,from.id,to.id,quantity);
+      assert(balance(draft,'CASH')>=quote.feeCents,'Caixa insuficiente para o frete simulado.');
+      const capacity=logisticsSiteCapacity(draft,to);
+      assert(capacity.used+quantity<=capacity.capacity,'Destino sem espaço para carga e mercadorias em trânsito.');
+      assert(lg.transfers.length<10000,'Limite histórico de transferências atingido.');
+      const lots=logisticsTakeLots(draft,from.id,sector,productId,quantity);
+      const valueCents=logisticsRemoveStock(draft,from,sector,productId,fromP.name,quantity);
+      assert(valueCents>0,'Transferência não permite mercadoria sem valor contábil.');
+      const id='tr-'+(++lg.seq),dueDate=addDays(draft.calendar.date,quote.days);
+      lg.transfers.push({id,fromId:from.id,toId:to.id,sector,productId,productName:fromP.name,
+        quantity,valueCents,lotPieces:lots,date:draft.calendar.date,dueDate,
+        feeCents:quote.feeCents,distanceUnits:quote.distanceUnits,
+        receivedAt:null,deliveredQuantity:0,lostQuantity:0,deliveredValueCents:0,status:'PENDING'});
+      journal(draft,'Expedição de estoque interfilial '+id,[
+        {account:'IN_TRANSIT',debit:valueCents,credit:0},
+        {account:'INVENTORY',debit:0,credit:valueCents}],
+        from.depot?null:from.id,from.depot?'LOGISTICS_CD_DISPATCH':'LOGISTICS_DISPATCH');
+      journal(draft,'Frete simulado de remanejamento '+id,[
+        {account:'EXPENSE',debit:quote.feeCents,credit:0},
+        {account:'CASH',debit:0,credit:quote.feeCents}],
+        from.depot?null:from.id,from.depot?'LOGISTICS_CD_FEE':'LOGISTICS_SHIP_FEE');
+      lg.metrics.fees+=quote.feeCents;
+      event(draft,'LOGISTICA.EXPEDIDA','Transferência '+id+' '+from.id+' → '+to.id+'; '+quantity+' unidade(s). Sem faturamento interno.',
+        {tripId:id,fromId:from.id,toId:to.id,quantity,valueCents,feeCents:quote.feeCents,dueDate,
+          distanceUnits:quote.distanceUnits,distanceType:'SIMULATED_INDEX_NOT_KM'},from.depot?null:from.id);
+      return;
+    }
+    if(type==='LOGISTICA.INSUMO.COMPRAR'){
+      const unit=businessById(draft,String(payload.businessId||''));
+      assert(unit&&unit.sector==='padaria'&&unit.products.some(p=>p.id===LOGISTICS_BAKERY_INPUT),
+        'Habilite o insumo antes da compra.');
+      registerPurchase(draft,unit,String(payload.supplierId||'regional'),[
+        {productId:LOGISTICS_BAKERY_INPUT,quantity:Number(payload.quantity)}]);
+      return;
+    }
+    if(type==='LOGISTICA.REABASTECER'){
+      const unit=businessById(draft,String(payload.businessId||''));
+      assert(unit,'Unidade de reposição inexistente.');
+      registerPurchase(draft,unit,String(payload.supplierId||'regional'),[
+        {productId:String(payload.productId||'base'),quantity:Number(payload.quantity)}]);
+      return;
+    }
+    if(type==='LOGISTICA.PRODUCAO.HABILITAR'){
+      const unit=businessById(draft,String(payload.businessId||''));
+      assert(unit&&unit.sector==='padaria','Produção piloto disponível apenas para padarias.');
+      assert(!unit.products.some(p=>p.id===LOGISTICS_BAKERY_INPUT),'Insumos já habilitados nesta padaria.');
+      assert(unit.products.length<40,'Catálogo da padaria sem espaço para insumo.');
+      unit.products.push({id:LOGISTICS_BAKERY_INPUT,name:'Farinha (insumo de produção)',
+        costCents:300,priceCents:400,referenceCents:400,demand:0,stockUnits:0,stockValueCents:0,
+        reorderPoint:15,targetStock:100});
+      event(draft,'LOGISTICA.PRODUCAO_HABILITADA','Padaria '+unit.id+' habilitou farinha como insumo não comercial.',
+        {businessId:unit.id},unit.id);
+      return;
+    }
+    if(type==='LOGISTICA.PRODUZIR'){
+      const unit=businessById(draft,String(payload.businessId||''));
+      const quantity=Number(payload.inputQuantity);
+      assert(unit&&unit.sector==='padaria','Produção restrita à padaria.');
+      assert(Number.isSafeInteger(quantity)&&quantity>=1&&quantity<=LOGISTICS_PRODUCTION_MAX,
+        'Lote de produção entre 1 e 25 unidades de insumo.');
+      const raw=product(unit,LOGISTICS_BAKERY_INPUT),finished=product(unit,'base');
+      const usage=lg.production[unit.id],current=usage?.date===draft.calendar.date?usage.used:0;
+      assert(current+quantity<=LOGISTICS_PRODUCTION_MAX,'Capacidade produtiva diária de 25 insumos atingida.');
+      const output=quantity*3,labour=quantity*120;
+      assert(finished.stockUnits+output<=100000,'Estoque final da padaria excede capacidade.');
+      assert(balance(draft,'CASH')>=labour,'Caixa insuficiente para custo de produção.');
+      const material=logisticsRemoveStock(draft,logisticsSite(draft,unit.id),unit.sector,raw.id,raw.name,quantity);
+      logisticsAddStock(draft,logisticsSite(draft,unit.id),unit.sector,'base',finished.name,output,material+labour);
+      // Transformação: custo sai do estoque de insumo e entra no acabado. Mão de obra CAPITALIZADA no lote.
+      journal(draft,'Transformação produtiva padaria '+unit.id,[
+        {account:'INVENTORY',debit:material+labour,credit:0},
+        {account:'INVENTORY',debit:0,credit:material},
+        {account:'CASH',debit:0,credit:labour}],unit.id,'LOGISTICS_PRODUCTION');
+      logisticsAddLot(draft,unit.id,unit.sector,'base',output,draft.calendar.date);
+      lg.production[unit.id]={date:draft.calendar.date,used:current+quantity};
+      lg.metrics.produced+=output;
+      event(draft,'LOGISTICA.PRODUZIDA',quantity+' farinha(s) transformadas em '+output+' pães na '+unit.id+'.',
+        {businessId:unit.id,inputQuantity:quantity,outputQuantity:output,materialCents:material,
+          labourCents:labour,finishedValueCents:material+labour,expiryDays:LOGISTICS_SHELF_DAYS.base},unit.id);
+      return;
+    }
+    throw Error('Comando logístico desconhecido: '+type);
+  }
+  function validateLogistics(state){
+    const lg=state.economy.logistics;
+    if(lg===undefined||lg===null){
+      assert(balance(state,'INTERNAL_CLEARING')===0,'Compensação interfilial sem módulo logístico.');
+      return;
+    }
+    assert(plain(lg)&&lg.modelVersion===1&&int(lg.seq)&&
+      Array.isArray(lg.transfers)&&lg.transfers.length<=10000&&
+      Array.isArray(lg.depotPurchases)&&lg.depotPurchases.length<=10000&&
+      Array.isArray(lg.batches)&&lg.batches.length<=30000&&plain(lg.production)&&
+      plain(lg.metrics)&&int(lg.metrics.fees)&&int(lg.metrics.waste)&&int(lg.metrics.produced),
+      'Estrutura logística inválida.');
+    if(lg.depot){
+      assert(lg.depot.id===LOGISTICS_DEPOT_ID&&cityById(lg.depot.cityId)&&
+        isoDate(lg.depot.openedAt)&&
+        (lg.depot.lastChargedDate===null||isoDate(lg.depot.lastChargedDate))&&
+        Array.isArray(lg.depot.stock)&&lg.depot.stock.length<=200,
+        'Centro de distribuição inconsistente.');
+      const seen=new Set();
+      for(const p of lg.depot.stock){
+        const id=p.sector+'|'+p.productId;
+        assert(SECTORS[p.sector]&&typeof p.productId==='string'&&typeof p.name==='string'&&
+          !seen.has(id)&&int(p.stockUnits)&&int(p.stockValueCents),'Estoque de CD inválido.');
+        seen.add(id);
+      }
+      assert(lg.depot.stock.reduce((n,p)=>n+p.stockUnits,0)<=LOGISTICS_DEPOT_CAPACITY,'CD excedeu capacidade.');
+    }
+    const seenTrips=new Set();
+    for(const t of lg.transfers){
+      assert(plain(t)&&typeof t.id==='string'&&!seenTrips.has(t.id)&&
+        logisticsSite(state,t.fromId)&&logisticsSite(state,t.toId)&&t.fromId!==t.toId&&
+        SECTORS[t.sector]&&typeof t.productId==='string'&&
+        Number.isSafeInteger(t.quantity)&&t.quantity>=1&&t.quantity<=250&&
+        int(t.valueCents)&&t.valueCents>0&&int(t.feeCents)&&
+        isoDate(t.date)&&isoDate(t.dueDate)&&t.dueDate>=t.date&&
+        ['PENDING','RECEIVED'].includes(t.status)&&Array.isArray(t.lotPieces)&&
+        t.lotPieces.every(p=>int(p.quantity)&&isoDate(p.expiresAt))&&
+        t.lotPieces.reduce((n,x)=>n+x.quantity,0)<=t.quantity,
+        'Transferência logística sem rastreio adequado.');
+      seenTrips.add(t.id);
+      assert(t.status==='PENDING'?t.receivedAt===null:
+        isoDate(t.receivedAt)&&int(t.deliveredQuantity)&&int(t.lostQuantity)&&
+        t.deliveredQuantity+t.lostQuantity===t.quantity&&int(t.deliveredValueCents),
+        'Baixa logística ou recebimento inconsistente.');
+    }
+    const seenOrders=new Set();
+    for(const o of lg.depotPurchases){
+      assert(plain(o)&&typeof o.id==='string'&&!seenOrders.has(o.id)&&
+        businessById(state,o.businessId)&&SECTORS[o.sector]&&
+        Number.isSafeInteger(o.quantity)&&o.quantity>=1&&o.quantity<=250&&
+        int(o.unitCost)&&o.total===o.unitCost*o.quantity&&
+        isoDate(o.date)&&isoDate(o.dueDate)&&['PENDING','RECEIVED'].includes(o.status)&&
+        (o.status==='PENDING'?o.receivedAt===null:isoDate(o.receivedAt)),
+        'Pedido consolidado inválido.');
+      seenOrders.add(o.id);
+    }
+    const quantities={};
+    for(const lot of lg.batches){
+      const site=logisticsSite(state,lot.locationId);
+      assert(plain(lot)&&site&&SECTORS[lot.sector]&&
+        int(lot.quantity)&&lot.quantity>0&&isoDate(lot.receivedAt)&&isoDate(lot.expiresAt),
+        'Lote perecível inválido.');
+      const p=site.depot?site.location.stock.find(x=>x.sector===lot.sector&&x.productId===lot.productId):
+        site.location.products.find(x=>x.id===lot.productId&&site.location.sector===lot.sector);
+      assert(p,'Produto de lote inexistente.');
+      const k=lot.locationId+'|'+lot.sector+'|'+lot.productId;
+      quantities[k]=(quantities[k]||0)+lot.quantity;
+      assert(quantities[k]<=p.stockUnits,'Quantidade perecível maior que estoque físico.');
+    }
+    for(const [businessId,p] of Object.entries(lg.production))
+      assert(businessById(state,businessId)?.sector==='padaria'&&
+        plain(p)&&isoDate(p.date)&&int(p.used)&&p.used<=LOGISTICS_PRODUCTION_MAX,
+        'Apuração de produção diária inválida.');
+    assert(balance(state,'INTERNAL_CLEARING')===0,'Compensação de movimentações internas não está zerada.');
+  }
+
   function dispatch(current,cmd) {
     try{
       assert(plain(cmd)&&typeof cmd.type==='string'&&typeof cmd.id==='string'&&/^[a-zA-Z\d._:-]{2,100}$/.test(cmd.id),'Comando sem ID válido');
@@ -2948,6 +3504,7 @@ const CidadeCore = (() => {
     assert(plain(state.world.competitor)&&int(state.world.competitor.priceIndex),'Concorrente inválido');
     validateRivalEconomy(state);
     validateFinancing(state);
+    validateLogistics(state);
     if(state.schemaVersion>=7){
       const regional=state.world.regional;
       assert(plain(regional)&&regional.datasetId===POPULATION_SOURCE.id&&
@@ -3013,7 +3570,8 @@ const CidadeCore = (() => {
         assert(unitStock===b.stockUnits&&unitStock<=100000&&b.unitPrice===product(b,'base').priceCents,'Saldos da unidade inválidos');
         assert(Object.keys(b.promotions).length<=40,'Excesso de promoções');
         for(const [id,pr] of Object.entries(b.promotions))assert(pids.has(id)&&plain(pr)&&[5,10,15].includes(pr.percent)&&isoDate(pr.until),'Promoção inválida');
-        let unitTransit=0;
+        let unitTransit=logisticsRead(state).transfers.filter(t=>t.status==='PENDING'&&t.fromId===b.id)
+          .reduce((n,t)=>n+t.valueCents,0);
         for(const o of b.purchaseOrders){
           assert(o&&['PENDING','RECEIVED'].includes(o.status)&&isoDate(o.date)&&isoDate(o.dueDate)&&o.dueDate>=o.date,'Pedido ou prazo inválido');
           assert(Array.isArray(o.items)&&int(o.total)&&o.items.reduce((n,l)=>n+l.total,0)===o.total,'Itens de compra inválidos');
@@ -3027,7 +3585,11 @@ const CidadeCore = (() => {
         assert(acc('INVENTORY')===unitGoods&&acc('IN_TRANSIT')===unitTransit,'Contabilidade da filial não concilia estoque/trânsito');
       }
       assert(!units.length?state.world.activeBusinessId===null:ids.has(state.world.activeBusinessId),'Unidade ativa inválida');
-      assert(physical===units.reduce((n,x)=>n+x.stockUnits,0)&&goods===inventory&&pending===balance(state,'IN_TRANSIT'),'Estoque consolidado não conciliado');
+      const lg=logisticsRead(state),depotGoods=lg.depot?.stock.reduce((n,p)=>n+p.stockValueCents,0)||0;
+      const depotTransit=lg.depotPurchases.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.total,0)+
+        lg.transfers.filter(t=>t.status==='PENDING'&&t.fromId===LOGISTICS_DEPOT_ID).reduce((n,t)=>n+t.valueCents,0);
+      assert(physical===units.reduce((n,x)=>n+x.stockUnits,0)&&goods+depotGoods===inventory&&
+        pending+depotTransit===balance(state,'IN_TRANSIT'),'Estoque consolidado não conciliado');
       for(const j of state.economy.ledger)if(j.businessId)assert(ids.has(j.businessId),'Lançamento aponta para unidade inexistente');
       for(const e of state.audit.events)if(e.businessId)assert(ids.has(e.businessId),'Evento aponta para unidade inexistente');
       return true;
@@ -3159,10 +3721,11 @@ const CidadeCore = (() => {
     const journals=state.economy.ledger.filter(j=>j.date<=asOf);
     const financeAccounts=['LOAN_PAYABLE','INTEREST_PAYABLE','LOAN_FEES_PAYABLE','CONTRACT_PAYABLE'];
     const amounts=Object.fromEntries(Object.keys(ACCOUNT_CATALOG)
-      .filter(code=>state.economy.financing||!financeAccounts.includes(code))
+      .filter(code=>(state.economy.financing||!financeAccounts.includes(code))&&
+        (state.economy.logistics||code!=='INTERNAL_CLEARING'))
       .map(code=>[code,signedAccount(journals,code)]));
     const unknown=Object.keys(ACCOUNT_CATALOG).length===0?[]:[...new Set(journals.flatMap(j=>j.entries.map(e=>e.account)))].filter(a=>!ACCOUNT_CATALOG[a]);
-    const assets=amounts.CASH+amounts.INVENTORY+amounts.IN_TRANSIT+amounts.RECEIVABLE;
+    const assets=amounts.CASH+amounts.INVENTORY+amounts.IN_TRANSIT+amounts.RECEIVABLE+(amounts.INTERNAL_CLEARING||0);
     const liabilities=amounts.PAYABLE+amounts.TAX_PAYABLE+(amounts.LOAN_PAYABLE||0)+(amounts.INTEREST_PAYABLE||0)+(amounts.LOAN_FEES_PAYABLE||0)+(amounts.CONTRACT_PAYABLE||0),retainedEarnings=amounts.REVENUE-amounts.COGS-amounts.EXPENSE-amounts.TAX_EXPENSE;
     const equity=amounts.CAPITAL+retainedEarnings,difference=assets-liabilities-equity;
     return {asOf,accounts:amounts,assets,liabilities,paidInCapital:amounts.CAPITAL,
@@ -3218,7 +3781,9 @@ const CidadeCore = (() => {
       let physical=0,transit=0;
       for(const b of businesses(state)){
         const inventory=b.products.reduce((n,p)=>n+p.stockValueCents,0);
-        const inTransit=b.purchaseOrders.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.total,0);
+        const inTransit=b.purchaseOrders.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.total,0)+
+          logisticsRead(state).transfers.filter(t=>t.status==='PENDING'&&t.fromId===b.id)
+            .reduce((n,t)=>n+t.valueCents,0);
         const local=journals.filter(j=>journalBusinessId(state,j)===b.id);
         const ledgerInventory=signedAccount(local,'INVENTORY'),ledgerTransit=signedAccount(local,'IN_TRANSIT');
         const ok=inventory===ledgerInventory&&inTransit===ledgerTransit;
@@ -3226,7 +3791,16 @@ const CidadeCore = (() => {
         unitRows.push({id:b.id,inventory,inTransit,ledgerInventory,ledgerTransit,ok});
         physical+=inventory;transit+=inTransit;
       }
-      if(physical!==sheet.accounts.INVENTORY||transit!==sheet.accounts.IN_TRANSIT)errors.push('Estoque consolidado diverge do razão contábil');
+      const lg=logisticsRead(state),depotGoods=lg.depot?.stock.reduce((n,p)=>n+p.stockValueCents,0)||0;
+      const depotTransit=lg.depotPurchases.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.total,0)+
+        lg.transfers.filter(t=>t.status==='PENDING'&&t.fromId===LOGISTICS_DEPOT_ID).reduce((n,t)=>n+t.valueCents,0);
+      if(physical+depotGoods!==sheet.accounts.INVENTORY||transit+depotTransit!==sheet.accounts.IN_TRANSIT||
+        (sheet.accounts.INTERNAL_CLEARING||0)!==0)errors.push('Estoque consolidado, trânsito ou compensação interfilial diverge do razão contábil');
+      if(lg.depot)unitRows.push({id:LOGISTICS_DEPOT_ID,inventory:depotGoods,inTransit:depotTransit,
+        ledgerInventory:signedAccount(journals.filter(j=>journalBusinessId(state,j)===null),'INVENTORY'),
+        ledgerTransit:signedAccount(journals.filter(j=>journalBusinessId(state,j)===null),'IN_TRANSIT'),
+        ok:depotGoods===signedAccount(journals.filter(j=>journalBusinessId(state,j)===null),'INVENTORY')&&
+          depotTransit===signedAccount(journals.filter(j=>journalBusinessId(state,j)===null),'IN_TRANSIT')});
     }
     return {asOf,balanced:sheet.balanced,statementDifference:sheet.difference,
       snapshotAvailable,unitRows,unknownAccounts:sheet.unknownAccounts,errors,ok:errors.length===0,
@@ -3464,7 +4038,7 @@ const CidadeCore = (() => {
     return {state,migrated,message:migrated?'Carreira migrada para V1.9: histórico preservado; cenário tributário desativado até confirmação explícita.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({creditReport,financialCommitmentsReport,journeyGuide,reputationReport,dilemmaReport,DILEMMA_DEFINITIONS,rivalMarketReport,RIVAL_EVENT_TYPES,progressionReport,operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({logisticsReport,logisticsRouteQuote,logisticsSuggestions,creditReport,financialCommitmentsReport,journeyGuide,reputationReport,dilemmaReport,DILEMMA_DEFINITIONS,rivalMarketReport,RIVAL_EVENT_TYPES,progressionReport,operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();
 
@@ -4461,6 +5035,209 @@ function bindRestock(){
       '</td></tr>').join('')||'<tr><td colspan="4">Nenhum compromisso no horizonte escolhido.</td></tr>';
   }
 
+    // Módulo V2.8: logística é leitura + comandos confirmados; jamais executa sugestões automaticamente.
+  function logisticsSiteOptions(){
+    const rows=Core.businesses(state).map(b=>[b.id,b.id+' · '+Core.cityById(b.cityId).name+' · '+Core.SECTORS[b.sector].name]);
+    if(Core.logisticsReport(state).depot)rows.push(['CD-1','CD-1 · centro de distribuição']);
+    return rows;
+  }
+  function logisticsLocationProducts(siteId){
+    const depot=Core.logisticsReport(state).depot;
+    if(siteId==='CD-1')return (depot?.stock||[]).filter(p=>p.stockUnits>0).map(p=>({
+      key:p.sector+'::'+p.productId,name:p.name,sector:p.sector,productId:p.productId,stock:p.stockUnits
+    }));
+    const b=Core.businessById(state,siteId);
+    return (b?.products||[]).filter(p=>p.stockUnits>0).map(p=>({
+      key:b.sector+'::'+p.id,name:p.name,sector:b.sector,productId:p.id,stock:p.stockUnits
+    }));
+  }
+  function logisticsRoutePreview(){
+    const fromId=$('logistics-transfer-from').value,toId=$('logistics-transfer-to').value,
+      quantity=Number($('logistics-transfer-quantity').value);
+    const key=$('logistics-transfer-product').value,available=logisticsLocationProducts(fromId).find(p=>p.key===key)?.stock||0;
+    try{
+      const q=Core.logisticsRouteQuote(state,fromId,toId,quantity);
+      $('logistics-transfer-submit').disabled=!key||quantity>available;
+      setText('logistics-route-preview','Distância: índice abstrato '+q.distanceUnits+' (NÃO km) · Prazo fictício '+q.days+
+        ' dia(s) · frete '+Core.money(q.feeCents)+' · desconto CD '+Core.money(q.discountCents)+
+        ' · origem '+available+' un.');
+    }catch(e){
+      $('logistics-transfer-submit').disabled=true;
+      setText('logistics-route-preview','Rota indisponível: '+e.message);
+    }
+  }
+  function logisticsRefreshTransferProducts(){
+    const rows=logisticsLocationProducts($('logistics-transfer-from').value)
+      .map(p=>[p.key,p.name+' · '+Core.SECTORS[p.sector].name+' · '+p.stock+' un.']);
+    setCreditOptions('logistics-transfer-product',rows);
+    logisticsRoutePreview();
+  }
+  function logisticsRefillProducts(unitId,productId){
+    const b=Core.businessById(state,$(unitId).value);
+    setCreditOptions(productId,(b?.products||[]).map(p=>[p.id,p.name+' · '+p.stockUnits+' un.']));
+  }
+  function renderLogistics(){
+    if(!state?.player?.cityId)return;
+    const report=Core.logisticsReport(state),units=Core.businesses(state),places=logisticsSiteOptions(),
+      suggestions=Core.logisticsSuggestions(state);
+    const transit=report.transfers.filter(t=>t.status==='PENDING').reduce((n,t)=>n+t.quantity,0);
+    const overview=[
+      ['Estoque físico (lojas + CD)',report.totalPhysicalUnits+' un.'],
+      ['Viagens em trânsito',report.transfers.filter(t=>t.status==='PENDING').length+' · '+transit+' un.'],
+      ['Fretes acumulados',Core.money(report.metrics.fees||0)],
+      ['Perdas contabilizadas',Core.money(report.metrics.waste||0)],
+      ['Unidades produzidas',String(report.metrics.produced||0)],
+      ['Caixa consolidado',Core.money(Core.overview(state).cash)]
+    ];
+    $('logistics-summary').innerHTML=overview.map(x=>'<dt>'+escape(x[0])+'</dt><dd>'+escape(x[1])+'</dd>').join('');
+    const data=units.map(b=>({id:b.id,cityId:b.cityId,stock:b.stockUnits,
+      value:b.products.reduce((n,p)=>n+p.stockValueCents,0)}));
+    if(report.depot)data.push({id:'CD-1',cityId:report.depot.cityId,
+      stock:report.depot.stock.reduce((n,p)=>n+p.stockUnits,0),
+      value:report.depot.stock.reduce((n,p)=>n+p.stockValueCents,0)});
+    $('logistics-sites').innerHTML=data.map(d=>'<tr><td>'+escape(d.id)+'</td><td>'+
+      escape(Core.cityById(d.cityId).name)+'</td><td>'+d.stock+'</td><td>'+
+      escape(Core.money(d.value))+'</td></tr>').join('')||
+      '<tr><td colspan="4">Abra ao menos uma unidade.</td></tr>';
+    setCreditOptions('logistics-transfer-from',places);
+    setCreditOptions('logistics-transfer-to',places.filter(p=>p[0]!==$('logistics-transfer-from').value));
+    logisticsRefreshTransferProducts();
+    setCreditOptions('logistics-depot-city',Core.CITIES.map(c=>[c.id,c.name+' / '+c.uf]));
+    $('logistics-depot-open-form').hidden=!!report.depot;
+    $('logistics-depot-buy-form').hidden=!report.depot;
+    setText('logistics-depot-status',report.depot?
+      'CD em '+Core.cityById(report.depot.cityId).name+' · '+report.depot.stock.reduce((n,p)=>n+p.stockUnits,0)+
+        '/2.000 un. · despesa diária '+Core.money(report.depotDailyCents):
+      'Nenhum CD ativo. Exige duas lojas, custo de abertura e manutenção fictícios.');
+    $('logistics-depot-open').disabled=units.length<2||!!report.depot;
+    setCreditOptions('logistics-depot-unit',units.map(b=>[b.id,b.id+' · '+Core.SECTORS[b.sector].name]));
+    logisticsRefillProducts('logistics-depot-unit','logistics-depot-product');
+    $('logistics-depot-buy').disabled=!report.depot||!units.length;
+    $('logistics-depot-stock').innerHTML=(report.depot?.stock||[]).filter(p=>p.stockUnits>0).map(p=>
+      '<tr><td>'+escape(p.name+' · '+p.sector)+'</td><td>'+p.stockUnits+'</td><td>'+
+      escape(Core.money(p.stockValueCents))+'</td></tr>').join('')||
+      '<tr><td colspan="3">CD sem estoque.</td></tr>';
+    $('logistics-depot-orders').innerHTML=report.depotPurchases.slice(-8).reverse().map(o=>
+      '<div class="event-item"><div><strong>'+escape(o.id+' · '+o.productName)+'</strong><p>'+
+      o.quantity+' un. · '+escape(Core.money(o.total))+' · '+escape(o.status)+'</p><small>'+
+      escape(o.dueDate)+'</small></div></div>').join('')||'<p class="muted">Sem pedidos do CD.</p>';
+    $('logistics-trip-rows').innerHTML=report.transfers.slice(-20).reverse().map(t=>
+      '<tr><td>'+escape(t.id)+'</td><td>'+escape(t.fromId+' → '+t.toId)+'</td><td>'+
+      escape(t.productName)+' · '+t.quantity+' un.</td><td>'+escape(t.dueDate)+'</td><td>'+
+      escape(Core.money(t.valueCents))+' / '+escape(Core.money(t.feeCents))+'</td><td>'+
+      escape(t.status==='PENDING'?'Em trânsito':t.lostQuantity?'Com perda':'Recebida')+'</td></tr>').join('')||
+      '<tr><td colspan="6">Nenhuma transferência.</td></tr>';
+    const bakeries=units.filter(b=>b.sector==='padaria');
+    setCreditOptions('logistics-bakery-unit',bakeries.map(b=>[b.id,b.id+' · '+Core.cityById(b.cityId).name]));
+    const bakery=Core.businessById(state,$('logistics-bakery-unit').value);
+    const flour=bakery?.products.find(p=>p.id==='raw-farinha');
+    $('logistics-enable-production').disabled=!bakery||!!flour;
+    $('logistics-input-buy').disabled=!flour;
+    $('logistics-produce').disabled=!flour||flour.stockUnits===0;
+    setText('logistics-production-status',!bakery?'Abra uma padaria para iniciar.':
+      !flour?'Habilite farinha como insumo. Sem retroagir sobre estoque antigo.':
+      'Farinha disponível '+flour.stockUnits+' un. · pães '+bakery.products.find(p=>p.id==='base').stockUnits+
+      ' un. · até 25 insumos por dia.');
+    $('logistics-lot-rows').innerHTML=report.batches.slice(0,40).map(l=>
+      '<tr><td>'+escape(l.locationId)+'</td><td>'+escape(l.sector+' · '+l.productId)+'</td><td>'+
+      l.quantity+'</td><td>'+escape(l.expiresAt)+'</td></tr>').join('')||
+      '<tr><td colspan="4">Nenhum lote novo rastreável.</td></tr>';
+    $('logistics-proposal-rows').innerHTML=suggestions.slice(0,30).map((p,i)=>
+      '<tr><td>'+escape(p.toId)+'</td><td>'+escape(p.sector+' · '+p.productId)+'</td><td>'+
+      escape(p.kind==='TRANSFER'?'Transferir '+p.quantity+' un. de '+p.fromId+' · frete '+Core.money(p.route.feeCents):
+        'Comprar '+p.quantity+' un. · estimativa '+Core.money(p.approximateValueCents))+
+      '</td><td><button type="button" class="btn btn-outline" data-logistics-suggestion="'+i+
+      '">Preparar</button></td></tr>').join('')||
+      '<tr><td colspan="4">Sem alerta de reposição.</td></tr>';
+    setCreditOptions('logistics-restock-unit',units.map(b=>[b.id,b.id+' · '+Core.SECTORS[b.sector].name]));
+    logisticsRefillProducts('logistics-restock-unit','logistics-restock-product');
+    const integrity=Core.reconciliationReport(state);
+    setText('logistics-integrity',integrity.ok?
+      'Conciliação atual: estoque, trânsito, CD, compensação e razão consistentes.':
+      'Atenção — divergências: '+integrity.errors.join('; '));
+  }
+  function bindLogistics(){
+    $('logistics-transfer-from').addEventListener('change',renderLogistics);
+    $('logistics-transfer-to').addEventListener('change',logisticsRoutePreview);
+    $('logistics-transfer-product').addEventListener('change',logisticsRoutePreview);
+    $('logistics-transfer-quantity').addEventListener('input',logisticsRoutePreview);
+    $('logistics-transfer-form').addEventListener('submit',e=>{
+      e.preventDefault();
+      const values=$('logistics-transfer-product').value.split('::');
+      const payload={fromId:$('logistics-transfer-from').value,toId:$('logistics-transfer-to').value,
+        sector:values[0],productId:values[1],quantity:Number($('logistics-transfer-quantity').value)};
+      try{
+        const quote=Core.logisticsRouteQuote(state,payload.fromId,payload.toId,payload.quantity);
+        if(confirm('Transferir '+payload.quantity+' unidade(s)? Frete fictício '+Core.money(quote.feeCents)+
+          ', '+quote.days+' dia(s) simulados. NÃO cria receita nem CMV.'))
+          commit('LOGISTICA.TRANSFERIR',payload);
+      }catch(err){notify(err.message,true);}
+    });
+    $('logistics-depot-open-form').addEventListener('submit',e=>{
+      e.preventDefault();const cityId=$('logistics-depot-city').value;
+      if(confirm('Instalar CD em '+Core.cityById(cityId).name+
+        '? R$ 800 de implantação e R$ 8,50 por dia, somente no jogo.'))
+        commit('LOGISTICA.CD.ABRIR',{cityId});
+    });
+    $('logistics-depot-unit').addEventListener('change',()=>logisticsRefillProducts('logistics-depot-unit','logistics-depot-product'));
+    $('logistics-depot-buy-form').addEventListener('submit',e=>{
+      e.preventDefault();
+      const payload={businessId:$('logistics-depot-unit').value,productId:$('logistics-depot-product').value,
+        supplierId:$('logistics-depot-supplier').value,quantity:Number($('logistics-depot-quantity').value)};
+      if(confirm('Comprar '+payload.quantity+' unidades para o CD? Caixa será debitado e estoque ficará em trânsito.'))
+        commit('LOGISTICA.CD.COMPRAR',payload);
+    });
+    $('logistics-bakery-unit').addEventListener('change',renderLogistics);
+    $('logistics-enable-production').addEventListener('click',()=>{
+      const businessId=$('logistics-bakery-unit').value;
+      if(confirm('Habilitar farinha como insumo não comercial da padaria '+businessId+'?'))
+        commit('LOGISTICA.PRODUCAO.HABILITAR',{businessId});
+    });
+    $('logistics-input-buy-form').addEventListener('submit',e=>{
+      e.preventDefault();
+      const payload={businessId:$('logistics-bakery-unit').value,
+        supplierId:$('logistics-input-supplier').value,quantity:Number($('logistics-input-quantity').value)};
+      if(confirm('Comprar '+payload.quantity+' unidades de farinha e pagar com caixa da rede?'))
+        commit('LOGISTICA.INSUMO.COMPRAR',payload);
+    });
+    $('logistics-produce-form').addEventListener('submit',e=>{
+      e.preventDefault();
+      const payload={businessId:$('logistics-bakery-unit').value,inputQuantity:Number($('logistics-input-use').value)};
+      if(confirm('Consumir '+payload.inputQuantity+' insumos e produzir '+(payload.inputQuantity*3)+
+        ' pães perecíveis? Custo fabril adicional em caixa: '+Core.money(payload.inputQuantity*120)+'.'))
+        commit('LOGISTICA.PRODUZIR',payload);
+    });
+    $('logistics-restock-unit').addEventListener('change',()=>logisticsRefillProducts('logistics-restock-unit','logistics-restock-product'));
+    $('logistics-restock-form').addEventListener('submit',e=>{
+      e.preventDefault();
+      const payload={businessId:$('logistics-restock-unit').value,productId:$('logistics-restock-product').value,
+        supplierId:$('logistics-restock-supplier').value,quantity:Number($('logistics-restock-quantity').value)};
+      if(confirm('Confirmar compra direta de '+payload.quantity+' unidades? O caixa será debitado.'))
+        commit('LOGISTICA.REABASTECER',payload);
+    });
+    $('logistics-proposal-rows').addEventListener('click',e=>{
+      const btn=e.target.closest('button[data-logistics-suggestion]');if(!btn)return;
+      const proposal=Core.logisticsSuggestions(state)[Number(btn.dataset.logisticsSuggestion)];
+      if(!proposal)return;
+      if(proposal.kind==='TRANSFER'){
+        $('logistics-transfer-from').value=proposal.fromId;
+        setCreditOptions('logistics-transfer-to',logisticsSiteOptions().filter(x=>x[0]!==proposal.fromId));
+        $('logistics-transfer-to').value=proposal.toId;
+        logisticsRefreshTransferProducts();
+        $('logistics-transfer-product').value=proposal.sector+'::'+proposal.productId;
+        $('logistics-transfer-quantity').value=proposal.quantity;
+        logisticsRoutePreview();$('logistics-transfer-quantity').focus();
+      }else{
+        $('logistics-restock-unit').value=proposal.toId;
+        logisticsRefillProducts('logistics-restock-unit','logistics-restock-product');
+        $('logistics-restock-product').value=proposal.productId;
+        $('logistics-restock-quantity').value=proposal.quantity;
+        $('logistics-restock-quantity').focus();
+      }
+      notify('Proposta carregada para revisão. Nenhuma operação foi executada.');
+    });
+  }
+
   /* V2.0: fragmento de visualização, incorporado à mesma closure pelo build. */
   // Demonstrativo financeiro puro: compara o livro do mesmo recorte, sem novos lançamentos.
   function renderTreasury(report,q,params){
@@ -4790,6 +5567,7 @@ function bindRestock(){
     }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('your-current-price','—');setText('competitor-price','—');setText('buy-total','—');}
     renderCommerce();renderPriceHistory();renderRivals();
     if(tab==='administrativo'&&activeSection.administrativo==='financas')renderCredit();
+    if(tab==='administrativo'&&activeSection.administrativo==='logistica')renderLogistics();
     if((tab==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo))||financeQuery)renderFinances();
     renderFiscal();
     renderFiscalOperations();
@@ -4842,6 +5620,7 @@ function bindRestock(){
     timer=setInterval(()=>{if(!commit('TEMPO.AVANCAR_DIA'))resetTimer();},Math.round(1900/speed));setText('pause-btn','Ⅱ Pausar');
   }
   function bind(){
+    bindLogistics();
     // Somente estado de apresentação; não grava em save nem executa comandos econômicos.
     const hudToggle=$('stats-more-toggle');
     hudToggle.addEventListener('click',()=>{

@@ -269,6 +269,88 @@
     if(report.recent.oneOff>0)risks.push('Abertura e outras despesas eventuais constam do realizado, mas não foram repetidas na projeção.');
     $('strategy-risks').innerHTML=risks.length?risks.map(x=>`<p>${escape(x)}</p>`).join(''):'<p>Sem alertas adicionais nos parâmetros desta projeção hipotética.</p>';
   }
+
+  // V2.7: a tela apenas lê relatórios e envia comandos idempotentes ao domínio.
+  function setCreditOptions(id,rows){
+    const el=$(id),selected=el.value;
+    el.replaceChildren(...rows.map(row=>{
+      const opt=document.createElement('option');
+      opt.value=String(row[0]);opt.textContent=String(row[1]);
+      return opt;
+    }));
+    if(rows.some(x=>String(x[0])===selected))el.value=selected;
+    el.disabled=!rows.length;
+  }
+  function renderCredit(){
+    const report=Core.creditReport(state),elig=report.eligibility;
+    const activeLoans=report.loans.filter(l=>l.status!=='PAID');
+    const statusNames={OPEN:'Em dia',DUE:'Parcela vencendo',DELINQUENT:'Em atraso',RESTRUCTURED:'Renegociado',PAID:'Quitado'};
+    const detail=[
+      ['Elegibilidade',elig.eligible?'Crédito disponível':elig.reason],
+      ['Vendas dos últimos 30 dias',Core.money(elig.salesLast30Cents||0)],
+      ['Limite total permitido',Core.money(elig.creditLimitCents||0)],
+      ['Limite adicional disponível',Core.money(elig.availableCents||0)],
+      ['Principal dos empréstimos',Core.money(report.principalOutstanding)],
+      ['Juros reconhecidos a pagar',Core.money(report.interestOutstanding)],
+      ['Multas de crédito a pagar',Core.money(report.feesOutstanding)],
+      ['Multas de fornecedores a pagar',Core.money(report.contractFeesOutstanding)]
+    ];
+    $('credit-summary').innerHTML=detail.map(item=>'<dt>'+escape(item[0])+'</dt><dd>'+escape(item[1])+'</dd>').join('');
+    $('credit-contract-submit').disabled=!elig.eligible;
+    $('credit-loan-list').innerHTML=report.loans.map(l=>{
+      const due=l.duePrincipalCents+l.interestDueCents+l.feesDueCents;
+      return '<div class="event-item"><div><strong>'+escape(l.id)+' · '+escape(statusNames[l.status]||l.status)+
+        '</strong><p>Principal: '+escape(Core.money(l.remainingCents))+' · Encargos reconhecidos: '+
+        escape(Core.money(l.interestDueCents+l.feesDueCents))+' · Parcela exigível: '+escape(Core.money(due))+
+        '</p><small>Próximo vencimento fictício: '+escape(l.nextDueDate)+' · '+l.termMonths+
+        ' períodos · renegociações '+l.renegotiations+'/2</small></div></div>';
+    }).join('')||'<p class="muted">Nenhum financiamento contratado.</p>';
+    setCreditOptions('credit-pay-id',activeLoans.map(l=>[l.id,l.id+' · '+Core.money(l.remainingCents+l.interestDueCents+l.feesDueCents)]));
+    setCreditOptions('credit-renegotiate-id',activeLoans.filter(l=>l.status==='DELINQUENT').map(l=>[l.id,l.id+' · '+Core.money(l.remainingCents)]));
+    $('credit-payment-form').querySelector('button').disabled=!activeLoans.length;
+    $('credit-renegotiate-form').querySelector('button').disabled=!activeLoans.some(l=>l.status==='DELINQUENT');
+    if(activeLoans.length&&!$('credit-pay-amount').value){
+      const loan=activeLoans.find(l=>l.id===$('credit-pay-id').value)||activeLoans[0];
+      $('credit-pay-amount').value=((loan.duePrincipalCents+loan.interestDueCents+loan.feesDueCents||Math.min(loan.remainingCents,50000))/100).toFixed(2);
+    }
+    const units=Core.businesses(state);
+    setCreditOptions('supplier-contract-unit',units.map(u=>[u.id,u.id+' · '+Core.cityById(u.cityId).name]));
+    const selected=units.find(u=>u.id===$('supplier-contract-unit').value)||units[0];
+    setCreditOptions('supplier-contract-product',(selected?.products||[]).map(p=>[p.id,p.name]));
+    $('supplier-contract-form').querySelector('button').disabled=!selected;
+    $('supplier-contract-list').innerHTML=report.contracts.map(c=>{
+      const pending=(c.cycles-c.processed)*c.quantity*c.unitCostCents;
+      const status=c.status==='ACTIVE'?'Ativo':c.status==='COMPLETED'?'Concluído':'Rescindido';
+      return '<div class="event-item"><div><strong>'+escape(c.id+' · '+status)+
+        '</strong><p>'+escape(c.productName)+' · '+c.quantity+' un. por pedido · custo '+escape(Core.money(c.unitCostCents))+
+        '/un. · '+c.fulfilled+'/'+c.cycles+' pedidos efetivados · '+c.missed+
+        ' falha(s) · compromisso futuro '+escape(Core.money(pending))+'</p><small>'+
+        'Próxima data '+escape(c.status==='ACTIVE'?c.nextOrderDate:'—')+
+        ' · multa em aberto '+escape(Core.money(c.penaltyDueCents))+'</small><div class="filter-action-row">'+
+        (c.status==='ACTIVE'?'<button type="button" class="btn btn-outline" data-credit-cancel="'+escape(c.id)+'">Rescindir</button>':'')+
+        (c.penaltyDueCents>0?'<button type="button" class="btn btn-outline" data-credit-fee="'+escape(c.id)+'">Quitar multa</button>':'')+
+        '</div></div></div>';
+    }).join('')||'<p class="muted">Nenhum contrato de fornecimento.</p>';
+    const horizon=Number($('credit-calendar-horizon').value)||90;
+    const cal=Core.financialCommitmentsReport(state,horizon);
+    $('credit-calendar-summary').innerHTML=[
+      ['Caixa realizado do grupo',cal.cash],
+      ['Passivos já reconhecidos no balanço',cal.recognizedLiabilities],
+      ['Compras futuras contratadas não contabilizadas',cal.expectedSupplierCents],
+      ['Parcelas futuras estimadas (principal e juros)',cal.expectedLoanCents],
+      ['Juros futuros ainda não reconhecidos',cal.expectedUnrecognizedLoanInterestCents],
+      ['Despesas operacionais fixas hipotéticas',cal.fixedOperatingScenarioCents],
+      ['Caixa sob estresse sem vendas (não disponível)',cal.stressCashNoSales]
+    ].map(row=>'<dt>'+escape(row[0])+'</dt><dd>'+escape(Core.money(row[1]))+'</dd>').join('');
+    const kindNames={LOAN_DUE:'Parcela/encargos exigíveis',LOAN_SCHEDULE:'Financiamento futuro',
+      SUPPLIER_COMMITMENT:'Compra contratada',RECOGNIZED_PAYABLES:'Outros passivos já lançados',
+      PAYROLL_KNOWN:'Folhas já contabilizadas no passivo'};
+    $('credit-calendar-rows').innerHTML=cal.events.slice(0,25).map(ev=>
+      '<tr><td>'+escape(ev.date)+'</td><td>'+escape((kindNames[ev.kind]||ev.kind)+' · '+ev.id)+
+      '</td><td>'+escape(Core.money(ev.amountCents))+'</td><td>'+escape(ev.certainty)+
+      '</td></tr>').join('')||'<tr><td colspan="4">Nenhum compromisso no horizonte escolhido.</td></tr>';
+  }
+
   /* CDN_FINANCE_VIEWS */
   function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
   function commit(type,payload={}){
@@ -389,6 +471,7 @@
       updateBuyPreview();
     }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('your-current-price','—');setText('competitor-price','—');setText('buy-total','—');}
     renderCommerce();renderPriceHistory();renderRivals();
+    if(tab==='administrativo'&&activeSection.administrativo==='financas')renderCredit();
     if((tab==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo))||financeQuery)renderFinances();
     renderFiscal();
     renderFiscalOperations();
@@ -451,6 +534,59 @@
     });
     $('career-form').addEventListener('submit',e=>{e.preventDefault();const name=$('player-name').value,companyName=$('company-name').value,cityId=$('start-city').value;if(commit('CARREIRA.CRIAR',{name,companyName,cityId,seed:(Date.now()>>>0)}))commit('MUNDO.CONCORRENCIA_ATIVAR');});
     $('rival-enable').addEventListener('click',()=>commit('MUNDO.CONCORRENCIA_ATIVAR'));
+
+    // Controles V2.7: nunca alteram o estado diretamente.
+    $('credit-contract-form').addEventListener('submit',e=>{
+      e.preventDefault();
+      const principalCents=Math.round(Number($('credit-principal').value)*100),
+        termMonths=Number($('credit-term').value);
+      if(confirm('Contratar crédito FICTÍCIO de '+Core.money(principalCents)+'? O principal entra no caixa e gera dívida; haverá juros de 1,8% a cada 30 dias.'))
+        commit('CREDITO.CONTRATAR',{principalCents,termMonths});
+    });
+    $('credit-pay-id').addEventListener('change',()=>{
+      const l=Core.creditReport(state).loans.find(x=>x.id===$('credit-pay-id').value);
+      $('credit-pay-amount').value=l?((l.duePrincipalCents+l.interestDueCents+l.feesDueCents||Math.min(l.remainingCents,50000))/100).toFixed(2):'';
+    });
+    $('credit-payment-form').addEventListener('submit',e=>{
+      e.preventDefault();
+      const loanId=$('credit-pay-id').value,amountCents=Math.round(Number($('credit-pay-amount').value)*100);
+      if(confirm('Pagar '+Core.money(amountCents)+' com o caixa do grupo? A baixa será aplicada primeiro às multas, depois aos juros e ao principal.'))
+        if(commit('CREDITO.PAGAR',{loanId,amountCents}))$('credit-pay-amount').value='';
+    });
+    $('credit-renegotiate-form').addEventListener('submit',e=>{
+      e.preventDefault();
+      const loanId=$('credit-renegotiate-id').value,termMonths=Number($('credit-renegotiate-term').value);
+      if(confirm('Renegociar '+loanId+' em '+termMonths+' novos períodos fictícios? Juros e multas existentes NÃO são perdoados.'))
+        commit('CREDITO.RENEGOCIAR',{loanId,termMonths});
+    });
+    $('supplier-contract-unit').addEventListener('change',()=>{
+      const unit=Core.businessById(state,$('supplier-contract-unit').value);
+      setCreditOptions('supplier-contract-product',(unit?.products||[]).map(p=>[p.id,p.name]));
+    });
+    $('supplier-contract-form').addEventListener('submit',e=>{
+      e.preventDefault();
+      const payload={businessId:$('supplier-contract-unit').value,productId:$('supplier-contract-product').value,
+        supplierId:$('supplier-contract-supplier').value,quantity:Number($('supplier-contract-quantity').value),
+        periodDays:Number($('supplier-contract-period').value),cycles:Number($('supplier-contract-cycles').value)};
+      if(confirm('Assinar contrato FICTÍCIO com '+payload.cycles+' pedidos automáticos? Eles descontam caixa na data do pedido. Falta de caixa/estoque gera multa simulada de 2%, e rescisão antecipada cobra 5% do compromisso restante.'))
+        commit('CONTRATO.FORNECEDOR.ASSINAR',payload);
+    });
+    $('supplier-contract-list').addEventListener('click',e=>{
+      const cancel=e.target.closest('[data-credit-cancel]'),fee=e.target.closest('[data-credit-fee]');
+      if(cancel){
+        const contractId=cancel.dataset.creditCancel;
+        const c=Core.creditReport(state).contracts.find(x=>x.id===contractId);
+        if(c&&confirm('Rescindir '+contractId+'? Serão cancelados pedidos futuros e lançada multa de 5% sobre os compromissos restantes.'))
+          commit('CONTRATO.FORNECEDOR.RESCINDIR',{contractId});
+      }else if(fee){
+        const contractId=fee.dataset.creditFee;
+        const c=Core.creditReport(state).contracts.find(x=>x.id===contractId);
+        if(c&&confirm('Quitar '+Core.money(c.penaltyDueCents)+' de multa fictícia do contrato '+contractId+'?'))
+          commit('CONTRATO.FORNECEDOR.PAGAR_PENALIDADE',{contractId,amountCents:c.penaltyDueCents});
+      }
+    });
+    $('credit-calendar-horizon').addEventListener('change',renderCredit);
+
     $('journey-dilemmas').addEventListener('click',e=>{const t=e.target.closest('button[data-dilemma]');if(t&&!t.disabled)commit('DILEMA.ESCOLHER',{dilemmaId:t.dataset.dilemma,choice:t.dataset.choice});});
     for(const button of document.querySelectorAll('[data-tab]'))button.addEventListener('click',()=>goto(button.dataset.tab));
     for(const button of document.querySelectorAll('[data-go]'))button.addEventListener('click',()=>goto(button.dataset.go));

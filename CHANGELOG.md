@@ -1,13 +1,13 @@
 # Histórico de versões — Cidade dos Negócios
 
-## 2.7.0-alpha.1 — Crédito, contratos e riscos financeiros (candidata em testes, 05/11/2026)
+## 2.7.0 — Crédito, contratos e riscos financeiros (homologada formalmente, 05/11/2026)
 
 - Financiamento empresarial fictício: limite proporcional ao histórico de vendas, até R$ 30.000 de principal em aberto; 3, 6, 12 ou 24 períodos de 30 dias; juros de 1,8% por período, calculados proporcionalmente quando há amortização antecipada.
 - Comando idempotente de crédito `CREDITO.CONTRATAR`; entrada em caixa e em `LOAN_PAYABLE`, **nunca em REVENUE**. Juros em despesa/`INTEREST_PAYABLE`; multas limitadas a 20% do principal, renegociação por até duas vezes sem perdão silencioso.
 - Fornecimento contratado: até seis contratos ativos, pedidos de 7/14/30 dias (2–12 ciclos), custo fixo, compra paga na data, rastreio no pedido e entrega no estoque. Falha de pedido gera multa fictícia de 2%; rescisão gera multa fictícia de 5% dos compromissos não cumpridos.
 - Calendário 30/90/180 dias distingue passivos já reconhecidos de compras futuras e juros não contabilizados; estresse sem vendas não desconta principal duas vezes.
 - Nova tela nas Finanças, regressões de crédito e novo benchmark de 90/365/1.825 dias. `schemaVersion=9` preservado para saves legados.
-- **Atenção:** não é release homologada. A V2.6.0 mantém seu checkpoint oficial e o QA Windows/navegador continua necessário. Ver [documentação](docs/V270_CREDITO_CONTRATOS_RISCOS.md).
+- **Homologação formal:** titular autorizou expressamente em 05/11/2026 após a CI `42136048056` aprovada. Candidata validada com **290/290 testes PASS, zero falhas**, seis benchmarks históricos, quatro cenários de concorrência e três benchmarks financeiros de 90/365/1.825 dias. **QA manual Windows/browser e balanceamento subjetivo não comprovados**. V2.6.0 conservada como rollback. Registro: [HOMOLOGACAO_V270.md](docs/HOMOLOGACAO_V270.md); especificação: [V270_CREDITO_CONTRATOS_RISCOS.md](docs/V270_CREDITO_CONTRATOS_RISCOS.md).
 
 
 ## 2.6.0 — Jornada Empresarial integral + Economia Viva (homologada formalmente, 05/11/2026)

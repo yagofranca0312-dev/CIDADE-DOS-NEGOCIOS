@@ -29,8 +29,9 @@ const companyViews=readFileSync(resolve(cwd,'src/ui/company-views.part.js'),'utf
 const restockViews=readFileSync(resolve(cwd,'src/ui/restock-views.part.js'),'utf8');
 const marketViews=readFileSync(resolve(cwd,'src/ui/market-views.part.js'),'utf8');
 const financeViews=readFileSync(resolve(cwd,'src/ui/finance-views.part.js'),'utf8');
-const ui=uiShell.replace('/* CDN_COMPANY_VIEWS */',companyViews).replace('/* CDN_RESTOCK_VIEWS */',restockViews).replace('/* CDN_MARKET_VIEWS */',marketViews).replace('/* CDN_FINANCE_VIEWS */',financeViews);
-if (ui.includes('/* CDN_COMPANY_VIEWS */') || ui.includes('/* CDN_RESTOCK_VIEWS */') || ui.includes('/* CDN_MARKET_VIEWS */') || ui.includes('/* CDN_FINANCE_VIEWS */')) throw Error('Fragmentos visuais incompletos');
+const logisticsViews=readFileSync(resolve(cwd,'src/ui/logistics-views.part.js'),'utf8');
+const ui=uiShell.replace('/* CDN_COMPANY_VIEWS */',companyViews).replace('/* CDN_RESTOCK_VIEWS */',restockViews).replace('/* CDN_MARKET_VIEWS */',marketViews).replace('/* CDN_FINANCE_VIEWS */',financeViews).replace('/* CDN_LOGISTICS_VIEWS */',logisticsViews);
+if (ui.includes('/* CDN_COMPANY_VIEWS */') || ui.includes('/* CDN_RESTOCK_VIEWS */') || ui.includes('/* CDN_MARKET_VIEWS */') || ui.includes('/* CDN_FINANCE_VIEWS */') || ui.includes('/* CDN_LOGISTICS_VIEWS */')) throw Error('Fragmentos visuais incompletos');
 const pkg=JSON.parse(readFileSync(resolve(cwd,'package.json'),'utf8'));
 const coreVersion=core.match(/const VERSION = '([^']+)'/)?.[1];
 if (!coreVersion || pkg.version!==coreVersion) throw Error('Versão divergente entre motor e package.json');

@@ -1297,12 +1297,11 @@ const CidadeCore = (() => {
     for(const l of fin.loans.filter(x=>x.status!=='PAID')){
       if(l.interestDueCents+l.feesDueCents+l.duePrincipalCents>0)
         rows.push({date:state.calendar.date,kind:'LOAN_DUE',id:l.id,amountCents:l.interestDueCents+l.feesDueCents+l.duePrincipalCents,certainty:'RECOGNIZED'});
-      let next=l.nextDueDate,remaining=l.remainingCents,expected=0;
+      let next=l.nextDueDate,remaining=l.remainingCents;
       for(let i=0;i<Math.min(l.termMonths,24)&&next<=until&&remaining>0;i++){
         const principal=Math.min(remaining,l.installmentPrincipalCents);
         const interest=Math.round(remaining*l.rateBp/10000);
-        expected+=principal+interest;
-        rows.push({date:next,kind:'LOAN_SCHEDULE',id:l.id,amountCents:principal+interest,certainty:'PROJECTED'});
+        rows.push({date:next,kind:'LOAN_SCHEDULE',id:l.id,amountCents:principal+interest,principalCents:principal,interestCents:interest,certainty:'PROJECTED'});
         remaining-=principal;next=addDays(next,FINANCE_TERM_DAYS);
       }
     }
@@ -1334,17 +1333,19 @@ const CidadeCore = (() => {
     assert(state&&[30,90,180].includes(days),'Horizonte contratual inválido');
     const events=scheduleDue(state,days),cash=balance(state,'CASH');
     const expectedSupplier=events.filter(x=>x.kind==='SUPPLIER_COMMITMENT').reduce((n,x)=>n+x.amountCents,0);
-    const expectedLoan=events.filter(x=>x.kind==='LOAN_SCHEDULE').reduce((n,x)=>n+x.amountCents,0);
+    const loanSchedules=events.filter(x=>x.kind==='LOAN_SCHEDULE');
+    const expectedLoan=loanSchedules.reduce((n,x)=>n+x.amountCents,0);
+    const expectedUnrecognizedLoanInterest=loanSchedules.reduce((n,x)=>n+x.interestCents,0);
     const recognized=balance(state,'PAYABLE')+balance(state,'TAX_PAYABLE')+
       balance(state,'CONTRACT_PAYABLE')+balance(state,'LOAN_PAYABLE')+
       balance(state,'INTEREST_PAYABLE')+balance(state,'LOAN_FEES_PAYABLE');
     const dailyFixed=businesses(state).reduce((n,b)=>n+SECTORS[b.sector].dailyCost,0);
     return {days,from:state.calendar.date,to:addDays(state.calendar.date,days),
       cash,recognizedLiabilities:recognized,expectedSupplierCents:expectedSupplier,
-      expectedLoanCents:expectedLoan,fixedOperatingScenarioCents:dailyFixed*days,
-      cashAfterRecognizedIfPaid:cash-recognized,
-      stressCashNoSales:cash-recognized-expectedSupplier-expectedLoan-dailyFixed*days,
-      events,warning:'Projeção de estresse sem novas vendas; obrigações reconhecidas e compromissos futuros são categorias diferentes. Não gera lançamentos nem garante disponibilidade.'};
+      expectedLoanCents:expectedLoan,expectedUnrecognizedLoanInterestCents:expectedUnrecognizedLoanInterest,
+      fixedOperatingScenarioCents:dailyFixed*days,cashAfterRecognizedIfPaid:cash-recognized,
+      stressCashNoSales:cash-recognized-expectedSupplier-expectedUnrecognizedLoanInterest-dailyFixed*days,
+      events,warning:'Estresse sem novas vendas: principal já reconhecido é descontado uma única vez; apenas juros futuros são adicionados. Compras e custos projetados não geram lançamento; folha futura não foi projetada neste painel.'};
   }
   function financeJournal(draft,memo,entries,kind,unit=null){
     journal(draft,memo,entries,unit,kind);

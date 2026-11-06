@@ -426,7 +426,7 @@
     <label>Origem<select id="logistics-transfer-from" required></select></label>
     <label>Destino<select id="logistics-transfer-to" required></select></label>
     <label>Produto / setor<select id="logistics-transfer-product" required></select></label>
-    <label>Quantidade<select id="logistics-transfer-quantity" type="number" min="1" max="250" value="10" required></select></label>
+    <label>Quantidade<input id="logistics-transfer-quantity" type="number" min="1" max="250" value="10" required></label>
    </div>
    <p id="logistics-route-preview" class="field-hint" aria-live="polite">Selecione origem, destino, produto e quantidade.</p>
    <button type="submit" class="btn btn-primary" id="logistics-transfer-submit">Confirmar e pagar frete fictício</button>
@@ -448,7 +448,7 @@
     <label>Catálogo da unidade<select id="logistics-depot-unit" required></select></label>
     <label>Produto<select id="logistics-depot-product" required></select></label>
     <label>Fornecedor<select id="logistics-depot-supplier"><option value="regional">Distribuidora Regional</option><option value="atacado">Atacado Comercial</option></select></label>
-    <label>Quantidade<select id="logistics-depot-quantity" type="number" min="1" max="200" value="20" required></select></label>
+    <label>Quantidade<input id="logistics-depot-quantity" type="number" min="1" max="200" value="20" required></label>
    </div>
    <button type="submit" class="btn btn-outline" id="logistics-depot-buy">Confirmar compra e trânsito ao CD</button>
   </form>

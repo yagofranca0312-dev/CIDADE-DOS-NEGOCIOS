@@ -3156,10 +3156,13 @@ const CidadeCore = (() => {
     assert(state&&plain(state.economy),'Carreira inválida');
     assert(isoDate(asOf)&&asOf>=START_DATE&&asOf<=state.calendar.date,'Data de balanço inválida');
     const journals=state.economy.ledger.filter(j=>j.date<=asOf);
-    const amounts=Object.fromEntries(Object.keys(ACCOUNT_CATALOG).map(code=>[code,signedAccount(journals,code)]));
+    const financeAccounts=['LOAN_PAYABLE','INTEREST_PAYABLE','LOAN_FEES_PAYABLE','CONTRACT_PAYABLE'];
+    const amounts=Object.fromEntries(Object.keys(ACCOUNT_CATALOG)
+      .filter(code=>state.economy.financing||!financeAccounts.includes(code))
+      .map(code=>[code,signedAccount(journals,code)]));
     const unknown=Object.keys(ACCOUNT_CATALOG).length===0?[]:[...new Set(journals.flatMap(j=>j.entries.map(e=>e.account)))].filter(a=>!ACCOUNT_CATALOG[a]);
     const assets=amounts.CASH+amounts.INVENTORY+amounts.IN_TRANSIT+amounts.RECEIVABLE;
-    const liabilities=amounts.PAYABLE+amounts.TAX_PAYABLE+amounts.LOAN_PAYABLE+amounts.INTEREST_PAYABLE+amounts.LOAN_FEES_PAYABLE+amounts.CONTRACT_PAYABLE,retainedEarnings=amounts.REVENUE-amounts.COGS-amounts.EXPENSE-amounts.TAX_EXPENSE;
+    const liabilities=amounts.PAYABLE+amounts.TAX_PAYABLE+(amounts.LOAN_PAYABLE||0)+(amounts.INTEREST_PAYABLE||0)+(amounts.LOAN_FEES_PAYABLE||0)+(amounts.CONTRACT_PAYABLE||0),retainedEarnings=amounts.REVENUE-amounts.COGS-amounts.EXPENSE-amounts.TAX_EXPENSE;
     const equity=amounts.CAPITAL+retainedEarnings,difference=assets-liabilities-equity;
     return {asOf,accounts:amounts,assets,liabilities,paidInCapital:amounts.CAPITAL,
       retainedEarnings,equity,difference,balanced:difference===0&&unknown.length===0,

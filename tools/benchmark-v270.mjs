@@ -65,11 +65,15 @@ const scenarios=[];
 {
  let s=build(270103,'SP-SAO-PAULO');
  s=go(s,'CREDITO.CONTRATAR',{principalCents:50000,termMonths:24});
+ // Inaugurações só podem acontecer com capital EFETIVAMENTE disponível.
+ // O benchmark não injeta crédito fictício acima do limite para forçar cinco unidades.
  const areas=['CE-TIANGUA','CE-FORTALEZA','RJ-RIO-DE-JANEIRO','MG-BELO-HORIZONTE'];
  for(const cityId of areas){
   if(!C.cityById(cityId))continue;
+  if(C.overview(s).cash<C.SECTORS.mercado.openCost+100000)break;
   s=go(s,'EMPRESA.ABRIR',{sector:'mercado',cityId,lot:1});
  }
+ if(C.businesses(s).length<2)throw Error('Cenário prolongado precisa de pelo menos duas lojas reais');
  s=go(s,'CONTRATO.FORNECEDOR.ASSINAR',{businessId:C.businesses(s)[0].id,supplierId:'regional',
   productId:'base',quantity:10,periodDays:30,cycles:12});
  s=advance(s,1825);

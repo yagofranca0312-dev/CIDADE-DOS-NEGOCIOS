@@ -15,7 +15,7 @@ const city=old.CITIES.find(c=>c.name==='Tianguá').id;
 function dispatch(c,state,type,payload,id){const r=c.dispatch(state,{type,payload,id:`v21-golden-${id}`});assert.equal(r.ok,true,`${type}: ${r.error}`);return r.state;}
 function drive(c){let s=dispatch(c,null,'CARREIRA.CRIAR',{cityId:city,name:'Teste de Compatibilidade',companyName:'Rede Visual',seed:10540},1);s=dispatch(c,s,'EMPRESA.ABRIR',{cityId:city,sector:'mercado',lot:1},2);s=dispatch(c,s,'ESTOQUE.COMPRAR',{productId:'base',supplierId:'regional',quantity:80},3);s=dispatch(c,s,'TEMPO.AVANCAR_LOTE',{days:29},4);return s;}
 test('V2.4-A mantém o schema e permite nova capacidade paralegal independente',()=>{
- assert.equal(now.SCHEMA_VERSION,9);assert.equal(now.VERSION,'2.6.0');
+ assert.equal(now.SCHEMA_VERSION,9);assert.equal(now.VERSION,'2.7.0-alpha.1');
  assert.equal(typeof now.paralegalReport,'function');
 });
 test('V2.0 vs V2.2 economia, rng, fiscal e razão invariáveis',()=>{
@@ -47,7 +47,7 @@ test('Limite tributário permanece visível, com detalhe acessível',()=>{
 test('CSS acessibilidade e versão sincronizada, sem depender de fontes externas',()=>{
  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
  assert.match(css,/max-width:800px/);assert.match(css,/max-width:430px/);
- for(const id of ['intro-version','build-version','footer-version'])assert.ok(template.includes(`id="${id}">v2.6.0<`));
- assert.match(template,/<title>Cidade dos Negócios 1 · v2\.6\.0<\/title>/);
+ for(const id of ['intro-version','build-version','footer-version'])assert.ok(template.includes(`id="${id}">v2.7.0-alpha.1<`));
+ assert.match(template,/<title>Cidade dos Negócios 1 · v2\.7\.0-alpha\.1<\/title>/);
  assert.doesNotMatch(html,/<script[^>]+src=/i);assert.doesNotMatch(html,/<link[^>]+stylesheet/i);
 });

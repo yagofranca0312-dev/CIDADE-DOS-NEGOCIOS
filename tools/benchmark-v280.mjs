@@ -63,7 +63,11 @@ const all=[];
  let cdBuilt=false,centralPurchase=false,centralMoved=false,directMoved=false,unlocked=0;
  const target=1832;
  while(s.calendar.tick<target){
+  // Até atingir cinco lojas, a rede compra e cresce com caixa real. Depois do primeiro ano,
+  // o horizonte prolongado mede persistência/obrigações sem criar milhares de compras artificiais.
+  const activeOperations=s.calendar.tick<400||(C.businesses(s).length<5&&s.calendar.tick<900);
   let units=C.businesses(s);
+  if(activeOperations){
   // Pagamentos, compras e expansões são reais no simulador; não há aporte adicional.
   for(const b of units){
    const base=b.products.find(p=>p.id==='base');
@@ -100,7 +104,8 @@ const all=[];
    s=go(s,'LOGISTICA.TRANSFERIR',{fromId:units[0].id,toId:units[2].id,productId:'base',quantity:10});
    directMoved=true;
   }
-  s=step(s,Math.min(7,target-s.calendar.tick));
+  }
+  s=step(s,Math.min(activeOperations?7:30,target-s.calendar.tick));
   if(s.calendar.tick>=365&&!all.some(x=>x.scenario==='365-dias-rede-logistica'))all.push(check(s,'365-dias-rede-logistica'));
  }
  const last=check(s,'1832-dias-5-unidades-economia-integrada');

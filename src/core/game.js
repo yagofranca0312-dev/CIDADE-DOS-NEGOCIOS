@@ -322,7 +322,7 @@ const CidadeCore = (() => {
   // Journals antigos pertencem à matriz, exceto aporte inicial, que pertence ao grupo.
   function journalBusinessId(state,j){
     if(j.businessId)return j.businessId;
-    return j.memo==='Capital inicial do empreendedor'||['LOAN_DRAW','LOAN_INTEREST','LOAN_LATE_FEE','LOAN_PAYMENT','LOGISTICS_CD_OPEN','LOGISTICS_CD_DAILY','LOGISTICS_CD_PURCHASE','LOGISTICS_CD_VENDOR_RECEIPT','LOGISTICS_CD_DISPATCH','LOGISTICS_CD_CLEAR','LOGISTICS_CD_RECEIVE','LOGISTICS_CD_FEE','LOGISTICS_CD_WASTE'].includes(transactionKind(j))?null:state.world.business?.id??null;
+    return j.memo==='Capital inicial do empreendedor'||['LOAN_DRAW','LOAN_INTEREST','LOAN_LATE_FEE','LOAN_PAYMENT','LOGISTICS_CD_OPEN','LOGISTICS_CD_DAILY','LOGISTICS_CD_PURCHASE','LOGISTICS_CD_VENDOR_RECEIPT','LOGISTICS_CD_DISPATCH','LOGISTICS_CD_CLEAR','LOGISTICS_CD_RECEIVE','LOGISTICS_CD_FEE','LOGISTICS_CD_WASTE','LOGISTICS_CD_SETTLEMENT'].includes(transactionKind(j))?null:state.world.business?.id??null;
   }
   function product(b,id) {const p=b.products.find(x=>x.id===(id??'base'));assert(p,'Produto não cadastrado');return p;}
   function promotionDiscount(b,p,date){
@@ -358,7 +358,10 @@ const CidadeCore = (() => {
     });
     const allPending=b.purchaseOrders.filter(o=>o.status==='PENDING')
       .reduce((n,o)=>n+o.items.reduce((sum,x)=>sum+x.quantity,0),0);
-    assert(b.stockUnits+allPending+qtyTotal<=100000,'Capacidade total do depósito (incluindo trânsito) excedida');
+    const incomingInternal=logisticsRead(draft).transfers.filter(t=>t.status==='PENDING'&&t.toId===b.id)
+      .reduce((n,t)=>n+t.quantity,0);
+    assert(b.stockUnits+allPending+incomingInternal+qtyTotal<=100000,
+      'Capacidade total da unidade, incluindo transferências em trânsito, excedida');
     assert(Number.isSafeInteger(total)&&balance(draft,'CASH')>=total,`Caixa insuficiente para encomenda: ${money(total)}`);
     assert(b.purchaseOrders.length<20000,'Histórico de compras cheio');
     const id=`pc-${++b.orderSeq}`,dueDate=addDays(draft.calendar.date,supplier.leadDays);
@@ -460,7 +463,7 @@ const CidadeCore = (() => {
     CONTRACT_PAYABLE:Object.freeze({name:'Multas de contratos de fornecimento',group:'LIABILITY',normal:'CREDIT'}),
     INTERNAL_CLEARING:Object.freeze({name:'Compensação interna de estoques',group:'ASSET',normal:'DEBIT'})
   });
-  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','PAYROLL_ACCRUAL','PAYROLL_PAYMENT','OPERATING_SETTLEMENT','LOAN_DRAW','LOAN_INTEREST','LOAN_LATE_FEE','LOAN_PAYMENT','CONTRACT_PENALTY','CONTRACT_PAYMENT','LOGISTICS_DISPATCH','LOGISTICS_CLEAR','LOGISTICS_RECEIVE','LOGISTICS_SHIP_FEE','LOGISTICS_WASTE','LOGISTICS_PRODUCTION','LOGISTICS_CD_OPEN','LOGISTICS_CD_DAILY','LOGISTICS_CD_PURCHASE','LOGISTICS_CD_VENDOR_RECEIPT','LOGISTICS_CD_DISPATCH','LOGISTICS_CD_CLEAR','LOGISTICS_CD_RECEIVE','LOGISTICS_CD_FEE','LOGISTICS_CD_WASTE','UNCLASSIFIED']);
+  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','PAYROLL_ACCRUAL','PAYROLL_PAYMENT','OPERATING_SETTLEMENT','LOAN_DRAW','LOAN_INTEREST','LOAN_LATE_FEE','LOAN_PAYMENT','CONTRACT_PENALTY','CONTRACT_PAYMENT','LOGISTICS_DISPATCH','LOGISTICS_CLEAR','LOGISTICS_RECEIVE','LOGISTICS_SHIP_FEE','LOGISTICS_WASTE','LOGISTICS_PRODUCTION','LOGISTICS_CD_OPEN','LOGISTICS_CD_DAILY','LOGISTICS_CD_PURCHASE','LOGISTICS_CD_VENDOR_RECEIPT','LOGISTICS_CD_DISPATCH','LOGISTICS_CD_CLEAR','LOGISTICS_CD_RECEIVE','LOGISTICS_CD_FEE','LOGISTICS_CD_WASTE','LOGISTICS_CD_SETTLEMENT','UNCLASSIFIED']);
   function transactionKind(j){
     if(TRANSACTION_KINDS.includes(j.kind))return j.kind;
     if(j.memo==='Capital inicial do empreendedor')return 'CAPITAL';
@@ -1804,6 +1807,11 @@ const CidadeCore = (() => {
       if(t.status==='PENDING'&&t.dueDate<=draft.calendar.date)logisticsReceiveTransfer(draft,t);
     }
   }
+  function logisticsDepotPayable(state){
+    if(!state?.economy?.logistics?.depot)return 0;
+    return state.economy.ledger.filter(j=>j.kind==='LOGISTICS_CD_DAILY'||j.kind==='LOGISTICS_CD_SETTLEMENT')
+      .reduce((sum,j)=>sum+j.entries.reduce((n,e)=>n+(e.account==='PAYABLE'?e.credit-e.debit:0),0),0);
+  }
   function logisticsReport(state){
     if(!state)return {enabled:false,depot:null,transfers:[],depotPurchases:[],batches:[],metrics:{}};
     const lg=logisticsRead(state);
@@ -1811,7 +1819,7 @@ const CidadeCore = (() => {
       depotPurchases:clone(lg.depotPurchases),batches:clone(lg.batches),metrics:clone(lg.metrics),
       totalPhysicalUnits:businesses(state).reduce((n,b)=>n+b.stockUnits,0)+(lg.depot?.stock.reduce((n,p)=>n+p.stockUnits,0)||0),
       depotCapacity:LOGISTICS_DEPOT_CAPACITY,depotOpeningCents:LOGISTICS_DEPOT_OPEN_CENTS,
-      depotDailyCents:LOGISTICS_DEPOT_DAILY_CENTS,productionLimit:LOGISTICS_PRODUCTION_MAX,
+      depotDailyCents:LOGISTICS_DEPOT_DAILY_CENTS,depotPayableCents:logisticsDepotPayable(state),productionLimit:LOGISTICS_PRODUCTION_MAX,
       note:'Todas as distâncias, entregas, prazos e custos logísticos são índices de jogo fictícios.'};
   }
   function logisticsSuggestions(state){
@@ -1847,6 +1855,19 @@ const CidadeCore = (() => {
   }
   function handleLogisticsCommand(draft,type,payload){
     const lg=logisticsState(draft);
+    if(type==='LOGISTICA.CD.PAGAR_DESPESAS'){
+      assert(lg.depot,'Nenhum CD ativo para liquidar custos.');
+      const amount=Number(payload.amountCents),owed=logisticsDepotPayable(draft);
+      assert(Number.isSafeInteger(amount)&&amount>0&&amount<=owed,
+        'Valor de pagamento excede as despesas do CD já reconhecidas.');
+      assert(balance(draft,'CASH')>=amount,'Caixa compartilhado insuficiente para liquidar o CD.');
+      journal(draft,'Pagamento de despesas do CD já reconhecidas',[
+        {account:'PAYABLE',debit:amount,credit:0},{account:'CASH',debit:0,credit:amount}],
+        null,'LOGISTICS_CD_SETTLEMENT');
+      event(draft,'LOGISTICA.CD_DESPESA_PAGA','Despesa já reconhecida do CD quitada: '+money(amount)+'.',
+        {amountCents:amount});
+      return;
+    }
     if(type==='LOGISTICA.CD.ABRIR'){
       assert(!lg.depot,'Já existe centro de distribuição no grupo.');
       assert(businesses(draft).length>=2,'Abra duas unidades antes de instalar um centro de distribuição.');
@@ -2058,6 +2079,7 @@ const CidadeCore = (() => {
       assert(businessById(state,businessId)?.sector==='padaria'&&
         plain(p)&&isoDate(p.date)&&int(p.used)&&p.used<=LOGISTICS_PRODUCTION_MAX,
         'Apuração de produção diária inválida.');
+    assert(logisticsDepotPayable(state)>=0,'Despesa do CD paga além do passivo reconhecido.');
     assert(balance(state,'INTERNAL_CLEARING')===0,'Compensação de movimentações internas não está zerada.');
   }
 

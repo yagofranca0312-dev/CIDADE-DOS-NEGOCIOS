@@ -14,7 +14,7 @@ test('Módulos e pontos de entrada presentes',()=>{for(const token of ['const Ci
 test('Aviso de cobertura fiscal explícita',()=>{assert.match(html,/Cenários tributários não são apuração legal/);assert.match(html,/NOT_COVERED/);});
 test('Build reproduzível byte a byte',()=>{
  const template=readFileSync('src/shell/index.template.html','utf8'),css=readFileSync('src/shell/theme.css','utf8'),v2css=readFileSync('src/shell/v2.css','utf8'),core=readFileSync('src/core/game.js','utf8'),visual=readFileSync('src/visual/city-scene.js','utf8'),ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/company-views.part.js','utf8')+readFileSync('src/ui/restock-views.part.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
- const uiBundle=readFileSync('src/ui/app.js','utf8').replace('/* CDN_COMPANY_VIEWS */',readFileSync('src/ui/company-views.part.js','utf8')).replace('/* CDN_RESTOCK_VIEWS */',readFileSync('src/ui/restock-views.part.js','utf8')).replace('/* CDN_MARKET_VIEWS */',readFileSync('src/ui/market-views.part.js','utf8')).replace('/* CDN_FINANCE_VIEWS */',readFileSync('src/ui/finance-views.part.js','utf8'));
+ const uiBundle=readFileSync('src/ui/app.js','utf8').replace('/* CDN_COMPANY_VIEWS */',readFileSync('src/ui/company-views.part.js','utf8')).replace('/* CDN_RESTOCK_VIEWS */',readFileSync('src/ui/restock-views.part.js','utf8')).replace('/* CDN_MARKET_VIEWS */',readFileSync('src/ui/market-views.part.js','utf8')).replace('/* CDN_FINANCE_VIEWS */',readFileSync('src/ui/finance-views.part.js','utf8')).replace('/* CDN_LOGISTICS_VIEWS */',readFileSync('src/ui/logistics-views.part.js','utf8'));
  const art='data:image/webp;base64,'+readFileSync('src/visual/keyart-v21.webp.b64','utf8').trim();
  const v21css=readFileSync('src/shell/v21.css','utf8').replace('__CDN_V21_KEYART__',art);
  const scene=readFileSync('src/visual/tiangua-scene.js','utf8')
@@ -50,7 +50,7 @@ test('Hotfix: preço próprio visível, concorrente independente e confirmação
 test('V1.3: schema 5 com migração da V1 e formato de exportação validado',()=>{
  const core=readFileSync('src/core/game.js','utf8');
  assert.match(core,/SCHEMA_VERSION = 9/);
- assert.match(core,/VERSION = '2\.7\.0'/);
+ assert.match(core,/VERSION = '2\.8\.0-alpha\.1'/);
  assert.match(core,/function importSave\(raw\)/);
  assert.match(core,/function upgradedState\(original\)/);
 });

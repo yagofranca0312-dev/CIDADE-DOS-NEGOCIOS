@@ -1,5 +1,18 @@
 # Histórico de versões — Cidade dos Negócios
 
+## 2.8.0-alpha.1 — Produção e logística integrada (candidata, 05/11/2026)
+
+- Rotas por índice fictício (não km ou ETA reais) e frete calculado por volume, sem fonte geográfica externa.
+- Remanejamento entre lojas com baixa física, trânsito, chegada e compensação interfilial, sem receita nem CMV.
+- Centro de distribuição opcional com custo fixo e quitação própria de obrigação já reconhecida, estoque, capacidade 2.000 e compras de fornecedores, incluindo desconto simulado de 25% em trechos com CD.
+- Padaria: farinha como insumo, produção 1:3, custo industrial incorporado ao estoque, capacidade diária e rastreio de lotes.
+- Validade de pães/bolos somente novos, redução de estoque e despesa de desperdício reconhecida uma vez, inclusive perda em trânsito.
+- Sugestões de compras e transferências puramente informativas e editáveis; ação exige comando confirmado.
+- Conciliação de estoque e trânsito por unidade/CD, razão geral e compensação interna em zero; save `schemaVersion 9` preservado.
+- Quatorze novos testes e benchmark específico 90/365/1.832 dias para 3–5 unidades, sujeito à conclusão do CI.
+- **Não homologada.** Manter `releases/v2.7.0-homologada` como rollback até QA Windows, CI verde e aceite formal. [Detalhes](docs/V280_PRODUCAO_LOGISTICA.md).
+
+
 ## 2.7.0 — Crédito, contratos e riscos financeiros (homologada formalmente, 05/11/2026)
 
 - Financiamento empresarial fictício: limite proporcional ao histórico de vendas, até R$ 30.000 de principal em aberto; 3, 6, 12 ou 24 períodos de 30 dias; juros de 1,8% por período, calculados proporcionalmente quando há amortização antecipada.

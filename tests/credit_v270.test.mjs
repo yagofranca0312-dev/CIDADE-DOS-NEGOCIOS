@@ -260,7 +260,7 @@ test('V2.7: multiple units, loans, suppliers, 90 days, save and full reconciliat
 });
 test('V2.7: compiled HTML uses updated version, real controls, and one offline script',()=>{
   const html=readFileSync('index.html','utf8');
-  assert.match(html,/v2\.7\.0/);
+  assert.match(html,/v2\.8\.0-alpha\.1/);
   for(const id of ['credit-contract-form','credit-summary','credit-loan-list',
     'credit-payment-form','credit-renegotiate-form','supplier-contract-form',
     'supplier-contract-list','credit-calendar-summary','credit-calendar-rows']){

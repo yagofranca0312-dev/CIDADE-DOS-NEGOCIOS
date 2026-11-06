@@ -1,3 +1,17 @@
+# 🏙️ Cidade dos Negócios — V2.8.0-alpha.1 · Produção e Logística (candidata)
+
+**V2.8.0 em validação, NÃO homologada.** Interliga unidades, centro de distribuição opcional, compras consolidadas, transferências físicas, padaria com insumo e transformação, validade e desperdício de lotes novos, propostas de reposição editáveis e conciliação contábil multiloja.
+
+**Regra:** remanejamento interfilial não gera venda ou CMV. Estoque de origem → trânsito → destino, com conta interna de compensação zerada. Frete, centro de distribuição e perdas geram custos ou despesas verdadeiras **somente no simulador**. Distância é um índice de jogo, **não quilometragem nem trajeto rodoviário real**. Nenhuma proposta de gasto é executada sem confirmação.
+
+**Compatibilidade:** `schemaVersion 9`, novo estado logístico opcional e sem efeitos retroativos em saves anteriores; a **V2.7.0 homologada** permanece no checkpoint [releases/v2.7.0-homologada](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/tree/releases/v2.7.0-homologada).
+
+**Testes e requisitos:** [Plano integral V2.8](docs/V280_PRODUCAO_LOGISTICA.md). Regressões: `tests/logistics_v280.test.mjs`; benchmark: `npm run bench:logistics`. São necessários CI verde, QA no Windows/navegador offline, save de teste e aceite explícito para homologar.
+
+---
+
+## Histórico — versão anterior estável
+
 # 🏙️ Cidade dos Negócios — V2.7.0 (homologação formal pelo titular em 05/11/2026)
 
 **Versão estável V2.7.0 — aceite formal do titular.** O módulo financeiro inclui empréstimos fictícios com limite baseado em vendas, juros proporcionais, atraso, multa, quitação e renegociação; contratos recorrentes de fornecimento com preço fixo, pedidos automáticos, rescisão e multas; calendário projetado de compromissos, separado dos saldos realizados.

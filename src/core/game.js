@@ -1643,6 +1643,7 @@ const CidadeCore = (() => {
       return p;
     }
     let p=site.location.stock.find(x=>x.sector===sector&&x.productId===productId);
+    if(p)assert(p.name===name,'O CD não aceita misturar produtos distintos com o mesmo código.');
     if(!p&&create){
       p={sector,productId,name,stockUnits:0,stockValueCents:0};
       site.location.stock.push(p);
@@ -1749,7 +1750,7 @@ const CidadeCore = (() => {
     const loss=expiredPieces.reduce((n,x)=>n+x.quantity,0);
     let remainingValue=t.valueCents;
     if(loss){
-      const waste=loss===t.quantity?t.valueCents:Math.round(t.valueCents*loss/t.quantity);
+      const waste=loss===t.quantity?t.valueCents:Math.min(t.valueCents-1,Math.round(t.valueCents*loss/t.quantity));
       if(waste){
         journal(draft,'Perda perecível durante transporte '+t.id,[
           {account:'EXPENSE',debit:waste,credit:0},{account:'IN_TRANSIT',debit:0,credit:waste}],
@@ -1926,6 +1927,21 @@ const CidadeCore = (() => {
       event(draft,'LOGISTICA.EXPEDIDA','Transferência '+id+' '+from.id+' → '+to.id+'; '+quantity+' unidade(s). Sem faturamento interno.',
         {tripId:id,fromId:from.id,toId:to.id,quantity,valueCents,feeCents:quote.feeCents,dueDate,
           distanceUnits:quote.distanceUnits,distanceType:'SIMULATED_INDEX_NOT_KM'},from.depot?null:from.id);
+      return;
+    }
+    if(type==='LOGISTICA.INSUMO.COMPRAR'){
+      const unit=businessById(draft,String(payload.businessId||''));
+      assert(unit&&unit.sector==='padaria'&&unit.products.some(p=>p.id===LOGISTICS_BAKERY_INPUT),
+        'Habilite o insumo antes da compra.');
+      registerPurchase(draft,unit,String(payload.supplierId||'regional'),[
+        {productId:LOGISTICS_BAKERY_INPUT,quantity:Number(payload.quantity)}]);
+      return;
+    }
+    if(type==='LOGISTICA.REABASTECER'){
+      const unit=businessById(draft,String(payload.businessId||''));
+      assert(unit,'Unidade de reposição inexistente.');
+      registerPurchase(draft,unit,String(payload.supplierId||'regional'),[
+        {productId:String(payload.productId||'base'),quantity:Number(payload.quantity)}]);
       return;
     }
     if(type==='LOGISTICA.PRODUCAO.HABILITAR'){

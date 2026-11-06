@@ -322,7 +322,7 @@ const CidadeCore = (() => {
   // Journals antigos pertencem à matriz, exceto aporte inicial, que pertence ao grupo.
   function journalBusinessId(state,j){
     if(j.businessId)return j.businessId;
-    return j.memo==='Capital inicial do empreendedor'?null:state.world.business?.id??null;
+    return j.memo==='Capital inicial do empreendedor'||['LOAN_DRAW','LOAN_INTEREST','LOAN_LATE_FEE','LOAN_PAYMENT'].includes(transactionKind(j))?null:state.world.business?.id??null;
   }
   function product(b,id) {const p=b.products.find(x=>x.id===(id??'base'));assert(p,'Produto não cadastrado');return p;}
   function promotionDiscount(b,p,date){
@@ -337,7 +337,7 @@ const CidadeCore = (() => {
   const supplierById=id=>SUPPLIERS.find(s=>s.id===id);
   const pendingQuantity=(b,id)=>b.purchaseOrders.filter(o=>o.status==='PENDING').reduce((n,o)=>
     n+o.items.reduce((sum,line)=>sum+(line.productId===id?line.quantity:0),0),0);
-  function registerPurchase(draft,b,supplierId,items){
+  function registerPurchase(draft,b,supplierId,items,contract=null){
     const supplier=supplierById(supplierId);
     assert(supplier,'Fornecedor não cadastrado');
     assert(Array.isArray(items)&&items.length>=1&&items.length<=40,'Informe de 1 a 40 itens');
@@ -351,7 +351,8 @@ const CidadeCore = (() => {
         .reduce((n,o)=>n+o.items.reduce((sum,x)=>sum+(x.productId===p.id?x.quantity:0),0),0);
       assert(quantity+boughtToday<=supplier.maxDailyPerSku,`Capacidade diária de ${supplier.name}: ${supplier.maxDailyPerSku} unidades por produto`);
       assert(p.stockUnits+pendingQuantity(b,p.id)+quantity<=100000,'Capacidade máxima do produto excedida');
-      const unitCost=Math.round(p.costCents*supplier.priceFactor/100),cost=quantity*unitCost;
+      assert(!contract||(contract.productId===p.id&&contract.quantity===quantity&&contract.supplierId===supplier.id),'Pedido não corresponde ao contrato de fornecimento');
+      const unitCost=contract?contract.unitCostCents:Math.round(p.costCents*supplier.priceFactor/100),cost=quantity*unitCost;
       total+=cost;qtyTotal+=quantity;
       return {productId:p.id,name:p.name,quantity,unitCost,total:cost};
     });
@@ -361,10 +362,10 @@ const CidadeCore = (() => {
     assert(Number.isSafeInteger(total)&&balance(draft,'CASH')>=total,`Caixa insuficiente para encomenda: ${money(total)}`);
     assert(b.purchaseOrders.length<20000,'Histórico de compras cheio');
     const id=`pc-${++b.orderSeq}`,dueDate=addDays(draft.calendar.date,supplier.leadDays);
-    b.purchaseOrders.push({id,date:draft.calendar.date,supplierId,items:lines,total,status:'PENDING',dueDate,receivedAt:null});
+    b.purchaseOrders.push({id,date:draft.calendar.date,supplierId,items:lines,total,status:'PENDING',dueDate,receivedAt:null,...(contract?{contractId:contract.id}:{})});
     journal(draft,`Encomenda ${id}: mercadorias em trânsito`,[
       {account:'IN_TRANSIT',debit:total,credit:0},{account:'CASH',debit:0,credit:total}],b.id,'PURCHASE');
-    event(draft,'COMPRA.ENCOMENDADA',`Pedido ${id} pago (${money(total)}); previsão ${dueDate} (${supplier.leadDays} dia(s)).`,{id,total,dueDate,supplierId},b.id);
+    event(draft,'COMPRA.ENCOMENDADA',`Pedido ${id} pago (${money(total)}); previsão ${dueDate} (${supplier.leadDays} dia(s)).`,{id,total,dueDate,supplierId,...(contract?{contractId:contract.id}:{})},b.id);
   }
   function receiveDueOrders(draft,b){
     if(!b)return;
@@ -1275,7 +1276,6 @@ const CidadeCore = (() => {
   }
   function creditEligibility(state){
     const loans=financeRead(state).loans,units=businesses(state),days=Math.min(30,Math.max(1,state.calendar.tick));
-    const since=addDays(state.calendar.date,-0); // referência de data, sem alterar estado
     const windowStart=new Date(state.calendar.date+'T12:00:00Z');
     windowStart.setUTCDate(windowStart.getUTCDate()-30);
     const from=windowStart.toISOString().slice(0,10);
@@ -1366,6 +1366,17 @@ const CidadeCore = (() => {
     assert(c,'Contrato com fornecedor não encontrado');
     return c;
   }
+  function financeAccrueInterest(draft,l){
+    const elapsed=Math.max(0,Math.round((Date.parse(draft.calendar.date+'T12:00:00Z')-Date.parse(l.lastAccruedAt+'T12:00:00Z'))/86400000));
+    if(!elapsed)return 0;
+    const interest=Math.round(l.remainingCents*l.rateBp*elapsed/(10000*FINANCE_TERM_DAYS));
+    if(interest>0){
+      financeAddPenalty(draft,'INTEREST_PAYABLE',interest,'Juros fictícios proporcionais '+l.id,'LOAN_INTEREST');
+      l.interestDueCents+=interest;
+    }
+    l.lastAccruedAt=draft.calendar.date;
+    return interest;
+  }
   function loanDue(draft,loan){
     if(loan.remainingCents<=0)return;
     const late=loan.duePrincipalCents>0;
@@ -1377,9 +1388,7 @@ const CidadeCore = (() => {
         loan.feesDueCents+=fee;loan.assessedFeesCents+=fee;
       }
     }
-    const interest=Math.max(1,Math.round(loan.remainingCents*loan.rateBp/10000));
-    financeAddPenalty(draft,'INTEREST_PAYABLE',interest,'Juros fictícios vencidos do financiamento '+loan.id,'LOAN_INTEREST');
-    loan.interestDueCents+=interest;
+    const interest=financeAccrueInterest(draft,loan);
     loan.maturities+=1;
     const principalDue=loan.maturities>=loan.termMonths?loan.remainingCents:
       Math.min(loan.remainingCents,loan.duePrincipalCents+loan.installmentPrincipalCents);
@@ -1434,7 +1443,7 @@ const CidadeCore = (() => {
       const id='cr-'+(++fin.loanSeq);
       fin.loans.push({id,principalCents:principal,remainingCents:principal,
         rateBp:FINANCE_RATE_BP,termMonths:months,installmentPrincipalCents:Math.ceil(principal/months),
-        signedAt:draft.calendar.date,nextDueDate:addDays(draft.calendar.date,FINANCE_TERM_DAYS),
+        signedAt:draft.calendar.date,lastAccruedAt:draft.calendar.date,nextDueDate:addDays(draft.calendar.date,FINANCE_TERM_DAYS),
         lastDueDate:null,duePrincipalCents:0,interestDueCents:0,feesDueCents:0,
         assessedFeesCents:0,maturities:0,renegotiations:0,paidTotalCents:0,status:'OPEN'});
       financeJournal(draft,'Crédito empresarial fictício '+id,[
@@ -1446,6 +1455,7 @@ const CidadeCore = (() => {
     }
     if(type==='CREDITO.PAGAR'){
       const l=financeLoanById(draft,String(payload.loanId||'')),amount=Number(payload.amountCents);
+      financeAccrueInterest(draft,l); // quitação antecipada reconhece juros proporcionais, sem arbitragem gratuita
       const due=l.remainingCents+l.interestDueCents+l.feesDueCents;
       assert(l.status!=='PAID'&&due>0,'Financiamento já encerrado');
       assert(Number.isSafeInteger(amount)&&amount>0&&amount<=due,'Pagamento de crédito excede o saldo exigível ou total contratado.');
@@ -1548,7 +1558,7 @@ const CidadeCore = (() => {
         int(l.interestDueCents)&&int(l.feesDueCents)&&int(l.assessedFeesCents)&&
         l.assessedFeesCents<=Math.floor(l.principalCents*.2)&&
         int(l.maturities)&&int(l.renegotiations)&&l.renegotiations<=2&&int(l.paidTotalCents)&&
-        isoDate(l.signedAt)&&isoDate(l.nextDueDate)&&
+        isoDate(l.signedAt)&&isoDate(l.lastAccruedAt)&&l.lastAccruedAt>=l.signedAt&&l.lastAccruedAt<=state.calendar.date&&isoDate(l.nextDueDate)&&
         (l.lastDueDate===null||isoDate(l.lastDueDate))&&
         ['OPEN','DUE','DELINQUENT','RESTRUCTURED','PAID'].includes(l.status),
         'Contrato de crédito inconsistente.');
@@ -1567,6 +1577,7 @@ const CidadeCore = (() => {
         ['ACTIVE','COMPLETED','TERMINATED'].includes(c.status),
         'Calendário ou obrigações de fornecedor inconsistentes.');
       assert(c.status!=='COMPLETED'||c.processed===c.cycles,'Contrato concluído antes do fim do prazo.');
+      assert(c.status!=='ACTIVE'||c.processed<c.cycles,'Contrato ativo sem ciclos futuros.');
       contractFees+=c.penaltyDueCents;
     }
     assert(principal===balance(state,'LOAN_PAYABLE')&&interest===balance(state,'INTEREST_PAYABLE')&&

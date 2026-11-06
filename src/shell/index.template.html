@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10243E">
   <meta name="description" content="Cidade dos Negócios 1, simulador empresarial brasileiro offline, em um único HTML.">
-  <title>Cidade dos Negócios 1 · v2.7.0</title>
+  <title>Cidade dos Negócios 1 · v2.8.0-alpha.1</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2080%2080%22%3E%3Crect%20width%3D%2280%22%20height%3D%2280%22%20rx%3D%2214%22%20fill%3D%22%2310243e%22%2F%3E%3Cpath%20d%3D%22M9%2069V39L24%2031V69H9ZM28%2069V20L43%2014V69H28ZM47%2069V43L62%2034V69H47Z%22%20fill%3D%22%2351a9df%22%2F%3E%3Cpath%20d%3D%22m8%2060%2022-23%2012%209L70%2013m-14%200%2015-2-2%2016%22%20stroke%3D%22%23e9ad50%22%20stroke-width%3D%226%22%20fill%3D%22none%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
   <style>
 /* CDN_CSS */
@@ -36,7 +36,7 @@
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◈ Gestão empresarial</span><span>◈ 30 cidades brasileiras</span><span>◈ Jogue offline</span></div>
       <p class="v21-art-disclaimer">Arte promocional conceitual · As cidades e os lotes do jogo são representações fictícias.</p>
-      <p class="fine-print"><span id="intro-version">v2.7.0</span> — simulador empresarial offline. Dados oficiais e estimativas fictícias identificados.</p>
+      <p class="fine-print"><span id="intro-version">v2.8.0-alpha.1</span> — simulador empresarial offline. Dados oficiais e estimativas fictícias identificados.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -84,7 +84,7 @@
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
       <details class="world-warning legal-warning v21-legal-note"><summary>ⓘ SIMULAÇÃO EDUCATIVA <span>Dados econômicos simulados e tributos não oficiais · ver limites</span></summary><p>Indicadores econômicos do jogo são fictícios, salvo população e PIB identificados como oficiais. Cenários tributários não são apuração legal. Regras sem cobertura não representam isenção nem imposto zero.</p></details>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v2.7.0</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v2.8.0-alpha.1</span></div>
         <section id="stats-bar" class="stats-bar v21-hud" aria-label="Indicadores financeiros e operacionais do grupo">
           <div class="stat stat--cash"><span><i class="v21-stat-icon" aria-hidden="true">◇</i> CAIXA DO GRUPO</span><strong id="kpi-cash">—</strong><small>Saldo disponível · não é receita</small></div>
           <div class="stat stat--revenue"><span><i class="v21-stat-icon" aria-hidden="true">↗</i> RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Vendas realizadas · toda a carreira</small></div>
@@ -294,7 +294,7 @@
             <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Produto</th><th>Estoque</th><th>Custo un.</th><th>Venda un.</th><th>Vendido*</th><th>Receita*</th><th>CMV*</th></tr></thead><tbody id="catalog-rows"></tbody></table></div>
             <p class="field-hint">* Desempenho por produto registrado a partir desta edição. Vendas antigas continuam preservadas no total contábil, sem distribuição fictícia entre SKUs.</p>
           </article></div></section>
-<section data-view="administrativo" class="view" hidden><div class="view-toolbar"><span>DEPARTAMENTOS ADMINISTRATIVOS</span><span class="toolbar-hint">Gestão financeira, contábil e fiscal da rede.</span></div><nav class="v23-subnav" role="tablist" aria-label="Departamentos administrativos"><button type="button" role="tab" class="v23-subtab active" data-section-tab="administrativo:financas" id="v23-tab-administrativo-financas" aria-controls="v23-pane-administrativo-financas" aria-selected="true" tabindex="0">Finanças</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:rh-dp" id="v23-tab-administrativo-rh-dp" aria-controls="v23-pane-administrativo-rh-dp" aria-selected="false" tabindex="-1">RH / DP</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:contabilidade" id="v23-tab-administrativo-contabilidade" aria-controls="v23-pane-administrativo-contabilidade" aria-selected="false" tabindex="-1">Contabilidade</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:fiscal" id="v23-tab-administrativo-fiscal" aria-controls="v23-pane-administrativo-fiscal" aria-selected="false" tabindex="-1">Fiscal</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:paralegal" id="v23-tab-administrativo-paralegal" aria-controls="v23-pane-administrativo-paralegal" aria-selected="false" tabindex="-1">Paralegal</button></nav><div class="admin-shared-filters" id="admin-shared-filters" aria-label="Filtros de Finanças e Contabilidade"><article class="panel finance-filters">
+<section data-view="administrativo" class="view" hidden><div class="view-toolbar"><span>DEPARTAMENTOS ADMINISTRATIVOS</span><span class="toolbar-hint">Gestão financeira, contábil e fiscal da rede.</span></div><nav class="v23-subnav" role="tablist" aria-label="Departamentos administrativos"><button type="button" role="tab" class="v23-subtab active" data-section-tab="administrativo:financas" id="v23-tab-administrativo-financas" aria-controls="v23-pane-administrativo-financas" aria-selected="true" tabindex="0">Finanças</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:logistica" id="v23-tab-administrativo-logistica" aria-controls="v23-pane-administrativo-logistica" aria-selected="false" tabindex="-1">Logística</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:rh-dp" id="v23-tab-administrativo-rh-dp" aria-controls="v23-pane-administrativo-rh-dp" aria-selected="false" tabindex="-1">RH / DP</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:contabilidade" id="v23-tab-administrativo-contabilidade" aria-controls="v23-pane-administrativo-contabilidade" aria-selected="false" tabindex="-1">Contabilidade</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:fiscal" id="v23-tab-administrativo-fiscal" aria-controls="v23-pane-administrativo-fiscal" aria-selected="false" tabindex="-1">Fiscal</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:paralegal" id="v23-tab-administrativo-paralegal" aria-controls="v23-pane-administrativo-paralegal" aria-selected="false" tabindex="-1">Paralegal</button></nav><div class="admin-shared-filters" id="admin-shared-filters" aria-label="Filtros de Finanças e Contabilidade"><article class="panel finance-filters">
             <div class="panel-heading"><h3>Consulta por período · Finanças e Contabilidade</h3><span class="tag-soft">M11 · NÃO ALTERA A CARREIRA</span></div>
             <div class="filter-fields">
               <div><label for="finance-scope">Estabelecimento ou grupo</label><select id="finance-scope"><option value="all">Grupo consolidado</option></select></div>
@@ -412,6 +412,88 @@
             <div id="strategy-risks" class="strategy-risks" aria-live="polite"></div>
             <p class="field-hint">Ponto de equilíbrio estimado = despesa operacional fixa diária ÷ margem de contribuição média do mix, sem impostos. Capital de giro gerencial = caixa + estoque + trânsito + recebíveis − obrigações. A previsão respeita estoque atual e entregas já pagas; reconhece folha futura estimada da unidade, mas não projeta novos tributos, contratações, compras, crédito, vendas das demais unidades ou alterações futuras da concorrência. O caixa após pagamentos é apenas um teste hipotético. Saldo positivo não é promessa de liquidez.</p>
           </article></details></div>
+
+<div class="v23-subpane" id="v23-pane-administrativo-logistica" role="tabpanel" data-section-pane="administrativo:logistica" aria-labelledby="v23-tab-administrativo-logistica" hidden>
+ <div class="view-toolbar"><span>LOGÍSTICA · REDE DE UNIDADES</span><span class="tag-soft">V2.8 · OPERAÇÕES FICTÍCIAS</span></div>
+ <article class="panel spaced" aria-labelledby="logistics-overview-title">
+  <div class="panel-heading"><h3 id="logistics-overview-title">Rede, mercadorias e movimentação física</h3><span class="tag-soft">SEM FATURAMENTO ENTRE FILIAIS</span></div>
+  <p class="field-hint">Remanejamento entre empresas e centro de distribuição: baixa na origem → estoque em trânsito → entrada no destino. O estoque mantém valor contábil; só o frete gera despesa. Toda distância exibida é <strong>índice abstrato de jogo, não quilômetros nem tempo rodoviário real</strong>. Transferências dependem de confirmação.</p>
+  <dl class="finance-list" id="logistics-summary"></dl>
+  <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Instalação</th><th>Cidade</th><th>Estoque (un.)</th><th>Valor contábil</th></tr></thead><tbody id="logistics-sites"></tbody></table></div>
+  <form id="logistics-transfer-form" class="finance-filters">
+   <h4>Programar transferência interna</h4>
+   <div class="dashboard-grid">
+    <label>Origem<select id="logistics-transfer-from" required></select></label>
+    <label>Destino<select id="logistics-transfer-to" required></select></label>
+    <label>Produto / setor<select id="logistics-transfer-product" required></select></label>
+    <label>Quantidade<select id="logistics-transfer-quantity" type="number" min="1" max="250" value="10" required></select></label>
+   </div>
+   <p id="logistics-route-preview" class="field-hint" aria-live="polite">Selecione origem, destino, produto e quantidade.</p>
+   <button type="submit" class="btn btn-primary" id="logistics-transfer-submit">Confirmar e pagar frete fictício</button>
+  </form>
+  <h4>Entregas internas e mercadorias em trânsito</h4>
+  <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Viagem</th><th>Origem → destino</th><th>Mercadoria</th><th>Prazo</th><th>Valor / frete</th><th>Situação</th></tr></thead><tbody id="logistics-trip-rows"></tbody></table></div>
+ </article>
+ <article class="panel spaced" aria-labelledby="logistics-depot-heading">
+  <div class="panel-heading"><h3 id="logistics-depot-heading">Centro de distribuição opcional</h3><span class="tag-soft">CAPACIDADE 2.000 UNIDADES</span></div>
+  <p class="field-hint">Abrir o CD custa R$ 800 fictícios e manter custa R$ 8,50/dia. A ponta com CD tem desconto simulado de 25% sobre o frete daquela rota (não é garantia de economia na rede inteira). Compras consolidadas são pagas pelo caixa e recebidas no CD antes do envio às lojas.</p>
+  <p id="logistics-depot-status" class="field-hint" aria-live="polite"></p>
+  <form id="logistics-depot-open-form" class="finance-filters">
+   <label>Instalar centro em<select id="logistics-depot-city" required></select></label>
+   <button type="submit" class="btn btn-primary" id="logistics-depot-open">Abrir CD simulado</button>
+  </form>
+  <form id="logistics-depot-buy-form" class="finance-filters">
+   <h4>Compra consolidada para o CD</h4>
+   <div class="dashboard-grid">
+    <label>Catálogo da unidade<select id="logistics-depot-unit" required></select></label>
+    <label>Produto<select id="logistics-depot-product" required></select></label>
+    <label>Fornecedor<select id="logistics-depot-supplier"><option value="regional">Distribuidora Regional</option><option value="atacado">Atacado Comercial</option></select></label>
+    <label>Quantidade<select id="logistics-depot-quantity" type="number" min="1" max="200" value="20" required></select></label>
+   </div>
+   <button type="submit" class="btn btn-outline" id="logistics-depot-buy">Confirmar compra e trânsito ao CD</button>
+  </form>
+  <p class="field-hint">Estoque CD e pedidos são reais para o jogo; o CD não realiza vendas automáticas. É preciso transferir fisicamente às unidades.</p>
+  <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Produto do CD</th><th>Unidades</th><th>Valor</th></tr></thead><tbody id="logistics-depot-stock"></tbody></table></div>
+  <div id="logistics-depot-orders" class="event-list" aria-live="polite"></div>
+ </article>
+ <article class="panel spaced" aria-labelledby="logistics-production-heading">
+  <div class="panel-heading"><h3 id="logistics-production-heading">Produção piloto da padaria</h3><span class="tag-soft">INSUMO → TRANSFORMAÇÃO → ACABADO</span></div>
+  <p class="field-hint">Habilite farinha para a padaria e compre do fornecedor. Cada 1 insumo produz 3 pães, consumindo custo da farinha e R$ 1,20 fictícios de produção. Limite de 25 insumos/dia por padaria. Pães produzidos vencem em 3 dias simulados; bolos recebidos vencem em 5 dias. Estoque histórico anterior não recebe validade retroativa.</p>
+  <label>Padaria da rede<select id="logistics-bakery-unit"></select></label>
+  <div class="filter-action-row"><button type="button" class="btn btn-outline" id="logistics-enable-production">Habilitar farinha</button></div>
+  <form id="logistics-input-buy-form" class="finance-filters">
+   <div class="dashboard-grid">
+    <label>Fornecedor de farinha<select id="logistics-input-supplier"><option value="regional">Regional · 1 dia</option><option value="atacado">Atacado · 3 dias</option></select></label>
+    <label>Comprar farinha (un.)<input id="logistics-input-quantity" type="number" min="1" max="200" value="25" required></label>
+   </div>
+   <button type="submit" class="btn btn-outline" id="logistics-input-buy">Confirmar compra do insumo</button>
+  </form>
+  <form id="logistics-produce-form" class="finance-filters">
+   <label>Consumir farinha (unidades de insumo)<input type="number" id="logistics-input-use" min="1" max="25" value="10" required></label>
+   <button type="submit" class="btn btn-primary" id="logistics-produce">Produzir lote físico e contabilizar custos</button>
+  </form>
+  <p id="logistics-production-status" class="field-hint" aria-live="polite"></p>
+  <h4>Rastreio de validades (apenas lotes novos)</h4>
+  <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Instalação</th><th>Produto</th><th>Quantidade rastreada</th><th>Validade simulada</th></tr></thead><tbody id="logistics-lot-rows"></tbody></table></div>
+ </article>
+ <article class="panel spaced" aria-labelledby="logistics-proposals-heading">
+  <div class="panel-heading"><h3 id="logistics-proposals-heading">Sugestões editáveis e conciliação</h3><span class="tag-soft">SEM COMPRA AUTOMÁTICA</span></div>
+  <p class="field-hint">Propostas usam estoque mínimo e meta atual das lojas; clique para carregar no formulário correspondente, revise quantidade, custo e rota e confirme manualmente. Nenhum gasto nasce de uma sugestão.</p>
+  <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Destino</th><th>Produto</th><th>Proposta</th><th>Ação</th></tr></thead><tbody id="logistics-proposal-rows"></tbody></table></div>
+  <form id="logistics-restock-form" class="finance-filters">
+   <h4>Compra direta proposta (sem execução automática)</h4>
+   <div class="dashboard-grid">
+    <label>Unidade<select id="logistics-restock-unit"></select></label>
+    <label>Produto<select id="logistics-restock-product"></select></label>
+    <label>Fornecedor<select id="logistics-restock-supplier"><option value="regional">Regional</option><option value="atacado">Atacado</option></select></label>
+    <label>Quantidade<input id="logistics-restock-quantity" type="number" min="1" max="200" value="20" required></label>
+   </div>
+   <button type="submit" class="btn btn-outline">Confirmar compra direta</button>
+  </form>
+  <p id="logistics-integrity" class="field-hint" aria-live="polite"></p>
+  <p class="muted">Conferência: estoque físico das unidades e CD + mercadorias em trânsito = ativos do razão, com compensação interfilial zerada. Perdas de validade são despesa uma única vez, nunca CMV de venda interna.</p>
+ </article>
+</div>
 <div class="v23-subpane" id="v23-pane-administrativo-rh-dp" role="tabpanel" data-section-pane="administrativo:rh-dp" aria-labelledby="v23-tab-administrativo-rh-dp" hidden>
  <article class="panel"><div class="panel-heading"><h3>RH/DP · equipe e folha simuladas</h3><span class="tag-soft">V2.4-B · FICTÍCIO</span></div>
  <p class="field-hint">Cadastro de empregados fictícios por unidade. Salários e competências são parâmetros do jogo, sem validade trabalhista ou previdenciária. Não são CLT, FGTS, INSS, eSocial ou obrigações reais. Não informe CPF ou dados pessoais reais.</p>
@@ -481,7 +563,7 @@
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v2.7.0</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v2.8.0-alpha.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#10243E">
   <meta name="description" content="Cidade dos Negócios 1, simulador empresarial brasileiro offline, em um único HTML.">
-  <title>Cidade dos Negócios 1 · v2.6.0</title>
+  <title>Cidade dos Negócios 1 · v2.7.0-alpha.1</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2080%2080%22%3E%3Crect%20width%3D%2280%22%20height%3D%2280%22%20rx%3D%2214%22%20fill%3D%22%2310243e%22%2F%3E%3Cpath%20d%3D%22M9%2069V39L24%2031V69H9ZM28%2069V20L43%2014V69H28ZM47%2069V43L62%2034V69H47Z%22%20fill%3D%22%2351a9df%22%2F%3E%3Cpath%20d%3D%22m8%2060%2022-23%2012%209L70%2013m-14%200%2015-2-2%2016%22%20stroke%3D%22%23e9ad50%22%20stroke-width%3D%226%22%20fill%3D%22none%22%20stroke-linejoin%3D%22round%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E">
   <style>
 :root{color-scheme:dark;--navy:#10243e;--deep:#091629;--panel:#142b45;--panelhi:#193451;--blue:#51a9df;--gold:#e9ad50;--green:#51bd83;--text:#f4f7fb;--muted:#b8c6d8;--stroke:#2b4860;--red:#ef7070;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:15px}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#091629;color:var(--text)}[hidden]{display:none!important}button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.46;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f4d49a;outline-offset:2px}a{color:#9dcee9}h1,h2,h3,p{margin-top:0}h1,h2,h3{letter-spacing:-.025em}h3{font-size:1.12rem;margin-bottom:0}p{line-height:1.65}small,.muted,.field-hint{color:var(--muted)}.field-hint{font-size:.83rem;margin:10px 0 19px;line-height:1.45}.hint-bottom{margin-top:26px}.status-text{font-size:.87rem;margin:13px 0 0;min-height:1.25rem}.overline,.eyebrow,.card-kicker,.nav-label{font-size:.7rem;letter-spacing:.16em;font-weight:800;color:#a3b7cb}.eyebrow-dot,.online-dot{display:inline-block;background:var(--green);width:7px;height:7px;border-radius:50%;margin-right:7px}.btn{border:1px solid #466178;border-radius:10px;padding:12px 16px;background:#24415a;color:var(--text);font-size:.89rem;font-weight:750;transition:transform .15s,filter .15s;min-height:44px}.btn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px)}.btn-primary{background:linear-gradient(135deg,#e9ad50,#f3c775);color:#101d2b;border-color:#f4d49a}.btn-outline{background:#14283b;color:#f2f7fb}.btn-big{width:100%;padding:16px 20px;display:flex;justify-content:space-between;margin-top:18px}.full{width:100%}.spaced{margin-top:9px}.tag-soft,.tag-warning{display:inline-block;letter-spacing:.05em;font-weight:800;font-size:.63rem;background:#203e58;color:#a9dafa;border:1px solid #3b617b;border-radius:8px;padding:8px 10px}.tag-warning{color:#f4d49a;background:#3c301d;border-color:#906c39}.brand-icon{filter:drop-shadow(0 9px 28px #0003)}.onboarding{min-height:100vh;display:grid;grid-template-columns:minmax(390px,1fr) minmax(380px,.78fr);gap:clamp(30px,6vw,100px);align-items:center;max-width:1540px;margin:0 auto;padding:45px clamp(24px,6vw,94px);position:relative;overflow:hidden}.onboarding:before{content:"";background:radial-gradient(ellipse at center,#193e6077,transparent 70%);position:absolute;inset:0 0 0 -30%;pointer-events:none}.onboarding-art{position:absolute;inset:0;opacity:.14;pointer-events:none;overflow:hidden}.skyline{display:flex;align-items:end;gap:18px;position:absolute;bottom:0;left:-2%;height:63%;width:110%;transform:skewY(-7deg)}.skyline i{display:block;flex:1;background:linear-gradient(180deg,#7dbde3,#1d5070);height:65%;border-radius:5px 5px 0 0;box-shadow:inset 10px 0 0 #0a223a}.skyline i:nth-child(2n){height:78%}.skyline i:nth-child(3n){height:44%}.skyline i:nth-child(5n){height:95%}.intro-copy{position:relative;z-index:1}.intro-copy .eyebrow{color:#9ddfe2;margin-bottom:48px}.brand-intro{margin-bottom:15px}.intro-copy h1{font-size:clamp(3.3rem,6vw,6.8rem);line-height:.92;margin-bottom:20px;font-weight:900}.intro-copy h1 em{font-style:normal;background:linear-gradient(120deg,#f6ce82,#d89d41);background-clip:text;-webkit-background-clip:text;color:transparent}.hero-subtitle{font-size:1.55rem;font-weight:700;margin:29px 0 10px}.intro-desc{font-size:1.02rem;color:#c7d3df;max-width:540px}.intro-features{display:flex;flex-wrap:wrap;gap:8px;margin-top:32px}.intro-features span{padding:10px 12px;border:1px solid #395875;background:#12304aab;border-radius:8px;font-size:.78rem;color:#b9d6e6}.fine-print{font-size:.72rem;color:#8fa8bb;margin-top:40px}.start-card{position:relative;z-index:1;background:linear-gradient(158deg,#1a3652 0%,#102339 100%);padding:clamp(25px,4vw,42px);border:1px solid #3c5970;box-shadow:0 24px 90px #0007;border-radius:20px}.card-kicker{color:var(--gold);margin-bottom:13px}.start-card h2{font-size:2rem;line-height:1.1;margin-bottom:12px}.start-card label,.panel label{display:block;font-size:.78rem;color:#c5d6e6;font-weight:700;margin:18px 0 7px}.start-card input,.start-card select,.panel input,.panel select,.topbar select{width:100%;background:#0c2136;border:1px solid #3c5a71;color:var(--text);border-radius:9px;min-height:42px;padding:10px 13px;outline-color:var(--gold)}.text-action{border:0;color:#b7d9f5;background:transparent;font-size:.86rem;margin:15px auto 0;display:block;padding:10px}.game-shell{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:100vh}.sidebar{background:linear-gradient(175deg,#0b1b2e,#10243e);border-right:1px solid #203e59;display:flex;flex-direction:column;padding:27px 15px 18px;position:sticky;top:0;height:100vh}.sidebar-brand{display:flex;gap:10px;align-items:center;padding:0 8px 32px}.brand-mark{width:43px;height:43px;border-radius:10px;background:linear-gradient(135deg,#e2a450,#f0c77d);color:#092037;display:grid;place-items:center;font-size:2rem}.sidebar-brand strong{display:block;font-size:.9rem;letter-spacing:.065em;line-height:1.15}.sidebar-brand small{font-size:.59rem;letter-spacing:.16em;color:var(--gold)}.nav-label{padding:0 14px 12px;color:#7896b4}.nav-items{display:grid;gap:5px}.nav-item{width:100%;background:none;border:1px solid transparent;color:#b6c7d8;padding:13px 14px;border-radius:9px;text-align:left;font-weight:650;display:flex;align-items:center;gap:14px;font-size:.88rem}.nav-item span{font-size:1.17rem;width:24px;text-align:center}.nav-item.active{background:#244360;color:#fff;border-color:#3a6080;box-shadow:inset 3px 0 0 var(--gold)}.nav-item:hover{background:#1a3852}.sidebar-bottom{margin-top:auto;padding:17px 11px 0;border-top:1px solid #29425a;font-size:.69rem;letter-spacing:.1em;font-weight:800;color:#bdd4e2}.sidebar-bottom small{display:block;letter-spacing:0;font-weight:400;margin:8px 0 0 16px}.main-pane{min-width:0;display:flex;flex-direction:column}.topbar{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:18px clamp(16px,3vw,39px);border-bottom:1px solid #28435c;background:#0e2035}.topbar h2{font-size:1.4rem;margin:3px 0 0}.topbar h2 span{color:#95adbf;font-weight:500}.topbar-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.compact-label{font-size:.72rem;color:var(--muted)}.topbar select{width:auto;max-width:195px;font-size:.78rem}.date-box{background:#152f47;border:1px solid #34516c;border-radius:9px;padding:7px 15px;min-width:115px}.date-box small{display:block;font-size:.57rem;letter-spacing:.1em}.date-box strong{display:block;font-size:.93rem;margin-top:3px;font-variant-numeric:tabular-nums}.world-warning{padding:10px clamp(16px,3vw,39px);border-bottom:1px solid #4b492d;background:#2e2b1d;color:#f6d69b;font-size:.76rem;font-weight:600}.legal-warning{background:#132b3a;border-color:#24485b;color:#a7c9d9}.content{padding:30px clamp(16px,3vw,39px);max-width:1720px;width:100%;margin:0 auto;flex:1}.page-title{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:25px}.page-title h1{font-size:clamp(1.5rem,2.6vw,2.2rem);margin:7px 0 2px}.page-title p{color:#a9bacb;font-size:.85rem;margin:0}.build-badge{border:1px solid #3d5a71;color:#a4cce4;padding:8px 11px;border-radius:8px;font-size:.72rem;white-space:nowrap}.stats-bar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:20px}.stat,.panel{border:1px solid #304c63;border-radius:13px;background:linear-gradient(155deg,#17314a,#10273e);box-shadow:0 10px 22px #0002}.stat{padding:21px 20px}.stat span{display:block;font-size:.67rem;letter-spacing:.085em;color:#afc0d2;font-weight:700}.stat strong{display:block;font-size:clamp(1.3rem,2vw,2rem);margin:10px 0 3px;font-variant-numeric:tabular-nums;letter-spacing:-.035em;white-space:nowrap}.stat small{font-size:.68rem}.dashboard-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(280px,.83fr);gap:17px}.right-column{display:grid;gap:17px;align-content:start}.panel{padding:23px}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.map-panel{padding:0;overflow:hidden;align-self:start}.map-panel .panel-heading{padding:23px 23px 0;margin-bottom:0}.map-panel .overline{margin-bottom:6px}.map-canvas{min-height:350px;background:radial-gradient(ellipse at 55% 37%,#265372 0%,#163751 54%,#0d2436 100%);overflow:hidden}.map-canvas svg{display:block;width:100%;height:auto;min-height:320px;max-height:480px;touch-action:manipulation}.map-canvas svg [data-lot]{cursor:pointer;outline:none;transition:filter .15s}.map-canvas svg [data-lot]:hover,.map-canvas svg [data-lot]:focus{filter:brightness(1.5)}.map-legend{display:flex;gap:20px;flex-wrap:wrap;font-size:.71rem;color:#b8cadd;padding:0 23px 12px}.legend-color{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}.legend-color.lot{background:#537d69}.legend-color.own{background:#e9ad50}.legend-color.sel{background:#51a9df}.map-disclaimer{font-size:.68rem;color:#91b0c0;padding:0 23px 15px;margin:0}.big-number{font-size:2.1rem;font-weight:850;color:var(--gold);letter-spacing:-.06em;margin:12px 0}.event-list{display:grid;gap:13px;max-height:320px;overflow:auto}.event-item{border-bottom:1px solid #264259;padding-bottom:10px;display:flex;gap:10px;align-items:start}.event-item:last-child{border-bottom:0}.event-dot{background:var(--blue);width:7px;height:7px;border-radius:50%;flex:none;margin-top:7px}.event-item p{margin:0;color:#d0dde8;font-size:.81rem;line-height:1.45}.event-item small{display:block;margin-top:4px;font-size:.67rem;color:#8eabc0}.view{min-height:370px}.detail-list,.finance-list{display:grid;grid-template-columns:1fr auto;gap:15px;margin:19px 0}.detail-list dt,.finance-list dt{color:#bed0df}.detail-list dd,.finance-list dd{margin:0;text-align:right;font-weight:800;font-variant-numeric:tabular-nums}.finance-list{border-top:1px solid #3b586c;padding-top:17px}.finance-list dt,.finance-list dd{font-size:.85rem}.finance-list .emphasis{color:var(--gold);font-weight:800;font-size:1rem}.company-emblem{display:flex;align-items:center;gap:16px;background:#102c40;border:1px solid #31526b;border-radius:12px;padding:16px}.company-emblem>span{font-size:2.4rem}.company-emblem h3{margin-bottom:3px}.company-emblem p{margin:0}.button-stack{display:grid;gap:10px;margin:20px 0}.fiscal-panel{display:flex;gap:24px;max-width:920px}.fiscal-icon{font-size:3.2rem;font-weight:850;color:var(--gold)}.turnbar{margin-top:23px;background:linear-gradient(125deg,#173c58,#132b44);border:1px solid #3d6480;border-radius:13px;padding:20px 25px;display:flex;justify-content:space-between;align-items:center;gap:20px}.turnbar h3{margin:6px 0}.turnbar p{font-size:.77rem;color:#a5bfd2;margin:0}.turn-actions{display:flex;gap:8px;flex-wrap:wrap}.game-footer{padding:19px clamp(16px,3vw,39px);display:flex;justify-content:space-between;gap:10px;font-size:.63rem;letter-spacing:.08em;color:#91aabd;border-top:1px solid #213e56}.toast{position:fixed;bottom:25px;right:25px;max-width:min(90vw,460px);z-index:99;pointer-events:none;background:#1b3a52;border:1px solid #5e869e;box-shadow:0 15px 45px #0009;color:#fff;padding:14px 19px;border-radius:11px;font-size:.82rem;transform:translateY(140px);opacity:0;transition:transform .25s,opacity .25s}.toast.visible{transform:none;opacity:1}.toast.error{border-color:var(--red);background:#4c2a34}@media(max-width:1180px){.game-shell{grid-template-columns:190px minmax(0,1fr)}.dashboard-grid{grid-template-columns:1fr}.stats-bar{grid-template-columns:repeat(2,minmax(0,1fr))}.sidebar{padding-left:10px;padding-right:10px}}@media(max-width:800px){.onboarding{grid-template-columns:1fr;gap:25px;padding:24px}.intro-copy .eyebrow{margin-bottom:20px}.intro-copy h1{font-size:3.8rem}.fine-print{margin-top:14px}.game-shell{display:block}.sidebar{position:relative;height:auto;padding:14px}.sidebar-brand{padding-bottom:12px}.nav-label,.sidebar-bottom{display:none}.nav-items{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:6px;padding-bottom:4px}.nav-item{width:auto;flex:none;padding:9px 11px;font-size:.75rem;gap:6px}.nav-item span{font-size:1rem;width:18px}.topbar{align-items:flex-start;flex-wrap:wrap}.topbar-controls{width:100%}.compact-label{display:none}.page-title{align-items:start}.turnbar{flex-direction:column;align-items:stretch}.turn-actions{width:100%}.turn-actions .btn{flex:1}.game-footer{flex-direction:column}}@media(max-width:480px){.stat{padding:15px 12px}.stat strong{font-size:1.16rem}.stat small{font-size:.6rem}.stats-bar{gap:8px}.panel{padding:17px}.map-panel .panel-heading{padding:16px 16px 0}.map-legend{padding:0 16px 12px}.map-disclaimer{padding:0 16px 12px}.topbar-controls select{max-width:140px}.page-title{flex-direction:column}.game-footer{font-size:.59rem}.fiscal-panel{flex-direction:column;gap:10px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
@@ -874,7 +874,7 @@ button.v221-hud-cell:hover{background:#1e4254}
       <p class="intro-desc">Escolha uma entre 30 cidades brasileiras, encontre seu primeiro ponto comercial e construa um negócio que reage ao mercado.</p>
       <div class="intro-features"><span>◈ Gestão empresarial</span><span>◈ 30 cidades brasileiras</span><span>◈ Jogue offline</span></div>
       <p class="v21-art-disclaimer">Arte promocional conceitual · As cidades e os lotes do jogo são representações fictícias.</p>
-      <p class="fine-print"><span id="intro-version">v2.6.0</span> — simulador empresarial offline. Dados oficiais e estimativas fictícias identificados.</p>
+      <p class="fine-print"><span id="intro-version">v2.7.0-alpha.1</span> — simulador empresarial offline. Dados oficiais e estimativas fictícias identificados.</p>
     </div>
     <section class="start-card" aria-labelledby="start-title">
       <div class="card-kicker">NOVA CARREIRA</div>
@@ -922,7 +922,7 @@ button.v221-hud-cell:hover{background:#1e4254}
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
       <details class="world-warning legal-warning v21-legal-note"><summary>ⓘ SIMULAÇÃO EDUCATIVA <span>Dados econômicos simulados e tributos não oficiais · ver limites</span></summary><p>Indicadores econômicos do jogo são fictícios, salvo população e PIB identificados como oficiais. Cenários tributários não são apuração legal. Regras sem cobertura não representam isenção nem imposto zero.</p></details>
       <main class="content">
-        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v2.6.0</span></div>
+        <div class="page-title"><div><div class="overline" id="page-kicker">CENTRAL DE OPERAÇÕES</div><h1 id="page-title-text">A sua cidade, as suas decisões.</h1><p id="page-subtitle">Uma visão do seu negócio e do ambiente ao redor.</p></div><span class="build-badge" id="build-version">v2.7.0-alpha.1</span></div>
         <section id="stats-bar" class="stats-bar v21-hud" aria-label="Indicadores financeiros e operacionais do grupo">
           <div class="stat stat--cash"><span><i class="v21-stat-icon" aria-hidden="true">◇</i> CAIXA DO GRUPO</span><strong id="kpi-cash">—</strong><small>Saldo disponível · não é receita</small></div>
           <div class="stat stat--revenue"><span><i class="v21-stat-icon" aria-hidden="true">↗</i> RECEITA ACUMULADA</span><strong id="kpi-revenue">—</strong><small>Vendas realizadas · toda a carreira</small></div>
@@ -1186,6 +1186,61 @@ button.v221-hud-cell:hover{background:#1e4254}
 <label for="payable-operating-amount">Valor da quitação (R$)<input type="number" id="payable-operating-amount" min="0.01" step="0.01" required></label>
 </div><button type="submit" class="btn btn-primary" id="payable-operating-submit">Liquidar passivo operacional</button></form>
 </article>
+
+<!-- V2.7 — financiamento e contratos fictícios, lançamentos conciliados no grupo -->
+<section class="v270-finance" aria-label="Crédito, contratos e compromissos financeiros simulados">
+ <article class="panel spaced">
+  <div class="panel-heading"><h3>V2.7 · Crédito empresarial fictício</h3><span class="tag-soft">CONTRATOS E RISCOS</span></div>
+  <p class="field-hint">Crédito aumenta caixa e obrigação, <strong>nunca receita</strong>. Taxa simulada de 1,8% por período de 30 dias, juros proporcionais na amortização e multa fictícia por atraso, limitada a 20% do principal. Não há empréstimos reais.</p>
+  <dl class="finance-list" id="credit-summary" aria-live="polite"></dl>
+  <form id="credit-contract-form" class="finance-filters">
+   <div class="dashboard-grid">
+    <label>Principal (R$)<input id="credit-principal" type="number" min="500" max="30000" step="50" value="1000" required></label>
+    <label>Prazo fictício<select id="credit-term"><option value="3">3 períodos de 30 dias</option><option value="6">6 períodos</option><option value="12" selected>12 períodos</option><option value="24">24 períodos</option></select></label>
+   </div>
+   <button type="submit" class="btn btn-primary" id="credit-contract-submit">Contratar crédito fictício</button>
+  </form>
+  <div id="credit-loan-list" class="event-list" aria-live="polite"></div>
+  <form id="credit-payment-form" class="finance-filters">
+   <div class="dashboard-grid">
+    <label>Financiamento<select id="credit-pay-id"></select></label>
+    <label>Valor para amortizar (R$)<input id="credit-pay-amount" type="number" min="0.01" step="0.01" required></label>
+   </div>
+   <button type="submit" class="btn btn-outline">Pagar juros, multas e principal</button>
+  </form>
+  <form id="credit-renegotiate-form" class="finance-filters">
+   <div class="dashboard-grid">
+    <label>Financiamento em atraso<select id="credit-renegotiate-id"></select></label>
+    <label>Novo prazo<select id="credit-renegotiate-term"><option value="3">3 períodos</option><option value="6">6 períodos</option><option value="12" selected>12 períodos</option><option value="24">24 períodos</option></select></label>
+   </div>
+   <button type="submit" class="btn btn-outline">Renegociar atraso</button>
+  </form>
+ </article>
+ <article class="panel spaced">
+  <div class="panel-heading"><h3>Contratos com fornecedores</h3><span class="tag-soft">PEDIDOS AUTOMÁTICOS FICTÍCIOS</span></div>
+  <p class="field-hint">Assinar autoriza pedidos automáticos nas datas combinadas. Cada pedido pago entra em trânsito e depois no estoque, sem criar receita. Se faltarem caixa ou capacidade, o pedido falha e gera multa simulada de 2%; rescisão cobra 5% do compromisso futuro. Preço unitário fica fixo no contrato.</p>
+  <form id="supplier-contract-form" class="finance-filters">
+   <div class="dashboard-grid">
+    <label>Unidade<select id="supplier-contract-unit" required></select></label>
+    <label>Produto<select id="supplier-contract-product" required></select></label>
+    <label>Fornecedor<select id="supplier-contract-supplier"><option value="regional">Distribuidora regional · 1 dia</option><option value="atacado">Atacado · 3 dias</option></select></label>
+    <label>Volume por ciclo (un.)<input id="supplier-contract-quantity" type="number" min="1" max="100" step="1" value="20" required></label>
+    <label>Intervalo entre pedidos<select id="supplier-contract-period"><option value="7">7 dias</option><option value="14" selected>14 dias</option><option value="30">30 dias</option></select></label>
+    <label>Ciclos contratados<select id="supplier-contract-cycles"><option value="2">2 pedidos</option><option value="3">3 pedidos</option><option value="6" selected>6 pedidos</option><option value="12">12 pedidos</option></select></label>
+   </div>
+   <button type="submit" class="btn btn-primary">Assinar contrato fictício</button>
+  </form>
+  <div id="supplier-contract-list" class="event-list" aria-live="polite"></div>
+ </article>
+ <article class="panel spaced">
+  <div class="panel-heading"><h3>Calendário de compromissos</h3><span class="tag-soft">REALIZADO ≠ PROJETADO</span></div>
+  <label for="credit-calendar-horizon">Horizonte<select id="credit-calendar-horizon"><option value="30">30 dias</option><option value="90" selected>90 dias</option><option value="180">180 dias</option></select></label>
+  <dl class="finance-list" id="credit-calendar-summary"></dl>
+  <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Data</th><th>Origem</th><th>Valor previsto</th><th>Natureza</th></tr></thead><tbody id="credit-calendar-rows"></tbody></table></div>
+  <p class="field-hint">O fluxo projetado não é saldo disponível nem gera lançamentos. Folha, obrigações operacionais e tributos já reconhecidos são consolidados sem contá-los duas vezes como novas despesas.</p>
+ </article>
+</section>
+
 <div class="admin-department-links"><button type="button" class="btn btn-outline" data-section-go="administrativo:contabilidade">Abrir DRE, balanço, razão e conciliação</button><button type="button" class="btn btn-outline" data-tab="fiscal">Ver tributos simulados</button></div>
 <details class="market-drawer finance-drawer"><summary>▥ Projeções e estratégia <span>Cenários hipotéticos, não lançamentos</span></summary><article class="panel strategy-panel"><div class="panel-heading"><h3>Gestão estratégica e equilíbrio econômico</h3><span class="tag-soft">V1.4 · ANÁLISE E PROJEÇÃO</span></div>
             <p class="muted">Resultados realizados vêm exclusivamente do livro contábil. Projeções são cenários hipotéticos, não lançamentos. A projeção estratégica considera apenas a unidade ativa e o caixa compartilhado atual, sem projetar simultaneamente as demais unidades. Inclui folha futura estimada como passivo e identifica dívidas operacionais, folhas já apuradas e tributos didáticos conhecidos. Os cenários não realizam novas compras nem pagamentos automáticos dessas obrigações ou tributos futuros. Não gera lançamentos.</p>
@@ -1264,16 +1319,16 @@ button.v221-hud-cell:hover{background:#1e4254}
         </section>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
-      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v2.6.0</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
+      <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v2.7.0-alpha.1</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>
     </div>
   </div>
   <input type="file" id="import-file" accept=".json,application/json" hidden>
   <div class="toast" id="toast" aria-live="polite" role="status"></div>
   <script>
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.6.0 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.7.0-alpha.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '2.6.0';
+  const VERSION = '2.7.0-alpha.1';
   const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -1594,7 +1649,7 @@ const CidadeCore = (() => {
   // Journals antigos pertencem à matriz, exceto aporte inicial, que pertence ao grupo.
   function journalBusinessId(state,j){
     if(j.businessId)return j.businessId;
-    return j.memo==='Capital inicial do empreendedor'?null:state.world.business?.id??null;
+    return j.memo==='Capital inicial do empreendedor'||['LOAN_DRAW','LOAN_INTEREST','LOAN_LATE_FEE','LOAN_PAYMENT'].includes(transactionKind(j))?null:state.world.business?.id??null;
   }
   function product(b,id) {const p=b.products.find(x=>x.id===(id??'base'));assert(p,'Produto não cadastrado');return p;}
   function promotionDiscount(b,p,date){
@@ -1609,7 +1664,7 @@ const CidadeCore = (() => {
   const supplierById=id=>SUPPLIERS.find(s=>s.id===id);
   const pendingQuantity=(b,id)=>b.purchaseOrders.filter(o=>o.status==='PENDING').reduce((n,o)=>
     n+o.items.reduce((sum,line)=>sum+(line.productId===id?line.quantity:0),0),0);
-  function registerPurchase(draft,b,supplierId,items){
+  function registerPurchase(draft,b,supplierId,items,contract=null){
     const supplier=supplierById(supplierId);
     assert(supplier,'Fornecedor não cadastrado');
     assert(Array.isArray(items)&&items.length>=1&&items.length<=40,'Informe de 1 a 40 itens');
@@ -1623,7 +1678,8 @@ const CidadeCore = (() => {
         .reduce((n,o)=>n+o.items.reduce((sum,x)=>sum+(x.productId===p.id?x.quantity:0),0),0);
       assert(quantity+boughtToday<=supplier.maxDailyPerSku,`Capacidade diária de ${supplier.name}: ${supplier.maxDailyPerSku} unidades por produto`);
       assert(p.stockUnits+pendingQuantity(b,p.id)+quantity<=100000,'Capacidade máxima do produto excedida');
-      const unitCost=Math.round(p.costCents*supplier.priceFactor/100),cost=quantity*unitCost;
+      assert(!contract||(contract.productId===p.id&&contract.quantity===quantity&&contract.supplierId===supplier.id),'Pedido não corresponde ao contrato de fornecimento');
+      const unitCost=contract?contract.unitCostCents:Math.round(p.costCents*supplier.priceFactor/100),cost=quantity*unitCost;
       total+=cost;qtyTotal+=quantity;
       return {productId:p.id,name:p.name,quantity,unitCost,total:cost};
     });
@@ -1633,10 +1689,10 @@ const CidadeCore = (() => {
     assert(Number.isSafeInteger(total)&&balance(draft,'CASH')>=total,`Caixa insuficiente para encomenda: ${money(total)}`);
     assert(b.purchaseOrders.length<20000,'Histórico de compras cheio');
     const id=`pc-${++b.orderSeq}`,dueDate=addDays(draft.calendar.date,supplier.leadDays);
-    b.purchaseOrders.push({id,date:draft.calendar.date,supplierId,items:lines,total,status:'PENDING',dueDate,receivedAt:null});
+    b.purchaseOrders.push({id,date:draft.calendar.date,supplierId,items:lines,total,status:'PENDING',dueDate,receivedAt:null,...(contract?{contractId:contract.id}:{})});
     journal(draft,`Encomenda ${id}: mercadorias em trânsito`,[
       {account:'IN_TRANSIT',debit:total,credit:0},{account:'CASH',debit:0,credit:total}],b.id,'PURCHASE');
-    event(draft,'COMPRA.ENCOMENDADA',`Pedido ${id} pago (${money(total)}); previsão ${dueDate} (${supplier.leadDays} dia(s)).`,{id,total,dueDate,supplierId},b.id);
+    event(draft,'COMPRA.ENCOMENDADA',`Pedido ${id} pago (${money(total)}); previsão ${dueDate} (${supplier.leadDays} dia(s)).`,{id,total,dueDate,supplierId,...(contract?{contractId:contract.id}:{})},b.id);
   }
   function receiveDueOrders(draft,b){
     if(!b)return;
@@ -1722,9 +1778,13 @@ const CidadeCore = (() => {
     COGS:Object.freeze({name:'Custo das mercadorias vendidas',group:'COST',normal:'DEBIT'}),
     EXPENSE:Object.freeze({name:'Despesas operacionais e de abertura',group:'EXPENSE',normal:'DEBIT'}),
     TAX_EXPENSE:Object.freeze({name:'Tributo simulado por competência',group:'EXPENSE',normal:'DEBIT'}),
-    TAX_PAYABLE:Object.freeze({name:'Tributo simulado a pagar',group:'LIABILITY',normal:'CREDIT'})
+    TAX_PAYABLE:Object.freeze({name:'Tributo simulado a pagar',group:'LIABILITY',normal:'CREDIT'}),
+    LOAN_PAYABLE:Object.freeze({name:'Principal de financiamento',group:'LIABILITY',normal:'CREDIT'}),
+    INTEREST_PAYABLE:Object.freeze({name:'Juros de financiamento a pagar',group:'LIABILITY',normal:'CREDIT'}),
+    LOAN_FEES_PAYABLE:Object.freeze({name:'Multas fictícias de financiamento',group:'LIABILITY',normal:'CREDIT'}),
+    CONTRACT_PAYABLE:Object.freeze({name:'Multas de contratos de fornecimento',group:'LIABILITY',normal:'CREDIT'})
   });
-  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','PAYROLL_ACCRUAL','PAYROLL_PAYMENT','OPERATING_SETTLEMENT','UNCLASSIFIED']);
+  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','PAYROLL_ACCRUAL','PAYROLL_PAYMENT','OPERATING_SETTLEMENT','LOAN_DRAW','LOAN_INTEREST','LOAN_LATE_FEE','LOAN_PAYMENT','CONTRACT_PENALTY','CONTRACT_PAYMENT','UNCLASSIFIED']);
   function transactionKind(j){
     if(TRANSACTION_KINDS.includes(j.kind))return j.kind;
     if(j.memo==='Capital inicial do empreendedor')return 'CAPITAL';
@@ -1746,7 +1806,7 @@ const CidadeCore = (() => {
     record.kind=label;
     draft.economy.ledger.push(record);
   }
-  function balance(draft,account) {let total=0;for(const j of draft.economy.ledger)for(const e of j.entries)if(e.account===account)total+=(['CAPITAL','REVENUE','PAYABLE','TAX_PAYABLE'].includes(account)?e.credit-e.debit:e.debit-e.credit);return total;}
+  function balance(draft,account) {let total=0;for(const j of draft.economy.ledger)for(const e of j.entries)if(e.account===account)total+=(['CAPITAL','REVENUE','PAYABLE','TAX_PAYABLE','LOAN_PAYABLE','INTEREST_PAYABLE','LOAN_FEES_PAYABLE','CONTRACT_PAYABLE'].includes(account)?e.credit-e.debit:e.debit-e.credit);return total;}
 
   // V1.9: FISCAL é uma simulação didática, não software de apuração. Fonte por competência.
   const FISCAL_RULE_PACKS=Object.freeze({
@@ -1880,7 +1940,7 @@ const CidadeCore = (() => {
     if(!draft)return null;
     const revenue=balance(draft,'REVENUE'),cogs=balance(draft,'COGS'),expenses=balance(draft,'EXPENSE');
     const taxExpense=balance(draft,'TAX_EXPENSE'),taxPayable=balance(draft,'TAX_PAYABLE');
-    return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),inTransit:balance(draft,'IN_TRANSIT'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),taxPayable,taxExpense,revenue,cogs,expenses,profit:revenue-cogs-expenses-taxExpense,stock:businesses(draft).reduce((n,b)=>n+b.stockUnits,0),unitPrice:activeBusiness(draft)?.unitPrice??null,units:businesses(draft).length,tick:draft.calendar.tick,city:cityById(activeBusiness(draft)?.cityId||draft.player.cityId)?.name??'—'};
+    return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),inTransit:balance(draft,'IN_TRANSIT'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),loanPayable:balance(draft,'LOAN_PAYABLE'),interestPayable:balance(draft,'INTEREST_PAYABLE'),loanFeesPayable:balance(draft,'LOAN_FEES_PAYABLE'),contractPayable:balance(draft,'CONTRACT_PAYABLE'),taxPayable,taxExpense,revenue,cogs,expenses,profit:revenue-cogs-expenses-taxExpense,stock:businesses(draft).reduce((n,b)=>n+b.stockUnits,0),unitPrice:activeBusiness(draft)?.unitPrice??null,units:businesses(draft).length,tick:draft.calendar.tick,city:cityById(activeBusiness(draft)?.cityId||draft.player.cityId)?.name??'—'};
   }
   function emptyLegacy(seed) {return {
     schemaVersion:9,worldId:`legacy-${seed}`,revision:0,
@@ -2121,6 +2181,9 @@ const CidadeCore = (() => {
       const cents=Number(payload.cents);assert(int(cents)&&cents>=100&&cents<=1000000,'Preço deve estar entre R$ 1 e R$ 10.000');
       const p=product(b,payload.productId||'base');const old=p.priceCents;p.priceCents=cents;syncTotals(b);
       event(draft,'PRECO.ALTERADO',`${p.name}: preço de ${money(old)} para ${money(cents)}.`,{old,cents,productId:p.id,productName:p.name},b.id);return;
+    }
+    if(type.startsWith('CREDITO.')||type.startsWith('CONTRATO.FORNECEDOR.')){
+      handleFinanceCommand(draft,type,payload);return;
     }
     if(type==='DILEMA.ESCOLHER') {
       chooseDilemma(draft,payload);return;
@@ -2523,7 +2586,333 @@ const CidadeCore = (() => {
     draft.calendar.date=dateNext(draft.calendar.date);
     for(const b of units)receiveDueOrders(draft,b);
     processParalegalDue(draft);
+    processFinancingDay(draft);
   }
+
+  // V2.7: Crédito e contratos são ficções econômicas. Toda obrigação reconhecida
+  // é escriturada no razão do grupo; intenções futuras só aparecem em projeções.
+  const FINANCE_RATE_BP=180, FINANCE_TERM_DAYS=30, FINANCE_MAX_PRINCIPAL=3000000;
+  const FINANCE_TERMS=Object.freeze([3,6,12,24]);
+  const CONTRACT_PERIODS=Object.freeze([7,14,30]);
+  function financeState(draft){
+    if(!draft.economy.financing)draft.economy.financing={modelVersion:1,loanSeq:0,contractSeq:0,loans:[],contracts:[]};
+    return draft.economy.financing;
+  }
+  function financeRead(state){
+    return state?.economy?.financing||{modelVersion:1,loanSeq:0,contractSeq:0,loans:[],contracts:[]};
+  }
+  function creditEligibility(state){
+    const loans=financeRead(state).loans,units=businesses(state),days=Math.min(30,Math.max(1,state.calendar.tick));
+    const windowStart=new Date(state.calendar.date+'T12:00:00Z');
+    windowStart.setUTCDate(windowStart.getUTCDate()-30);
+    const from=windowStart.toISOString().slice(0,10);
+    const sales=state.economy.ledger.filter(j=>j.date>=from&&j.date<=state.calendar.date)
+      .reduce((sum,j)=>sum+j.entries.reduce((n,e)=>n+(e.account==='REVENUE'?e.credit-e.debit:0),0),0);
+    const projected30=Math.round(sales*30/days);
+    const authorized=units.length>0&&state.calendar.tick>=7&&sales>=10000;
+    const ceiling=authorized?Math.min(FINANCE_MAX_PRINCIPAL,Math.max(0,Math.floor(projected30*3/4))):0;
+    const outstanding=loans.reduce((n,l)=>n+l.remainingCents,0);
+    const blocked=loans.some(l=>l.status==='DELINQUENT')||loans.length>=30;
+    return {eligible:authorized&&!blocked&&ceiling>outstanding,
+      reason:!units.length?'Inaugure uma unidade.':state.calendar.tick<7?'Opere pelo menos sete dias.':sales<10000?'É necessário histórico positivo de vendas.':blocked?'Regularize atrasos ou limite histórico de contratos.':ceiling<=outstanding?'Limite de crédito já comprometido.':'Elegível para crédito fictício.',
+      salesLast30Cents:sales,projected30Cents:projected30,creditLimitCents:ceiling,
+      outstandingPrincipalCents:outstanding,availableCents:Math.max(0,ceiling-outstanding),
+      monthlyRateBasisPoints:FINANCE_RATE_BP,terms:FINANCE_TERMS.slice()};
+  }
+  function scheduleDue(state,limitDays=90){
+    const until=addDays(state.calendar.date,limitDays),fin=financeRead(state),rows=[];
+    for(const l of fin.loans.filter(x=>x.status!=='PAID')){
+      if(l.interestDueCents+l.feesDueCents+l.duePrincipalCents>0)
+        rows.push({date:state.calendar.date,kind:'LOAN_DUE',id:l.id,amountCents:l.interestDueCents+l.feesDueCents+l.duePrincipalCents,certainty:'RECOGNIZED'});
+      let next=l.nextDueDate,remaining=l.remainingCents;
+      for(let i=0;i<Math.min(l.termMonths,24)&&next<=until&&remaining>0;i++){
+        const principal=Math.min(remaining,l.installmentPrincipalCents);
+        const interest=Math.round(remaining*l.rateBp/10000);
+        rows.push({date:next,kind:'LOAN_SCHEDULE',id:l.id,amountCents:principal+interest,principalCents:principal,interestCents:interest,certainty:'PROJECTED'});
+        remaining-=principal;next=addDays(next,FINANCE_TERM_DAYS);
+      }
+    }
+    for(const c of fin.contracts.filter(x=>x.status==='ACTIVE')){
+      let next=c.nextOrderDate;
+      for(let i=0;i<c.cycles-c.processed&&next<=until;i++){
+        rows.push({date:next,kind:'SUPPLIER_COMMITMENT',id:c.id,
+          amountCents:c.quantity*c.unitCostCents,certainty:'CONTRACTED_UNPOSTED'});
+        next=addDays(next,c.periodDays);
+      }
+    }
+    const pending=balance(state,'PAYABLE')+balance(state,'TAX_PAYABLE')+
+      balance(state,'CONTRACT_PAYABLE')+balance(state,'LOAN_FEES_PAYABLE')+balance(state,'INTEREST_PAYABLE');
+    if(pending>0)rows.push({date:state.calendar.date,kind:'RECOGNIZED_PAYABLES',id:'group',amountCents:pending,certainty:'RECOGNIZED'});
+    const payroll=rhReport(state).pendingCents;
+    if(payroll>0)rows.push({date:state.calendar.date,kind:'PAYROLL_KNOWN',id:'payroll',amountCents:payroll,certainty:'ALREADY_INCLUDED_IN_PAYABLE'});
+    return rows.sort((a,b)=>a.date.localeCompare(b.date)||a.kind.localeCompare(b.kind));
+  }
+  function creditReport(state){
+    if(!state)return {loans:[],contracts:[],eligibility:{eligible:false,availableCents:0},principalOutstanding:0,interestOutstanding:0,feesOutstanding:0,contractFeesOutstanding:0};
+    const fin=financeRead(state),eligibility=creditEligibility(state);
+    return {loans:clone(fin.loans),contracts:clone(fin.contracts),eligibility,
+      principalOutstanding:balance(state,'LOAN_PAYABLE'),
+      interestOutstanding:balance(state,'INTEREST_PAYABLE'),feesOutstanding:balance(state,'LOAN_FEES_PAYABLE'),
+      contractFeesOutstanding:balance(state,'CONTRACT_PAYABLE'),
+      note:'Contratação aumenta caixa e passivo, nunca receita; taxas e juros são despesas reconhecidas. Todas as cifras são fictícias.'};
+  }
+  function financialCommitmentsReport(state,days=90){
+    assert(state&&[30,90,180].includes(days),'Horizonte contratual inválido');
+    const events=scheduleDue(state,days),cash=balance(state,'CASH');
+    const expectedSupplier=events.filter(x=>x.kind==='SUPPLIER_COMMITMENT').reduce((n,x)=>n+x.amountCents,0);
+    const loanSchedules=events.filter(x=>x.kind==='LOAN_SCHEDULE');
+    const expectedLoan=loanSchedules.reduce((n,x)=>n+x.amountCents,0);
+    const expectedUnrecognizedLoanInterest=loanSchedules.reduce((n,x)=>n+x.interestCents,0);
+    const recognized=balance(state,'PAYABLE')+balance(state,'TAX_PAYABLE')+
+      balance(state,'CONTRACT_PAYABLE')+balance(state,'LOAN_PAYABLE')+
+      balance(state,'INTEREST_PAYABLE')+balance(state,'LOAN_FEES_PAYABLE');
+    const dailyFixed=businesses(state).reduce((n,b)=>n+SECTORS[b.sector].dailyCost,0);
+    return {days,from:state.calendar.date,to:addDays(state.calendar.date,days),
+      cash,recognizedLiabilities:recognized,expectedSupplierCents:expectedSupplier,
+      expectedLoanCents:expectedLoan,expectedUnrecognizedLoanInterestCents:expectedUnrecognizedLoanInterest,
+      fixedOperatingScenarioCents:dailyFixed*days,cashAfterRecognizedIfPaid:cash-recognized,
+      stressCashNoSales:cash-recognized-expectedSupplier-expectedUnrecognizedLoanInterest-dailyFixed*days,
+      events,warning:'Estresse sem novas vendas: principal já reconhecido é descontado uma única vez; apenas juros futuros são adicionados. Compras e custos projetados não geram lançamento; folha futura não foi projetada neste painel.'};
+  }
+  function financeJournal(draft,memo,entries,kind,unit=null){
+    journal(draft,memo,entries,unit,kind);
+  }
+  function financeAddPenalty(draft,account,cents,label,kind,businessId=null){
+    if(cents<=0)return;
+    financeJournal(draft,label,[
+      {account:'EXPENSE',debit:cents,credit:0},
+      {account,debit:0,credit:cents}
+    ],kind,businessId);
+  }
+  function financeLoanById(state,id){
+    const loan=financeRead(state).loans.find(l=>l.id===id);
+    assert(loan,'Contrato de financiamento inexistente');
+    return loan;
+  }
+  function financeContractById(state,id){
+    const c=financeRead(state).contracts.find(x=>x.id===id);
+    assert(c,'Contrato com fornecedor não encontrado');
+    return c;
+  }
+  function financeAccrueInterest(draft,l){
+    const elapsed=Math.max(0,Math.round((Date.parse(draft.calendar.date+'T12:00:00Z')-Date.parse(l.lastAccruedAt+'T12:00:00Z'))/86400000));
+    if(!elapsed)return 0;
+    const interest=Math.round(l.remainingCents*l.rateBp*elapsed/(10000*FINANCE_TERM_DAYS));
+    if(interest>0){
+      financeAddPenalty(draft,'INTEREST_PAYABLE',interest,'Juros fictícios proporcionais '+l.id,'LOAN_INTEREST');
+      l.interestDueCents+=interest;
+    }
+    l.lastAccruedAt=draft.calendar.date;
+    return interest;
+  }
+  function loanDue(draft,loan){
+    if(loan.remainingCents<=0)return;
+    const late=loan.duePrincipalCents>0;
+    if(late){
+      const room=Math.max(0,Math.floor(loan.principalCents*.20)-loan.assessedFeesCents);
+      const fee=Math.min(room,Math.round(loan.duePrincipalCents*.02));
+      if(fee>0){
+        financeAddPenalty(draft,'LOAN_FEES_PAYABLE',fee,'Multa fictícia do financiamento '+loan.id,'LOAN_LATE_FEE');
+        loan.feesDueCents+=fee;loan.assessedFeesCents+=fee;
+      }
+    }
+    const interest=financeAccrueInterest(draft,loan);
+    loan.maturities+=1;
+    const principalDue=loan.maturities>=loan.termMonths?loan.remainingCents:
+      Math.min(loan.remainingCents,loan.duePrincipalCents+loan.installmentPrincipalCents);
+    loan.duePrincipalCents=principalDue;
+    loan.lastDueDate=loan.nextDueDate;
+    loan.nextDueDate=addDays(loan.nextDueDate,FINANCE_TERM_DAYS);
+    loan.status=late?'DELINQUENT':'DUE';
+    event(draft,'CREDITO.PARCELA_VENCEU','Financiamento '+loan.id+' · principal em vencimento '+money(principalDue)+', juros lançados '+money(interest)+'.',
+      {loanId:loan.id,principalDueCents:principalDue,interestCents:interest,feeCents:late?loan.feesDueCents:0});
+  }
+  function financeContractCycle(draft,c){
+    const unit=businessById(draft,c.businessId);
+    const due=c.nextOrderDate;
+    c.processed++;
+    c.nextOrderDate=addDays(c.nextOrderDate,c.periodDays);
+    try{
+      assert(unit,'Unidade do contrato ausente');
+      registerPurchase(draft,unit,c.supplierId,[{productId:c.productId,quantity:c.quantity}],c);
+      c.fulfilled++;
+      event(draft,'CONTRATO.FORNECEDOR.CUMPRIDO','Entrega contratada '+c.id+' gerou pedido pago e em trânsito.',
+        {contractId:c.id,cycle:c.processed,orderDate:due,amountCents:c.quantity*c.unitCostCents},c.businessId);
+    }catch(err){
+      c.missed++;
+      const fee=Math.max(1,Math.round(c.quantity*c.unitCostCents*.02));
+      financeAddPenalty(draft,'CONTRACT_PAYABLE',fee,'Multa fictícia por descumprimento '+c.id,'CONTRACT_PENALTY',c.businessId);
+      c.penaltyDueCents+=fee;
+      event(draft,'CONTRATO.FORNECEDOR.DESCUMPRIDO','Pedido contratado '+c.id+' não executado: '+String(err.message)+'. Multa fictícia '+money(fee)+'.',
+        {contractId:c.id,cycle:c.processed,penaltyCents:fee,reason:String(err.message)},c.businessId);
+    }
+    if(c.processed>=c.cycles)c.status='COMPLETED';
+  }
+  function processFinancingDay(draft){
+    const fin=draft.economy.financing;
+    if(!fin)return;
+    for(const loan of fin.loans){
+      if(loan.status==='PAID')continue;
+      while(loan.remainingCents>0&&loan.nextDueDate<=draft.calendar.date)loanDue(draft,loan);
+      if(loan.duePrincipalCents>0&&loan.lastDueDate<draft.calendar.date)loan.status='DELINQUENT';
+    }
+    for(const c of fin.contracts){
+      while(c.status==='ACTIVE'&&c.nextOrderDate<=draft.calendar.date)financeContractCycle(draft,c);
+    }
+  }
+  function handleFinanceCommand(draft,type,payload){
+    const fin=financeState(draft);
+    if(type==='CREDITO.CONTRATAR'){
+      const eligibility=creditEligibility(draft),principal=Number(payload.principalCents),months=Number(payload.termMonths);
+      assert(FINANCE_TERMS.includes(months),'Escolha prazo de 3, 6, 12 ou 24 parcelas de 30 dias.');
+      assert(Number.isSafeInteger(principal)&&principal>=50000&&principal<=FINANCE_MAX_PRINCIPAL,'Principal fictício fora do intervalo R$ 500–30.000.');
+      assert(eligibility.eligible&&principal<=eligibility.availableCents,eligibility.reason||'Limite insuficiente.');
+      assert(fin.loans.length<30,'Limite histórico de financiamentos atingido.');
+      const id='cr-'+(++fin.loanSeq);
+      fin.loans.push({id,principalCents:principal,remainingCents:principal,
+        rateBp:FINANCE_RATE_BP,termMonths:months,installmentPrincipalCents:Math.ceil(principal/months),
+        signedAt:draft.calendar.date,lastAccruedAt:draft.calendar.date,nextDueDate:addDays(draft.calendar.date,FINANCE_TERM_DAYS),
+        lastDueDate:null,duePrincipalCents:0,interestDueCents:0,feesDueCents:0,
+        assessedFeesCents:0,maturities:0,renegotiations:0,paidTotalCents:0,status:'OPEN'});
+      financeJournal(draft,'Crédito empresarial fictício '+id,[
+        {account:'CASH',debit:principal,credit:0},{account:'LOAN_PAYABLE',debit:0,credit:principal}
+      ],'LOAN_DRAW');
+      event(draft,'CREDITO.CONTRATADO','Financiamento '+id+' · '+money(principal)+'; '+months+' parcelas fictícias. Não é receita.',
+        {loanId:id,principalCents:principal,termMonths:months,rateBp:FINANCE_RATE_BP});
+      return;
+    }
+    if(type==='CREDITO.PAGAR'){
+      const l=financeLoanById(draft,String(payload.loanId||'')),amount=Number(payload.amountCents);
+      financeAccrueInterest(draft,l); // quitação antecipada reconhece juros proporcionais, sem arbitragem gratuita
+      const due=l.remainingCents+l.interestDueCents+l.feesDueCents;
+      assert(l.status!=='PAID'&&due>0,'Financiamento já encerrado');
+      assert(Number.isSafeInteger(amount)&&amount>0&&amount<=due,'Pagamento de crédito excede o saldo exigível ou total contratado.');
+      assert(balance(draft,'CASH')>=amount,'Caixa insuficiente para pagamento.');
+      let left=amount;
+      const fee=Math.min(left,l.feesDueCents);left-=fee;
+      const interest=Math.min(left,l.interestDueCents);left-=interest;
+      const principal=Math.min(left,l.remainingCents);
+      l.feesDueCents-=fee;l.interestDueCents-=interest;l.remainingCents-=principal;
+      l.duePrincipalCents=Math.min(l.remainingCents,Math.max(0,l.duePrincipalCents-principal));
+      l.paidTotalCents+=amount;
+      const entries=[];
+      if(fee)entries.push({account:'LOAN_FEES_PAYABLE',debit:fee,credit:0});
+      if(interest)entries.push({account:'INTEREST_PAYABLE',debit:interest,credit:0});
+      if(principal)entries.push({account:'LOAN_PAYABLE',debit:principal,credit:0});
+      entries.push({account:'CASH',debit:0,credit:amount});
+      financeJournal(draft,'Pagamento de financiamento '+l.id,entries,'LOAN_PAYMENT');
+      if(l.remainingCents+l.interestDueCents+l.feesDueCents===0)l.status='PAID';
+      else if(l.duePrincipalCents>0)l.status=l.lastDueDate<draft.calendar.date?'DELINQUENT':'DUE';
+      else l.status='OPEN';
+      event(draft,'CREDITO.PAGO','Pagamento '+l.id+': principal '+money(principal)+', juros '+money(interest)+', multa '+money(fee)+'.',
+        {loanId:l.id,amountCents:amount,principalCents:principal,interestCents:interest,feeCents:fee});
+      return;
+    }
+    if(type==='CREDITO.RENEGOCIAR'){
+      const l=financeLoanById(draft,String(payload.loanId||'')),months=Number(payload.termMonths);
+      assert(FINANCE_TERMS.includes(months),'Prazo de renegociação inválido.');
+      assert(l.status==='DELINQUENT'&&l.remainingCents>0,'Renegociação disponível somente para financiamento em atraso.');
+      assert(l.renegotiations<2,'Limite de duas renegociações atingido.');
+      l.termMonths=months;l.maturities=0;l.installmentPrincipalCents=Math.ceil(l.remainingCents/months);
+      l.duePrincipalCents=0;l.nextDueDate=addDays(draft.calendar.date,FINANCE_TERM_DAYS);
+      l.lastDueDate=null;l.renegotiations++;l.status='RESTRUCTURED';
+      event(draft,'CREDITO.RENEGOCIADO','Financiamento '+l.id+' renegociado em '+months+' períodos. Juros e multas já reconhecidos continuam devidos.',
+        {loanId:l.id,termMonths:months,remainingPrincipalCents:l.remainingCents,interestDueCents:l.interestDueCents,feesDueCents:l.feesDueCents});
+      return;
+    }
+    if(type==='CONTRATO.FORNECEDOR.ASSINAR'){
+      const b=businessById(draft,String(payload.businessId||'')),supplier=supplierById(String(payload.supplierId||''));
+      const quantity=Number(payload.quantity),periodDays=Number(payload.periodDays),cycles=Number(payload.cycles);
+      assert(b&&supplier,'Escolha unidade e fornecedor fictício válidos.');
+      assert(CONTRACT_PERIODS.includes(periodDays),'Frequência permitida: 7, 14 ou 30 dias.');
+      assert(Number.isSafeInteger(cycles)&&cycles>=2&&cycles<=12,'Prazo contratual de 2 a 12 ciclos.');
+      assert(Number.isSafeInteger(quantity)&&quantity>=1&&quantity<=Math.min(100,supplier.maxDailyPerSku),'Volume contratado inválido.');
+      const p=product(b,String(payload.productId||'base'));
+      assert(fin.contracts.filter(x=>x.status==='ACTIVE').length<6,'Limite de seis contratos ativos atingido.');
+      const unitCost=Math.round(p.costCents*supplier.priceFactor/100);
+      assert(quantity*unitCost>0&&Number.isSafeInteger(quantity*unitCost*cycles),'Comprometimento contratual excede capacidade de registro.');
+      const id='cf-'+(++fin.contractSeq);
+      fin.contracts.push({id,businessId:b.id,supplierId:supplier.id,productId:p.id,productName:p.name,
+        quantity,unitCostCents:unitCost,leadDays:supplier.leadDays,periodDays,cycles,
+        processed:0,fulfilled:0,missed:0,penaltyDueCents:0,
+        signedAt:draft.calendar.date,nextOrderDate:addDays(draft.calendar.date,periodDays),status:'ACTIVE'});
+      event(draft,'CONTRATO.FORNECEDOR.ASSINADO','Contrato '+id+' · '+cycles+' pedidos futuros de '+quantity+' un. de '+p.name+'.',
+        {contractId:id,unitCostCents:unitCost,cycles,periodDays,commitmentCents:quantity*unitCost*cycles},b.id);
+      return;
+    }
+    if(type==='CONTRATO.FORNECEDOR.RESCINDIR'){
+      const c=financeContractById(draft,String(payload.contractId||''));
+      assert(c.status==='ACTIVE','Somente contratos ativos podem ser rescindidos.');
+      const future=(c.cycles-c.processed)*c.quantity*c.unitCostCents,fee=Math.round(future*.05);
+      if(fee)financeAddPenalty(draft,'CONTRACT_PAYABLE',fee,'Rescisão fictícia de fornecimento '+c.id,'CONTRACT_PENALTY',c.businessId);
+      c.penaltyDueCents+=fee;c.status='TERMINATED';
+      event(draft,'CONTRATO.FORNECEDOR.RESCINDIDO','Contrato '+c.id+' rescindido. Compromissos futuros cancelados; multa fictícia '+money(fee)+'.',
+        {contractId:c.id,penaltyCents:fee,cancelledCommitmentCents:future},c.businessId);
+      return;
+    }
+    if(type==='CONTRATO.FORNECEDOR.PAGAR_PENALIDADE'){
+      const c=financeContractById(draft,String(payload.contractId||'')),amount=Number(payload.amountCents);
+      assert(Number.isSafeInteger(amount)&&amount>0&&amount<=c.penaltyDueCents,'Valor de multa contratual inválido.');
+      assert(balance(draft,'CASH')>=amount,'Caixa insuficiente para quitar multa.');
+      c.penaltyDueCents-=amount;
+      financeJournal(draft,'Pagamento multa contratual '+c.id,[
+        {account:'CONTRACT_PAYABLE',debit:amount,credit:0},{account:'CASH',debit:0,credit:amount}
+      ],'CONTRACT_PAYMENT',c.businessId);
+      event(draft,'CONTRATO.FORNECEDOR.MULTA_PAGA','Multa fictícia do contrato '+c.id+' paga: '+money(amount)+'.',
+        {contractId:c.id,amountCents:amount},c.businessId);
+      return;
+    }
+    throw Error('Ação financeira desconhecida: '+type);
+  }
+  function validateFinancing(state){
+    const fin=state.economy.financing;
+    if(fin===undefined||fin===null){
+      assert(balance(state,'LOAN_PAYABLE')===0&&balance(state,'INTEREST_PAYABLE')===0&&
+        balance(state,'LOAN_FEES_PAYABLE')===0&&balance(state,'CONTRACT_PAYABLE')===0,'Obrigações financeiras sem contrato válido.');
+      return;
+    }
+    assert(plain(fin)&&fin.modelVersion===1&&int(fin.loanSeq)&&int(fin.contractSeq)&&
+      Array.isArray(fin.loans)&&fin.loans.length<=30&&Array.isArray(fin.contracts)&&fin.contracts.length<=100,
+      'Modelo de financiamento inválido.');
+    const loanIds=new Set(),contractIds=new Set();
+    let principal=0,interest=0,fees=0,contractFees=0;
+    for(const l of fin.loans){
+      assert(plain(l)&&typeof l.id==='string'&&!loanIds.has(l.id)&&/^cr-\d+$/.test(l.id),'Financiamento duplicado ou inválido.');loanIds.add(l.id);
+      assert(int(l.principalCents)&&l.principalCents>=50000&&l.principalCents<=FINANCE_MAX_PRINCIPAL&&
+        int(l.remainingCents)&&l.remainingCents<=l.principalCents&&
+        int(l.rateBp)&&l.rateBp===FINANCE_RATE_BP&&FINANCE_TERMS.includes(l.termMonths)&&
+        int(l.installmentPrincipalCents)&&l.installmentPrincipalCents>0&&
+        int(l.duePrincipalCents)&&l.duePrincipalCents<=l.remainingCents&&
+        int(l.interestDueCents)&&int(l.feesDueCents)&&int(l.assessedFeesCents)&&
+        l.assessedFeesCents<=Math.floor(l.principalCents*.2)&&
+        int(l.maturities)&&int(l.renegotiations)&&l.renegotiations<=2&&int(l.paidTotalCents)&&
+        isoDate(l.signedAt)&&isoDate(l.lastAccruedAt)&&l.lastAccruedAt>=l.signedAt&&l.lastAccruedAt<=state.calendar.date&&isoDate(l.nextDueDate)&&
+        (l.lastDueDate===null||isoDate(l.lastDueDate))&&
+        ['OPEN','DUE','DELINQUENT','RESTRUCTURED','PAID'].includes(l.status),
+        'Contrato de crédito inconsistente.');
+      assert(l.status!=='PAID'||l.remainingCents+l.interestDueCents+l.feesDueCents===0,'Crédito encerrado com dívida.');
+      principal+=l.remainingCents;interest+=l.interestDueCents;fees+=l.feesDueCents;
+    }
+    for(const c of fin.contracts){
+      assert(plain(c)&&typeof c.id==='string'&&!contractIds.has(c.id)&&/^cf-\d+$/.test(c.id),'Contrato de fornecimento inválido.');contractIds.add(c.id);
+      assert(businessById(state,c.businessId)&&supplierById(c.supplierId)&&
+        Number.isSafeInteger(c.quantity)&&c.quantity>=1&&c.quantity<=100&&
+        int(c.unitCostCents)&&c.unitCostCents>0&&CONTRACT_PERIODS.includes(c.periodDays)&&
+        Number.isSafeInteger(c.cycles)&&c.cycles>=2&&c.cycles<=12&&
+        int(c.processed)&&c.processed<=c.cycles&&int(c.fulfilled)&&int(c.missed)&&
+        c.fulfilled+c.missed===c.processed&&int(c.penaltyDueCents)&&
+        isoDate(c.signedAt)&&isoDate(c.nextOrderDate)&&
+        ['ACTIVE','COMPLETED','TERMINATED'].includes(c.status),
+        'Calendário ou obrigações de fornecedor inconsistentes.');
+      assert(c.status!=='COMPLETED'||c.processed===c.cycles,'Contrato concluído antes do fim do prazo.');
+      assert(c.status!=='ACTIVE'||c.processed<c.cycles,'Contrato ativo sem ciclos futuros.');
+      contractFees+=c.penaltyDueCents;
+    }
+    assert(principal===balance(state,'LOAN_PAYABLE')&&interest===balance(state,'INTEREST_PAYABLE')&&
+      fees===balance(state,'LOAN_FEES_PAYABLE')&&contractFees===balance(state,'CONTRACT_PAYABLE'),
+      'Financiamento diverge dos saldos reconhecidos no razão.');
+  }
+
   function dispatch(current,cmd) {
     try{
       assert(plain(cmd)&&typeof cmd.type==='string'&&typeof cmd.id==='string'&&/^[a-zA-Z\d._:-]{2,100}$/.test(cmd.id),'Comando sem ID válido');
@@ -2557,6 +2946,7 @@ const CidadeCore = (() => {
     assert(state.player.cityId===null||!!cityById(state.player.cityId),'Cidade de carreira inválida');
     assert(plain(state.world.competitor)&&int(state.world.competitor.priceIndex),'Concorrente inválido');
     validateRivalEconomy(state);
+    validateFinancing(state);
     if(state.schemaVersion>=7){
       const regional=state.world.regional;
       assert(plain(regional)&&regional.datasetId===POPULATION_SOURCE.id&&
@@ -2726,7 +3116,7 @@ const CidadeCore = (() => {
     const inScope=j=>businessId==='all'||journalBusinessId(state,j)===businessId;
     const entries=state.economy.ledger.filter(x=>x.date>=from&&x.date<=effectiveEnd&&inScope(x));
     const until=state.economy.ledger.filter(x=>x.date<=effectiveEnd&&inScope(x));
-    const account=(journals,name)=>journals.reduce((sum,j)=>sum+j.entries.reduce((n,e)=>e.account===name?n+(['CAPITAL','REVENUE','PAYABLE','TAX_PAYABLE'].includes(name)?e.credit-e.debit:e.debit-e.credit):n,0),0);
+    const account=(journals,name)=>journals.reduce((sum,j)=>sum+j.entries.reduce((n,e)=>e.account===name?n+(['CAPITAL','REVENUE','PAYABLE','TAX_PAYABLE','LOAN_PAYABLE','INTEREST_PAYABLE','LOAN_FEES_PAYABLE','CONTRACT_PAYABLE'].includes(name)?e.credit-e.debit:e.debit-e.credit):n,0),0);
     const revenue=account(entries,'REVENUE'),cogs=account(entries,'COGS'),expenses=account(entries,'EXPENSE'),taxExpense=account(entries,'TAX_EXPENSE');
     return {
       period,referenceDate,from,to,effectiveEnd,label,entries,businessId,
@@ -2767,7 +3157,7 @@ const CidadeCore = (() => {
     const amounts=Object.fromEntries(Object.keys(ACCOUNT_CATALOG).map(code=>[code,signedAccount(journals,code)]));
     const unknown=Object.keys(ACCOUNT_CATALOG).length===0?[]:[...new Set(journals.flatMap(j=>j.entries.map(e=>e.account)))].filter(a=>!ACCOUNT_CATALOG[a]);
     const assets=amounts.CASH+amounts.INVENTORY+amounts.IN_TRANSIT+amounts.RECEIVABLE;
-    const liabilities=amounts.PAYABLE+amounts.TAX_PAYABLE,retainedEarnings=amounts.REVENUE-amounts.COGS-amounts.EXPENSE-amounts.TAX_EXPENSE;
+    const liabilities=amounts.PAYABLE+amounts.TAX_PAYABLE+amounts.LOAN_PAYABLE+amounts.INTEREST_PAYABLE+amounts.LOAN_FEES_PAYABLE+amounts.CONTRACT_PAYABLE,retainedEarnings=amounts.REVENUE-amounts.COGS-amounts.EXPENSE-amounts.TAX_EXPENSE;
     const equity=amounts.CAPITAL+retainedEarnings,difference=assets-liabilities-equity;
     return {asOf,accounts:amounts,assets,liabilities,paidInCapital:amounts.CAPITAL,
       retainedEarnings,equity,difference,balanced:difference===0&&unknown.length===0,
@@ -2793,6 +3183,9 @@ const CidadeCore = (() => {
       else if(kind==='TAX_PAYMENT'&&net<0)rows.taxPayments+=-net;
       else if(kind==='PAYROLL_PAYMENT'&&net<0)rows.payroll=(rows.payroll||0)-net;
       else if(kind==='OPERATING_SETTLEMENT'&&net<0)rows.operatingSettlements=(rows.operatingSettlements||0)-net;
+      else if(kind==='LOAN_DRAW'&&net>0)rows.loanDraws=(rows.loanDraws||0)+net;
+      else if(kind==='LOAN_PAYMENT'&&net<0)rows.loanPayments=(rows.loanPayments||0)-net;
+      else if(kind==='CONTRACT_PAYMENT'&&net<0)rows.contractPenalties=(rows.contractPenalties||0)-net;
       else if(net>0)rows.unclassifiedIn+=net;
       else rows.unclassifiedOut+=-net;
     }
@@ -3065,7 +3458,7 @@ const CidadeCore = (() => {
     return {state,migrated,message:migrated?'Carreira migrada para V1.9: histórico preservado; cenário tributário desativado até confirmação explícita.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({journeyGuide,reputationReport,dilemmaReport,DILEMMA_DEFINITIONS,rivalMarketReport,RIVAL_EVENT_TYPES,progressionReport,operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({creditReport,financialCommitmentsReport,journeyGuide,reputationReport,dilemmaReport,DILEMMA_DEFINITIONS,rivalMarketReport,RIVAL_EVENT_TYPES,progressionReport,operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();
 
@@ -3980,6 +4373,88 @@ function bindRestock(){
     if(report.recent.oneOff>0)risks.push('Abertura e outras despesas eventuais constam do realizado, mas não foram repetidas na projeção.');
     $('strategy-risks').innerHTML=risks.length?risks.map(x=>`<p>${escape(x)}</p>`).join(''):'<p>Sem alertas adicionais nos parâmetros desta projeção hipotética.</p>';
   }
+
+  // V2.7: a tela apenas lê relatórios e envia comandos idempotentes ao domínio.
+  function setCreditOptions(id,rows){
+    const el=$(id),selected=el.value;
+    el.replaceChildren(...rows.map(row=>{
+      const opt=document.createElement('option');
+      opt.value=String(row[0]);opt.textContent=String(row[1]);
+      return opt;
+    }));
+    if(rows.some(x=>String(x[0])===selected))el.value=selected;
+    el.disabled=!rows.length;
+  }
+  function renderCredit(){
+    const report=Core.creditReport(state),elig=report.eligibility;
+    const activeLoans=report.loans.filter(l=>l.status!=='PAID');
+    const statusNames={OPEN:'Em dia',DUE:'Parcela vencendo',DELINQUENT:'Em atraso',RESTRUCTURED:'Renegociado',PAID:'Quitado'};
+    const detail=[
+      ['Elegibilidade',elig.eligible?'Crédito disponível':elig.reason],
+      ['Vendas dos últimos 30 dias',Core.money(elig.salesLast30Cents||0)],
+      ['Limite total permitido',Core.money(elig.creditLimitCents||0)],
+      ['Limite adicional disponível',Core.money(elig.availableCents||0)],
+      ['Principal dos empréstimos',Core.money(report.principalOutstanding)],
+      ['Juros reconhecidos a pagar',Core.money(report.interestOutstanding)],
+      ['Multas de crédito a pagar',Core.money(report.feesOutstanding)],
+      ['Multas de fornecedores a pagar',Core.money(report.contractFeesOutstanding)]
+    ];
+    $('credit-summary').innerHTML=detail.map(item=>'<dt>'+escape(item[0])+'</dt><dd>'+escape(item[1])+'</dd>').join('');
+    $('credit-contract-submit').disabled=!elig.eligible;
+    $('credit-loan-list').innerHTML=report.loans.map(l=>{
+      const due=l.duePrincipalCents+l.interestDueCents+l.feesDueCents;
+      return '<div class="event-item"><div><strong>'+escape(l.id)+' · '+escape(statusNames[l.status]||l.status)+
+        '</strong><p>Principal: '+escape(Core.money(l.remainingCents))+' · Encargos reconhecidos: '+
+        escape(Core.money(l.interestDueCents+l.feesDueCents))+' · Parcela exigível: '+escape(Core.money(due))+
+        '</p><small>Próximo vencimento fictício: '+escape(l.nextDueDate)+' · '+l.termMonths+
+        ' períodos · renegociações '+l.renegotiations+'/2</small></div></div>';
+    }).join('')||'<p class="muted">Nenhum financiamento contratado.</p>';
+    setCreditOptions('credit-pay-id',activeLoans.map(l=>[l.id,l.id+' · '+Core.money(l.remainingCents+l.interestDueCents+l.feesDueCents)]));
+    setCreditOptions('credit-renegotiate-id',activeLoans.filter(l=>l.status==='DELINQUENT').map(l=>[l.id,l.id+' · '+Core.money(l.remainingCents)]));
+    $('credit-payment-form').querySelector('button').disabled=!activeLoans.length;
+    $('credit-renegotiate-form').querySelector('button').disabled=!activeLoans.some(l=>l.status==='DELINQUENT');
+    if(activeLoans.length&&!$('credit-pay-amount').value){
+      const loan=activeLoans.find(l=>l.id===$('credit-pay-id').value)||activeLoans[0];
+      $('credit-pay-amount').value=((loan.duePrincipalCents+loan.interestDueCents+loan.feesDueCents||Math.min(loan.remainingCents,50000))/100).toFixed(2);
+    }
+    const units=Core.businesses(state);
+    setCreditOptions('supplier-contract-unit',units.map(u=>[u.id,u.id+' · '+Core.cityById(u.cityId).name]));
+    const selected=units.find(u=>u.id===$('supplier-contract-unit').value)||units[0];
+    setCreditOptions('supplier-contract-product',(selected?.products||[]).map(p=>[p.id,p.name]));
+    $('supplier-contract-form').querySelector('button').disabled=!selected;
+    $('supplier-contract-list').innerHTML=report.contracts.map(c=>{
+      const pending=(c.cycles-c.processed)*c.quantity*c.unitCostCents;
+      const status=c.status==='ACTIVE'?'Ativo':c.status==='COMPLETED'?'Concluído':'Rescindido';
+      return '<div class="event-item"><div><strong>'+escape(c.id+' · '+status)+
+        '</strong><p>'+escape(c.productName)+' · '+c.quantity+' un. por pedido · custo '+escape(Core.money(c.unitCostCents))+
+        '/un. · '+c.fulfilled+'/'+c.cycles+' pedidos efetivados · '+c.missed+
+        ' falha(s) · compromisso futuro '+escape(Core.money(pending))+'</p><small>'+
+        'Próxima data '+escape(c.status==='ACTIVE'?c.nextOrderDate:'—')+
+        ' · multa em aberto '+escape(Core.money(c.penaltyDueCents))+'</small><div class="filter-action-row">'+
+        (c.status==='ACTIVE'?'<button type="button" class="btn btn-outline" data-credit-cancel="'+escape(c.id)+'">Rescindir</button>':'')+
+        (c.penaltyDueCents>0?'<button type="button" class="btn btn-outline" data-credit-fee="'+escape(c.id)+'">Quitar multa</button>':'')+
+        '</div></div></div>';
+    }).join('')||'<p class="muted">Nenhum contrato de fornecimento.</p>';
+    const horizon=Number($('credit-calendar-horizon').value)||90;
+    const cal=Core.financialCommitmentsReport(state,horizon);
+    $('credit-calendar-summary').innerHTML=[
+      ['Caixa realizado do grupo',cal.cash],
+      ['Passivos já reconhecidos no balanço',cal.recognizedLiabilities],
+      ['Compras futuras contratadas não contabilizadas',cal.expectedSupplierCents],
+      ['Parcelas futuras estimadas (principal e juros)',cal.expectedLoanCents],
+      ['Juros futuros ainda não reconhecidos',cal.expectedUnrecognizedLoanInterestCents],
+      ['Despesas operacionais fixas hipotéticas',cal.fixedOperatingScenarioCents],
+      ['Caixa sob estresse sem vendas (não disponível)',cal.stressCashNoSales]
+    ].map(row=>'<dt>'+escape(row[0])+'</dt><dd>'+escape(Core.money(row[1]))+'</dd>').join('');
+    const kindNames={LOAN_DUE:'Parcela/encargos exigíveis',LOAN_SCHEDULE:'Financiamento futuro',
+      SUPPLIER_COMMITMENT:'Compra contratada',RECOGNIZED_PAYABLES:'Outros passivos já lançados',
+      PAYROLL_KNOWN:'Folhas já contabilizadas no passivo'};
+    $('credit-calendar-rows').innerHTML=cal.events.slice(0,25).map(ev=>
+      '<tr><td>'+escape(ev.date)+'</td><td>'+escape((kindNames[ev.kind]||ev.kind)+' · '+ev.id)+
+      '</td><td>'+escape(Core.money(ev.amountCents))+'</td><td>'+escape(ev.certainty)+
+      '</td></tr>').join('')||'<tr><td colspan="4">Nenhum compromisso no horizonte escolhido.</td></tr>';
+  }
+
   /* V2.0: fragmento de visualização, incorporado à mesma closure pelo build. */
   // Demonstrativo financeiro puro: compara o livro do mesmo recorte, sem novos lançamentos.
   function renderTreasury(report,q,params){
@@ -4308,6 +4783,7 @@ function bindRestock(){
       updateBuyPreview();
     }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('your-current-price','—');setText('competitor-price','—');setText('buy-total','—');}
     renderCommerce();renderPriceHistory();renderRivals();
+    if(tab==='administrativo'&&activeSection.administrativo==='financas')renderCredit();
     if((tab==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo))||financeQuery)renderFinances();
     renderFiscal();
     renderFiscalOperations();
@@ -4370,6 +4846,59 @@ function bindRestock(){
     });
     $('career-form').addEventListener('submit',e=>{e.preventDefault();const name=$('player-name').value,companyName=$('company-name').value,cityId=$('start-city').value;if(commit('CARREIRA.CRIAR',{name,companyName,cityId,seed:(Date.now()>>>0)}))commit('MUNDO.CONCORRENCIA_ATIVAR');});
     $('rival-enable').addEventListener('click',()=>commit('MUNDO.CONCORRENCIA_ATIVAR'));
+
+    // Controles V2.7: nunca alteram o estado diretamente.
+    $('credit-contract-form').addEventListener('submit',e=>{
+      e.preventDefault();
+      const principalCents=Math.round(Number($('credit-principal').value)*100),
+        termMonths=Number($('credit-term').value);
+      if(confirm('Contratar crédito FICTÍCIO de '+Core.money(principalCents)+'? O principal entra no caixa e gera dívida; haverá juros de 1,8% a cada 30 dias.'))
+        commit('CREDITO.CONTRATAR',{principalCents,termMonths});
+    });
+    $('credit-pay-id').addEventListener('change',()=>{
+      const l=Core.creditReport(state).loans.find(x=>x.id===$('credit-pay-id').value);
+      $('credit-pay-amount').value=l?((l.duePrincipalCents+l.interestDueCents+l.feesDueCents||Math.min(l.remainingCents,50000))/100).toFixed(2):'';
+    });
+    $('credit-payment-form').addEventListener('submit',e=>{
+      e.preventDefault();
+      const loanId=$('credit-pay-id').value,amountCents=Math.round(Number($('credit-pay-amount').value)*100);
+      if(confirm('Pagar '+Core.money(amountCents)+' com o caixa do grupo? A baixa será aplicada primeiro às multas, depois aos juros e ao principal.'))
+        if(commit('CREDITO.PAGAR',{loanId,amountCents}))$('credit-pay-amount').value='';
+    });
+    $('credit-renegotiate-form').addEventListener('submit',e=>{
+      e.preventDefault();
+      const loanId=$('credit-renegotiate-id').value,termMonths=Number($('credit-renegotiate-term').value);
+      if(confirm('Renegociar '+loanId+' em '+termMonths+' novos períodos fictícios? Juros e multas existentes NÃO são perdoados.'))
+        commit('CREDITO.RENEGOCIAR',{loanId,termMonths});
+    });
+    $('supplier-contract-unit').addEventListener('change',()=>{
+      const unit=Core.businessById(state,$('supplier-contract-unit').value);
+      setCreditOptions('supplier-contract-product',(unit?.products||[]).map(p=>[p.id,p.name]));
+    });
+    $('supplier-contract-form').addEventListener('submit',e=>{
+      e.preventDefault();
+      const payload={businessId:$('supplier-contract-unit').value,productId:$('supplier-contract-product').value,
+        supplierId:$('supplier-contract-supplier').value,quantity:Number($('supplier-contract-quantity').value),
+        periodDays:Number($('supplier-contract-period').value),cycles:Number($('supplier-contract-cycles').value)};
+      if(confirm('Assinar contrato FICTÍCIO com '+payload.cycles+' pedidos automáticos? Eles descontam caixa na data do pedido. Falta de caixa/estoque gera multa simulada de 2%, e rescisão antecipada cobra 5% do compromisso restante.'))
+        commit('CONTRATO.FORNECEDOR.ASSINAR',payload);
+    });
+    $('supplier-contract-list').addEventListener('click',e=>{
+      const cancel=e.target.closest('[data-credit-cancel]'),fee=e.target.closest('[data-credit-fee]');
+      if(cancel){
+        const contractId=cancel.dataset.creditCancel;
+        const c=Core.creditReport(state).contracts.find(x=>x.id===contractId);
+        if(c&&confirm('Rescindir '+contractId+'? Serão cancelados pedidos futuros e lançada multa de 5% sobre os compromissos restantes.'))
+          commit('CONTRATO.FORNECEDOR.RESCINDIR',{contractId});
+      }else if(fee){
+        const contractId=fee.dataset.creditFee;
+        const c=Core.creditReport(state).contracts.find(x=>x.id===contractId);
+        if(c&&confirm('Quitar '+Core.money(c.penaltyDueCents)+' de multa fictícia do contrato '+contractId+'?'))
+          commit('CONTRATO.FORNECEDOR.PAGAR_PENALIDADE',{contractId,amountCents:c.penaltyDueCents});
+      }
+    });
+    $('credit-calendar-horizon').addEventListener('change',renderCredit);
+
     $('journey-dilemmas').addEventListener('click',e=>{const t=e.target.closest('button[data-dilemma]');if(t&&!t.disabled)commit('DILEMA.ESCOLHER',{dilemmaId:t.dataset.dilemma,choice:t.dataset.choice});});
     for(const button of document.querySelectorAll('[data-tab]'))button.addEventListener('click',()=>goto(button.dataset.tab));
     for(const button of document.querySelectorAll('[data-go]'))button.addEventListener('click',()=>goto(button.dataset.go));

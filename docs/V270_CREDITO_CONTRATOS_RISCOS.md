@@ -1,6 +1,6 @@
-# CIDADE DOS NEGÓCIOS — V2.7.0-alpha.1 · Crédito, contratos e riscos financeiros
+# CIDADE DOS NEGÓCIOS — V2.7.0 · Crédito, contratos e riscos financeiros
 
-**Status:** CANDIDATA EM IMPLEMENTAÇÃO/VALIDAÇÃO. Não homologada e não equivale a QA Windows.
+**Status:** HOMOLOGAÇÃO FORMAL pelo titular em 05/11/2026, condicionada à nova CI da promoção final; **não é evidência de QA Windows concluído**. Ver `HOMOLOGACAO_V270.md`.
 **Origem:** Plano Diretor V2 → V3 de 04/11/2026 — oito checkpoints V2.7.
 **Base protegida:** `releases/v2.6.0-homologada` — V2.6.0 oficialmente homologada pelo titular em 05/11/2026.
 **Contrato de save:** `schemaVersion=9` mantido. `economy.financing` opcional e ativado por comando; não retroage financiamento em saves antigos.
@@ -16,7 +16,7 @@
 | 05 | Contrato com fornecedor | Unidade, produto, fornecedor, preço travado, volume, 2–12 ciclos de 7/14/30 dias; pedido automático em trânsito; falta de caixa/capacidade vira falha + multa | `CONTRATO.FORNECEDOR.ASSINAR` e motor diário. Pedido só lança mercadoria se pago. Rescisão multa de 5% do compromisso futuro |
 | 06 | Calendário de compromissos | Projeção de 30/90/180 dias com passivos contabilizados, compras contratadas ainda não contabilizadas, parcelas futuras e estresse sem vendas | `financialCommitmentsReport` puro; principal só deduzido uma vez no estresse |
 | 07 | Regressões financeiras | Testes do ledger, amortização, default, recuperação, contratos, vendas, caixa, DRE, balanço e save | `tests/credit_v270.test.mjs` e `tools/benchmark-v270.mjs` |
-| 08 | GATE — crédito com consequências | CI, benchmark 90/365/1825 dias, HTML offline, QA e aceite | CI a verificar; Windows e homologação do titular pendentes |
+| 08 | GATE — crédito com consequências | CI, benchmark 90/365/1825 dias, HTML offline, QA e aceite | CI da candidata aprovada e aceite formal do titular; QA Windows e experiência real ainda sem comprovação |
 
 ## Regras econômicas e contábeis
 
@@ -30,7 +30,7 @@
 - A sequência `economy.financing` não altera a classificação de salários, tributos didáticos ou contas a pagar operacionais já existentes.
 - Os valores, juros e vencimentos **não representam crédito bancário ou contrato comercial real**, apenas regras internas do jogo.
 
-## Como testar no Windows (ainda não comprovado)
+## Como testar no Windows (validação manual ainda não comprovada)
 
 1. Faça **backup JSON** da carreira antiga antes de testar.
 2. Abra o `index.html` candidato em navegador local e confirme `v2.7.0-alpha.1`.
@@ -48,5 +48,6 @@
 - Prazo fictício é **período fixo de 30 dias**, não vencimento bancário em mês civil real.
 - O preço contratual unitário é fixado na assinatura (sem custos dinâmicos externos).
 - O fluxo de estresse não projeta vendas futuras nem novas folhas futuras; saldos já registrados e planos futuros são discriminados.
-- Testes de balanceamento e UI com jogador real permanecem necessários antes de se chamar V2.7.0 homologada.
-- No encerramento da candidata: gerar HTML reproduzível, 0 falhas em regressões e benchmarks, testes manuais Windows e aceite explícito do titular.
+- A V2.7.0 recebeu **aceite formal explícito de homologação**, sustentado por CI da candidata. A CI do pacote final deve ser aprovada antes da publicação definitiva.
+- Testes manuais Windows/navegador e balanceamento com jogador real continuam **não realizados/não comprovados**, e não foram declarados como aprovados. Ver registro de ressalvas e evidências em `HOMOLOGACAO_V270.md`.
+- A criação de `releases/v2.7.0-homologada` exige commit final em `main` e CI após o merge aprovada.

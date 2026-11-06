@@ -1,0 +1,49 @@
+name: Validar e empacotar V2.7.0 homologada pelo titular
+on:
+  push:
+    branches:
+      - release/v2.7.0-promocao
+permissions:
+  contents: write
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Recompilar HTML offline V2.7.0
+        run: npm run build
+      - name: Gravar HTML reproduzível na branch de promoção
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet -- index.html; then
+            git add index.html
+            git commit -m "build(v2.7.0): sincronizar HTML offline da release [skip ci]"
+            git push origin HEAD:release/v2.7.0-promocao
+          fi
+      - name: Validar 290 regressões
+        run: npm test
+      - name: Benchmark estabilidade V2.4.1
+        run: npm run bench:stability
+      - name: Benchmark concorrência V2.6
+        run: npm run bench:competition
+      - name: Benchmark financiamento V2.7
+        run: npm run bench:finance
+      - name: Checksum SHA-256 do executável
+        run: sha256sum index.html
+      - name: Publicar pacote HTML V2.7.0 homologada formalmente
+        uses: actions/upload-artifact@v4
+        with:
+          name: CIDADE_DOS_NEGOCIOS_V270_HTML_OFFLINE_HOMOLOGADA
+          path: |
+            index.html
+            docs/HOMOLOGACAO_V270.md
+            docs/V270_CREDITO_CONTRATOS_RISCOS.md
+            README.md
+          if-no-files-found: error

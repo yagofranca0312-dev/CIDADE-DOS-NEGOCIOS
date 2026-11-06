@@ -11,7 +11,7 @@
 |---|---|---|---|
 | 1 | Rede logística intermunicipal | `logisticsRouteQuote` com **índice abstrato**, 1–5 dias fictícios e fretes parametrizados; rotas sem afirmação de km ou ETA reais | Implementado, testes em validação |
 | 2 | Transferência interfilial | `LOGISTICA.TRANSFERIR` → `INVENTORY → IN_TRANSIT → INVENTORY`, compensação `INTERNAL_CLEARING` igual a zero; **nenhum REVENUE nem COGS** | Implementado, testes em validação |
-| 3 | Centro de distribuição opcional | `LOGISTICA.CD.ABRIR`, custo de implantação e manutenção, estoque/limite 2.000, compras pagas e consolidadas, fretes com desconto em trechos com CD | Implementado, testes em validação |
+| 3 | Centro de distribuição opcional | `LOGISTICA.CD.ABRIR`, custo de implantação e manutenção com baixa separada do passivo, estoque/limite 2.000, compras pagas e consolidadas, fretes com desconto em trechos com CD | Implementado, testes em validação |
 | 4 | Produção piloto da padaria | `LOGISTICA.PRODUCAO.HABILITAR`, compras de farinha, `LOGISTICA.PRODUZIR` (1 farinha → 3 pães, capacidade 25 farinhas/dia), custo de insumos mais mão de obra incorporado a estoque; sem venda interna | Implementado, testes em validação |
 | 5 | Perecibilidade e perdas | Lotes novos de pão e bolo, validade fictícia 3/5 dias, baixa única em `EXPENSE` e `INVENTORY`; perda também em trânsito, sem CMV artificial | Implementado, testes em validação |
 | 6 | Sugestões de logística | `logisticsSuggestions` pura, com propostas de remanejamento ou compra pelo estoque mínimo; painel editável e confirmação antes de qualquer ação | Implementado, testes em validação |
@@ -21,11 +21,11 @@
 ## Regras contábeis do módulo
 
 - **Transferência entre filiais nunca é faturamento.** Na saída, crédito em estoque físico, débito em trânsito. Na chegada, a origem baixa seu trânsito via compensação e o destino incorpora mercadorias via compensação. A conta `INTERNAL_CLEARING` deve somar zero no grupo.
-- **O frete é custo/despesa real do jogo**, pago com o caixa compartilhado. O CD custa R$ 800 para abrir e R$ 8,50 por dia simulado, com despesa reconhecida ou obrigação se caixa insuficiente. Um trecho envolvendo CD recebe desconto *simulado* de 25% sobre o frete desse trecho. Roteamentos múltiplos podem custar mais que o envio direto.
+- **O frete é custo/despesa real do jogo**, pago com o caixa compartilhado. O CD custa R$ 800 para abrir e R$ 8,50 por dia simulado, com despesa reconhecida ou obrigação se caixa insuficiente. `LOGISTICA.CD.PAGAR_DESPESAS` quita essa obrigação quando houver caixa, sem reapurar a despesa. Um trecho envolvendo CD recebe desconto *simulado* de 25% sobre o frete desse trecho. Roteamentos múltiplos podem custar mais que o envio direto.
 - Compras externas de CD, fornecedores e insumos consomem caixa e criam mercadoria em trânsito. A entrada de produtos no estoque ocorre apenas na data prevista; sem criar receita fictícia.
 - A produção transfere **valor de insumo** ao produto final e incorpora o custo fabril pago no caixa. O livro possui um lançamento de transformação com dupla entrada `INVENTORY` compensada e crédito em caixa; sem `REVENUE` ou `COGS` na transformação.
 - Lotes de validade **apenas das mercadorias novas** são marcados após recebimento ou produção. Quando expiram, quantidade é reduzida e a despesa é reconhecida **uma vez**. Estoques anteriores não ganham validade presumida. Vendas ao consumidor reduzem lotes rastreados; transferências carregam a data de validade.
-- Capacidade do CD contabiliza estoque físico + pedidos futuros já pagos + transferências a caminho. A unidade usa capacidade global do motor.
+- Capacidade do CD contabiliza estoque físico + pedidos futuros já pagos + transferências a caminho. A unidade também considera o volume de transferências internas pendentes antes de autorizar novas compras.
 - A restrição de saldo vale em todos os fluxos pagos; não há acesso externo a bancos, fornecedores ou fretes reais.
 
 ## Rota simulada e precisão

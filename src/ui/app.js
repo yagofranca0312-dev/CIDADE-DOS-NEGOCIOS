@@ -351,6 +351,7 @@
       '</td></tr>').join('')||'<tr><td colspan="4">Nenhum compromisso no horizonte escolhido.</td></tr>';
   }
 
+  /* CDN_LOGISTICS_VIEWS */
   /* CDN_FINANCE_VIEWS */
   function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
   function commit(type,payload={}){
@@ -472,6 +473,7 @@
     }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('your-current-price','—');setText('competitor-price','—');setText('buy-total','—');}
     renderCommerce();renderPriceHistory();renderRivals();
     if(tab==='administrativo'&&activeSection.administrativo==='financas')renderCredit();
+    if(tab==='administrativo'&&activeSection.administrativo==='logistica')renderLogistics();
     if((tab==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo))||financeQuery)renderFinances();
     renderFiscal();
     renderFiscalOperations();
@@ -524,6 +526,7 @@
     timer=setInterval(()=>{if(!commit('TEMPO.AVANCAR_DIA'))resetTimer();},Math.round(1900/speed));setText('pause-btn','Ⅱ Pausar');
   }
   function bind(){
+    bindLogistics();
     // Somente estado de apresentação; não grava em save nem executa comandos econômicos.
     const hudToggle=$('stats-more-toggle');
     hudToggle.addEventListener('click',()=>{

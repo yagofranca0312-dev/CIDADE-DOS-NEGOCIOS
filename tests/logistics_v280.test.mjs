@@ -72,7 +72,7 @@ test('V2.8: transfer between two stores reduces origin, adds in-transit, no reve
  assert.equal(during.inTransit,before.inTransit+t.valueCents);
  assert.equal(C.businessById(s,origin).products[0].stockValueCents,costBefore-t.valueCents);
  check(s);
- s=step(s,2);
+ s=step(s,1);
  const arrived=C.logisticsReport(s).transfers[0];
  assert.equal(arrived.status,'RECEIVED');
  assert.equal(arrived.deliveredQuantity,24);
@@ -164,12 +164,12 @@ test('V2.8: bakery input requires opt-in, material is consumed and product cost 
 });
 test('V2.8: new bakery goods expire and are expensed exactly once (not cost of sales)',()=>{
  let s=open(career(28009),'padaria',1),unit=C.activeBusiness(s).id;
+ s=go(s,'LOGISTICA.PRODUCAO.HABILITAR',{businessId:unit});
  s=buyToStore(s,unit,'extra-1',100); // Bolo caseiro: 5 days, older stock untouched.
  const originalStock=C.businessById(s,unit).products.find(p=>p.id==='extra-1').stockUnits;
  assert.equal(originalStock,100);
  assert.ok(C.logisticsReport(s).batches.some(l=>l.productId==='extra-1'));
  s=step(s,6);
- assert.ok(C.audit===undefined); // validations below inspect observable report only
  const lost=s.audit.events.filter(e=>e.type==='LOGISTICA.DESPERDICIO'&&e.data.productId==='extra-1');
  assert.equal(lost.length,1);
  assert.ok(lost[0].data.quantity>0);

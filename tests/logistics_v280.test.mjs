@@ -132,6 +132,19 @@ test('V2.8: CD purchases supplier goods, receives stock, then ships to branch wi
  assert.equal(C.businessById(s,dest).products[0].stockUnits,30);
  check(s);
 });
+test('V2.8: unpaid CD maintenance is recognized as payable without repeated expense',()=>{
+ let {s}=twoMarkets(28013);
+ s=go(s,'LOGISTICA.CD.ABRIR',{cityId:'CE-TIANGUA'});
+ s=step(s,80);
+ const before=C.overview(s),payable=C.logisticsReport(s).depotPayableCents;
+ assert.ok(payable>0,'Maintenance should accrue when cash is insufficient');
+ assert.ok(before.payable>=payable);
+ reject(s,'LOGISTICA.CD.PAGAR_DESPESAS',{amountCents:payable+1});
+ if(before.cash<payable)reject(s,'LOGISTICA.CD.PAGAR_DESPESAS',{amountCents:payable});
+ assert.equal(C.logisticsReport(s).depotPayableCents,payable);
+ assert.equal(C.overview(s).expenses,before.expenses);
+ check(s);
+});
 test('V2.8: CD capacity counts stock and pending supplier / inbound shipments',()=>{
  let {s,origin,dest}=twoMarkets(28007);
  s=go(s,'LOGISTICA.CD.ABRIR',{cityId:'CE-TIANGUA'});

@@ -1,3 +1,17 @@
+# 🏙️ Cidade dos Negócios — V2.7.0-alpha.1 (implantação de crédito e contratos)
+
+**Nova candidata jogável — V2.7.0-alpha.1.** O módulo financeiro inclui empréstimos fictícios com limite baseado em vendas, juros proporcionais, atraso, multa, quitação e renegociação; contratos recorrentes de fornecimento com preço fixo, pedidos automáticos, rescisão e multas; calendário projetado de compromissos, separado dos saldos realizados.
+
+**Contabilidade:** empréstimo aumenta caixa e principal a pagar, **não** receita. Juros e multas são despesas reconhecidas uma vez; pagamentos baixam passivos, sem duplicação. Pedidos dos contratos entram em trânsito após desembolso; compromissos futuros não são lançamentos nem vendas. Modelo de prazo: períodos lúdicos de 30 dias, taxa de 1,8% e multas fictícias. `schemaVersion 9` preservado e financiamento opcional em saves antigos.
+
+**Status:** candidata em validação; **não homologada** até CI, QA Windows/browser, equilíbrio e aceite de Yago. Referência oficial de recuperação: [V2.6.0 homologada](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/tree/releases/v2.6.0-homologada). Antes de usar o BAT, exporte o backup JSON original. `ATUALIZAR_E_JOGAR.bat` acompanha a `main` e somente receberá esta candidata após integração aprovada.
+
+**Documentação e critérios:** [V270_CREDITO_CONTRATOS_RISCOS.md](docs/V270_CREDITO_CONTRATOS_RISCOS.md). Regressões específicas: `tests/credit_v270.test.mjs`; benchmark: `npm run bench:finance`.
+
+---
+
+## Histórico — release anterior homologada V2.6.0
+
 # 🏙️ Cidade dos Negócios — V2.6.0 (homologação formal do titular em 05/11/2026)
 
 ## Atualização integral V2.5 + V2.6 — Economia Viva

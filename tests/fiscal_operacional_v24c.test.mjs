@@ -27,7 +27,7 @@ const row=(s,period='2026-11',id=unit(s))=>Core.fiscalOperationsReport(s).units.
 
 test('C: opt-in, schema 9 e carreira antiga sem pendências operacionais automáticas',()=>{
  let s=career(),before=Core.exportSave(s);
- assert.equal(Core.VERSION,'2.7.0-alpha.1');
+ assert.equal(Core.VERSION,'2.7.0');
  assert.equal(s.schemaVersion,9);
  assert.equal(Core.fiscalOperationsReport(s).openPeriods,0);
  assert.equal(Core.fiscalOperationsReport(s).units[0].activatedAt,null);
@@ -134,5 +134,5 @@ test('C: HTML offline único contém a tela Fiscal Operacional e scripts válido
  assert.match(ui,/FISCAL_OP\.FECHADO|FISCAL_OP\.FECHAR|data-fiscal-op-close/);
  const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
  assert.equal(scripts.length,1);assert.doesNotThrow(()=>new Script(scripts[0][1]));
- assert.match(html,/const VERSION = '2\.7\.0-alpha\.1'/);
+ assert.match(html,/const VERSION = '2\.7\.0'/);
 });

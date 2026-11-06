@@ -2604,7 +2604,7 @@ const CidadeCore = (() => {
   function creditEligibility(state){
     const loans=financeRead(state).loans,units=businesses(state),days=Math.min(30,Math.max(1,state.calendar.tick));
     const windowStart=new Date(state.calendar.date+'T12:00:00Z');
-    windowStart.setUTCDate(windowStart.getUTCDate()-30);
+    windowStart.setUTCDate(windowStart.getUTCDate()-29);
     const from=windowStart.toISOString().slice(0,10);
     const sales=state.economy.ledger.filter(j=>j.date>=from&&j.date<=state.calendar.date)
       .reduce((sum,j)=>sum+j.entries.reduce((n,e)=>n+(e.account==='REVENUE'?e.credit-e.debit:0),0),0);
@@ -2612,11 +2612,12 @@ const CidadeCore = (() => {
     const authorized=units.length>0&&state.calendar.tick>=7&&sales>=10000;
     const ceiling=authorized?Math.min(FINANCE_MAX_PRINCIPAL,Math.max(0,Math.floor(projected30*3/4))):0;
     const outstanding=loans.reduce((n,l)=>n+l.remainingCents,0);
-    const blocked=loans.some(l=>l.status==='DELINQUENT')||loans.length>=30;
-    return {eligible:authorized&&!blocked&&ceiling>outstanding,
-      reason:!units.length?'Inaugure uma unidade.':state.calendar.tick<7?'Opere pelo menos sete dias.':sales<10000?'É necessário histórico positivo de vendas.':blocked?'Regularize atrasos ou limite histórico de contratos.':ceiling<=outstanding?'Limite de crédito já comprometido.':'Elegível para crédito fictício.',
+    const blocked=loans.some(l=>l.status==='DELINQUENT'||l.duePrincipalCents>0||l.interestDueCents+l.feesDueCents>0)||loans.length>=30;
+    const available=Math.max(0,ceiling-outstanding);
+    return {eligible:authorized&&!blocked&&available>=50000,
+      reason:!units.length?'Inaugure uma unidade.':state.calendar.tick<7?'Opere pelo menos sete dias.':sales<10000?'É necessário histórico positivo de vendas.':blocked?'Regularize parcelas, encargos vencidos ou limite histórico.':available<50000?'Limite disponível inferior ao empréstimo mínimo de R$ 500.':'Elegível para crédito fictício.',
       salesLast30Cents:sales,projected30Cents:projected30,creditLimitCents:ceiling,
-      outstandingPrincipalCents:outstanding,availableCents:Math.max(0,ceiling-outstanding),
+      outstandingPrincipalCents:outstanding,availableCents:available,
       monthlyRateBasisPoints:FINANCE_RATE_BP,terms:FINANCE_TERMS.slice()};
   }
   function scheduleDue(state,limitDays=90){
@@ -2640,8 +2641,8 @@ const CidadeCore = (() => {
         next=addDays(next,c.periodDays);
       }
     }
-    const pending=balance(state,'PAYABLE')+balance(state,'TAX_PAYABLE')+
-      balance(state,'CONTRACT_PAYABLE')+balance(state,'LOAN_FEES_PAYABLE')+balance(state,'INTEREST_PAYABLE');
+    // Os juros e multas já aparecem dentro da parcela vencida: não repetir no agregado.
+    const pending=balance(state,'PAYABLE')+balance(state,'TAX_PAYABLE')+balance(state,'CONTRACT_PAYABLE');
     if(pending>0)rows.push({date:state.calendar.date,kind:'RECOGNIZED_PAYABLES',id:'group',amountCents:pending,certainty:'RECOGNIZED'});
     const payroll=rhReport(state).pendingCents;
     if(payroll>0)rows.push({date:state.calendar.date,kind:'PAYROLL_KNOWN',id:'payroll',amountCents:payroll,certainty:'ALREADY_INCLUDED_IN_PAYABLE'});

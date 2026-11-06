@@ -1,7 +1,7 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.6.0 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.7.0-alpha.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '2.6.0';
+  const VERSION = '2.7.0-alpha.1';
   const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -450,9 +450,13 @@ const CidadeCore = (() => {
     COGS:Object.freeze({name:'Custo das mercadorias vendidas',group:'COST',normal:'DEBIT'}),
     EXPENSE:Object.freeze({name:'Despesas operacionais e de abertura',group:'EXPENSE',normal:'DEBIT'}),
     TAX_EXPENSE:Object.freeze({name:'Tributo simulado por competência',group:'EXPENSE',normal:'DEBIT'}),
-    TAX_PAYABLE:Object.freeze({name:'Tributo simulado a pagar',group:'LIABILITY',normal:'CREDIT'})
+    TAX_PAYABLE:Object.freeze({name:'Tributo simulado a pagar',group:'LIABILITY',normal:'CREDIT'}),
+    LOAN_PAYABLE:Object.freeze({name:'Principal de financiamento',group:'LIABILITY',normal:'CREDIT'}),
+    INTEREST_PAYABLE:Object.freeze({name:'Juros de financiamento a pagar',group:'LIABILITY',normal:'CREDIT'}),
+    LOAN_FEES_PAYABLE:Object.freeze({name:'Multas fictícias de financiamento',group:'LIABILITY',normal:'CREDIT'}),
+    CONTRACT_PAYABLE:Object.freeze({name:'Multas de contratos de fornecimento',group:'LIABILITY',normal:'CREDIT'})
   });
-  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','PAYROLL_ACCRUAL','PAYROLL_PAYMENT','OPERATING_SETTLEMENT','UNCLASSIFIED']);
+  const TRANSACTION_KINDS=Object.freeze(['CAPITAL','OPENING','SALE','PURCHASE','RECEIPT','DAILY_EXPENSE','TAX_ASSESSMENT','TAX_PAYMENT','PARALEGAL_FEE','PAYROLL_ACCRUAL','PAYROLL_PAYMENT','OPERATING_SETTLEMENT','LOAN_DRAW','LOAN_INTEREST','LOAN_LATE_FEE','LOAN_PAYMENT','CONTRACT_PENALTY','CONTRACT_PAYMENT','UNCLASSIFIED']);
   function transactionKind(j){
     if(TRANSACTION_KINDS.includes(j.kind))return j.kind;
     if(j.memo==='Capital inicial do empreendedor')return 'CAPITAL';
@@ -474,7 +478,7 @@ const CidadeCore = (() => {
     record.kind=label;
     draft.economy.ledger.push(record);
   }
-  function balance(draft,account) {let total=0;for(const j of draft.economy.ledger)for(const e of j.entries)if(e.account===account)total+=(['CAPITAL','REVENUE','PAYABLE','TAX_PAYABLE'].includes(account)?e.credit-e.debit:e.debit-e.credit);return total;}
+  function balance(draft,account) {let total=0;for(const j of draft.economy.ledger)for(const e of j.entries)if(e.account===account)total+=(['CAPITAL','REVENUE','PAYABLE','TAX_PAYABLE','LOAN_PAYABLE','INTEREST_PAYABLE','LOAN_FEES_PAYABLE','CONTRACT_PAYABLE'].includes(account)?e.credit-e.debit:e.debit-e.credit);return total;}
 
   // V1.9: FISCAL é uma simulação didática, não software de apuração. Fonte por competência.
   const FISCAL_RULE_PACKS=Object.freeze({
@@ -608,7 +612,7 @@ const CidadeCore = (() => {
     if(!draft)return null;
     const revenue=balance(draft,'REVENUE'),cogs=balance(draft,'COGS'),expenses=balance(draft,'EXPENSE');
     const taxExpense=balance(draft,'TAX_EXPENSE'),taxPayable=balance(draft,'TAX_PAYABLE');
-    return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),inTransit:balance(draft,'IN_TRANSIT'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),taxPayable,taxExpense,revenue,cogs,expenses,profit:revenue-cogs-expenses-taxExpense,stock:businesses(draft).reduce((n,b)=>n+b.stockUnits,0),unitPrice:activeBusiness(draft)?.unitPrice??null,units:businesses(draft).length,tick:draft.calendar.tick,city:cityById(activeBusiness(draft)?.cityId||draft.player.cityId)?.name??'—'};
+    return {cash:balance(draft,'CASH'),inventoryValue:balance(draft,'INVENTORY'),inTransit:balance(draft,'IN_TRANSIT'),receivables:balance(draft,'RECEIVABLE'),payable:balance(draft,'PAYABLE'),loanPayable:balance(draft,'LOAN_PAYABLE'),interestPayable:balance(draft,'INTEREST_PAYABLE'),loanFeesPayable:balance(draft,'LOAN_FEES_PAYABLE'),contractPayable:balance(draft,'CONTRACT_PAYABLE'),taxPayable,taxExpense,revenue,cogs,expenses,profit:revenue-cogs-expenses-taxExpense,stock:businesses(draft).reduce((n,b)=>n+b.stockUnits,0),unitPrice:activeBusiness(draft)?.unitPrice??null,units:businesses(draft).length,tick:draft.calendar.tick,city:cityById(activeBusiness(draft)?.cityId||draft.player.cityId)?.name??'—'};
   }
   function emptyLegacy(seed) {return {
     schemaVersion:9,worldId:`legacy-${seed}`,revision:0,
@@ -849,6 +853,9 @@ const CidadeCore = (() => {
       const cents=Number(payload.cents);assert(int(cents)&&cents>=100&&cents<=1000000,'Preço deve estar entre R$ 1 e R$ 10.000');
       const p=product(b,payload.productId||'base');const old=p.priceCents;p.priceCents=cents;syncTotals(b);
       event(draft,'PRECO.ALTERADO',`${p.name}: preço de ${money(old)} para ${money(cents)}.`,{old,cents,productId:p.id,productName:p.name},b.id);return;
+    }
+    if(type.startsWith('CREDITO.')||type.startsWith('CONTRATO.FORNECEDOR.')){
+      handleFinanceCommand(draft,type,payload);return;
     }
     if(type==='DILEMA.ESCOLHER') {
       chooseDilemma(draft,payload);return;
@@ -1251,7 +1258,322 @@ const CidadeCore = (() => {
     draft.calendar.date=dateNext(draft.calendar.date);
     for(const b of units)receiveDueOrders(draft,b);
     processParalegalDue(draft);
+    processFinancingDay(draft);
   }
+
+  // V2.7: Crédito e contratos são ficções econômicas. Toda obrigação reconhecida
+  // é escriturada no razão do grupo; intenções futuras só aparecem em projeções.
+  const FINANCE_RATE_BP=180, FINANCE_TERM_DAYS=30, FINANCE_MAX_PRINCIPAL=3000000;
+  const FINANCE_TERMS=Object.freeze([3,6,12,24]);
+  const CONTRACT_PERIODS=Object.freeze([7,14,30]);
+  function financeState(draft){
+    if(!draft.economy.financing)draft.economy.financing={modelVersion:1,loanSeq:0,contractSeq:0,loans:[],contracts:[]};
+    return draft.economy.financing;
+  }
+  function financeRead(state){
+    return state?.economy?.financing||{modelVersion:1,loanSeq:0,contractSeq:0,loans:[],contracts:[]};
+  }
+  function creditEligibility(state){
+    const loans=financeRead(state).loans,units=businesses(state),days=Math.min(30,Math.max(1,state.calendar.tick));
+    const since=addDays(state.calendar.date,-0); // referência de data, sem alterar estado
+    const windowStart=new Date(state.calendar.date+'T12:00:00Z');
+    windowStart.setUTCDate(windowStart.getUTCDate()-30);
+    const from=windowStart.toISOString().slice(0,10);
+    const sales=state.economy.ledger.filter(j=>j.date>=from&&j.date<=state.calendar.date)
+      .reduce((sum,j)=>sum+j.entries.reduce((n,e)=>n+(e.account==='REVENUE'?e.credit-e.debit:0),0),0);
+    const projected30=Math.round(sales*30/days);
+    const authorized=units.length>0&&state.calendar.tick>=7&&sales>=10000;
+    const ceiling=authorized?Math.min(FINANCE_MAX_PRINCIPAL,Math.max(0,Math.floor(projected30*3/4))):0;
+    const outstanding=loans.reduce((n,l)=>n+l.remainingCents,0);
+    const blocked=loans.some(l=>l.status==='DELINQUENT')||loans.length>=30;
+    return {eligible:authorized&&!blocked&&ceiling>outstanding,
+      reason:!units.length?'Inaugure uma unidade.':state.calendar.tick<7?'Opere pelo menos sete dias.':sales<10000?'É necessário histórico positivo de vendas.':blocked?'Regularize atrasos ou limite histórico de contratos.':ceiling<=outstanding?'Limite de crédito já comprometido.':'Elegível para crédito fictício.',
+      salesLast30Cents:sales,projected30Cents:projected30,creditLimitCents:ceiling,
+      outstandingPrincipalCents:outstanding,availableCents:Math.max(0,ceiling-outstanding),
+      monthlyRateBasisPoints:FINANCE_RATE_BP,terms:FINANCE_TERMS.slice()};
+  }
+  function scheduleDue(state,limitDays=90){
+    const until=addDays(state.calendar.date,limitDays),fin=financeRead(state),rows=[];
+    for(const l of fin.loans.filter(x=>x.status!=='PAID')){
+      if(l.interestDueCents+l.feesDueCents+l.duePrincipalCents>0)
+        rows.push({date:state.calendar.date,kind:'LOAN_DUE',id:l.id,amountCents:l.interestDueCents+l.feesDueCents+l.duePrincipalCents,certainty:'RECOGNIZED'});
+      let next=l.nextDueDate,remaining=l.remainingCents,expected=0;
+      for(let i=0;i<Math.min(l.termMonths,24)&&next<=until&&remaining>0;i++){
+        const principal=Math.min(remaining,l.installmentPrincipalCents);
+        const interest=Math.round(remaining*l.rateBp/10000);
+        expected+=principal+interest;
+        rows.push({date:next,kind:'LOAN_SCHEDULE',id:l.id,amountCents:principal+interest,certainty:'PROJECTED'});
+        remaining-=principal;next=addDays(next,FINANCE_TERM_DAYS);
+      }
+    }
+    for(const c of fin.contracts.filter(x=>x.status==='ACTIVE')){
+      let next=c.nextOrderDate;
+      for(let i=0;i<c.cycles-c.processed&&next<=until;i++){
+        rows.push({date:next,kind:'SUPPLIER_COMMITMENT',id:c.id,
+          amountCents:c.quantity*c.unitCostCents,certainty:'CONTRACTED_UNPOSTED'});
+        next=addDays(next,c.periodDays);
+      }
+    }
+    const pending=balance(state,'PAYABLE')+balance(state,'TAX_PAYABLE')+
+      balance(state,'CONTRACT_PAYABLE')+balance(state,'LOAN_FEES_PAYABLE')+balance(state,'INTEREST_PAYABLE');
+    if(pending>0)rows.push({date:state.calendar.date,kind:'RECOGNIZED_PAYABLES',id:'group',amountCents:pending,certainty:'RECOGNIZED'});
+    const payroll=rhReport(state).pendingCents;
+    if(payroll>0)rows.push({date:state.calendar.date,kind:'PAYROLL_KNOWN',id:'payroll',amountCents:payroll,certainty:'ALREADY_INCLUDED_IN_PAYABLE'});
+    return rows.sort((a,b)=>a.date.localeCompare(b.date)||a.kind.localeCompare(b.kind));
+  }
+  function creditReport(state){
+    if(!state)return {loans:[],contracts:[],eligibility:{eligible:false,availableCents:0},principalOutstanding:0,interestOutstanding:0,feesOutstanding:0,contractFeesOutstanding:0};
+    const fin=financeRead(state),eligibility=creditEligibility(state);
+    return {loans:clone(fin.loans),contracts:clone(fin.contracts),eligibility,
+      principalOutstanding:balance(state,'LOAN_PAYABLE'),
+      interestOutstanding:balance(state,'INTEREST_PAYABLE'),feesOutstanding:balance(state,'LOAN_FEES_PAYABLE'),
+      contractFeesOutstanding:balance(state,'CONTRACT_PAYABLE'),
+      note:'Contratação aumenta caixa e passivo, nunca receita; taxas e juros são despesas reconhecidas. Todas as cifras são fictícias.'};
+  }
+  function financialCommitmentsReport(state,days=90){
+    assert(state&&[30,90,180].includes(days),'Horizonte contratual inválido');
+    const events=scheduleDue(state,days),cash=balance(state,'CASH');
+    const expectedSupplier=events.filter(x=>x.kind==='SUPPLIER_COMMITMENT').reduce((n,x)=>n+x.amountCents,0);
+    const expectedLoan=events.filter(x=>x.kind==='LOAN_SCHEDULE').reduce((n,x)=>n+x.amountCents,0);
+    const recognized=balance(state,'PAYABLE')+balance(state,'TAX_PAYABLE')+
+      balance(state,'CONTRACT_PAYABLE')+balance(state,'LOAN_PAYABLE')+
+      balance(state,'INTEREST_PAYABLE')+balance(state,'LOAN_FEES_PAYABLE');
+    const dailyFixed=businesses(state).reduce((n,b)=>n+SECTORS[b.sector].dailyCost,0);
+    return {days,from:state.calendar.date,to:addDays(state.calendar.date,days),
+      cash,recognizedLiabilities:recognized,expectedSupplierCents:expectedSupplier,
+      expectedLoanCents:expectedLoan,fixedOperatingScenarioCents:dailyFixed*days,
+      cashAfterRecognizedIfPaid:cash-recognized,
+      stressCashNoSales:cash-recognized-expectedSupplier-expectedLoan-dailyFixed*days,
+      events,warning:'Projeção de estresse sem novas vendas; obrigações reconhecidas e compromissos futuros são categorias diferentes. Não gera lançamentos nem garante disponibilidade.'};
+  }
+  function financeJournal(draft,memo,entries,kind,unit=null){
+    journal(draft,memo,entries,unit,kind);
+  }
+  function financeAddPenalty(draft,account,cents,label,kind,businessId=null){
+    if(cents<=0)return;
+    financeJournal(draft,label,[
+      {account:'EXPENSE',debit:cents,credit:0},
+      {account,debit:0,credit:cents}
+    ],kind,businessId);
+  }
+  function financeLoanById(state,id){
+    const loan=financeRead(state).loans.find(l=>l.id===id);
+    assert(loan,'Contrato de financiamento inexistente');
+    return loan;
+  }
+  function financeContractById(state,id){
+    const c=financeRead(state).contracts.find(x=>x.id===id);
+    assert(c,'Contrato com fornecedor não encontrado');
+    return c;
+  }
+  function loanDue(draft,loan){
+    if(loan.remainingCents<=0)return;
+    const late=loan.duePrincipalCents>0;
+    if(late){
+      const room=Math.max(0,Math.floor(loan.principalCents*.20)-loan.assessedFeesCents);
+      const fee=Math.min(room,Math.round(loan.duePrincipalCents*.02));
+      if(fee>0){
+        financeAddPenalty(draft,'LOAN_FEES_PAYABLE',fee,'Multa fictícia do financiamento '+loan.id,'LOAN_LATE_FEE');
+        loan.feesDueCents+=fee;loan.assessedFeesCents+=fee;
+      }
+    }
+    const interest=Math.max(1,Math.round(loan.remainingCents*loan.rateBp/10000));
+    financeAddPenalty(draft,'INTEREST_PAYABLE',interest,'Juros fictícios vencidos do financiamento '+loan.id,'LOAN_INTEREST');
+    loan.interestDueCents+=interest;
+    loan.maturities+=1;
+    const principalDue=loan.maturities>=loan.termMonths?loan.remainingCents:
+      Math.min(loan.remainingCents,loan.duePrincipalCents+loan.installmentPrincipalCents);
+    loan.duePrincipalCents=principalDue;
+    loan.lastDueDate=loan.nextDueDate;
+    loan.nextDueDate=addDays(loan.nextDueDate,FINANCE_TERM_DAYS);
+    loan.status=late?'DELINQUENT':'DUE';
+    event(draft,'CREDITO.PARCELA_VENCEU','Financiamento '+loan.id+' · principal em vencimento '+money(principalDue)+', juros lançados '+money(interest)+'.',
+      {loanId:loan.id,principalDueCents:principalDue,interestCents:interest,feeCents:late?loan.feesDueCents:0});
+  }
+  function financeContractCycle(draft,c){
+    const unit=businessById(draft,c.businessId);
+    const due=c.nextOrderDate;
+    c.processed++;
+    c.nextOrderDate=addDays(c.nextOrderDate,c.periodDays);
+    try{
+      assert(unit,'Unidade do contrato ausente');
+      registerPurchase(draft,unit,c.supplierId,[{productId:c.productId,quantity:c.quantity}],c);
+      c.fulfilled++;
+      event(draft,'CONTRATO.FORNECEDOR.CUMPRIDO','Entrega contratada '+c.id+' gerou pedido pago e em trânsito.',
+        {contractId:c.id,cycle:c.processed,orderDate:due,amountCents:c.quantity*c.unitCostCents},c.businessId);
+    }catch(err){
+      c.missed++;
+      const fee=Math.max(1,Math.round(c.quantity*c.unitCostCents*.02));
+      financeAddPenalty(draft,'CONTRACT_PAYABLE',fee,'Multa fictícia por descumprimento '+c.id,'CONTRACT_PENALTY',c.businessId);
+      c.penaltyDueCents+=fee;
+      event(draft,'CONTRATO.FORNECEDOR.DESCUMPRIDO','Pedido contratado '+c.id+' não executado: '+String(err.message)+'. Multa fictícia '+money(fee)+'.',
+        {contractId:c.id,cycle:c.processed,penaltyCents:fee,reason:String(err.message)},c.businessId);
+    }
+    if(c.processed>=c.cycles)c.status='COMPLETED';
+  }
+  function processFinancingDay(draft){
+    const fin=draft.economy.financing;
+    if(!fin)return;
+    for(const loan of fin.loans){
+      if(loan.status==='PAID')continue;
+      while(loan.remainingCents>0&&loan.nextDueDate<=draft.calendar.date)loanDue(draft,loan);
+      if(loan.duePrincipalCents>0&&loan.lastDueDate<draft.calendar.date)loan.status='DELINQUENT';
+    }
+    for(const c of fin.contracts){
+      while(c.status==='ACTIVE'&&c.nextOrderDate<=draft.calendar.date)financeContractCycle(draft,c);
+    }
+  }
+  function handleFinanceCommand(draft,type,payload){
+    const fin=financeState(draft);
+    if(type==='CREDITO.CONTRATAR'){
+      const eligibility=creditEligibility(draft),principal=Number(payload.principalCents),months=Number(payload.termMonths);
+      assert(FINANCE_TERMS.includes(months),'Escolha prazo de 3, 6, 12 ou 24 parcelas de 30 dias.');
+      assert(Number.isSafeInteger(principal)&&principal>=50000&&principal<=FINANCE_MAX_PRINCIPAL,'Principal fictício fora do intervalo R$ 500–30.000.');
+      assert(eligibility.eligible&&principal<=eligibility.availableCents,eligibility.reason||'Limite insuficiente.');
+      assert(fin.loans.length<30,'Limite histórico de financiamentos atingido.');
+      const id='cr-'+(++fin.loanSeq);
+      fin.loans.push({id,principalCents:principal,remainingCents:principal,
+        rateBp:FINANCE_RATE_BP,termMonths:months,installmentPrincipalCents:Math.ceil(principal/months),
+        signedAt:draft.calendar.date,nextDueDate:addDays(draft.calendar.date,FINANCE_TERM_DAYS),
+        lastDueDate:null,duePrincipalCents:0,interestDueCents:0,feesDueCents:0,
+        assessedFeesCents:0,maturities:0,renegotiations:0,paidTotalCents:0,status:'OPEN'});
+      financeJournal(draft,'Crédito empresarial fictício '+id,[
+        {account:'CASH',debit:principal,credit:0},{account:'LOAN_PAYABLE',debit:0,credit:principal}
+      ],'LOAN_DRAW');
+      event(draft,'CREDITO.CONTRATADO','Financiamento '+id+' · '+money(principal)+'; '+months+' parcelas fictícias. Não é receita.',
+        {loanId:id,principalCents:principal,termMonths:months,rateBp:FINANCE_RATE_BP});
+      return;
+    }
+    if(type==='CREDITO.PAGAR'){
+      const l=financeLoanById(draft,String(payload.loanId||'')),amount=Number(payload.amountCents);
+      const due=l.remainingCents+l.interestDueCents+l.feesDueCents;
+      assert(l.status!=='PAID'&&due>0,'Financiamento já encerrado');
+      assert(Number.isSafeInteger(amount)&&amount>0&&amount<=due,'Pagamento de crédito excede o saldo exigível ou total contratado.');
+      assert(balance(draft,'CASH')>=amount,'Caixa insuficiente para pagamento.');
+      let left=amount;
+      const fee=Math.min(left,l.feesDueCents);left-=fee;
+      const interest=Math.min(left,l.interestDueCents);left-=interest;
+      const principal=Math.min(left,l.remainingCents);
+      l.feesDueCents-=fee;l.interestDueCents-=interest;l.remainingCents-=principal;
+      l.duePrincipalCents=Math.min(l.remainingCents,Math.max(0,l.duePrincipalCents-principal));
+      l.paidTotalCents+=amount;
+      const entries=[];
+      if(fee)entries.push({account:'LOAN_FEES_PAYABLE',debit:fee,credit:0});
+      if(interest)entries.push({account:'INTEREST_PAYABLE',debit:interest,credit:0});
+      if(principal)entries.push({account:'LOAN_PAYABLE',debit:principal,credit:0});
+      entries.push({account:'CASH',debit:0,credit:amount});
+      financeJournal(draft,'Pagamento de financiamento '+l.id,entries,'LOAN_PAYMENT');
+      if(l.remainingCents+l.interestDueCents+l.feesDueCents===0)l.status='PAID';
+      else if(l.duePrincipalCents>0)l.status=l.lastDueDate<draft.calendar.date?'DELINQUENT':'DUE';
+      else l.status='OPEN';
+      event(draft,'CREDITO.PAGO','Pagamento '+l.id+': principal '+money(principal)+', juros '+money(interest)+', multa '+money(fee)+'.',
+        {loanId:l.id,amountCents:amount,principalCents:principal,interestCents:interest,feeCents:fee});
+      return;
+    }
+    if(type==='CREDITO.RENEGOCIAR'){
+      const l=financeLoanById(draft,String(payload.loanId||'')),months=Number(payload.termMonths);
+      assert(FINANCE_TERMS.includes(months),'Prazo de renegociação inválido.');
+      assert(l.status==='DELINQUENT'&&l.remainingCents>0,'Renegociação disponível somente para financiamento em atraso.');
+      assert(l.renegotiations<2,'Limite de duas renegociações atingido.');
+      l.termMonths=months;l.maturities=0;l.installmentPrincipalCents=Math.ceil(l.remainingCents/months);
+      l.duePrincipalCents=0;l.nextDueDate=addDays(draft.calendar.date,FINANCE_TERM_DAYS);
+      l.lastDueDate=null;l.renegotiations++;l.status='RESTRUCTURED';
+      event(draft,'CREDITO.RENEGOCIADO','Financiamento '+l.id+' renegociado em '+months+' períodos. Juros e multas já reconhecidos continuam devidos.',
+        {loanId:l.id,termMonths:months,remainingPrincipalCents:l.remainingCents,interestDueCents:l.interestDueCents,feesDueCents:l.feesDueCents});
+      return;
+    }
+    if(type==='CONTRATO.FORNECEDOR.ASSINAR'){
+      const b=businessById(draft,String(payload.businessId||'')),supplier=supplierById(String(payload.supplierId||''));
+      const quantity=Number(payload.quantity),periodDays=Number(payload.periodDays),cycles=Number(payload.cycles);
+      assert(b&&supplier,'Escolha unidade e fornecedor fictício válidos.');
+      assert(CONTRACT_PERIODS.includes(periodDays),'Frequência permitida: 7, 14 ou 30 dias.');
+      assert(Number.isSafeInteger(cycles)&&cycles>=2&&cycles<=12,'Prazo contratual de 2 a 12 ciclos.');
+      assert(Number.isSafeInteger(quantity)&&quantity>=1&&quantity<=Math.min(100,supplier.maxDailyPerSku),'Volume contratado inválido.');
+      const p=product(b,String(payload.productId||'base'));
+      assert(fin.contracts.filter(x=>x.status==='ACTIVE').length<6,'Limite de seis contratos ativos atingido.');
+      const unitCost=Math.round(p.costCents*supplier.priceFactor/100);
+      assert(quantity*unitCost>0&&Number.isSafeInteger(quantity*unitCost*cycles),'Comprometimento contratual excede capacidade de registro.');
+      const id='cf-'+(++fin.contractSeq);
+      fin.contracts.push({id,businessId:b.id,supplierId:supplier.id,productId:p.id,productName:p.name,
+        quantity,unitCostCents:unitCost,leadDays:supplier.leadDays,periodDays,cycles,
+        processed:0,fulfilled:0,missed:0,penaltyDueCents:0,
+        signedAt:draft.calendar.date,nextOrderDate:addDays(draft.calendar.date,periodDays),status:'ACTIVE'});
+      event(draft,'CONTRATO.FORNECEDOR.ASSINADO','Contrato '+id+' · '+cycles+' pedidos futuros de '+quantity+' un. de '+p.name+'.',
+        {contractId:id,unitCostCents:unitCost,cycles,periodDays,commitmentCents:quantity*unitCost*cycles},b.id);
+      return;
+    }
+    if(type==='CONTRATO.FORNECEDOR.RESCINDIR'){
+      const c=financeContractById(draft,String(payload.contractId||''));
+      assert(c.status==='ACTIVE','Somente contratos ativos podem ser rescindidos.');
+      const future=(c.cycles-c.processed)*c.quantity*c.unitCostCents,fee=Math.round(future*.05);
+      if(fee)financeAddPenalty(draft,'CONTRACT_PAYABLE',fee,'Rescisão fictícia de fornecimento '+c.id,'CONTRACT_PENALTY',c.businessId);
+      c.penaltyDueCents+=fee;c.status='TERMINATED';
+      event(draft,'CONTRATO.FORNECEDOR.RESCINDIDO','Contrato '+c.id+' rescindido. Compromissos futuros cancelados; multa fictícia '+money(fee)+'.',
+        {contractId:c.id,penaltyCents:fee,cancelledCommitmentCents:future},c.businessId);
+      return;
+    }
+    if(type==='CONTRATO.FORNECEDOR.PAGAR_PENALIDADE'){
+      const c=financeContractById(draft,String(payload.contractId||'')),amount=Number(payload.amountCents);
+      assert(Number.isSafeInteger(amount)&&amount>0&&amount<=c.penaltyDueCents,'Valor de multa contratual inválido.');
+      assert(balance(draft,'CASH')>=amount,'Caixa insuficiente para quitar multa.');
+      c.penaltyDueCents-=amount;
+      financeJournal(draft,'Pagamento multa contratual '+c.id,[
+        {account:'CONTRACT_PAYABLE',debit:amount,credit:0},{account:'CASH',debit:0,credit:amount}
+      ],'CONTRACT_PAYMENT',c.businessId);
+      event(draft,'CONTRATO.FORNECEDOR.MULTA_PAGA','Multa fictícia do contrato '+c.id+' paga: '+money(amount)+'.',
+        {contractId:c.id,amountCents:amount},c.businessId);
+      return;
+    }
+    throw Error('Ação financeira desconhecida: '+type);
+  }
+  function validateFinancing(state){
+    const fin=state.economy.financing;
+    if(fin===undefined||fin===null){
+      assert(balance(state,'LOAN_PAYABLE')===0&&balance(state,'INTEREST_PAYABLE')===0&&
+        balance(state,'LOAN_FEES_PAYABLE')===0&&balance(state,'CONTRACT_PAYABLE')===0,'Obrigações financeiras sem contrato válido.');
+      return;
+    }
+    assert(plain(fin)&&fin.modelVersion===1&&int(fin.loanSeq)&&int(fin.contractSeq)&&
+      Array.isArray(fin.loans)&&fin.loans.length<=30&&Array.isArray(fin.contracts)&&fin.contracts.length<=100,
+      'Modelo de financiamento inválido.');
+    const loanIds=new Set(),contractIds=new Set();
+    let principal=0,interest=0,fees=0,contractFees=0;
+    for(const l of fin.loans){
+      assert(plain(l)&&typeof l.id==='string'&&!loanIds.has(l.id)&&/^cr-\d+$/.test(l.id),'Financiamento duplicado ou inválido.');loanIds.add(l.id);
+      assert(int(l.principalCents)&&l.principalCents>=50000&&l.principalCents<=FINANCE_MAX_PRINCIPAL&&
+        int(l.remainingCents)&&l.remainingCents<=l.principalCents&&
+        int(l.rateBp)&&l.rateBp===FINANCE_RATE_BP&&FINANCE_TERMS.includes(l.termMonths)&&
+        int(l.installmentPrincipalCents)&&l.installmentPrincipalCents>0&&
+        int(l.duePrincipalCents)&&l.duePrincipalCents<=l.remainingCents&&
+        int(l.interestDueCents)&&int(l.feesDueCents)&&int(l.assessedFeesCents)&&
+        l.assessedFeesCents<=Math.floor(l.principalCents*.2)&&
+        int(l.maturities)&&int(l.renegotiations)&&l.renegotiations<=2&&int(l.paidTotalCents)&&
+        isoDate(l.signedAt)&&isoDate(l.nextDueDate)&&
+        (l.lastDueDate===null||isoDate(l.lastDueDate))&&
+        ['OPEN','DUE','DELINQUENT','RESTRUCTURED','PAID'].includes(l.status),
+        'Contrato de crédito inconsistente.');
+      assert(l.status!=='PAID'||l.remainingCents+l.interestDueCents+l.feesDueCents===0,'Crédito encerrado com dívida.');
+      principal+=l.remainingCents;interest+=l.interestDueCents;fees+=l.feesDueCents;
+    }
+    for(const c of fin.contracts){
+      assert(plain(c)&&typeof c.id==='string'&&!contractIds.has(c.id)&&/^cf-\d+$/.test(c.id),'Contrato de fornecimento inválido.');contractIds.add(c.id);
+      assert(businessById(state,c.businessId)&&supplierById(c.supplierId)&&
+        Number.isSafeInteger(c.quantity)&&c.quantity>=1&&c.quantity<=100&&
+        int(c.unitCostCents)&&c.unitCostCents>0&&CONTRACT_PERIODS.includes(c.periodDays)&&
+        Number.isSafeInteger(c.cycles)&&c.cycles>=2&&c.cycles<=12&&
+        int(c.processed)&&c.processed<=c.cycles&&int(c.fulfilled)&&int(c.missed)&&
+        c.fulfilled+c.missed===c.processed&&int(c.penaltyDueCents)&&
+        isoDate(c.signedAt)&&isoDate(c.nextOrderDate)&&
+        ['ACTIVE','COMPLETED','TERMINATED'].includes(c.status),
+        'Calendário ou obrigações de fornecedor inconsistentes.');
+      assert(c.status!=='COMPLETED'||c.processed===c.cycles,'Contrato concluído antes do fim do prazo.');
+      contractFees+=c.penaltyDueCents;
+    }
+    assert(principal===balance(state,'LOAN_PAYABLE')&&interest===balance(state,'INTEREST_PAYABLE')&&
+      fees===balance(state,'LOAN_FEES_PAYABLE')&&contractFees===balance(state,'CONTRACT_PAYABLE'),
+      'Financiamento diverge dos saldos reconhecidos no razão.');
+  }
+
   function dispatch(current,cmd) {
     try{
       assert(plain(cmd)&&typeof cmd.type==='string'&&typeof cmd.id==='string'&&/^[a-zA-Z\d._:-]{2,100}$/.test(cmd.id),'Comando sem ID válido');
@@ -1285,6 +1607,7 @@ const CidadeCore = (() => {
     assert(state.player.cityId===null||!!cityById(state.player.cityId),'Cidade de carreira inválida');
     assert(plain(state.world.competitor)&&int(state.world.competitor.priceIndex),'Concorrente inválido');
     validateRivalEconomy(state);
+    validateFinancing(state);
     if(state.schemaVersion>=7){
       const regional=state.world.regional;
       assert(plain(regional)&&regional.datasetId===POPULATION_SOURCE.id&&
@@ -1454,7 +1777,7 @@ const CidadeCore = (() => {
     const inScope=j=>businessId==='all'||journalBusinessId(state,j)===businessId;
     const entries=state.economy.ledger.filter(x=>x.date>=from&&x.date<=effectiveEnd&&inScope(x));
     const until=state.economy.ledger.filter(x=>x.date<=effectiveEnd&&inScope(x));
-    const account=(journals,name)=>journals.reduce((sum,j)=>sum+j.entries.reduce((n,e)=>e.account===name?n+(['CAPITAL','REVENUE','PAYABLE','TAX_PAYABLE'].includes(name)?e.credit-e.debit:e.debit-e.credit):n,0),0);
+    const account=(journals,name)=>journals.reduce((sum,j)=>sum+j.entries.reduce((n,e)=>e.account===name?n+(['CAPITAL','REVENUE','PAYABLE','TAX_PAYABLE','LOAN_PAYABLE','INTEREST_PAYABLE','LOAN_FEES_PAYABLE','CONTRACT_PAYABLE'].includes(name)?e.credit-e.debit:e.debit-e.credit):n,0),0);
     const revenue=account(entries,'REVENUE'),cogs=account(entries,'COGS'),expenses=account(entries,'EXPENSE'),taxExpense=account(entries,'TAX_EXPENSE');
     return {
       period,referenceDate,from,to,effectiveEnd,label,entries,businessId,
@@ -1495,7 +1818,7 @@ const CidadeCore = (() => {
     const amounts=Object.fromEntries(Object.keys(ACCOUNT_CATALOG).map(code=>[code,signedAccount(journals,code)]));
     const unknown=Object.keys(ACCOUNT_CATALOG).length===0?[]:[...new Set(journals.flatMap(j=>j.entries.map(e=>e.account)))].filter(a=>!ACCOUNT_CATALOG[a]);
     const assets=amounts.CASH+amounts.INVENTORY+amounts.IN_TRANSIT+amounts.RECEIVABLE;
-    const liabilities=amounts.PAYABLE+amounts.TAX_PAYABLE,retainedEarnings=amounts.REVENUE-amounts.COGS-amounts.EXPENSE-amounts.TAX_EXPENSE;
+    const liabilities=amounts.PAYABLE+amounts.TAX_PAYABLE+amounts.LOAN_PAYABLE+amounts.INTEREST_PAYABLE+amounts.LOAN_FEES_PAYABLE+amounts.CONTRACT_PAYABLE,retainedEarnings=amounts.REVENUE-amounts.COGS-amounts.EXPENSE-amounts.TAX_EXPENSE;
     const equity=amounts.CAPITAL+retainedEarnings,difference=assets-liabilities-equity;
     return {asOf,accounts:amounts,assets,liabilities,paidInCapital:amounts.CAPITAL,
       retainedEarnings,equity,difference,balanced:difference===0&&unknown.length===0,
@@ -1521,6 +1844,9 @@ const CidadeCore = (() => {
       else if(kind==='TAX_PAYMENT'&&net<0)rows.taxPayments+=-net;
       else if(kind==='PAYROLL_PAYMENT'&&net<0)rows.payroll=(rows.payroll||0)-net;
       else if(kind==='OPERATING_SETTLEMENT'&&net<0)rows.operatingSettlements=(rows.operatingSettlements||0)-net;
+      else if(kind==='LOAN_DRAW'&&net>0)rows.loanDraws=(rows.loanDraws||0)+net;
+      else if(kind==='LOAN_PAYMENT'&&net<0)rows.loanPayments=(rows.loanPayments||0)-net;
+      else if(kind==='CONTRACT_PAYMENT'&&net<0)rows.contractPenalties=(rows.contractPenalties||0)-net;
       else if(net>0)rows.unclassifiedIn+=net;
       else rows.unclassifiedOut+=-net;
     }
@@ -1793,6 +2119,6 @@ const CidadeCore = (() => {
     return {state,migrated,message:migrated?'Carreira migrada para V1.9: histórico preservado; cenário tributário desativado até confirmação explícita.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({journeyGuide,reputationReport,dilemmaReport,DILEMMA_DEFINITIONS,rivalMarketReport,RIVAL_EVENT_TYPES,progressionReport,operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({creditReport,financialCommitmentsReport,journeyGuide,reputationReport,dilemmaReport,DILEMMA_DEFINITIONS,rivalMarketReport,RIVAL_EVENT_TYPES,progressionReport,operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();

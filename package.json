@@ -1,6 +1,6 @@
 {
   "name": "cidade-dos-negocios",
-  "version": "2.8.0-alpha.1",
+  "version": "2.8.0",
   "private": true,
   "type": "module",
   "description": "Cidade dos Negócios V2.8: transferências, CD, produção piloto, perecibilidade e logística de cinco unidades",

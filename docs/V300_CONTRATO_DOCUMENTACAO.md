@@ -57,4 +57,6 @@
 4. CI da PR executa testes específicos e regride a suíte econômica, contábil, fiscal, saves, build HTML, perf e checksum.
 5. Checklist de QA manual permanece separado dos testes Node: não presumir Windows, mobile, performance real, persistência em `file://` nem recuperação do usuário.
 
+**Próximos gates:** `3.0.0-07` (contrato UI de leitura para V3.1) permanece pendente; `3.0.0-08` (homologação integral) segue bloqueado até QA e aceite.
+
 **Status:** entregas documentais preparadas; marcar `3.0.0-06` **PASS DOCUMENTAL (CI)** apenas após verificar o commit e a suíte. Mesmo com PASS documental, **gates 01–05 parciais, 07 pendente, 08 bloqueado**. Não alterar o motor/HTML para completar essa etapa.

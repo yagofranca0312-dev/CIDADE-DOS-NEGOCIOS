@@ -1,5 +1,22 @@
 # Histórico de versões — Cidade dos Negócios
 
+## V3.0.0 — Consolidação integral da V2 (AUDITORIA, sem release homologada; 07/11/2026)
+
+**Não representa nova versão liberada.** O executável na `main` continua identificado como `3.0.0-alpha.1` (Patch A), já incorporado pela PR #38; a última **release formalmente homologada** é `2.9.0`, checkpoint `releases/v2.9.0-homologada`. A PR de [auditoria #39](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/pull/39) está **DRAFT**, sem merge, sem homologação da V3.0.
+
+- **Etapa 1 — plano/gates:** dossiê `docs/V300_CONSOLIDACAO_INTEGRAL_GATES.md`, oito checkpoints: consolidar V2 antes da interface imersiva V3.1.
+- **Etapa 2 — integração:** quatro regressões abrangendo mercado, RH, Fiscal Operacional, Paralegal, crédito, contratos, concorrência, logística, contabilidade e Patch A; CI [335 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42416696608).
+- **Etapa 3 — contratos:** oito regressões de única porta do motor, único lançamento de compras, vendas, idempotência e relatórios não mutantes; CI [343 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42417243617). Riscos de fórmulas paralelas de RH e de propostas de compras registrados, sem afirmar dupla contabilização.
+- **Etapa 4 — saves:** dezoito regressões de schemas 2–9 e rollback com motor original V2.9 homologado, checksum e corrupção; CI [361 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42418650812). Ainda sem QA Windows e saves pessoais.
+- **Etapa 5 — estabilidade:** três regressões novas, benchmark de oito painéis em DOM simulado com 30/365/1.825 dias, backups e HTML. O checksum passou a ser calculado apenas por **Executar Diagnóstico** no painel Sistema; em carreira artificial de cinco anos o custo médio observado caiu de ~2.110 ms para ~102 ms no executor. CI [364 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42425405336). Persistência por `localStorage` ainda é risco de perda de progresso em caso de quota cheia.
+- **Etapa 6 — documentação:** README corrigido para distinguir código atual, versão estável, programa V3.0 e fases históricas; ROADMAP recebe um estado vigente sem apagar seu histórico; este CHANGELOG separa fatos de implementação e homologação; criado [guia atual de gameplay, fiscal e backups](docs/JOGAR_GUIA_V300.md). **Validação desta etapa exige CI no commit correspondente**.
+- **Próximos passos:** contrato de apresentação/leitura para V3.1 (`3.0.0-07`), depois gate global `3.0.0-08` com CI final, QA real Windows/desktop/mobile, importação de saves de jogador e aceite expresso.
+
+**Invariantes:** `schemaVersion=9`; nenhum tributo real, nenhum envio de declarações, nenhuma mudança nas fórmulas do motor econômico por esta etapa documental. O fiscal didático de 2026 e o checklist Fiscal Operacional são subsistemas distintos. O HTML único foi recompilado na Etapa 5; a Etapa 6 não altera gameplay.
+
+---
+
+
 ## 3.0.0-alpha.1 — Patch A Economia e Balanceamento (candidata, 07/11/2026)
 
 - Três perfis de risco para capital de giro, com reservas de 14/7/3 dias de custos fixos e metas de cobertura de 4/7/12 dias de demanda por SKU.
@@ -8,7 +25,7 @@
 - Novo comando explícito `ECONOMIA.COMPRAR_PLANO`: valida revisão e cotação, usa motor de compras atual, gera estoque em trânsito, diminui caixa, preserva ledger e idempotência.
 - Alertas de unidade subcapitalizada, passivos superiores ao caixa após a compra, possível ruptura e margem unitária negativa.
 - Mercado → Compras: painel de estratégia, proposta detalhada, comparação e confirmação; sem vendas, pagamentos, crédito ou compras automáticos.
-- **331/331 testes PASS, 0 FAIL** e seis famílias de benchmarks aprovadas na [CI #42413908821](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42413908821). Simulações 30/90/365 dias com três perfis, controle sem estoque e expansão descapitalizada; integração na `main`, QA Windows e homologação ainda pendentes.
+- **331/331 testes PASS, 0 FAIL** e seis famílias de benchmarks aprovadas na [CI #42413908821](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42413908821). Simulações 30/90/365 dias com três perfis, controle sem estoque e expansão descapitalizada; **na data desse teste da candidata** a integração à `main` ainda era pendente. **Situação posterior:** Patch A integrado à `main` no commit `871df2b1cd133bcad717c0194a474a35fbabcd3c`, mantendo QA Windows e homologação V3.0 pendentes.
 - `schemaVersion 9` e backups V1/V2 preservados. Último checkpoint estável: `releases/v2.9.0-homologada`. [Especificação](docs/V300_PATCH_A_ECONOMIA_BALANCEAMENTO.md).
 
 

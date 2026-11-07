@@ -1,7 +1,7 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.9.0 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v3.0.0-alpha.1 — Patch A Economia e Balanceamento */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '2.9.0';
+  const VERSION = '3.0.0-alpha.1';
   const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -650,6 +650,23 @@ const CidadeCore = (() => {
     const b=activeBusiness(draft);
 
 
+    if(type==='ECONOMIA.COMPRAR_PLANO'){
+      const quote=operationalBalanceReport(draft,payload.mode);
+      assert(payload.businessId===quote.businessId&&
+        payload.revision===quote.revision&&payload.quoteId===quote.quoteId,
+        'Plano de compra desatualizado: revise preços, caixa, estoque e proposta antes de confirmar.');
+      assert(quote.lines.length>0&&quote.spendCents>0,'Sem compra viável nessa estratégia.');
+      const initialCash=balance(draft,'CASH');
+      registerPurchase(draft,activeBusiness(draft),quote.supplierId,quote.lines);
+      assert(balance(draft,'CASH')===initialCash-quote.spendCents,
+        'Custo da compra estratégica divergiu da cotação; transação recusada.');
+      event(draft,'ECONOMIA.COMPRA_PLANEJADA',
+        'Reposição '+quote.modeLabel+' confirmada para '+quote.businessId+
+        ': '+money(quote.spendCents)+'; reserva recomendada de '+quote.reserveDays+' dias.',
+        {strategy:quote.mode,supplierId:quote.supplierId,spendCents:quote.spendCents,
+          reserveDays:quote.reserveDays,quoteId:quote.quoteId},quote.businessId);
+      return;
+    }
     if(type.startsWith('LOGISTICA.')){handleLogisticsCommand(draft,type,payload);return;}
     if(type==='FISCAL_OP.ATIVAR'){
       const target=businessById(draft,String(payload.businessId||''));
@@ -2627,6 +2644,104 @@ const CidadeCore = (() => {
 
   // V2.9: diagnóstico gerencial somente leitura; nenhum ajuste automático nos parâmetros
   // de demanda, custos, crédito, tributos, concorrência ou estoque.
+
+  // V3.0 Patch A: estratégias controladas de capital de giro e abastecimento.
+  // Consultas puras: jamais alteram RNG, preço, limite de demanda, imposto ou razão.
+  const BALANCE_MODES=Object.freeze({
+    conservador:Object.freeze({label:'Conservador',reserveDays:14,coverageDays:4,supplierId:'atacado'}),
+    equilibrado:Object.freeze({label:'Equilibrado',reserveDays:7,coverageDays:7,supplierId:'regional'}),
+    agressivo:Object.freeze({label:'Agressivo',reserveDays:3,coverageDays:12,supplierId:'regional'})
+  });
+  function operationalBalanceReport(state,mode='equilibrado'){
+    assert(state?.player?.cityId,'Inicie uma carreira para planejar a economia.');
+    const policy=BALANCE_MODES[mode];
+    assert(policy,'Estratégia de equilíbrio econômico inválida.');
+    const b=activeBusiness(state);
+    assert(b,'Abra e selecione uma unidade para planejar a reposição.');
+    const supplier=supplierById(policy.supplierId),city=cityById(b.cityId);
+    const cash=balance(state,'CASH');
+    const fixedDailyCents=businesses(state).reduce((n,u)=>n+SECTORS[u.sector].dailyCost,0)+
+      (state.economy.logistics?.depot?850:0);
+    const reservedCents=fixedDailyCents*policy.reserveDays;
+    const availableBudgetCents=Math.max(0,cash-reservedCents);
+    const recognizedLiabilitiesCents=balanceSheet(state).liabilities;
+    const pending=b.purchaseOrders.filter(o=>o.status==='PENDING');
+    const incoming=logisticsRead(state).transfers.filter(t=>t.status==='PENDING'&&t.toId===b.id);
+    const pendingTotal=pending.reduce((n,o)=>n+o.items.reduce((v,x)=>v+x.quantity,0),0);
+    const incomingTotal=incoming.reduce((n,t)=>n+t.quantity,0);
+    let room=Math.max(0,100000-b.stockUnits-pendingTotal-incomingTotal);
+    let budget=availableBudgetCents;
+    const observations=state.audit.events.filter(e=>e.type==='DEMANDA.SIMULADA'&&
+      e.businessId===b.id).slice(-7);
+    const products=b.products.map(p=>{
+      const observed=observations.map(e=>e.data?.items?.find(x=>x.productId===p.id)?.estimated)
+        .filter(Number.isInteger);
+      const modelDaily=p.demand*city.factor/100;
+      const demandDaily=observed.length?
+        Math.round(observed.reduce((n,x)=>n+x,0)/observed.length*10)/10:
+        Math.round(modelDaily*10)/10;
+      const incomingSupplier=pending.reduce((n,o)=>n+o.items.reduce((v,x)=>v+(x.productId===p.id?x.quantity:0),0),0);
+      const incomingInternal=incoming.filter(t=>t.productId===p.id).reduce((n,t)=>n+t.quantity,0);
+      const alreadyOrderedToday=b.purchaseOrders.filter(o=>o.date===state.calendar.date&&o.supplierId===supplier.id)
+        .reduce((n,o)=>n+o.items.reduce((v,x)=>v+(x.productId===p.id?x.quantity:0),0),0);
+      const unitCostCents=Math.round(p.costCents*supplier.priceFactor/100);
+      const currentPriceCents=effectivePrice(b,p,state.calendar.date);
+      const referenceCents=competitorReference(state,p,city);
+      const theoreticalBase=Math.max(.01,demandElasticity(currentPriceCents,referenceCents,city));
+      const priceScenarios=[{id:'preco',label:'Competir em preço',pct:92},
+        {id:'equilibrio',label:'Preço atual',pct:100},
+        {id:'margem',label:'Priorizar margem',pct:108}].map(x=>{
+        const priceCents=Math.max(100,Math.round(currentPriceCents*x.pct/100));
+        const potentialDailyUnits=Math.max(0,Math.round(demandDaily*
+          demandElasticity(priceCents,referenceCents,city)/theoreticalBase));
+        return {id:x.id,label:x.label,priceCents,potentialDailyUnits,
+          potentialGrossContributionCents:potentialDailyUnits*(priceCents-unitCostCents)};
+      });
+      const incomingQty=incomingSupplier+incomingInternal;
+      const targetUnits=Math.ceil(Math.max(0,demandDaily)*(supplier.leadDays+policy.coverageDays));
+      const recommendedQty=Math.max(0,targetUnits-p.stockUnits-incomingQty);
+      const maxDailyQty=Math.max(0,supplier.maxDailyPerSku-alreadyOrderedToday);
+      const coverageDays=demandDaily>0?Math.round((p.stockUnits+incomingQty)/demandDaily*10)/10:null;
+      return {productId:p.id,name:p.name,stockUnits:p.stockUnits,incomingQty,demandDaily,
+        sampleDays:observed.length,coverageDays,targetUnits,recommendedQty,maxDailyQty,
+        unitCostCents,currentPriceCents,contributionCents:currentPriceCents-unitCostCents,
+        priceScenarios,quantity:0,spendCents:0};
+    });
+    // Mais urgência primeiro; sempre respeitar orçamento e capacidade sem empréstimo implícito.
+    const order=products.slice().sort((a,b)=>{
+      const coverA=a.coverageDays??Infinity,coverB=b.coverageDays??Infinity;
+      return coverA-coverB||a.productId.localeCompare(b.productId);
+    });
+    for(const row of order){
+      if(row.contributionCents<=0)continue; // Evitar recomendação de comprar para vender abaixo do custo.
+      const qty=Math.max(0,Math.min(row.recommendedQty,row.maxDailyQty,room,
+        Math.floor(budget/row.unitCostCents),2000,
+        100000-row.stockUnits-row.incomingQty));
+      row.quantity=qty;row.spendCents=qty*row.unitCostCents;
+      budget-=row.spendCents;room-=qty;
+    }
+    const spendCents=products.reduce((n,p)=>n+p.spendCents,0);
+    const lines=products.filter(p=>p.quantity>0).map(p=>({productId:p.productId,quantity:p.quantity}));
+    const postPurchaseCashCents=cash-spendCents;
+    const flags=[];
+    if(cash<reservedCents)flags.push({id:'UNDERCAPITALIZED',label:'Caixa insuficiente para a reserva operacional desta estratégia.'});
+    if(recognizedLiabilitiesCents>postPurchaseCashCents)
+      flags.push({id:'LIABILITIES',label:'Passivos reconhecidos podem exceder o caixa restante; prazos não foram projetados.'});
+    if(products.some(p=>p.recommendedQty>p.quantity&&p.contributionCents>0))
+      flags.push({id:'STOCKOUT',label:'Demanda potencial permanece parcialmente descoberta por caixa, capacidade ou fornecedor.'});
+    if(products.some(p=>p.contributionCents<=0))
+      flags.push({id:'NEGATIVE_UNIT_MARGIN',label:'Há produto com preço atual igual/inferior ao custo de reposição.'});
+    const quoteId=hash(JSON.stringify({revision:state.revision,date:state.calendar.date,
+      businessId:b.id,mode,supplierId:supplier.id,lines,spendCents,reservedCents}));
+    return {revision:state.revision,asOf:state.calendar.date,businessId:b.id,mode,modeLabel:policy.label,
+      supplierId:supplier.id,supplierLeadDays:supplier.leadDays,reserveDays:policy.reserveDays,
+      coverageTargetDays:policy.coverageDays,fixedDailyCents,recognizedLiabilitiesCents,cashCents:cash,
+      reservedCents,availableBudgetCents,spendCents,postPurchaseCashCents,
+      remainingReserveCents:postPurchaseCashCents-reservedCents,
+      products,lines,quoteId,flags,
+      note:'Cenários de preço são sensibilidades aproximadas, não vendas garantidas. A compra é única, paga na confirmação; passivos não são quitados pela reserva e o preço não muda automaticamente.'};
+  }
+
   function qualityReport(state,horizonDays=30){
     assert(state&&[30,90].includes(horizonDays),'Horizonte de QA deve ser 30 ou 90 dias.');
     const today=state.calendar.date,begin=new Date(today+'T12:00:00Z');
@@ -2782,6 +2897,6 @@ const CidadeCore = (() => {
     return {state,migrated,message:migrated?'Carreira migrada para V1.9: histórico preservado; cenário tributário desativado até confirmação explícita.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({qualityReport,saveHealthReport,exportSaveCompact,logisticsReport,logisticsRouteQuote,logisticsSuggestions,creditReport,financialCommitmentsReport,journeyGuide,reputationReport,dilemmaReport,DILEMMA_DEFINITIONS,rivalMarketReport,RIVAL_EVENT_TYPES,progressionReport,operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({BALANCE_MODES,operationalBalanceReport,qualityReport,saveHealthReport,exportSaveCompact,logisticsReport,logisticsRouteQuote,logisticsSuggestions,creditReport,financialCommitmentsReport,journeyGuide,reputationReport,dilemmaReport,DILEMMA_DEFINITIONS,rivalMarketReport,RIVAL_EVENT_TYPES,progressionReport,operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();

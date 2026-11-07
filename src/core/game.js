@@ -2634,7 +2634,7 @@ const CidadeCore = (() => {
     const from=begin.toISOString().slice(0,10),to=state.calendar.date;
     const ledger=state.economy.ledger.filter(j=>j.date>=from&&j.date<to);
     const byKind=j=>transactionKind(j);
-    const sum=account=>signedAccount(ledger,account);
+    const sum=account=>{const value=signedAccount(ledger,account);return value===0?0:value;};
     const sales=sum('REVENUE'),cogs=sum('COGS'),expenses=sum('EXPENSE'),taxExpense=sum('TAX_EXPENSE');
     const cash=balance(state,'CASH'),sheet=balanceSheet(state);
     const dailyFixed=businesses(state).reduce((n,b)=>n+SECTORS[b.sector].dailyCost,0)+
@@ -2647,7 +2647,7 @@ const CidadeCore = (() => {
     const lossRatioPercent=requested?Math.round(1000*missed/requested)/10:null;
     const perUnit=businesses(state).map(b=>{
       const local=ledger.filter(j=>journalBusinessId(state,j)===b.id);
-      const amount=code=>signedAccount(local,code);
+      const amount=code=>{const value=signedAccount(local,code);return value===0?0:value;};
       const revenue=amount('REVENUE'),localCogs=amount('COGS'),localExpenses=amount('EXPENSE');
       const recentDemand=demand.filter(e=>e.businessId===b.id);
       const unmet=recentDemand.reduce((n,e)=>n+(Number(e.data?.unmet)||0),0);

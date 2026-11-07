@@ -4162,11 +4162,16 @@ const CidadeCore = (() => {
   }
   function saveHealthReport(state){
     validate(state);
-    const standard=JSON.stringify({saveFormatVersion:1,app:'Cidade dos Negócios',
-      checksumAlgorithm:'FNV1A32',checksum:'00000000',payload:state}).length;
+    let standard,standardAvailable=true;
+    try{standard=exportSave(state).length;}
+    catch(error){
+      standardAvailable=false;
+      standard=JSON.stringify({saveFormatVersion:1,app:'Cidade dos Negócios',
+        checksumAlgorithm:'FNV1A32',checksum:'00000000',payload:state}).length;
+    }
     const compact=exportSaveCompact(state).length;
     return {version:VERSION,schemaVersion:state.schemaVersion,
-      standardChars:standard,compactChars:compact,maxChars:MAX_SAVE_CHARS,
+      standardChars:standard,standardAvailable,compactChars:compact,maxChars:MAX_SAVE_CHARS,
       standardPercent:Math.round(standard/MAX_SAVE_CHARS*1000)/10,
       compactPercent:Math.round(compact/MAX_SAVE_CHARS*1000)/10,
       savedPercent:Math.round((1-compact/standard)*1000)/10,

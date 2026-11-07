@@ -16,7 +16,7 @@
 | `3.0.0-03` | Auditoria cruzada de economia, RH, fiscais, IA, contratos, logística | **PARCIAL:** 4 testes de integração e regressões, cobertura manual pendente |
 | `3.0.0-04` | Migrar saves e proteger rollback V2→V3 | **PARCIAL:** 18 testes e V2.9 original, pendem saves reais/Windows |
 | `3.0.0-05` | Performance e estabilidade, tamanho de saves e UI | **PARCIAL:** 3 testes, 8 painéis e 5 anos em CI; pendem Windows/mobile/quota |
-| `3.0.0-06` | README, CHANGELOG, ROADMAP e tutorial únicos | **EM EXECUÇÃO:** material unificado nesta PR, CI/aceite documental pendentes |
+| `3.0.0-06` | README, CHANGELOG, ROADMAP e tutorial únicos | **PASS DOCUMENTAL (CI):** guia unificado, seis testes novos, [370/370 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42427216125); não homologa release |
 | `3.0.0-07` | Contrato de API só leitura para apresentação V3.1 | **PENDENTE** |
 | `3.0.0-08` | CI final, QA Windows/desktop/mobile, saves, aceite, snapshot de release | **BLOQUEADO**, não homologar |
 

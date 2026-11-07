@@ -1,3 +1,19 @@
+# 🏙️ Cidade dos Negócios — V3.0.0-alpha.1 · Patch A: Economia e Balanceamento (CANDIDATA)
+
+**Não homologada.** O primeiro patch da V3 cria **três perfis explícitos de capital de giro** (conservador, equilibrado e agressivo), uma cotação de compra com reserva de custos fixos, sensibilidades de preço e execução do pedido só após confirmação do jogador em **Mercado → Compras**.
+
+**Sem vendas artificiais:** o simulador mantém a demanda, elasticidade, concorrência, preços do jogador, custo fixo e capital inicial da V2.9. Planos não concedem crédito, não prometem lucro e não fazem compras por conta própria. A compra realmente paga usa as mesmas partidas dobradas de encomendas tradicionais, com entregas após o prazo do fornecedor.
+
+**Risco que motivou a mudança:** a V2.9 identificou expansão sem capital de giro (100% de demanda não atendida em um cenário de 90 dias) e 59,7% de falta de atendimento em outro cenário de 365 dias. O Patch A cria decisões e experimentos para explicar esses resultados, sem maquiar o mercado.
+
+**Segurança:** `schemaVersion 9` mantido, JSON tradicional V1 compatível com V2.9 e backup compacto V2 preservado. **Exporte backup tradicional antes de atualizar.** A V2.9 permanece como versão homologada de recuperação: [releases/v2.9.0-homologada](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/tree/releases/v2.9.0-homologada).
+
+**Plano e validação:** [V3.0 Patch A — Economia](docs/V300_PATCH_A_ECONOMIA_BALANCEAMENTO.md). Regressões e benchmarks remotos, QA manual Windows e homologação **ainda pendentes nesta candidata**. Nenhuma funcionalidade do Patch B fiscal foi implementada.
+
+---
+
+## Histórico da última versão homologada
+
 # 🏙️ Cidade dos Negócios — V2.9.0 · QA, balanceamento e consolidação do ciclo V2 (homologação formal em 07/11/2026)
 
 **Versão V2.9.0 com aceite formal expresso de Yago em 07/11/2026**, com validação de CI da promoção como condição técnica de publicação. O aceite não equivale a testes manuais de Windows ou jogabilidade. A V2.9 acrescenta um **painel econômico de leitura** (margens, risco de caixa, ruptura, desempenho por unidade e 30/90 dias) e **backup compacto reversível V2**, sem modificar regras de compra, vendas, despesa, tributação, crédito ou estoque.

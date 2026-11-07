@@ -66,6 +66,36 @@
       setText('safety-backup-status','Armazenamento local indisponível. Utilize backup JSON.');
     }
   }
+
+  function renderQuality(){
+    if(!state?.player?.cityId)return;
+    const q=Core.qualityReport(state,Number($('qa-horizon').value)||30);
+    const ratio=x=>x===null?'Sem amostra':String(x).replace('.',',')+'%';
+    const fields=[
+      ['Receita do período',Core.money(q.salesCents)],
+      ['CMV externo realizado',Core.money(q.cogsCents)],
+      ['Despesas reconhecidas',Core.money(q.expensesCents)],
+      ['Resultado após tributo simulado',Core.money(q.periodResultCents)],
+      ['Margem bruta',ratio(q.grossMarginPercent)],
+      ['Caixa do grupo',Core.money(q.cashCents)],
+      ['Passivos reconhecidos',Core.money(q.recognizedLiabilitiesCents)],
+      ['Caixa menos passivos',Core.money(q.freeCashCents)],
+      ['Custos fixos diários (cenário)',Core.money(q.estimatedFixedDailyCents)],
+      ['Cobertura de custos fixos',q.fixedCostRunwayDays===null?'Sem custo fixo':q.fixedCostRunwayDays+' dia(s)'],
+      ['Demanda não atendida',q.unmetDemandUnits+' de '+q.demandUnits+' unidades · '+ratio(q.unmetDemandPercent)]
+    ];
+    $('qa-v290-summary').innerHTML=fields.map(x=>'<dt>'+escape(x[0])+'</dt><dd>'+escape(x[1])+'</dd>').join('');
+    $('qa-v290-flags').innerHTML=q.flags.length?q.flags.map(f=>
+      '<div class="event-item"><div><strong>'+escape(f.id)+' · Atenção</strong><p>'+
+      escape(f.label)+'</p></div></div>').join(''):
+      '<p class="muted">Nenhum alerta quantitativo acima dos limites escolhidos. Isso NÃO é garantia de equilíbrio ou lucratividade futura.</p>';
+    $('qa-v290-units').innerHTML=q.unitsReport.map(b=>'<tr><td>'+escape(b.id)+'</td><td>'+
+      escape(Core.money(b.revenue))+'</td><td>'+escape(Core.money(b.cogs))+'</td><td>'+
+      escape(Core.money(b.expenses))+'</td><td>'+escape(Core.money(b.contributionCents))+
+      '</td><td>'+ratio(b.demandUnmetPercent)+'</td></tr>').join('')||
+      '<tr><td colspan="6">Sem empresas abertas.</td></tr>';
+  }
+
   function lastAvailableDate(){
     if(!state)return Core.START_DATE;
     if(!state.calendar.tick)return state.calendar.date;
@@ -480,8 +510,11 @@
     renderParalegal();
     renderRH();
     renderSafetyBackup();
-    const report=Core.diagnostics(state);
-    $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal',state.fiscal.coverageStatus]].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
+    if(tab==='sistema'){
+      renderQuality();
+      const report=Core.diagnostics(state);
+      $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal',state.fiscal.coverageStatus]].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
+    }
     setText('turn-message',!b?'Abra sua primeira empresa.':b.stockUnits===0?'Seu estoque está vazio. Reabasteça.':`Sua empresa está operando há ${state.calendar.tick} dia(s).`);
     setText('turn-subtext',!b?'Clique em um lote para iniciar.':`${b.products.length} produtos · Estoque total ${b.stockUnits} un. · próximo dia ${BRDate(state.calendar.date)}.`);
     setText('autosave-label',autosaveStatus);
@@ -494,12 +527,12 @@
     const unit=p&&supplier?Math.round(p.costCents*supplier.priceFactor/100):0;
     setText('buy-total',p&&supplier&&Number.isInteger(qty)&&qty>0?`Encomenda: ${Core.money(unit)} por unidade · total pago hoje: ${Core.money(qty*unit)} · entrega em ${supplier.leadDays} dia(s) · caixa: ${Core.money(Core.overview(state).cash)}`:'Informe quantidade e fornecedor.');
   }
-  function exportFile(){
+  function exportFile(compact=false){
     if(!state){notify('Crie uma carreira antes de exportar.',true);return;}
     try{
-      const data=Core.exportSave(state),blob=new Blob([data],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
-      a.href=url;a.download=`cidade-dos-negocios-${state.player.cityId}-${state.calendar.date}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
-      notify('Download do backup solicitado. Confira se o arquivo JSON foi salvo no computador.');
+      const data=compact?Core.exportSaveCompact(state):Core.exportSave(state),blob=new Blob([data],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+      a.href=url;a.download=`cidade-dos-negocios-${state.player.cityId}-${state.calendar.date}${compact?'-compacto-v29':''}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
+      notify(compact?'Download compacto solicitado; só é compatível com V2.9+. Confira o arquivo e mantenha também um backup tradicional.':'Download tradicional solicitado. Confira se o arquivo JSON foi salvo no computador.');
     }catch(e){notify(e.message,true);}
   }
   async function importFile(file){
@@ -737,7 +770,21 @@
     $('next-month').addEventListener('click',()=>commit('TEMPO.AVANCAR_LOTE',{days:30}));
     $('speed-select').addEventListener('change',e=>{speed=Number(e.target.value);if(timer){resetTimer();launchAuto();}});
     $('pause-btn').addEventListener('click',launchAuto);
-    $('export-btn').addEventListener('click',exportFile);
+    $('export-btn').addEventListener('click',()=>exportFile(false));
+    $('export-compact-btn').addEventListener('click',()=>exportFile(true));
+    $('qa-horizon').addEventListener('change',renderQuality);
+    $('qa-save-health-btn').addEventListener('click',()=>{
+      try{
+        const saved=Core.saveHealthReport(state);
+        const fields=[['Backup normal',saved.standardChars.toLocaleString('pt-BR')+' caracteres ('+saved.standardPercent+'%)'],
+          ['Backup compacto',saved.compactChars.toLocaleString('pt-BR')+' caracteres ('+saved.compactPercent+'%)'],
+          ['Redução sem excluir histórico',saved.savedPercent+'%'],['Limite por arquivo',saved.maxChars.toLocaleString('pt-BR')+' caracteres']];
+        $('qa-save-size').innerHTML=fields.map(x=>'<dt>'+escape(x[0])+'</dt><dd>'+escape(x[1])+'</dd>').join('');
+        setText('qa-save-warning',saved.standardNearLimit?
+          'Atenção: save tradicional acima de 80% do limite! Exporte backup compacto também. O navegador pode ter quota menor que esse limite.':
+          'Arquivos verificados em memória, sem excluir eventos. O formato compacto exige V2.9+. Persistência local do navegador não foi garantida.');
+      }catch(e){notify('Diagnóstico do backup: '+e.message,true);}
+    });
     $('import-btn').addEventListener('click',()=>$('import-file').click());
     $('start-import').addEventListener('click',()=>$('import-file').click());
     $('import-file').addEventListener('change',async e=>{const f=e.target.files?.[0];try{await importFile(f);}finally{e.target.value='';}});

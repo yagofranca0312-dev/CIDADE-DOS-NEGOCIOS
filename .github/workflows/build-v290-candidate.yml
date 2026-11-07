@@ -1,0 +1,52 @@
+name: Validar V2.9.0 QA, balanceamento e consolidação
+on:
+  push:
+    branches:
+      - feature/v2.9.0-qa-balanceamento-consolidacao
+permissions:
+  contents: write
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Compilar HTML offline V2.9
+        run: npm run build
+      - name: Comitar HTML reproduzível da candidata
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet -- index.html; then
+            git add index.html
+            git commit -m "build(v2.9): sincronizar HTML offline alpha [skip ci]"
+            git push origin HEAD:feature/v2.9.0-qa-balanceamento-consolidacao
+          fi
+      - name: Regressões e 12 testes novos
+        run: npm test
+      - name: Benchmark estabilidade histórica 30/365/1825
+        run: npm run bench:stability
+      - name: Benchmark concorrência V2.6
+        run: npm run bench:competition
+      - name: Benchmark crédito V2.7
+        run: npm run bench:finance
+      - name: Benchmark logística V2.8
+        run: npm run bench:logistics
+      - name: Benchmark qualidade e backups V2.9
+        run: npm run bench:quality
+      - name: Checksum do HTML offline
+        run: sha256sum index.html
+      - name: Artefato beta V2.9 não homologado
+        uses: actions/upload-artifact@v4
+        with:
+          name: CIDADE_DOS_NEGOCIOS_V290_ALPHA1_HTML_OFFLINE_QA
+          path: |
+            index.html
+            README.md
+            docs/V290_QA_BALANCEAMENTO_CONSOLIDACAO.md
+          if-no-files-found: error

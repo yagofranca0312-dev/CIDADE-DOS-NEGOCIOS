@@ -1,5 +1,16 @@
 # Histórico de versões — Cidade dos Negócios
 
+## 2.9.0-alpha.1 — QA, balanceamento e consolidação (candidata, 07/11/2026)
+
+- Relatório gerencial **somente leitura**, 30/90 dias: receita, CMV, despesas, margem, tributos simulados, resultado, caixa, passivos, demanda atendida/perdida e contribuições de cada unidade.
+- Alertas quantitativos de liquidez, baixa cobertura dos custos fixos, ruptura de abastecimento e margem negativa, sem gastos, empréstimos ou vendas automáticas.
+- **Formato JSON V1 preservado** como backup tradicional e compatível com rollback para V2.8.
+- **Formato JSON V2 opcional, reversível** com dicionário de chaves repetidas e checksum, sem perder eventos, lançamentos, produtos ou datas; só importável em V2.9+.
+- Painel em Sistema com diagnóstico de qualidade, comparação de tamanhos, alertas e exportação compacta mediante ação do jogador.
+- Doze novos testes, benchmark QA 90/365 dias, regressões históricas e benchmark logística 1.832 dias; CI em execução.
+- **Não homologada:** QA Windows, navegador real e avaliação de balanceamento com jogador não realizados/comprovados. Última stable: `releases/v2.8.0-homologada`. [Detalhes](docs/V290_QA_BALANCEAMENTO_CONSOLIDACAO.md).
+
+
 ## 2.8.0 — Produção e logística integrada (homologação formal, 07/11/2026)
 
 - Rotas por índice fictício (não km ou ETA reais) e frete calculado por volume, sem fonte geográfica externa.

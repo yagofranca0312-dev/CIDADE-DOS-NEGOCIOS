@@ -40,7 +40,7 @@ A V3.0 é uma **release de unificação, regressão e estabilidade**, sem recons
 | `3.0.0-02` | Consolidar APIs e contratos | **PARCIAL** | Único escritor de journal/event/dispatch e calendário inspecionado e protegido por testes; PR-01 (cálculo de folha) e PR-02 (propostas de compra paralelas) ainda exigem controle da divergência futura |
 | `3.0.0-03` | Auditoria cruzada geral | **PARCIAL** | Doze testes novos (4 de integração e 8 de propriedade), 343/343 PASS no SHA de teste; matriz dos fluxos e riscos; cenários remanescentes e QA manual pendentes |
 | `3.0.0-04` | Migração de todas as carreiras V2 | **PARCIAL** | Matriz automática 18 testes novos PASS, schemas históricos 2–9, rollback Patch A→V2.9 homologada no motor original, corrupção rejeitada; ainda faltam saves pessoais reais e recuperação Windows/file:// |
-| `3.0.0-05` | Performance e estabilidade longa | **PARCIAL** | CI atual de regressão aprovada, benchmarks 30/365/1.825 dias com 1 e 5 unidades PASS; limites de interface, navegadores e experiência real não homologados |
+| `3.0.0-05` | Performance e estabilidade longa | **PARCIAL** | Benchmark V3 instrumentou 8 painéis, saves, relatórios e HTML; CI 364/364 PASS; hotfix de checksum sob demanda reduz Sistema ~2.110→102 ms no DOM simulado de 5 anos; Windows/mobile, quotas e navegador real pendentes |
 | `3.0.0-06` | Documentação e tutorial únicos | **PENDENTE** | README e CHANGELOG refletem Patch A; `docs/ROADMAP.md` preserva decisões históricas já superadas; requer consolidação canônica, sem apagar histórico |
 | `3.0.0-07` | Preparar contrato UI V3.1 | **PENDENTE** | Definir API somente-leitura de cidade, eventos e comandos para overlays; renderização não pode mutar estado ou executar ticks |
 | `3.0.0-08` | Gate de homologação completa | **BLOQUEADO** | Falta concluir 01–07, CI da release candidata, QA Windows/desktop/mobile, saves reais, aceite e snapshot imutável |
@@ -153,3 +153,22 @@ A V3.0 é uma **release de unificação, regressão e estabilidade**, sem recons
 **`3.0.0-04` permanece PARCIAL**: a automação com fixtures cobriu muitos schemas, mas não substitui testes com arquivos autênticos do jogador, navegador/Windows, falha de quota, retenção do backup anterior e procedimento operacional de rollback. O formato compacto V2 requer leitor V2.9+; versões anteriores não recebem garantia de reversibilidade universal. **Não homologar nem ativar V3.0 final** por este resultado isolado.
 
 **Próxima etapa:** `3.0.0-05` performance, tamanho/limites de saves, responsividade de painéis e estabilidade de uso; distinguir benchmarks CI de QA real.
+
+
+## Etapa 5 — Performance e estabilidade prolongada (07/11/2026)
+
+**Relatório técnico:** [`docs/V300_PERFORMANCE_ESTABILIDADE.md`](V300_PERFORMANCE_ESTABILIDADE.md).  
+**Benchmark novo:** [`tools/benchmark-v300-consolidation.mjs`](../tools/benchmark-v300-consolidation.mjs), também executado no CI como `npm run bench:consolidation`.  
+**Travas novas:** [`tests/performance_v300_stage5.test.mjs`](../tests/performance_v300_stage5.test.mjs) — três testes de checksum sob demanda, comando de diagnóstico e integração contínua.  
+**CI confirmada:** [#42425249268](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42425249268), **364/364 testes PASS, 0 FAIL**, build reproduzível e benchmarks antigos/novos PASS.  
+**HTML único regenerado:** `index.html` com **1.478.540 bytes**, SHA-256 `e72193601ca3d2282bc8be5211f45ad4b7976d269f62a16d6dd48ac38ec06b64` no commit de CI acima.
+
+### Descobertas verificadas
+
+1. Carreira 1.825 dias/5 unidades: motor levou ~**9.974 ms** no executor Node/Linux; save tradicional **21.312.692 bytes** (85% do teto de 25 milhões de caracteres), compacto **6.966.345 bytes** (redução 67,5%). Integridade contábil mantida.
+2. Na aba **Sistema**, o checksum de todo o JSON era calculado por `Core.diagnostics(state)` em cada render. A correção moveu o checksum para o **botão já existente** de diagnóstico. Média sob DOM simulado passou de **2.109,96 ms** para **101,84 ms** no cenário de cinco anos, melhoria aproximada de **95,2%**. Ambos os runs foram aprovados.
+3. Sob o mesmo DOM simulado, outros painéis do cenário de cinco anos levaram aproximadamente **76–113 ms** por atualização. A maior string HTML de painel mediu **365.065 caracteres**. Estes números não incluem layout, desenho da cidade real, FPS ou armazenamento.
+4. **Risco crítico de persistência:** `saveLocal()` tenta gravar sempre o envelope tradicional V1 em `localStorage`; se a quota falhar, `commit()` pode manter o progresso em memória, sem garantia de recuperação após fechar o navegador. O jogo avisa falha, mas não garante continuidade automática. Precisa de QA de falha de quota e estratégia de proteção do usuário antes de homologar.
+5. Não foram alterados motor econômico, schema 9, saldos, balanço, saves ou comandos; apenas calculado diagnóstico sob demanda na UI e regenerado HTML no branch de auditoria.
+
+**Gate `3.0.0-05` continua PARCIAL:** benchmarks automatizados concluídos, mas **QA Windows/desktop/mobile, armazenamento local e arquivos reais** não executados; nenhuma homologação inferida. **Próxima etapa:** `3.0.0-06` alinhar README, CHANGELOG, ROADMAP e tutorial, preservando histórico de V2 e avisos de simulação.

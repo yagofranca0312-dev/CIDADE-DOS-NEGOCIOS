@@ -1,6 +1,6 @@
-# CIDADE DOS NEGÓCIOS — V2.8.0-alpha.1 · Produção e logística entre unidades
+# CIDADE DOS NEGÓCIOS — V2.8.0 · Produção e logística entre unidades
 
-**Situação:** implementação candidata sobre a **V2.7.0 homologada**; regressões, benchmarks, testes de navegador e homologação devem ser registrados separadamente.
+**Situação:** titular autorizou **homologação formal V2.8.0 em 07/11/2026**, sobre a V2.7 homologada. A CI de 2.8.0 definitiva e o checkpoint de publicação devem ser verificados após a promoção; **QA manual no Windows/navegador não tem evidência de execução**. Ver `HOMOLOGACAO_V280.md`.
 
 **Dependências:** V2.6 Economia Viva e V2.7 Crédito e Contratos.
 **Save:** `schemaVersion = 9` preservado. `economy.logistics` opcional e ativado somente por comandos reais de logística. Nenhum depósito, perda, custo de rota, produção ou transferência retroativa em saves V2.7.
@@ -9,14 +9,14 @@
 
 | CP | Função | Critério de evidência e conclusão | Estado |
 |---|---|---|---|
-| 1 | Rede logística intermunicipal | `logisticsRouteQuote` com **índice abstrato**, 1–5 dias fictícios e fretes parametrizados; rotas sem afirmação de km ou ETA reais | Implementado, testes em validação |
-| 2 | Transferência interfilial | `LOGISTICA.TRANSFERIR` → `INVENTORY → IN_TRANSIT → INVENTORY`, compensação `INTERNAL_CLEARING` igual a zero; **nenhum REVENUE nem COGS** | Implementado, testes em validação |
-| 3 | Centro de distribuição opcional | `LOGISTICA.CD.ABRIR`, custo de implantação e manutenção com baixa separada do passivo, estoque/limite 2.000, compras pagas e consolidadas, fretes com desconto em trechos com CD | Implementado, testes em validação |
-| 4 | Produção piloto da padaria | `LOGISTICA.PRODUCAO.HABILITAR`, compras de farinha, `LOGISTICA.PRODUZIR` (1 farinha → 3 pães, capacidade 25 farinhas/dia), custo de insumos mais mão de obra incorporado a estoque; sem venda interna | Implementado, testes em validação |
-| 5 | Perecibilidade e perdas | Lotes novos de pão e bolo, validade fictícia 3/5 dias, baixa única em `EXPENSE` e `INVENTORY`; perda também em trânsito, sem CMV artificial | Implementado, testes em validação |
-| 6 | Sugestões de logística | `logisticsSuggestions` pura, com propostas de remanejamento ou compra pelo estoque mínimo; painel editável e confirmação antes de qualquer ação | Implementado, testes em validação |
-| 7 | Conciliação multiloja | `validateLogistics`, `validate`, `reconciliationReport` e `balanceSheet`; CD e trânsito integrados aos valores físicos, contábeis e comandos com ID | Implementado, testes em validação |
-| 8 | GATE operações integradas | Regressões automáticas + benchmark 90/365/1832 dias com meta de cinco unidades reais e saves JSON; QA Windows e aceite do titular posteriores | **Não homologado** |
+| 1 | Rede logística intermunicipal | `logisticsRouteQuote` com **índice abstrato**, 1–5 dias fictícios e fretes parametrizados; rotas sem afirmação de km ou ETA reais | Implementado; regressões e benchmarks aprovados na candidata |
+| 2 | Transferência interfilial | `LOGISTICA.TRANSFERIR` → `INVENTORY → IN_TRANSIT → INVENTORY`, compensação `INTERNAL_CLEARING` igual a zero; **nenhum REVENUE nem COGS** | Implementado; regressões e benchmarks aprovados na candidata |
+| 3 | Centro de distribuição opcional | `LOGISTICA.CD.ABRIR`, custo de implantação e manutenção com baixa separada do passivo, estoque/limite 2.000, compras pagas e consolidadas, fretes com desconto em trechos com CD | Implementado; regressões e benchmarks aprovados na candidata |
+| 4 | Produção piloto da padaria | `LOGISTICA.PRODUCAO.HABILITAR`, compras de farinha, `LOGISTICA.PRODUZIR` (1 farinha → 3 pães, capacidade 25 farinhas/dia), custo de insumos mais mão de obra incorporado a estoque; sem venda interna | Implementado; regressões e benchmarks aprovados na candidata |
+| 5 | Perecibilidade e perdas | Lotes novos de pão e bolo, validade fictícia 3/5 dias, baixa única em `EXPENSE` e `INVENTORY`; perda também em trânsito, sem CMV artificial | Implementado; regressões e benchmarks aprovados na candidata |
+| 6 | Sugestões de logística | `logisticsSuggestions` pura, com propostas de remanejamento ou compra pelo estoque mínimo; painel editável e confirmação antes de qualquer ação | Implementado; regressões e benchmarks aprovados na candidata |
+| 7 | Conciliação multiloja | `validateLogistics`, `validate`, `reconciliationReport` e `balanceSheet`; CD e trânsito integrados aos valores físicos, contábeis e comandos com ID | Implementado; regressões e benchmarks aprovados na candidata |
+| 8 | GATE operações integradas | Regressões automáticas + benchmark 90/365/1832 dias com meta de cinco unidades reais e saves JSON; QA Windows e aceite do titular posteriores | **Aceite formal recebido**; CI candidata aprovada, promoção final em validação; QA Windows pendente |
 
 ## Regras contábeis do módulo
 
@@ -47,4 +47,4 @@ O índice de distância é gerado deterministamente com a posição das cidades 
 5. Abrir até 5 unidades de cidades/setores distintos, avançar dias, examinar preço, vendas e perdas; exportar/importar save.
 6. Verificar interface Windows (BAT e navegador offline), funcionalidade, desempenho e balanceamento. Não afirmar QA realizado antes do registro de evidência.
 
-**Gate de release:** CI verde, HTML offline reproduzível, integridade de saves e QA de uso real, com aprovação expressa de Yago. Até lá, usar a designação `2.8.0-alpha.1` e manter `releases/v2.7.0-homologada` como último checkpoint estável.
+**Gate de release:** o titular autorizou a homologação formal em 07/11/2026, após CI candidata 304 PASS/0 FAIL e benchmark integrado. A publicação definitiva 2.8.0 requer build reproduzível e nova CI de promoção e `main` aprovadas; criar o checkpoint `releases/v2.8.0-homologada` somente depois. **Os testes reais no Windows/BAT e navegador continuam não realizados/não comprovados**; são pendências de QA, não aprovação implícita. A V2.7.0 permanece como rollback histórico.

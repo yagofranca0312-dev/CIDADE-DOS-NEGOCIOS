@@ -1,0 +1,51 @@
+name: Validar e empacotar V2.8.0 formalmente homologada
+on:
+  push:
+    branches:
+      - release/v2.8.0-promocao
+permissions:
+  contents: write
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Gerar HTML offline V2.8.0
+        run: npm run build
+      - name: Registrar HTML da release no commit promocional
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet -- index.html; then
+            git add index.html
+            git commit -m "build(v2.8.0): HTML offline homologação [skip ci]"
+            git push origin HEAD:release/v2.8.0-promocao
+          fi
+      - name: Executar 304 testes automatizados
+        run: npm test
+      - name: Benchmark histórico V2.4.1
+        run: npm run bench:stability
+      - name: Benchmark concorrência V2.6
+        run: npm run bench:competition
+      - name: Benchmark crédito e contratos V2.7
+        run: npm run bench:finance
+      - name: Benchmark produção e logística V2.8
+        run: npm run bench:logistics
+      - name: Checksum SHA-256 do HTML offline
+        run: sha256sum index.html
+      - name: Anexar HTML offline e documentação da versão formal
+        uses: actions/upload-artifact@v4
+        with:
+          name: CIDADE_DOS_NEGOCIOS_V280_HTML_OFFLINE_HOMOLOGADA_FORMAL
+          path: |
+            index.html
+            README.md
+            docs/HOMOLOGACAO_V280.md
+            docs/V280_PRODUCAO_LOGISTICA.md
+          if-no-files-found: error

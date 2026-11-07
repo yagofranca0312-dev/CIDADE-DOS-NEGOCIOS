@@ -249,7 +249,7 @@ test('V2.8: all funds and product value reconcile after incoming supplier, CD, i
 });
 test('V2.8: compiled offline HTML includes navigation, forms and no external dependency',()=>{
  const html=readFileSync('index.html','utf8');
- assert.match(html,/v2\.8\.0-alpha\.1/);
+ assert.match(html,/v2\.8\.0/);
  for(const id of ['v23-tab-administrativo-logistica','v23-pane-administrativo-logistica',
   'logistics-transfer-form','logistics-depot-buy-form','logistics-produce-form',
   'logistics-proposal-rows','logistics-lot-rows','logistics-integrity']){

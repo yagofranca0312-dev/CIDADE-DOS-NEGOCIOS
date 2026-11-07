@@ -1,12 +1,12 @@
-# 🏙️ Cidade dos Negócios — V2.8.0-alpha.1 · Produção e Logística (candidata)
+# 🏙️ Cidade dos Negócios — V2.8.0 · Produção e Logística (homologação formal em 07/11/2026)
 
-**V2.8.0 em validação, NÃO homologada.** Interliga unidades, centro de distribuição opcional, compras consolidadas, transferências físicas, padaria com insumo e transformação, validade e desperdício de lotes novos, propostas de reposição editáveis e conciliação contábil multiloja.
+**V2.8.0 formalmente aprovada pelo titular em 07/11/2026; release definitiva sujeita à validação CI do pacote promovido.** Interliga unidades, centro de distribuição opcional, compras consolidadas, transferências físicas, padaria com insumo e transformação, validade e desperdício de lotes novos, propostas de reposição editáveis e conciliação contábil multiloja.
 
 **Regra:** remanejamento interfilial não gera venda ou CMV. Estoque de origem → trânsito → destino, com conta interna de compensação zerada. Frete, centro de distribuição e perdas geram custos ou despesas verdadeiras **somente no simulador**. Distância é um índice de jogo, **não quilometragem nem trajeto rodoviário real**. Nenhuma proposta de gasto é executada sem confirmação.
 
 **Compatibilidade:** `schemaVersion 9`, novo estado logístico opcional e sem efeitos retroativos em saves anteriores; a **V2.7.0 homologada** permanece no checkpoint [releases/v2.7.0-homologada](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/tree/releases/v2.7.0-homologada).
 
-**Testes e requisitos:** [Plano integral V2.8](docs/V280_PRODUCAO_LOGISTICA.md). Regressões: `tests/logistics_v280.test.mjs`; benchmark: `npm run bench:logistics`. São necessários CI verde, QA no Windows/navegador offline, save de teste e aceite explícito para homologar.
+**Evidências e limites:** [Registro formal](docs/HOMOLOGACAO_V280.md) e [Plano integral V2.8](docs/V280_PRODUCAO_LOGISTICA.md). Candidata validada com 304/304 testes, 0 falhas e benchmarks de 90/365/1.832 dias; integração CI de `main` aprovada. **QA manual Windows/BAT, navegador offline, save real e balanceamento percebido não foram comprovados** e permanecem pendentes, sem serem declarados aprovados. A V2.7.0 mantém seu checkpoint de recuperação. A publicação final depende da CI de release e da `main` após promoção.
 
 ---
 

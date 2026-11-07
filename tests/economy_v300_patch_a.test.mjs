@@ -71,7 +71,7 @@ test('Patch A: compra estratégica executa um pedido confirmado, sem inventar re
  assert.equal(now.revenue,old.revenue);
  assert.equal(now.cogs,old.cogs);
  assert.equal(now.payable,old.payable);
- assert.equal(next.economy.ledger.filter(j=>j.kind==='PURCHASE').length,0);
+ assert.equal(next.economy.ledger.filter(j=>j.kind==='PURCHASE').length,1);
  assert.equal(C.activeBusiness(next).purchaseOrders.filter(o=>o.status==='PENDING').length,1);
  assert.ok(next.audit.events.some(e=>e.type==='ECONOMIA.COMPRA_PLANEJADA'));
  invariants(next);

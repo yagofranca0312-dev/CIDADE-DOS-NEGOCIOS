@@ -514,7 +514,7 @@
     if(tab==='sistema'){
       renderQuality();
       // Diagnóstico completo calcula hash de todo o save e deve ser explícito.
-      // A navegação exibe somente contadores baratos; clique em Diagnóstico para SHA local.
+      // A navegação exibe somente contadores baratos; checksum FNV1A32 fica sob demanda.
       $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${Core.CITIES.length} / ${new Set(Core.CITIES.map(x=>x.uf)).size}`],['Dias concluídos',String(state.calendar.tick)],['Eventos confirmados',String(state.audit.events.length)],['Checksum local','Sob demanda: execute o diagnóstico'],['Cobertura fiscal',state.fiscal.coverageStatus]].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
     }
     setText('turn-message',!b?'Abra sua primeira empresa.':b.stockUnits===0?'Seu estoque está vazio. Reabasteça.':`Sua empresa está operando há ${state.calendar.tick} dia(s).`);

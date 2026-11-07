@@ -59,4 +59,4 @@
 
 **Próximos gates:** `3.0.0-07` (contrato UI de leitura para V3.1) permanece pendente; `3.0.0-08` (homologação integral) segue bloqueado até QA e aceite.
 
-**Status:** entregas documentais preparadas; marcar `3.0.0-06` **PASS DOCUMENTAL (CI)** apenas após verificar o commit e a suíte. Mesmo com PASS documental, **gates 01–05 parciais, 07 pendente, 08 bloqueado**. Não alterar o motor/HTML para completar essa etapa.
+**Status:** `3.0.0-06` **PASS DOCUMENTAL (CI)**: [GitHub Actions #42427216125](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42427216125) concluída com **370/370 testes PASS, 0 FAIL**, incluindo **6 testes documentais novos**, benchmarks de estabilidade/consolidação, integridade do HTML e SHA-256. Mesmo com PASS documental, **gates 01–05 parciais, 07 pendente, 08 bloqueado**; QA real e aceite V3.0 não foram realizados. Não alterar o motor/HTML para completar essa etapa.

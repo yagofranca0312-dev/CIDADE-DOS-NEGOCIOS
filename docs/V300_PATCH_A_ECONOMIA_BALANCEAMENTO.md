@@ -20,7 +20,7 @@ A V2.9 encontrou demanda não atendida de **100%** em 90 dias com três lojas ab
 | 04 | Reserva financeira | Orçamento de compra = caixa atual menos dias de custo fixo do grupo, sem supor entrada de receita. Passivos são **informados**, não quitados pela reserva | Implementado; CI candidata PASS |
 | 05 | Compra realmente confirmada | `ECONOMIA.COMPRAR_PLANO` compara ID/cotação/revisão, usa `registerPurchase` e mantém débito IN_TRANSIT/crédito CASH, sem receita/CMV/credito automático | Implementado; CI candidata PASS |
 | 06 | Sensibilidade de preços | Alternativas de ±8% sobre preço atual, com elasticidade **aproximada**, sem alterar os preços nem garantir demanda futura | Implementado; CI candidata PASS |
-| 07 | Integração Mercado e regressões | Painel, 15 testes novos, economia 30/90/365 dias, benchmark legado até 1.825/1.832 dias, QA manual previsto | **331/331 testes PASS; 7 baterias de benchmark PASS** |
+| 07 | Integração Mercado e regressões | Painel, 15 testes novos, economia 30/90/365 dias, benchmark legado até 1.825/1.832 dias, QA manual previsto | **331/331 testes PASS; 6 famílias de benchmarks PASS** |
 | 08 | Release Patch A | CI do branch + CI da main, HTML offline reproduzível, checkpoint candidato e teste Windows do jogador; aceite formal separado | **PENDENTE** |
 
 ## Regras do motor

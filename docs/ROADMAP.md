@@ -1,5 +1,34 @@
 # Roadmap — Cidade dos Negócios
 
+## Estado vigente — 07/11/2026: consolidar a V2 na V3.0 ANTES da V3.1
+
+**Fonte de decisão mais recente:** roadmap interativo `roadmap_cidade_dos_negocios_v2_v3_interativo.html` (04/11/2026) — bloco `3.0.0 — Consolidação INTEGRAL da linha V2`. **Este bloco prevalece na priorização sobre decisões históricas registradas abaixo**. As datas e propostas antigas são preservadas por rastreabilidade e não significam que continuem em execução.
+
+- **Última versão homologada:** V2.9.0, `releases/v2.9.0-homologada`, commit `082faa4626cf5cb0fc54c9ef092bddd86ffce54c`.
+- **Código na `main`:** V3.0.0-alpha.1, Patch A de Economia já integrado no commit `871df2b1cd133bcad717c0194a474a35fbabcd3c`. **Não homologado**, sem versão V3.0 final.
+- **Trabalho atual:** PR [#39 — auditoria de consolidação](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/pull/39), **DRAFT**, sem merge. Preservar Patch A, schema 9 e a V2.9 estável.
+- **Missão:** consolidar mercado/economia, IA/rivais, RH/DP, Paralegal, fiscais didáticos, contabilidade, contratos/crédito, logística/produção, jornada/progressão, interface V2 e saves. A V3.1 imersiva, reconstrução estilo SimCity e novo regime tributário 2027+ **não estão autorizados como implementação dentro deste gate**.
+
+| Checkpoint | Objetivo de saída | Situação em 07/11/2026 |
+|---|---|---|
+| `3.0.0-01` | Inventário total V2, comandos e evidências | **PARCIAL:** matriz + testes; QA manual e cenários remanescentes |
+| `3.0.0-02` | Responsável único por eventos, escrita, persistência, módulos | **PARCIAL:** 8 testes, riscos de fórmulas paralelas não encerrados |
+| `3.0.0-03` | Auditoria cruzada de economia, RH, fiscais, IA, contratos, logística | **PARCIAL:** 4 testes de integração e regressões, cobertura manual pendente |
+| `3.0.0-04` | Migrar saves e proteger rollback V2→V3 | **PARCIAL:** 18 testes e V2.9 original, pendem saves reais/Windows |
+| `3.0.0-05` | Performance e estabilidade, tamanho de saves e UI | **PARCIAL:** 3 testes, 8 painéis e 5 anos em CI; pendem Windows/mobile/quota |
+| `3.0.0-06` | README, CHANGELOG, ROADMAP e tutorial únicos | **EM EXECUÇÃO:** material unificado nesta PR, CI/aceite documental pendentes |
+| `3.0.0-07` | Contrato de API só leitura para apresentação V3.1 | **PENDENTE** |
+| `3.0.0-08` | CI final, QA Windows/desktop/mobile, saves, aceite, snapshot de release | **BLOQUEADO**, não homologar |
+
+**Evidências:** [dossiê dos oito gates](V300_CONSOLIDACAO_INTEGRAL_GATES.md) · [matriz de propriedade](V300_MATRIZ_CONTRATOS_E_PROPRIEDADE.md) · [migração/rollback](V300_MIGRACAO_ROLLBACK_SAVES.md) · [desempenho](V300_PERFORMANCE_ESTABILIDADE.md) · [guia operacional](JOGAR_GUIA_V300.md).
+
+**Sequência:** fechar a documentação `06` → preparar contrato UI V3.1 `07` → retornar às lacunas manuais dos checkpoints `01–05` → release gate `08`. Não confundir `PASS` no CI com homologação humana. Versão homologada só muda com autorização explícita após as provas obrigatórias.
+
+---
+
+## Histórico de planejamento (registros por data; não substituir o plano vigente)
+
+
 ## P0 — Fundação (checkpoint CP-000)
 
 **Objetivo:** preparar repositório, núcleo sem gameplay, contratos, testes estruturais, fluxo de contribuição, CI e checkpoint.

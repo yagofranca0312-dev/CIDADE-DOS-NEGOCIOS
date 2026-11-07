@@ -39,7 +39,7 @@ A V3.0 é uma **release de unificação, regressão e estabilidade**, sem recons
 | `3.0.0-01` | Inventário final da V2 | **PARCIAL** | Matriz detalhada de áreas/comandos/donos/testes em docs/V300_MATRIZ_CONTRATOS_E_PROPRIEDADE.md; faltam comprovações funcionais manuais e casos históricos remanescentes |
 | `3.0.0-02` | Consolidar APIs e contratos | **PARCIAL** | Único escritor de journal/event/dispatch e calendário inspecionado e protegido por testes; PR-01 (cálculo de folha) e PR-02 (propostas de compra paralelas) ainda exigem controle da divergência futura |
 | `3.0.0-03` | Auditoria cruzada geral | **PARCIAL** | Doze testes novos (4 de integração e 8 de propriedade), 343/343 PASS no SHA de teste; matriz dos fluxos e riscos; cenários remanescentes e QA manual pendentes |
-| `3.0.0-04` | Migração de todas as carreiras V2 | **PARCIAL** | Testes integrados PASS: save V1/V2 roundtrip, corrupção, idempotência e migração V1.7→schema 9; saves reais do jogador, recuperação no Windows e outros formatos legados ainda não auditados integralmente |
+| `3.0.0-04` | Migração de todas as carreiras V2 | **PARCIAL** | Matriz automática 18 testes novos PASS, schemas históricos 2–9, rollback Patch A→V2.9 homologada no motor original, corrupção rejeitada; ainda faltam saves pessoais reais e recuperação Windows/file:// |
 | `3.0.0-05` | Performance e estabilidade longa | **PARCIAL** | CI atual de regressão aprovada, benchmarks 30/365/1.825 dias com 1 e 5 unidades PASS; limites de interface, navegadores e experiência real não homologados |
 | `3.0.0-06` | Documentação e tutorial únicos | **PENDENTE** | README e CHANGELOG refletem Patch A; `docs/ROADMAP.md` preserva decisões históricas já superadas; requer consolidação canônica, sem apagar histórico |
 | `3.0.0-07` | Preparar contrato UI V3.1 | **PENDENTE** | Definir API somente-leitura de cidade, eventos e comandos para overlays; renderização não pode mutar estado ou executar ticks |
@@ -130,3 +130,26 @@ A V3.0 é uma **release de unificação, regressão e estabilidade**, sem recons
 - **PR-04/05:** relatórios projetivos vs lançamentos realizados, e cobertura não exaustiva de todos os ramos.
 
 **Decisão de gate:** entregas de inventário/matriz e testes de unicidade **CONCLUÍDAS**; os checkpoints gerais `3.0.0-01`, `3.0.0-02` e `3.0.0-03` **continuam PARCIAIS** até suas evidências restantes. Sem alteração de gameplay/versão/schema, sem merge, sem homologação final. **Próxima etapa:** migração de saves e rollback compatível (V2→V3), com matriz de evidências e restrições de testes manuais.
+
+
+## Etapa 4 — Migração, corrupção e rollback (07/11/2026)
+
+**Protocolo e matriz:** [`docs/V300_MIGRACAO_ROLLBACK_SAVES.md`](V300_MIGRACAO_ROLLBACK_SAVES.md).  
+**Regressões:** [`tests/migration_rollback_v300.test.mjs`](../tests/migration_rollback_v300.test.mjs).  
+**Baseline V2.9 imutável:** [`tests/fixtures/core_v2_9_0_homologada.js`](../tests/fixtures/core_v2_9_0_homologada.js), copiada do commit homologado `082faa4626cf5cb0fc54c9ef092bddd86ffce54c`, blob Git `048d174cd2e952d61a255c84c97dbb40dceaf50a` validado em teste.
+
+**CI aprovada:** [run #42418650812](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42418650812) sobre o commit `4d4c1fb495fd8d1121e44140b5280e438cbf40af`: **361/361 testes PASS, 0 FAIL**, build HTML, diff reprodutível e benchmark 30/365/1.825 dias PASS.
+
+### Evidência testada
+
+- **11 origens históricas**, cobrindo schemas 2, 3, 4, 5, 6, 7, 8 e 9, migradas sem modificar os registros anteriores do journal, eventos, comandos, estoque, caixa, receitas, IDs, RNG e calendário.
+- **V2.9 homologada original** executada dentro da CI; arquivos V1 tradicional e V2 compacto preservados byte a byte no estado; cenário integrado com empréstimo, CD, RH e filiais.
+- **Rollback V3.0 alpha/Patch A → V2.9:** a versão estável lê os dois envelopes e consegue continuar a carreira após a compra estratégica, sem diferença de lançamentos/eventos no dia comparado.
+- **Corruptelas:** checksum adulterado, schema futuro, estoque inconsistente com checksum recalculado, IDs de eventos duplicados, codec/envelope inválido, dicionário rompido e JSON malformado são rejeitados antes de devolver estado válido; CP-000 com histórico não é convertido artificialmente.
+- **Formulário de QA manual criado:** exige ensaio Windows `file://`, armazenamento local, recuperação após erro e saves reais em separado.
+
+### Limites e gate
+
+**`3.0.0-04` permanece PARCIAL**: a automação com fixtures cobriu muitos schemas, mas não substitui testes com arquivos autênticos do jogador, navegador/Windows, falha de quota, retenção do backup anterior e procedimento operacional de rollback. O formato compacto V2 requer leitor V2.9+; versões anteriores não recebem garantia de reversibilidade universal. **Não homologar nem ativar V3.0 final** por este resultado isolado.
+
+**Próxima etapa:** `3.0.0-05` performance, tamanho/limites de saves, responsividade de painéis e estabilidade de uso; distinguir benchmarks CI de QA real.

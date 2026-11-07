@@ -86,7 +86,7 @@ test('V2.4-A: UI expõe comandos com aviso de natureza fictícia e HTML executá
   assert.match(template,/sem equivalência com taxas ou exigências legais brasileiras/);
   assert.match(app,/renderParalegal\(\)/);
   assert.match(app,/PARALEGAL\.PROTOCOLAR/);
-  assert.match(html,/const VERSION = '2\.9\.0-alpha\.1'/);
+  assert.match(html,/const VERSION = '2\.9\.0'/);
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(scripts.length,1);
   assert.doesNotThrow(()=>new Script(scripts[0][1]));

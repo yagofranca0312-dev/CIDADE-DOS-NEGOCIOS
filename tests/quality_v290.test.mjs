@@ -65,7 +65,7 @@ test('V2.9: versões antigas têm retorno V1 tradicional, enquanto V2 compacto e
  const s=career(29006);
  assert.equal(JSON.parse(Core.exportSave(s)).saveFormatVersion,1);
  assert.equal(JSON.parse(Core.exportSaveCompact(s)).saveFormatVersion,2);
- assert.match(Core.saveHealthReport(s).note,/V2\.8|2\.8/);
+ assert.match(Core.saveHealthReport(s).note,/2\.9\.0/);
 });
 test('V2.9: leitura do QA é pura, não gera receita, custo, eventos nem alteração de RNG',()=>{
  let s=career(29007),serialized=JSON.stringify(s);

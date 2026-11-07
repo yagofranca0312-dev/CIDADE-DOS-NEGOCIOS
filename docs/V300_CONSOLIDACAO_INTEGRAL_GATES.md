@@ -36,9 +36,9 @@ A V3.0 é uma **release de unificação, regressão e estabilidade**, sem recons
 
 | ID | Gate do HTML | Estado observado | Evidência e lacuna |
 |---|---|---|---|
-| `3.0.0-01` | Inventário final da V2 | **PARCIAL** | Inventário inicial acima; requer conferência comando/arquivo/versão e classificação de pendências |
-| `3.0.0-02` | Consolidar APIs e contratos | **PARCIAL** | `docs/ARQUITETURA.md` contém propriedade lógica; falta prova cruzada de ausência de cálculos/comandos duplicados nos domínios |
-| `3.0.0-03` | Auditoria cruzada geral | **PARCIAL** | Quatro novos testes de integração V2→V3 passaram na CI (335/335 no total), incluindo RH, crédito, contratos, fiscal, paralegal, concorrência, logística e Patch A; auditoria de contratos/cálculos em código ainda incompleta |
+| `3.0.0-01` | Inventário final da V2 | **PARCIAL** | Matriz detalhada de áreas/comandos/donos/testes em docs/V300_MATRIZ_CONTRATOS_E_PROPRIEDADE.md; faltam comprovações funcionais manuais e casos históricos remanescentes |
+| `3.0.0-02` | Consolidar APIs e contratos | **PARCIAL** | Único escritor de journal/event/dispatch e calendário inspecionado e protegido por testes; PR-01 (cálculo de folha) e PR-02 (propostas de compra paralelas) ainda exigem controle da divergência futura |
+| `3.0.0-03` | Auditoria cruzada geral | **PARCIAL** | Doze testes novos (4 de integração e 8 de propriedade), 343/343 PASS no SHA de teste; matriz dos fluxos e riscos; cenários remanescentes e QA manual pendentes |
 | `3.0.0-04` | Migração de todas as carreiras V2 | **PARCIAL** | Testes integrados PASS: save V1/V2 roundtrip, corrupção, idempotência e migração V1.7→schema 9; saves reais do jogador, recuperação no Windows e outros formatos legados ainda não auditados integralmente |
 | `3.0.0-05` | Performance e estabilidade longa | **PARCIAL** | CI atual de regressão aprovada, benchmarks 30/365/1.825 dias com 1 e 5 unidades PASS; limites de interface, navegadores e experiência real não homologados |
 | `3.0.0-06` | Documentação e tutorial únicos | **PENDENTE** | README e CHANGELOG refletem Patch A; `docs/ROADMAP.md` preserva decisões históricas já superadas; requer consolidação canônica, sem apagar histórico |
@@ -103,3 +103,30 @@ A V3.0 é uma **release de unificação, regressão e estabilidade**, sem recons
 - **PENDENTES:** documentação unificada (`3.0.0-06`), contrato UI V3.1 (`3.0.0-07`), QA humano e gate final (`3.0.0-08`).
 
 **Sem promoção a versão final, sem mudança de gameplay, sem homologação de QA humano, sem merge desta PR.** A `main` permanece com o Patch A candidato preservado. A próxima etapa lógica é fechar a matriz de contratos/propriedade única (`3.0.0-01/02/03`) e documentar as lacunas de compatibilidade antes do gate final.
+
+
+## Etapa 3 — Inventário e propriedade única concluídos como entregável de auditoria (07/11/2026)
+
+**Documentação nova:** [`docs/V300_MATRIZ_CONTRATOS_E_PROPRIEDADE.md`](V300_MATRIZ_CONTRATOS_E_PROPRIEDADE.md).  
+**Teste novo:** [`tests/ownership_v300_contracts.test.mjs`](../tests/ownership_v300_contracts.test.mjs).  
+**SHA do commit de teste:** `5e11d90166d77e719183a97c108a3e930ba42b7d`.  
+**CI comprovada:** [GitHub Actions #42417243617](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42417243617), `SUCCESS`, **343 testes PASS / 0 FAIL** (331 herdados, 4 de integração, 8 de propriedade). Build e benchmarks 30/365/1.825 dias, 1 e 5 unidades, passaram.
+
+### Evidência de unicidade
+
+- `dispatch()` = ponto de validação/commit; `src/ui/app.js::commit()` é o único ponto `Core.dispatch` no conjunto `src/ui/*.js` examinado.
+- `journal()` = único escritor físico no `economy.ledger.push`; `event()` = único escritor em `audit.events.push`.
+- `registerPurchase()` = único processamento de compra para formulário individual, multi-item, reposição logística, contrato e Patch A; **um** journal `PURCHASE` e uma encomenda por operação confirmada nos quatro caminhos de teste.
+- `registerSale()` = venda gerada em `day()`; `VENDA.REGISTRAR` manual é bloqueado; compras não geram receita.
+- `day()` = único avanço de calendário; repetição de comando é `DUPLICATE`, sem nova despesa ou evento.
+- Reconhecimento de folha separado da quitação; estimativa proporcional e valor apurado coincidiram no cenário testado; fechamento `FISCAL_OP` é evento sem débito fiscal adicional; relatórios e importações não geram transações.
+- Os **oito testes novos** de propriedade passaram na CI sobre o commit exato, sem alterações no motor.
+
+### Dívidas técnicas explicitadas (não são bugs de dupla contabilização comprovados)
+
+- **PR-01:** `estimatedPayrollMonth` e `accruePayrollMonth` replicam lógica de pró-rata; risco de divergência em manutenção futura. Um teste de paridade foi incluído.
+- **PR-02:** planejamento manual de reposição na UI e cotação gerencial do Patch A têm cálculos paralelos, porém ambos confirmam por `registerPurchase`; risco de divergência de proposta/interface, não prova de dupla compra.
+- **PR-03:** `localStorage` e exportação manual precisam de validação `file://`, Windows e recuperação de saves de jogador.
+- **PR-04/05:** relatórios projetivos vs lançamentos realizados, e cobertura não exaustiva de todos os ramos.
+
+**Decisão de gate:** entregas de inventário/matriz e testes de unicidade **CONCLUÍDAS**; os checkpoints gerais `3.0.0-01`, `3.0.0-02` e `3.0.0-03` **continuam PARCIAIS** até suas evidências restantes. Sem alteração de gameplay/versão/schema, sem merge, sem homologação final. **Próxima etapa:** migração de saves e rollback compatível (V2→V3), com matriz de evidências e restrições de testes manuais.

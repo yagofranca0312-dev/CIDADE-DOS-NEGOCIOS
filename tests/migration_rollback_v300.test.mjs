@@ -200,7 +200,7 @@ test('V3.0 recuperação: backup alterado e schema novo rejeitados antes de entr
   const missingKeys=JSON.parse(current.exportSaveCompact(s));
   missingKeys.keys=[];
   assert.throws(()=>current.importSave(json(missingKeys)),/Referência de chave compacta/);
-  assert.throws(()=>current.importSave('{malformed'),SyntaxError);
+  assert.throws(()=>current.importSave('{malformed'),{name:'SyntaxError'});
   assert.equal(json(s),snapshot,'Uma importação com erro não pode editar a carreira ativa');
   integrity(s);
 });

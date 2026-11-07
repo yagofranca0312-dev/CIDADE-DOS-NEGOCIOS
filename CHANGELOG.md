@@ -8,7 +8,7 @@
 - Novo comando explícito `ECONOMIA.COMPRAR_PLANO`: valida revisão e cotação, usa motor de compras atual, gera estoque em trânsito, diminui caixa, preserva ledger e idempotência.
 - Alertas de unidade subcapitalizada, passivos superiores ao caixa após a compra, possível ruptura e margem unitária negativa.
 - Mercado → Compras: painel de estratégia, proposta detalhada, comparação e confirmação; sem vendas, pagamentos, crédito ou compras automáticos.
-- Novos testes e benchmark controlado 30/90/365 dias, inclusive cenário sem estoque, três estratégias e expansão descapitalizada. **CI/QA e homologação ainda pendentes**.
+- **331/331 testes PASS, 0 FAIL** e seis famílias de benchmarks aprovadas na [CI #42413908821](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42413908821). Simulações 30/90/365 dias com três perfis, controle sem estoque e expansão descapitalizada; integração na `main`, QA Windows e homologação ainda pendentes.
 - `schemaVersion 9` e backups V1/V2 preservados. Último checkpoint estável: `releases/v2.9.0-homologada`. [Especificação](docs/V300_PATCH_A_ECONOMIA_BALANCEAMENTO.md).
 
 

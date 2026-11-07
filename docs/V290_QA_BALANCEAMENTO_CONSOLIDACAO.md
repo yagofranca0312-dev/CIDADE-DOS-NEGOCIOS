@@ -1,7 +1,7 @@
-# CIDADE DOS NEGÓCIOS — V2.9.0-alpha.1 · QA, balanceamento e consolidação do ciclo V2
+# CIDADE DOS NEGÓCIOS — V2.9.0 · QA, balanceamento e consolidação do ciclo V2
 
 **Data do planejamento executado:** 07/11/2026 · **Base:** `releases/v2.8.0-homologada` (`a18108ac6433c438a604b8f2e668d61d0db624c0`).  
-**Status:** **candidata técnica em validação**, não homologada. O último checkpoint formal permanece V2.8.0.
+**Status:** **aceite formal do titular em 07/11/2026**, com ressalva de QA manual sem evidência. Validação CI da candidata aprovada em `42405817482`, CI de integração da candidata em `42406067465` aprovada; promoção final e checkpoint dependem de nova validação. Consulte [HOMOLOGACAO_V290.md](HOMOLOGACAO_V290.md).
 
 ## Objetivo, escopo e fronteiras
 
@@ -15,19 +15,19 @@ A V2.9 fecha **risco operacional e técnico** antes da V3, sem acrescentar siste
 
 | CP | Entrega | Critério verificável | Status |
 |---|---|---|---|
-| 01 | Inventário de riscos V2.8 | Marcar save próximo de 25M, quota variável de `localStorage`, liquidez terminal, QA real ausente e trajetos de jogo não reais | Implementado, validação CI |
-| 02 | Baseline econômico de 30/90 dias | `qualityReport()` não mutante lê receita, CMV, despesas, tributos, caixa e demanda perdida; unidades separadas | Implementado, validação CI |
-| 03 | Alertas sem execução automática | Alertas de estoque, liquidez, dias de custos fixos e resultado; nenhum gasto, mudança de preço ou venda fictícia | Implementado, validação CI |
-| 04 | Backup portável preservado | `exportSave()` V1 continua idêntico e legível na V2.8; `importSave()` valida checksum | Implementado, validação CI |
-| 05 | Backup compacto opcional | `exportSaveCompact()` V2 com dicionário reversível; conserva integralmente históricos, estrutura, dados e saldos; V2.8 **não lê** esse formato | Implementado, validação CI |
+| 01 | Inventário de riscos V2.8 | Marcar save próximo de 25M, quota variável de `localStorage`, liquidez terminal, QA real ausente e trajetos de jogo não reais | Implementado; CI de candidata aprovada |
+| 02 | Baseline econômico de 30/90 dias | `qualityReport()` não mutante lê receita, CMV, despesas, tributos, caixa e demanda perdida; unidades separadas | Implementado; CI de candidata aprovada |
+| 03 | Alertas sem execução automática | Alertas de estoque, liquidez, dias de custos fixos e resultado; nenhum gasto, mudança de preço ou venda fictícia | Implementado; CI de candidata aprovada |
+| 04 | Backup portável preservado | `exportSave()` V1 continua idêntico e legível na V2.8; `importSave()` valida checksum | Implementado; CI de candidata aprovada |
+| 05 | Backup compacto opcional | `exportSaveCompact()` V2 com dicionário reversível; conserva integralmente históricos, estrutura, dados e saldos; V2.8 **não lê** esse formato | Implementado; CI de candidata aprovada |
 | 06 | QA visual e controle de risco | Em Sistema: painel 30/90 dias, tabela por unidade, alerta de limite, comparar tamanhos e exportação compacta sob clique | Implementado, navegador real pendente |
-| 07 | Regressões e horizonte 3–5 lojas | 12 novos testes + 304 legados, benchmark dedicado 90/365 dias, bem como estabilidade, concorrência, crédito e logística | Testes em execução |
-| 08 | GATE consolidação V2 → V3 | CI PASS no SHA final, HTML único, save importável, evidência de QA Windows e aceite expresso do titular | **Pendente: CI, QA real e homologação** |
+| 07 | Regressões e horizonte 3–5 lojas | 12 novos testes + 304 legados, benchmark 90/365 dias, além de estabilidade, concorrência, crédito e logística 1.832 dias | **316/316 PASS; benchmarks PASS na candidata** |
+| 08 | GATE consolidação V2 → V3 | CI PASS no SHA final, HTML único, save importável, QA Windows rastreável e aceite formal | **Aceite formal recebido; CI da promoção e da `main` em validação; QA real não comprovado** |
 
 ## Sem perdas nem alterações econômicas
 
 - O **formato tradicional V1** permanece `saveFormatVersion: 1` com checksum FNV1A32 do payload, `schemaVersion: 9`. Não há mudança nas regras de `dispatch`, produção, venda, débito/crédito, receita, CMV, despesas, tributos ou concorrentes.
-- O **formato compacto V2** é um **arquivo JSON** separado. Seu codec `DICT_KEYS_V1` usa dicionário de nomes de propriedades e arrays etiquetadas para representar objetos e listas sem descartar um evento, journal ou item. O importador reconstrói o mesmo estado e valida seu checksum e todas as invariantes antes de aceitar. A compacidade exata é uma métrica a provar em CI.
+- O **formato compacto V2** é um **arquivo JSON** separado. Seu codec `DICT_KEYS_V1` usa dicionário de nomes de propriedades e arrays etiquetadas para representar objetos e listas sem descartar um evento, journal ou item. O importador reconstrói o mesmo estado e valida seu checksum e todas as invariantes antes de aceitar. Na CI da candidata foi medida redução de 67,2% (90 dias/3 unidades) e 67,5% (365 dias/5 unidades), com roundtrip íntegro.
 - Os saves antigos V1 são importados normalmente. O compacto V2 **não deve ser usado como único backup quando se pretende voltar à versão V2.8**: mantenha JSON V1 para rollback.
 - Importar um save com arquivo íntegro não garante persistência em `localStorage`: o limite do navegador varia por dispositivo, política e origem `file://`. Exportação JSON externa é a defesa principal.
 - O limite atual de 25 milhões de caracteres permanece; nenhuma remoção irreversível de histórico, compactação destrutiva, truncamento de logs nem nova migração são implementados.
@@ -48,7 +48,7 @@ Para registrar validação funcional, o jogador ainda deverá:
 
 - Release candidata passa `npm run check`, `npm run bench:stability`, `npm run bench:competition`, `npm run bench:finance`, `npm run bench:logistics`, `npm run bench:quality`, hash único do HTML e testes V1/V2 compatíveis.
 - `main` só recebe candidata depois de CI aprovada. CI de `main` deve ser verificada novamente. Checkpoint de candidata independente da `releases/v2.8.0-homologada`.
-- **Não declarar V2.9 homologada** sem aceite expresso de Yago e documentação de ressalvas sobre QA manual.
+- **Aceite formal concedido pelo titular em 07/11/2026**; a homologação técnica/publicação requer nova CI para o pacote 2.9.0, CI da `main` no SHA final e checkpoint `releases/v2.9.0-homologada`. Não afirmar QA Windows/browser sem evidência.
 - **V3**: backlog separado para dados externos, tributação didática mais abrangente, logística com parametrização regulatória e desempenho/arquivamento de histórico de longo prazo, condicionado à priorização posterior.
 
-**Próximo estado permitido:** candidata validada por CI e publicada para QA, sem homologação antecipada.
+**Estado formal:** homologação expressa autorizada. A publicação da versão 2.9.0 e o checkpoint definitivo serão confirmados somente após CI do pacote promovido e CI da `main` concluídas com sucesso. O QA manual permanece pendente; a V3 exige revisão independente do risco de saves, experiência de jogo e balanceamento.

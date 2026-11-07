@@ -1,6 +1,6 @@
 {
   "name": "cidade-dos-negocios",
-  "version": "2.9.0-alpha.1",
+  "version": "2.9.0",
   "private": true,
   "type": "module",
   "description": "Cidade dos Negócios V2.9: QA econômico, auditoria de balanceamento e backup compacto reversível, sem alterar regras da V2.8",

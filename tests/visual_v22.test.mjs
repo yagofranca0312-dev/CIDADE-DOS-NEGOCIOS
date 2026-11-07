@@ -18,7 +18,7 @@ const lotElements=svg=>[...svg.matchAll(/<g class="v22-lot [^"]+" data-lot="(\d+
 const normalized=x=>JSON.parse(JSON.stringify(x));
 
 test('V2.4-A mantém schema 9, cidades e compatibilidade de renderização',()=>{
- assert.equal(core.VERSION,'2.9.0-alpha.1');assert.equal(core.SCHEMA_VERSION,9);
+ assert.equal(core.VERSION,'2.9.0');assert.equal(core.SCHEMA_VERSION,9);
  assert.equal(core.CITIES.length,30);
 });
 test('V2.2 renderiza exatamente 18 lotes acionáveis, 1–18, com semântica acessível',()=>{

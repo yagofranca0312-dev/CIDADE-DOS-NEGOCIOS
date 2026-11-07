@@ -1,16 +1,16 @@
-# 🏙️ Cidade dos Negócios — V2.9.0-alpha.1 · QA, balanceamento e consolidação do ciclo V2
+# 🏙️ Cidade dos Negócios — V2.9.0 · QA, balanceamento e consolidação do ciclo V2 (homologação formal em 07/11/2026)
 
-**Versão candidata não homologada.** A V2.9 acrescenta um **painel econômico de leitura** (margens, risco de caixa, ruptura, desempenho por unidade e 30/90 dias) e **backup compacto reversível V2**, sem modificar regras de compra, vendas, despesa, tributação, crédito ou estoque.
+**Versão V2.9.0 com aceite formal expresso de Yago em 07/11/2026**, com validação de CI da promoção como condição técnica de publicação. O aceite não equivale a testes manuais de Windows ou jogabilidade. A V2.9 acrescenta um **painel econômico de leitura** (margens, risco de caixa, ruptura, desempenho por unidade e 30/90 dias) e **backup compacto reversível V2**, sem modificar regras de compra, vendas, despesa, tributação, crédito ou estoque.
 
 **Risco tratado:** na V2.8, o save de 1.832 dias chegou a aproximadamente **23,4 milhões de caracteres**, próximo do limite de 25 milhões, e o caixa ficou em R$ 6,91. Isso **não comprova jogabilidade balanceada**. O novo diagnóstico expõe esses riscos; não introduz dinheiro, não retuna preços e não executa ações.
 
 **Preservação de saves:** o botão tradicional permanece em formato **V1** compatível com V2.8. O botão **“Backup compacto V2.9”** preserva integralmente históricos, mas só é legível na V2.9+. Guarde um JSON tradicional antes de atualizar ou restaurar uma carreira. A disponibilidade real de `localStorage` e QA no Windows ainda **não foi comprovada**.
 
-**Documentação e testes:** [Plano V2.9](docs/V290_QA_BALANCEAMENTO_CONSOLIDACAO.md) · `tests/quality_v290.test.mjs` · `npm run bench:quality`. Oito checkpoints estruturados, com CI, QA real e aceite ainda pendentes. A última versão **homologada é V2.8.0**, checkpoint [releases/v2.8.0-homologada](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/tree/releases/v2.8.0-homologada).
+**Homologação formal:** [Registro V2.9](docs/HOMOLOGACAO_V290.md) · [Plano V2.9](docs/V290_QA_BALANCEAMENTO_CONSOLIDACAO.md). A candidata passou em **316/316 testes, 0 falhas** e benchmarks de estabilidade, concorrência, crédito, logística e QA; a CI de integração da candidata à `main` também foi aprovada. A promoção definitiva deve passar nova CI antes do checkpoint. **QA Windows, navegador, persistência `file://` e balanceamento percebido ainda não foram comprovados**. O checkpoint V2.8.0 permanece disponível para recuperação.
 
 ---
 
-## Histórico da última versão homologada
+## Histórico da versão anterior homologada
 
 # 🏙️ Cidade dos Negócios — V2.8.0 · Produção e Logística (homologação formal em 07/11/2026)
 

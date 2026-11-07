@@ -1,0 +1,53 @@
+name: Validar e empacotar V2.9.0 formalmente homologada
+on:
+  push:
+    branches:
+      - release/v2.9.0-promocao
+permissions:
+  contents: write
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Gerar HTML único offline V2.9.0
+        run: npm run build
+      - name: Publicar HTML determinístico na branch de promoção
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet -- index.html; then
+            git add index.html
+            git commit -m "build(v2.9.0): HTML offline homologação [skip ci]"
+            git push origin HEAD:release/v2.9.0-promocao
+          fi
+      - name: Executar 316 regressões automatizadas
+        run: npm test
+      - name: Benchmark estabilidade histórica 30, 365 e 1825 dias
+        run: npm run bench:stability
+      - name: Benchmark concorrência V2.6
+        run: npm run bench:competition
+      - name: Benchmark crédito e contratos V2.7
+        run: npm run bench:finance
+      - name: Benchmark CD e logística V2.8
+        run: npm run bench:logistics
+      - name: Benchmark qualidade e saves V2.9
+        run: npm run bench:quality
+      - name: Registrar SHA-256 do HTML offline
+        run: sha256sum index.html
+      - name: Arquivar release formal V2.9.0 para validação no Windows
+        uses: actions/upload-artifact@v4
+        with:
+          name: CIDADE_DOS_NEGOCIOS_V290_HTML_OFFLINE_HOMOLOGADA_FORMAL
+          path: |
+            index.html
+            README.md
+            docs/HOMOLOGACAO_V290.md
+            docs/V290_QA_BALANCEAMENTO_CONSOLIDACAO.md
+          if-no-files-found: error

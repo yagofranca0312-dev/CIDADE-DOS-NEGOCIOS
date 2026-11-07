@@ -1,14 +1,14 @@
 # Histórico de versões — Cidade dos Negócios
 
-## 2.9.0-alpha.1 — QA, balanceamento e consolidação (candidata, 07/11/2026)
+## 2.9.0 — QA, balanceamento e consolidação (homologação formal em 07/11/2026)
 
 - Relatório gerencial **somente leitura**, 30/90 dias: receita, CMV, despesas, margem, tributos simulados, resultado, caixa, passivos, demanda atendida/perdida e contribuições de cada unidade.
 - Alertas quantitativos de liquidez, baixa cobertura dos custos fixos, ruptura de abastecimento e margem negativa, sem gastos, empréstimos ou vendas automáticas.
 - **Formato JSON V1 preservado** como backup tradicional e compatível com rollback para V2.8.
 - **Formato JSON V2 opcional, reversível** com dicionário de chaves repetidas e checksum, sem perder eventos, lançamentos, produtos ou datas; só importável em V2.9+.
 - Painel em Sistema com diagnóstico de qualidade, comparação de tamanhos, alertas e exportação compacta mediante ação do jogador.
-- Doze novos testes, benchmark QA 90/365 dias, regressões históricas e benchmark logística 1.832 dias; CI em execução.
-- **Não homologada:** QA Windows, navegador real e avaliação de balanceamento com jogador não realizados/comprovados. Última stable: `releases/v2.8.0-homologada`. [Detalhes](docs/V290_QA_BALANCEAMENTO_CONSOLIDACAO.md).
+- Doze novos testes; **316/316 PASS, 0 FAIL** na CI da candidata `42405817482`, benchmarks V2.4.1, V2.6, V2.7, V2.8 (até 1.832 dias) e V2.9 (90/365 dias) aprovados; CI de integração candidata à `main` `42406067465` também **SUCCESS**. Nos cenários 90/365, redução de tamanho do backup em **67,2%/67,5%**, sem excluir histórico.
+- **Aceite formal expresso em 07/11/2026.** A versão final V2.9.0 será publicada apenas após CI de promoção e da `main` aprovadas. O diagnóstico detectou demanda não atendida de **100% e 59,7%** nos cenários respectivos; **não significa equilíbrio econômico comprovado**. QA real Windows, navegador, importação efetiva de save de usuário e diversão **sem evidências**, registrados como ressalvas. Guardar backup tradicional V1 antes de atualizar; rollback preservado na V2.8.0. [Registro](docs/HOMOLOGACAO_V290.md) · [Plano](docs/V290_QA_BALANCEAMENTO_CONSOLIDACAO.md).
 
 
 ## 2.8.0 — Produção e logística integrada (homologação formal, 07/11/2026)

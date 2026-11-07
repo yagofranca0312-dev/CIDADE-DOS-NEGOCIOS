@@ -1,5 +1,8 @@
 # Cidade dos Negócios — V3.0.0-alpha.1 · Patch A: Economia e Balanceamento
 
+> **Nota de estado vigente (07/11/2026):** este arquivo registra o **plano e a validação originais do Patch A**, quando sua integração ainda era proposta. **O Patch A já foi integrado à `main` pelo PR #38, SHA `871df2b1cd133bcad717c0194a474a35fbabcd3c`**, mas **não houve homologação formal da V3.0**. A prioridade aprovada posteriormente é **consolidar integralmente os sistemas V2 na V3.0** antes de avançar para interface imersiva V3.1 ou implementar novos pacotes tributários. A antiga frase “Próxima etapa: Patch B” abaixo **é histórica e está superada**. Consulte o [roadmap vigente](ROADMAP.md), o [dossiê dos gates V3.0](V300_CONSOLIDACAO_INTEGRAL_GATES.md) e o [guia único do jogo](JOGAR_GUIA_V300.md). Nenhum requisito ou resultado original do Patch A foi apagado.
+
+
 **Data:** 07/11/2026. **Status:** candidata técnica validada por CI, **NÃO HOMOLOGADA**. Aguardar integração à `main`, CI final, QA Windows e aceite do jogador.  
 **Base estável:** `releases/v2.9.0-homologada` — SHA `082faa4626cf5cb0fc54c9ef092bddd86ffce54c`.  
 **Próxima etapa:** Patch B — sistema fiscal 2027, somente após aprovação do Patch A.

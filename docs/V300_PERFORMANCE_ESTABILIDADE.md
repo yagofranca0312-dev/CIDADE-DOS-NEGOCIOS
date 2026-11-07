@@ -3,7 +3,7 @@
 **Data:** 07/11/2026 (America/Fortaleza)  
 **Escopo:** checkpoint `3.0.0-05` do roadmap original: estabilidade longa, saves, abertura e alternância de painéis e tamanho do HTML único.  
 **Baseline de release:** V2.9.0 homologada; código sob teste `3.0.0-alpha.1` com Patch A preservado.  
-**Estado:** **AUTOMAÇÃO INSTRUMENTADA / QA REAL DE NAVEGADOR PENDENTE / V3.0 NÃO HOMOLOGADA.**
+**Estado:** **AUTOMAÇÃO APROVADA NA CI 364/364 / QA REAL DE NAVEGADOR PENDENTE / V3.0 NÃO HOMOLOGADA.**
 
 ## 1. Benchmark incorporado ao CI
 
@@ -31,7 +31,17 @@ Na carreira de cinco anos, a exportação V1 tradicional levou **2.202,09 ms**, 
 
 No `src/ui/app.js`, a navegação da aba **Sistema** agora apresenta dados básicos baratos (versão, unidades, data, eventos) e informa que o **checksum é calculado sob demanda**. O botão existente **Executar Diagnóstico** continua verificando o estado, calculando o checksum e mostrando o resultado. Nenhum comando, evento, journal, saldo, save, versão ou schema foi alterado por essa otimização. O `index.html` foi obrigatoriamente regenerado pelo build oficial para permanecer idêntico às fontes.
 
-**Medição posterior:** verificar no log do CI final `BENCH_V3005.panelSamples` do cenário 1.825/5 e anexar comparação antes/depois ao gate. Não interpretar ganho em DOM simulado como comprovação de tempo real no Windows.
+**Medição posterior comprovada:** [GitHub Actions #42425249268](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42425249268), `SUCCESS`, commit `ee938cee9351a902162490c5f3751000f47ad4ab`, **364 testes PASS / 0 FAIL** (361 anteriores + 3 regressões de Etapa 5). Os benchmarks, a comparação do `index.html` com o build e seu SHA-256 passaram.
+
+| Cenário | Sistema antes (ms médios) | Sistema depois (ms médios) | Contexto |
+|---|---:|---:|---|
+| 30 dias / 1 unidade | 15,19 | 8,80 | Render em DOM simulado |
+| 365 dias / 5 unidades | 429,47 | 31,04 | Render em DOM simulado |
+| **1.825 dias / 5 unidades** | **2.109,96** | **101,84** | **Melhoria aproximada de 95,2%** |
+
+A medição final de cinco anos/5 unidades registrou: `htmlArtifactBytes = 1.478.540`, `simulationMs = 9.974,2`, `saveTraditionalBytes = 21.312.692`, `saveCompactBytes = 6.966.345`, `standardNearLimit = true`, `compactNearLimit = false`, exportação tradicional **2.160,93 ms**, compactação **2.584,27 ms**, importação do compacto **2.736,44 ms**. Outros painéis variaram de cerca de **75,77 a 113,43 ms** na mesma bateria. A maior string de conteúdo HTML produzida por um painel teve **365.065 caracteres**.
+
+**A comparação pré/pós usa duas execuções independentes de GitHub Actions** e não é um microbenchmark controlado na mesma amostra; ela demonstra uma melhora relevante observada, não estabelece garantias de latência para todo hardware. O tamanho do HTML corresponde ao artefato único produzido pelo build oficial, não inclui outros arquivos auxiliares de desenvolvimento.
 
 ## 2. Problemas de volume e seus limites
 

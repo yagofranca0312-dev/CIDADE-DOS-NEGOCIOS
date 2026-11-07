@@ -1,6 +1,6 @@
 # Cidade dos Negócios — V3.0.0-alpha.1 · Patch A: Economia e Balanceamento
 
-**Data:** 07/11/2026. **Status:** candidata técnica, **NÃO HOMOLOGADA**.  
+**Data:** 07/11/2026. **Status:** candidata técnica validada por CI, **NÃO HOMOLOGADA**. Aguardar integração à `main`, CI final, QA Windows e aceite do jogador.  
 **Base estável:** `releases/v2.9.0-homologada` — SHA `082faa4626cf5cb0fc54c9ef092bddd86ffce54c`.  
 **Próxima etapa:** Patch B — sistema fiscal 2027, somente após aprovação do Patch A.
 
@@ -14,13 +14,13 @@ A V2.9 encontrou demanda não atendida de **100%** em 90 dias com três lojas ab
 
 | CP | Componente | Critério objetivo | Estado |
 |---|---|---|---|
-| 01 | Diagnóstico das causas de ruptura | Registrar cenários sem estoque, falta de capital e demanda sem compra | Implementado, CI pendente |
-| 02 | Planos de risco | Três perfis: conservador (14 dias de reserva; atacado; 4 dias de cobertura), equilibrado (7; regional; 7), agressivo (3; regional; 12) | Implementado, CI pendente |
-| 03 | Cálculo não mutante por produto | Demanda observada dos últimos 7 registros ou parâmetro inicial, estoque físico, fornecedor, trânsito, capacidade e margem | Implementado, CI pendente |
-| 04 | Reserva financeira | Orçamento de compra = caixa atual menos dias de custo fixo do grupo, sem supor entrada de receita. Passivos são **informados**, não quitados pela reserva | Implementado, CI pendente |
-| 05 | Compra realmente confirmada | `ECONOMIA.COMPRAR_PLANO` compara ID/cotação/revisão, usa `registerPurchase` e mantém débito IN_TRANSIT/crédito CASH, sem receita/CMV/credito automático | Implementado, CI pendente |
-| 06 | Sensibilidade de preços | Alternativas de ±8% sobre preço atual, com elasticidade **aproximada**, sem alterar os preços nem garantir demanda futura | Implementado, CI pendente |
-| 07 | Integração Mercado e regressões | Painel, 15 testes novos, economia 30/90/365 dias, benchmark legado até 1.825/1.832 dias, QA manual previsto | Implementado, CI pendente |
+| 01 | Diagnóstico das causas de ruptura | Registrar cenários sem estoque, falta de capital e demanda sem compra | Implementado; CI candidata PASS |
+| 02 | Planos de risco | Três perfis: conservador (14 dias de reserva; atacado; 4 dias de cobertura), equilibrado (7; regional; 7), agressivo (3; regional; 12) | Implementado; CI candidata PASS |
+| 03 | Cálculo não mutante por produto | Demanda observada dos últimos 7 registros ou parâmetro inicial, estoque físico, fornecedor, trânsito, capacidade e margem | Implementado; CI candidata PASS |
+| 04 | Reserva financeira | Orçamento de compra = caixa atual menos dias de custo fixo do grupo, sem supor entrada de receita. Passivos são **informados**, não quitados pela reserva | Implementado; CI candidata PASS |
+| 05 | Compra realmente confirmada | `ECONOMIA.COMPRAR_PLANO` compara ID/cotação/revisão, usa `registerPurchase` e mantém débito IN_TRANSIT/crédito CASH, sem receita/CMV/credito automático | Implementado; CI candidata PASS |
+| 06 | Sensibilidade de preços | Alternativas de ±8% sobre preço atual, com elasticidade **aproximada**, sem alterar os preços nem garantir demanda futura | Implementado; CI candidata PASS |
+| 07 | Integração Mercado e regressões | Painel, 15 testes novos, economia 30/90/365 dias, benchmark legado até 1.825/1.832 dias, QA manual previsto | **331/331 testes PASS; 7 baterias de benchmark PASS** |
 | 08 | Release Patch A | CI do branch + CI da main, HTML offline reproduzível, checkpoint candidato e teste Windows do jogador; aceite formal separado | **PENDENTE** |
 
 ## Regras do motor
@@ -46,6 +46,16 @@ A V2.9 encontrou demanda não atendida de **100%** em 90 dias com três lojas ab
 ### Critério de balanceamento
 
 Não se fixa previamente uma meta arbitrária de lucro ou vendas. A aprovação técnica exige que os experimentos sejam **reproduzíveis**, que o abastecimento financiado por caixa real modifique as vendas de forma causal, e que resultados adversos tenham explicação observável. O diagnóstico deverá informar a existência de quebra de estoque e compromissos acumulados, e uma eventual revisão dos coeficientes de demanda/custos só poderá ser feita em patch próprio, mediante aprovação baseada nesses dados.
+
+## Evidência técnica de implantação (CI da candidata)
+
+- GitHub Actions [#42413908821](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42413908821): **SUCCESS**, **331/331 testes PASS e 0 FAIL**, build HTML único SHA-256 `95d460eb1eb850c4f2a594e2df972084f73cbc8fcb1e61856209226b6a6a599d` (1.478.306 bytes), regressões legadas e benchmarks de estabilidade, concorrência, crédito, logística, QA e economia aprovados.
+- Cenário controle, **30 dias sem estoque e sem compra**: receita **R$ 0**, 100% de demanda não atendida e 0 vendas; resultado com abertura/despesas **-R$ 11.550,00**. A mesma seed, com encomendas confirmadas, registrou receita de **R$ 21.700,00**, 617 unidades vendidas, demanda não atendida **5,4%** e resultado de **-R$ 3.959,00** aos 30 dias (a abertura da loja ainda afeta o acumulado).
+- **Noventa dias**, mesma seed 300301 e uma unidade de mercado, reposição a cada 7 dias mediante comando explícito: conservador **25,2%** demanda perdida / resultado **R$ 1.507,10**; equilibrado **2,7%** / **R$ 6.048,00**; agressivo **0,9%** / **R$ 6.565,00**. São trajetórias controladas, não garantia de lucro em qualquer save.
+- **365 dias**, mesma seed e premissas: conservador **22,3%** demanda perdida / resultado acumulado **R$ 37.787,16**; equilibrado **2,3%** / **R$ 53.242,00**; agressivo **0%** / **R$ 55.501,00**.
+- **90 dias com 3 unidades abertas sem capital de giro:** 0 vendas/receitas, caixa final **R$ 22,00** e resultado **-R$ 64.670,00**. A perda permanece explícita: nenhum bônus de receita foi injetado para salvar o cenário.
+- Cenários de preços do SKU base (92%/100%/108%, **30 dias**, seed 300331) tiveram **599/586/575 unidades** vendidas e resultados **-R$ 5.259,40 / -R$ 4.324,00 / -R$ 3.448,68**, respectivamente. O preço mais alto teve menor volume, mas melhor resultado nesse recorte. Não inferir preferência ótima universal.
+- O controle sem estoque foi observado em **30 dias**, não 90; não misturar horizontes em comparações gráficas. Resultados são observações da simulação com parâmetros fixados e não QA humano ou prova de equilíbrio geral.
 
 ## QA Windows e compatibilidade
 

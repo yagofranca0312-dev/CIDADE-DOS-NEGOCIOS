@@ -41,7 +41,7 @@ A V3.0 é uma **release de unificação, regressão e estabilidade**, sem recons
 | `3.0.0-03` | Auditoria cruzada geral | **PARCIAL** | Doze testes novos (4 de integração e 8 de propriedade), 343/343 PASS no SHA de teste; matriz dos fluxos e riscos; cenários remanescentes e QA manual pendentes |
 | `3.0.0-04` | Migração de todas as carreiras V2 | **PARCIAL** | Matriz automática 18 testes novos PASS, schemas históricos 2–9, rollback Patch A→V2.9 homologada no motor original, corrupção rejeitada; ainda faltam saves pessoais reais e recuperação Windows/file:// |
 | `3.0.0-05` | Performance e estabilidade longa | **PARCIAL** | Benchmark V3 instrumentou 8 painéis, saves, relatórios e HTML; CI 364/364 PASS; hotfix de checksum sob demanda reduz Sistema ~2.110→102 ms no DOM simulado de 5 anos; Windows/mobile, quotas e navegador real pendentes |
-| `3.0.0-06` | Documentação e tutorial únicos | **PENDENTE** | README e CHANGELOG refletem Patch A; `docs/ROADMAP.md` preserva decisões históricas já superadas; requer consolidação canônica, sem apagar histórico |
+| `3.0.0-06` | Documentação e tutorial únicos | **PASS DOCUMENTAL (CI)** | README, CHANGELOG, ROADMAP, guia único e matriz canônica alinhados; seis novas regressões, **370/370 PASS** na CI #42427216125; QA humano e homologação geral continuam pendentes |
 | `3.0.0-07` | Preparar contrato UI V3.1 | **PENDENTE** | Definir API somente-leitura de cidade, eventos e comandos para overlays; renderização não pode mutar estado ou executar ticks |
 | `3.0.0-08` | Gate de homologação completa | **BLOQUEADO** | Falta concluir 01–07, CI da release candidata, QA Windows/desktop/mobile, saves reais, aceite e snapshot imutável |
 

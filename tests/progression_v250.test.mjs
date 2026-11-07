@@ -16,7 +16,7 @@ function career(){
 const advance=(s,days)=>{while(days>0){const count=Math.min(30,days);s=next(s,'TEMPO.AVANCAR_LOTE',{days:count});days-=count;}return s;};
 
 test('V2.5: preparação sem carreira e 12 missões únicas após abertura',()=>{
-  assert.equal(Core.VERSION,'2.9.0');
+  assert.equal(Core.VERSION,'3.0.0-alpha.1');
   assert.equal(Core.SCHEMA_VERSION,9);
   assert.equal(Core.progressionReport(null).level.id,'preparacao');
   const s=career(),p=Core.progressionReport(s);
@@ -73,11 +73,11 @@ test('V2.5: interface da jornada é única e compilada sem novo menu ou script',
   const app=readFileSync('src/ui/app.js','utf8');
   const html=readFileSync('index.html','utf8');
   const pkg=JSON.parse(readFileSync('package.json','utf8'));
-  assert.equal(pkg.version,'2.9.0');
+  assert.equal(pkg.version,'3.0.0-alpha.1');
   for(const id of ['progression-panel','progression-goals','progression-level','progression-achievements'])
     assert.equal([...tpl.matchAll(new RegExp('id="'+id+'"','g'))].length,1);
   assert.match(app,/function renderProgression\(\)/);
-  assert.match(html,/const VERSION = '2\.9\.0'/);
+  assert.match(html,/const VERSION = '3\.0\.0-alpha\.1'/);
   assert.equal((html.match(/<script\b/g)||[]).length,1);
   const script=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(script.length,1);assert.doesNotThrow(()=>new Script(script[0][1]));

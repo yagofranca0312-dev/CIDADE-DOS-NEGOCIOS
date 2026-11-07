@@ -1,0 +1,54 @@
+name: Validar V3.0 Patch A Economia e Balanceamento (candidata)
+on:
+  push:
+    branches:
+      - feature/v3.0.0-alpha.1-patch-a-economia
+permissions:
+  contents: write
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 26
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Gerar HTML offline da V3.0 Patch A
+        run: npm run build
+      - name: Sincronizar HTML reproduzível da candidata
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet -- index.html; then
+            git add index.html
+            git commit -m "build(v3a): sincronizar HTML offline da candidata [skip ci]"
+            git push origin HEAD:feature/v3.0.0-alpha.1-patch-a-economia
+          fi
+      - name: Executar regressões da V3 e versões anteriores
+        run: npm test
+      - name: Benchmark estabilidade V2.4.1
+        run: npm run bench:stability
+      - name: Benchmark concorrência V2.6
+        run: npm run bench:competition
+      - name: Benchmark crédito e contratos V2.7
+        run: npm run bench:finance
+      - name: Benchmark logística V2.8
+        run: npm run bench:logistics
+      - name: Benchmark qualidade e saves V2.9
+        run: npm run bench:quality
+      - name: Benchmark experimental Patch A V3.0
+        run: npm run bench:economy
+      - name: SHA256 do executável V3 Patch A
+        run: sha256sum index.html
+      - name: Empacotar candidato offline com contrato
+        uses: actions/upload-artifact@v4
+        with:
+          name: CIDADE_DOS_NEGOCIOS_V300_PATCH_A_ALPHA1_HTML_OFFLINE
+          path: |
+            index.html
+            README.md
+            docs/V300_PATCH_A_ECONOMIA_BALANCEAMENTO.md
+          if-no-files-found: error

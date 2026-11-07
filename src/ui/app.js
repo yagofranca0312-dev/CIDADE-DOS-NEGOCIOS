@@ -502,6 +502,7 @@
       updateBuyPreview();
     }else{setText('market-product','Abra uma empresa antes de comprar mercadorias.');setText('your-current-price','—');setText('competitor-price','—');setText('buy-total','—');}
     renderCommerce();renderPriceHistory();renderRivals();
+    if(tab==='mercado'&&activeSection.mercado==='compras')renderBalancePlan();
     if(tab==='administrativo'&&activeSection.administrativo==='financas')renderCredit();
     if(tab==='administrativo'&&activeSection.administrativo==='logistica')renderLogistics();
     if((tab==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo))||financeQuery)renderFinances();
@@ -560,6 +561,7 @@
   }
   function bind(){
     bindLogistics();
+    bindBalancePlan();
     // Somente estado de apresentação; não grava em save nem executa comandos econômicos.
     const hudToggle=$('stats-more-toggle');
     hudToggle.addEventListener('click',()=>{

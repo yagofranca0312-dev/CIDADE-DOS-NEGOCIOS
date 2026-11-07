@@ -1,9 +1,9 @@
 {
   "name": "cidade-dos-negocios",
-  "version": "2.8.0",
+  "version": "2.9.0-alpha.1",
   "private": true,
   "type": "module",
-  "description": "Cidade dos Negócios V2.8: transferências, CD, produção piloto, perecibilidade e logística de cinco unidades",
+  "description": "Cidade dos Negócios V2.9: QA econômico, auditoria de balanceamento e backup compacto reversível, sem alterar regras da V2.8",
   "scripts": {
     "build": "node tools/build.mjs",
     "test": "node --test tests/*.test.mjs",
@@ -11,7 +11,8 @@
     "bench:stability": "node tools/benchmark-v241.mjs",
     "bench:competition": "node tools/benchmark-v260.mjs",
     "bench:finance": "node tools/benchmark-v270.mjs",
-    "bench:logistics": "node tools/benchmark-v280.mjs"
+    "bench:logistics": "node tools/benchmark-v280.mjs",
+    "bench:quality": "node tools/benchmark-v290.mjs"
   },
   "engines": {
     "node": ">=22"

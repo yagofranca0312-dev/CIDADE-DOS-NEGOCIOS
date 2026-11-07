@@ -41,7 +41,8 @@ function measure(s,label,minimumUnits){
  let s=start(29090);
  s=go(s,'EMPRESA.ABRIR',{sector:'padaria',cityId:'CE-TIANGUA',lot:2});
  s=go(s,'EMPRESA.ABRIR',{sector:'roupas',cityId:'CE-TIANGUA',lot:3});
- s=go(s,'ESTOQUE.COMPRAR',{supplierId:'regional',productId:'base',quantity:100});
+ // Capital inicial usado integralmente na abertura de 3 setores: sem injetar caixa ou forçar compra.
+ // O cenário evidencia justamente ruptura e baixa liquidez, não simula vendas inexistentes.
  s=days(s,90);
  measure(s,'90-dias-3-setores-conciliados',3);
 }

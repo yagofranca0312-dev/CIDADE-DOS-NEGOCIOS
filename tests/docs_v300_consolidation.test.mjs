@@ -35,7 +35,7 @@ test('V3.0-06: roadmap atual explicita oito gates, plano de consolidação antes
   assert.match(roadmapTop,/INTEGRAL|integral/i);
   assert.match(roadmapTop,/V3\.1/);
   assert.match(roadmapTop,/BLOQUEADO/);
-  assert.match(roadmapTop,/Histórico|histórico/);
+  assert.match(roadmapTop,/históric/i);
   assert.match(roadmap,/## P0 — Fundação/,'histórico original do roadmap foi apagado');
   assert.match(changelog,/## 2\.9\.0 —/,'registro V2.9 foi apagado');
   assert.match(readme,/## Histórico da última versão homologada/,'README perdeu arquivo histórico');
@@ -70,7 +70,7 @@ test('V3.0-06: avisos do fiscal do jogo impedem promessas de apuração legal',(
   assert.match(guide,/SPED/);
   assert.match(guide,/PGDAS-D/);
   assert.match(guide,/Reinf/);
-  assert.match(guide.replace(/\\*\\*/g,''),/não apuram? tributos?/i);
+  assert.match(guide.replaceAll('**',''),/não apuram? tributos?/i);
   assert.match(contract,/não indica imposto zero/);
   assert.match(read('docs/V24C_IMPLANTACAO.md'),/sem multa ou pagamento automático/i);
   assert.match(read('docs/FISCAL_V19.md'),/UNSUPPORTED.*não significa|não significa isenção/);

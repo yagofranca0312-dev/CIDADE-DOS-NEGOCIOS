@@ -38,9 +38,9 @@ A V3.0 é uma **release de unificação, regressão e estabilidade**, sem recons
 |---|---|---|---|
 | `3.0.0-01` | Inventário final da V2 | **PARCIAL** | Inventário inicial acima; requer conferência comando/arquivo/versão e classificação de pendências |
 | `3.0.0-02` | Consolidar APIs e contratos | **PARCIAL** | `docs/ARQUITETURA.md` contém propriedade lógica; falta prova cruzada de ausência de cálculos/comandos duplicados nos domínios |
-| `3.0.0-03` | Auditoria cruzada geral | **PARCIAL** | Testes e benchmarks antigos + Patch A passam, mas não há relatório conclusivo de todas as identidades econômico-contábeis em casos integrados V2→V3 |
-| `3.0.0-04` | Migração de todas as carreiras V2 | **PARCIAL** | Schema 9, backup V1 e compacto V2 testados em automação; importação/recuperação com saves reais de jogador, corrupção e rollback no Windows não comprovados |
-| `3.0.0-05` | Performance e estabilidade longa | **PARCIAL** | Benchmarks automatizados 30/90/365/1.825+ dias; limites de interface, navegadores e experiência real não homologados |
+| `3.0.0-03` | Auditoria cruzada geral | **PARCIAL** | Quatro novos testes de integração V2→V3 passaram na CI (335/335 no total), incluindo RH, crédito, contratos, fiscal, paralegal, concorrência, logística e Patch A; auditoria de contratos/cálculos em código ainda incompleta |
+| `3.0.0-04` | Migração de todas as carreiras V2 | **PARCIAL** | Testes integrados PASS: save V1/V2 roundtrip, corrupção, idempotência e migração V1.7→schema 9; saves reais do jogador, recuperação no Windows e outros formatos legados ainda não auditados integralmente |
+| `3.0.0-05` | Performance e estabilidade longa | **PARCIAL** | CI atual de regressão aprovada, benchmarks 30/365/1.825 dias com 1 e 5 unidades PASS; limites de interface, navegadores e experiência real não homologados |
 | `3.0.0-06` | Documentação e tutorial únicos | **PENDENTE** | README e CHANGELOG refletem Patch A; `docs/ROADMAP.md` preserva decisões históricas já superadas; requer consolidação canônica, sem apagar histórico |
 | `3.0.0-07` | Preparar contrato UI V3.1 | **PENDENTE** | Definir API somente-leitura de cidade, eventos e comandos para overlays; renderização não pode mutar estado ou executar ticks |
 | `3.0.0-08` | Gate de homologação completa | **BLOQUEADO** | Falta concluir 01–07, CI da release candidata, QA Windows/desktop/mobile, saves reais, aceite e snapshot imutável |
@@ -75,3 +75,31 @@ A V3.0 é uma **release de unificação, regressão e estabilidade**, sem recons
 - Não publicar este registro como release homologada, não criar `releases/v3.0.0-homologada` e não alterar o executável até completar o gate.
 
 **Decisão de 07/11/2026:** escopo de consolidação V3.0 reestabelecido; auditoria documental aberta; homologação técnica **ainda não concedida**.
+
+
+## Etapa 2 — Auditoria cruzada executada na candidata (07/11/2026)
+
+**Branch:** `audit/v3.0-consolidacao-integral-v2-20261107`.  
+**Arquivo de teste novo:** [`tests/integration_v300_consolidation.test.mjs`](../tests/integration_v300_consolidation.test.mjs).  
+**Commit de teste:** `f5c3497bf1c68dd291046d5959a211d72199b49a`.  
+**CI de validação:** [GitHub Actions #42416696608](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42416696608), `SUCCESS`.  
+**Resultado:** **335/335 testes PASS, 0 FAIL** — quatro casos novos mais 331 testes preexistentes; `npm run check`, build HTML único e benchmark de estabilidade **PASS**.
+
+### Novos testes observados como PASS
+
+1. **Integração V2 dentro de uma só carreira:** estoque e venda efetiva, financiamento, contratos de fornecedor, abertura de filial, concorrência, RH/DP, Fiscal Operacional, Paralegal e transferência entre filiais; balanço, razão e compensação interfilial conciliados após 33 dias acumulados.
+2. **Patch A com módulos V2:** proposta de capital de giro, compra estratégica com confirmação e ID idempotente, folha e fechamento de mês; consultas de qualidade/progressão/finanças/logística não alteraram estado ou RNG.
+3. **Migração histórica:** arquivo V1.7 homologado representado pelo fixture original da versão V1.7 migrou a schema 9 sem reescrever registros anteriores, alterar caixa nem ativar crédito, concorrência, RH ou logística retroativamente.
+4. **Proteção de persistência:** backup tradicional V1 e compacto V2 preservaram estado serializado integral e conciliação; adulteração de checksum foi rejeitada; comando repetido não duplicou consequência e reutilização conflitante do ID foi rejeitada.
+
+**Benchmarks observados na mesma CI:** estabilidade 30/365/1.825 dias, 1 e 5 estabelecimentos, integridade `PASS`. O pior caso registrado (1.825 dias e 5 unidades) gerou save de aproximadamente **21.321.320 bytes**, com média computacional de **4,95 ms/dia no executor da CI**. Isso **não** demonstra desempenho em computador de usuário nem persistência via `file://`.
+
+### Conclusão e limites
+
+- **PASS técnico observado nesta etapa:** regressões cruzadas acrescentadas, build/testes e benchmark sob as condições da CI.
+- **PARCIAL — gate `3.0.0-03`:** integração entre domínios testada; resta auditoria arquitetural completa de propriedades do motor, ausência de cálculo duplicado e invariante de todos os fluxos combinados.
+- **PARCIAL — gate `3.0.0-04`:** formatos V1/V2 e um legado V1.7 validados em laboratório; faltam arquivos reais de jogador, teste manual de corrupção/rollback e cobertura documental do inventário de todas as carreiras V2.
+- **PARCIAL — gate `3.0.0-05`:** desempenho da CI comprovado; falta validação de interface/navegador, mobile e Windows.
+- **PENDENTES:** documentação unificada (`3.0.0-06`), contrato UI V3.1 (`3.0.0-07`), QA humano e gate final (`3.0.0-08`).
+
+**Sem promoção a versão final, sem mudança de gameplay, sem homologação de QA humano, sem merge desta PR.** A `main` permanece com o Patch A candidato preservado. A próxima etapa lógica é fechar a matriz de contratos/propriedade única (`3.0.0-01/02/03`) e documentar as lacunas de compatibilidade antes do gate final.

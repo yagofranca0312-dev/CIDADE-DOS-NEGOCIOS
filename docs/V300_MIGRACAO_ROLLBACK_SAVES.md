@@ -4,9 +4,9 @@
 **Contrato:** checkpoint `3.0.0-04` do roadmap: carreiras e backups V2, corrupção rejeitada e preservação de saldos, estoque e histórico.  
 **Base imutável para rollback:** branch `releases/v2.9.0-homologada`, commit `082faa4626cf5cb0fc54c9ef092bddd86ffce54c`.  
 **Candidata sob teste:** `3.0.0-alpha.1` com Patch A, sem aumento de `schemaVersion=9`.  
-**Estado do gate:** **AUTOMAÇÃO CONCLUÍDA / QA WINDOWS E SAVES REAIS PENDENTES / NÃO HOMOLOGADO**.
+**Estado do gate:** **AUTOMAÇÃO CONCLUÍDA E VERIFICADA / QA WINDOWS E SAVES REAIS PENDENTES / NÃO HOMOLOGADO**.
 
-## Evidência técnica reproduzível
+**CI comprovada:** [GitHub Actions #42418650812](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42418650812), `SUCCESS`, commit de teste `4d4c1fb495fd8d1121e44140b5280e438cbf40af`, **361/361 testes PASS, 0 FAIL**: 343 existentes na Etapa 3 mais 18 novos testes de migração/rollback. Passaram também build, benchmarks 30/365/1.825 dias (1/5 unidades), diff do HTML e checksum SHA-256 do executável. A correção do teste para `SyntaxError` de contexto VM isolado foi registrada no commit citado; o motor não foi modificado.\n\n## Evidência técnica reproduzível
 
 O teste `tests/migration_rollback_v300.test.mjs` carrega os motores históricos já presentes em `tests/fixtures` e o motor exato da V2.9 homologada, copiado para:
 
@@ -89,4 +89,4 @@ O gate só pode mudar de **PARCIAL** para **PASS** quando houver execução docu
 - O benchmark anterior em CI gerou save de aproximadamente **21,3 MB** para cinco unidades e 1.825 dias; o tamanho **não é** garantia de caber em `localStorage`. A quota real varia por navegador, contexto `file://` e dispositivo.
 - A interface usa `localStorage` para a cópia corrente e uma cópia anterior; duas cópias grandes podem exceder quota. Sempre manter backup externo, preferencialmente em **dois locais distintos**.
 
-**Conclusão da etapa:** automação de migração/rollback e casos de corrupção completada somente quando confirmada CI verde no SHA correspondente. Checklist manual permanece bloqueador formal do gate `3.0.0-04` e da homologação `3.0.0-08`. Não alterar a `main`, não mudar schema, não publicar release nem homologar por inferência.
+**Conclusão da etapa:** automação de migração/rollback e casos de corrupção completada e confirmada por CI verde no SHA `4d4c1fb495fd8d1121e44140b5280e438cbf40af`. Checklist manual permanece bloqueador formal do gate `3.0.0-04` e da homologação `3.0.0-08`. Não alterar a `main`, não mudar schema, não publicar release nem homologar por inferência.

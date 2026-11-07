@@ -1,5 +1,17 @@
 # Histórico de versões — Cidade dos Negócios
 
+## 3.0.0-alpha.1 — Patch A Economia e Balanceamento (candidata, 07/11/2026)
+
+- Três perfis de risco para capital de giro, com reservas de 14/7/3 dias de custos fixos e metas de cobertura de 4/7/12 dias de demanda por SKU.
+- Cotações de compra por fornecedor existente, saldo de caixa, entregas pendentes e capacidade real; estimativa de demanda baseada em até 7 observações passadas ou referência inicial.
+- Cenários de preço ilustrativos de 92%/100%/108% do preço atual, com sensibilidades de demanda e margem bruta potencial. Preços não são alterados por consulta.
+- Novo comando explícito `ECONOMIA.COMPRAR_PLANO`: valida revisão e cotação, usa motor de compras atual, gera estoque em trânsito, diminui caixa, preserva ledger e idempotência.
+- Alertas de unidade subcapitalizada, passivos superiores ao caixa após a compra, possível ruptura e margem unitária negativa.
+- Mercado → Compras: painel de estratégia, proposta detalhada, comparação e confirmação; sem vendas, pagamentos, crédito ou compras automáticos.
+- Novos testes e benchmark controlado 30/90/365 dias, inclusive cenário sem estoque, três estratégias e expansão descapitalizada. **CI/QA e homologação ainda pendentes**.
+- `schemaVersion 9` e backups V1/V2 preservados. Último checkpoint estável: `releases/v2.9.0-homologada`. [Especificação](docs/V300_PATCH_A_ECONOMIA_BALANCEAMENTO.md).
+
+
 ## 2.9.0 — QA, balanceamento e consolidação (homologação formal em 07/11/2026)
 
 - Relatório gerencial **somente leitura**, 30/90 dias: receita, CMV, despesas, margem, tributos simulados, resultado, caixa, passivos, demanda atendida/perdida e contribuições de cada unidade.

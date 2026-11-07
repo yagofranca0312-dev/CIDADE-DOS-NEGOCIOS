@@ -1,16 +1,21 @@
-# 🏙️ Cidade dos Negócios — V3.0.0-alpha.1 · Patch A: Economia e Balanceamento (CANDIDATA)
+# 🏙️ Cidade dos Negócios — situação atual e guia de jogo
 
-**Não homologada.** O primeiro patch da V3 cria **três perfis explícitos de capital de giro** (conservador, equilibrado e agressivo), uma cotação de compra com reserva de custos fixos, sensibilidades de preço e execução do pedido só após confirmação do jogador em **Mercado → Compras**.
+**Código disponível na `main`: `3.0.0-alpha.1` — Patch A Economia e Balanceamento, já integrado. V3.0.0 completa: EM CONSOLIDAÇÃO, NÃO HOMOLOGADA.**  
+**Última release formalmente homologada:** `2.9.0`, snapshot [`releases/v2.9.0-homologada`](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/tree/releases/v2.9.0-homologada) no commit `082faa4626cf5cb0fc54c9ef092bddd86ffce54c`.
 
-**Sem vendas artificiais:** o simulador mantém a demanda, elasticidade, concorrência, preços do jogador, custo fixo e capital inicial da V2.9. Planos não concedem crédito, não prometem lucro e não fazem compras por conta própria. A compra realmente paga usa as mesmas partidas dobradas de encomendas tradicionais, com entregas após o prazo do fornecedor.
+**Leia primeiro:** [Guia único de jogo, áreas e recuperação](docs/JOGAR_GUIA_V300.md) · [Dossiê de consolidação V3.0](docs/V300_CONSOLIDACAO_INTEGRAL_GATES.md) · [Roadmap atualizado](docs/ROADMAP.md) · [CHANGELOG](CHANGELOG.md).
 
-**Risco que motivou a mudança:** a V2.9 identificou expansão sem capital de giro (100% de demanda não atendida em um cenário de 90 dias) e 59,7% de falta de atendimento em outro cenário de 365 dias. O Patch A cria decisões e experimentos para explicar esses resultados, sem maquiar o mercado.
+A V3.0 tem a missão **consolidar integralmente tudo que foi implantado durante a V2**: comércio, economia, IA/concorrência, empresas, RH/DP, Paralegal, Fiscal Operacional, contabilidade, crédito, contratos, logística, progressão, UX e saves. Os oito checkpoints de integração, persistência, performance, documentação, contrato futuro da interface e homologação são controlados na [PR de auditoria #39](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/pull/39). **Essa PR é um rascunho, não uma release.** A futura interface V3.1 e a expansão tributária de 2027+ não são funções desta consolidação.
 
-**Segurança:** `schemaVersion 9` mantido, JSON tradicional V1 compatível com V2.9 e backup compacto V2 preservado. **Exporte backup tradicional antes de atualizar.** A V2.9 permanece como versão homologada de recuperação: [releases/v2.9.0-homologada](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/tree/releases/v2.9.0-homologada).
+O **Patch A já presente na `main`** oferece planos de capital de giro **conservador, equilibrado e agressivo**, reserva de caixa, cotação de compras e sensibilidades de preços em **Mercado → Compras**. **Nenhuma cotação compra sem confirmação; nenhum plano inventa vendas ou concede crédito.** O motor econômico e o `schemaVersion=9` permanecem; backups V1 e compacto V2 são mantidos. Veja [detalhes do Patch A](docs/V300_PATCH_A_ECONOMIA_BALANCEAMENTO.md).
 
-**Plano e validação:** [V3.0 Patch A — Economia](docs/V300_PATCH_A_ECONOMIA_BALANCEAMENTO.md). [CI da candidata aprovada](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42413908821): **331/331 testes PASS**, 6 famílias de benchmarks PASS, com cenários 30/90/365 dias reproduzíveis. **A integração definitiva na `main`, o QA manual no Windows e a homologação estão pendentes.** Nenhuma funcionalidade do Patch B fiscal foi implementada.
+**Limite e segurança:** são **empresas, valores, funcionários, cadastros e impostos fictícios**. O cenário fiscal V1.9 calcula apenas uma hipótese comercial restrita de 2026; o Fiscal Operacional V2.4-C só registra tarefas internas e **não apura tributos**. Nenhuma declaração, guia, cadastro ou transmissão fiscal/trabalhista é real. Saves muito grandes podem não caber no `localStorage` do navegador, mesmo quando o jogo continua operando em memória. **Exporte JSON tradicional V1 externo antes de atualizar e ao terminar sessões**; o compacto V2 exige leitor V2.9 ou posterior.
+
+**Evidência atual:** o ciclo de auditoria passou pela CI automatizada de 364 testes na [Etapa 5](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42425405336); **não substitui QA Windows/mobile, persistência `file://`, saves reais ou aceite formal da V3.0**. As revisões anteriores preservadas abaixo são **histórico de cada momento**, não representam estado atual nem planos necessariamente vigentes.
 
 ---
+
+## Arquivo histórico — versões anteriores e decisões na data
 
 ## Histórico da última versão homologada
 
@@ -293,58 +298,48 @@ A candidata `2.5.0-alpha.1` (CI **257/257 PASS**, seis benchmarks, HTML reproduz
 - Após atualizar o preço, uma mensagem mostra o valor anterior e o novo; o evento já era auditável.
 - Não foram alterados economia, formato de save (`schemaVersion: 2`), RNG, regras fiscais ou comportamento do atualizador.
 
-## O que já funciona
+## Funcionalidades implementadas na linha atual
 
-- Criar uma carreira em qualquer uma das **30 cidades brasileiras previstas**: 27 capitais/DF, Tianguá, Sobral e Ubajara (Fortaleza já está entre as capitais).
-- Explorar um **mapa isométrico fictício** de 18 lotes por cidade, selecionar um lote e abrir uma empresa comercial (mercado, padaria ou loja de roupas).
-- Comprar estoque, definir preços, simular vendas diárias e enfrentar concorrência algorítmica básica.
-- Avançar 1, 7 ou 30 dias; executar em reprodução automática 1×, 2× e 5× com pausa.
-- Consultar caixa, receitas, despesas, custo de mercadorias, estoque e resultado **antes de tributos**.
-- Fazer exportação e importação de saves `.json` com checksum, comando idempotente e eventos auditáveis; migração conservadora do save de fundação CP-000 vazio.
-- Verificar integridade de estado/ledger no painel Sistema.
+- **Mundo e empresas:** 30 cidades, mapas com 18 lotes por cidade, até **cinco estabelecimentos** nos setores mercado, padaria e roupas; caixa central e estoques separados, comparativos, jornada empresarial, reputação, dilemas e concorrentes.
+- **Operação comercial:** demanda diária dependente de estoque, preços e promoções, fornecedores, encomendas em trânsito, reposição confirmada e Patch A com três planos de capital de giro e sensibilidades de preço; nenhuma venda manual fictícia.
+- **Administrativo:** demonstrativos contábeis de partidas dobradas, passivos, crédito e contratos fictícios, RH/folha fictícia, Paralegal fictício, centro de distribuição, transferências, produção/insumos e perdas.
+- **Fiscal:** cenário didático do Simples **limitado a competências cobertas de 2026** e, em separado, **Fiscal Operacional** de checklists do jogo, sem obrigação fiscal real. Leia [o guia fiscal](docs/JOGAR_GUIA_V300.md#5-fiscal-não-confundir-os-dois-subsistemas).
+- **Dados e diagnóstico:** `schemaVersion=9`, migração de schemas históricos 2–8, backup JSON tradicional V1, compacto V2 (V2.9+) e diagnóstico FNV1A32 sob demanda; limites do navegador ainda pendentes de QA manual.
 
-**Limites explícitos:** os parâmetros econômicos são **simulados e fictícios**, não estatísticas oficiais das cidades. **Nenhum tributo brasileiro está calculado** neste release; MT-01 informa `NOT_COVERED`, e não alíquota zero. A continuação do calendário após 2033 não representa atualização normativa. Apenas um estabelecimento é operável por carreira neste primeiro corte.
+## Jogar no Windows — procedimento recomendado
 
-## Jogar no Windows
+1. **Antes de atualizar:** exporte uma carreira ativa em **Configurações/Sistema → Exportar minha carreira** (formato tradicional V1), confira o arquivo e guarde cópia externa.
+2. Para jogar offline, mantenha `index.html` em pasta própria e abra com Chrome/Edge ou `JOGAR_OFFLINE.bat`. O cenário de `file://` e armazenamento local deve ser validado no navegador utilizado.
+3. Crie a carreira, selecione cidade e lote, abra uma unidade, faça um pedido em **Mercado → Compras**, avance dias e verifique entrega, vendas e caixa em **Administrativo → Finanças/Contabilidade**.
+4. Abra **Configurações/Sistema** para verificar saúde do save, exportar JSON e, quando necessário, **executar diagnóstico**. O checksum completo não é recalculado automaticamente ao navegar pela tela.
+5. **Atualizador:** o `ATUALIZAR_E_JOGAR.bat` segue a **`main` de desenvolvimento**, não a última release homologada. Para testar alpha, guarde uma cópia da V2.9 em pasta separada. Consulte [Atualizador Windows](docs/ATUALIZADOR_WINDOWS.md).
+6. Para importar carreira ou recuperar versão anterior, siga [guia completo de backup e rollback](docs/JOGAR_GUIA_V300.md#6-salvar-restaurar-e-recuperar) e [matriz de saves V2–V3](docs/V300_MIGRACAO_ROLLBACK_SAVES.md).
 
-1. Extraia o ZIP e **abra `index.html` por duplo clique** no Chrome/Edge, ou clique em `JOGAR_OFFLINE.bat`.
-2. Crie uma carreira, selecione lote, inaugure empresa, compre estoque e avance os dias.
-3. Em **Sistema → Exportar minha carreira**, faça um backup `.json` após cada sessão.
-4. Para carregar em outro PC/HTML, use **Sistema → Importar carreira**.
-5. O armazenamento local do navegador é uma conveniência; **em `file://` pode variar conforme navegador/caminho**. O backup JSON é o método portátil recomendado.
+## Desenvolvimento e arquitetura
 
-### Atualizar pelo GitHub
-
-O `ATUALIZAR_E_JOGAR.bat` obtém a versão da branch `main` do repositório [CIDADE-DOS-NEGOCIOS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS). **O HTML já está publicado no GitHub.** Veja [ATUALIZADOR_WINDOWS.md](docs/ATUALIZADOR_WINDOWS.md).
-
-## Desenvolver
-
-Requer Node.js ≥ 22. Nada é baixado por npm:
+Requer Node.js ≥22. O executável offline `index.html` é **gerado** de `src/` e recursos locais; não edite fonte e artefato em paralelo.
 
 ```bash
-npm run build   # reúne src/core/game.js, src/ui/app.js e src/shell/* em index.html
-npm test        # testes de motor, integração estrutural e atualizador
-npm run check   # build reproduzível + testes
+npm run build                  # compila HTML único
+npm run check                  # compila e executa suíte Node
+npm run bench:stability        # carreiras 30/365/1.825 dias, 1/5 unidades
+npm run bench:consolidation    # painéis simulados, backups, tamanho e stress V3.0
+npm run bench:economy          # Patch A: capital de giro, preços e efeitos
 ```
 
-**Não editar `index.html` e `src/` em paralelo:** `index.html` é derivado de `src/` pela ferramenta de build. Os arquivos extras são **fontes/testes**, não necessários para jogar.
+- **Fonte de regras:** `src/core/game.js`, com `CidadeCore.dispatch` como única porta de comandos; `journal()` e `event()` centralizam efeitos, `day()` ordena calendário.
+- **Fonte visual:** `src/ui/app.js`, partes de visualização `src/ui/*.part.js` e mapas `src/visual/`; leitura não deve mutar economia, estoque nem RNG.
+- **Persistência:** `exportSave`, `exportSaveCompact` e `importSave`; idempotência por comando. `localStorage` é melhor esforço, não compromisso de durabilidade.
+- **Referências técnicas:** [arquitetura](docs/ARQUITETURA.md) · [matriz de contratos](docs/V300_MATRIZ_CONTRATOS_E_PROPRIEDADE.md) · [performance e riscos](docs/V300_PERFORMANCE_ESTABILIDADE.md).
 
-### Arquitetura
+## Qualidade, histórico e publicação
 
-- C00: um controlador (`CidadeCore.dispatch`), comandos com ID, idempotência e commit lógico.
-- M01: estado canônico (`schemaVersion: 3`), 30 cidades, empresa, ledger, calendário, auditoria e cobertura fiscal.
-- M02/M04: data única por mundo, demanda e concorrente básico determinísticos.
-- M03: eventos confirmados no mesmo commit; consultas não alteram o jogo.
-- M05: exportação/importação com checksum FNV1A32 (detecção acidental de corrupção, **não** autenticação criptográfica); armazenamento local de melhor esforço.
-- M06: verificação do ledger, estoque e estado, sem reparação silenciosa.
-- MT-01: presença de metadados de cobertura sem cálculos legais (`NOT_COVERED`).
+A V2.9 possui **aceite formal histórico** do titular, com ressalvas sobre teste Windows. O código V3.0.0-alpha.1 está integrado à `main` **sem homologação V3.0**. A PR #39 concentra evidências da consolidação e segue **DRAFT**, sem merge da documentação/testes para a `main`.
 
-## Qualidade e publicação
+Testes automatizados e benchmarks de Node não comprovam jogabilidade agradável, desempenho/fps no navegador, quota de `localStorage` nem recuperação de saves pessoais. O gate final demanda evidências específicas de QA Windows/desktop/mobile e aceite explícito do titular. Não usar a CI como sinônimo de homologação.
 
-Os testes automatizados comprovam apenas os cenários executados. Não substituem o ensaio por duplo clique no Windows e um ciclo real de salvamento/reabertura. O hotfix V1.0.1 foi homologado pelo usuário e preservado na branch `releases/v1.0.1-homologada`. A V1.1.1 foi validada no Windows pelo usuário; a V1.2 permanece candidata até novos testes na máquina do jogador.
-
-Documentação histórica inicial: [checkpoint CP-000](docs/00_CHECKPOINT_CP000.md), [arquitetura](docs/ARQUITETURA.md), [roadmap](docs/ROADMAP.md), [atualizador Windows](docs/ATUALIZADOR_WINDOWS.md). O **pacote local** inclui as sete especificações e o guia do programador em `docs/especificacoes/`. Esses documentos não entram no publicador inicial por conterem referências a fontes privadas do projeto.
+Os registros anteriores neste README, no [CHANGELOG](CHANGELOG.md) e no [ROADMAP](docs/ROADMAP.md) continuam preservados como história. Datas/planos anteriores que divergem do quadro vigente **não são comandos para execução**.
 
 ## Privacidade
 
-O repositório identificado está **público**. Não inclua credenciais, saves pessoais ou informações de clientes nos commits. O jogo não envia dados para servidores. Nenhuma licença de redistribuição adicional é concedida neste pacote.
+Repositório público. Não versionar nomes/saves pessoais, documentos de clientes, credenciais, dados financeiros reais ou documentos fiscais. O simulador offline não realiza transmissão de gameplay a serviço externo. O atualizador opcional consulta o GitHub ao atualizar, como descrito na [documentação](docs/ATUALIZADOR_WINDOWS.md).

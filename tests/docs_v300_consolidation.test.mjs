@@ -70,7 +70,7 @@ test('V3.0-06: avisos do fiscal do jogo impedem promessas de apuração legal',(
   assert.match(guide,/SPED/);
   assert.match(guide,/PGDAS-D/);
   assert.match(guide,/Reinf/);
-  assert.match(guide,/não calcula tributos|não apura tributos/);
+  assert.match(guide.replace(/\\*\\*/g,''),/não apuram? tributos?/i);
   assert.match(contract,/não indica imposto zero/);
   assert.match(read('docs/V24C_IMPLANTACAO.md'),/sem multa ou pagamento automático/i);
   assert.match(read('docs/FISCAL_V19.md'),/UNSUPPORTED.*não significa|não significa isenção/);

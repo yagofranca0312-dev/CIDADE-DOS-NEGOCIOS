@@ -8,7 +8,7 @@
 
 **Segurança:** `schemaVersion 9` mantido, JSON tradicional V1 compatível com V2.9 e backup compacto V2 preservado. **Exporte backup tradicional antes de atualizar.** A V2.9 permanece como versão homologada de recuperação: [releases/v2.9.0-homologada](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/tree/releases/v2.9.0-homologada).
 
-**Plano e validação:** [V3.0 Patch A — Economia](docs/V300_PATCH_A_ECONOMIA_BALANCEAMENTO.md). Regressões e benchmarks remotos, QA manual Windows e homologação **ainda pendentes nesta candidata**. Nenhuma funcionalidade do Patch B fiscal foi implementada.
+**Plano e validação:** [V3.0 Patch A — Economia](docs/V300_PATCH_A_ECONOMIA_BALANCEAMENTO.md). [CI da candidata aprovada](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42413908821): **331/331 testes PASS**, 6 famílias de benchmarks PASS, com cenários 30/90/365 dias reproduzíveis. **A integração definitiva na `main`, o QA manual no Windows e a homologação estão pendentes.** Nenhuma funcionalidade do Patch B fiscal foi implementada.
 
 ---
 

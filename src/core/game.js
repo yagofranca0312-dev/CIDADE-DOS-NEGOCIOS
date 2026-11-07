@@ -1,7 +1,7 @@
-/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.8.0 */
+/* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v2.9.0-alpha.1 */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '2.8.0';
+  const VERSION = '2.9.0-alpha.1';
   const SCHEMA_VERSION = 9;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;
@@ -2624,6 +2624,127 @@ const CidadeCore = (() => {
         recentRevenueCents:revenue30,recentResultCents:recentResult,margin30,dailyFixedCents:dailyFixed},
       note:'Missões e selos são leituras do histórico confirmado. Não concedem dinheiro, pontos arbitrários ou bônus econômicos.'};
   }
+
+  // V2.9: diagnóstico gerencial somente leitura; nenhum ajuste automático nos parâmetros
+  // de demanda, custos, crédito, tributos, concorrência ou estoque.
+  function qualityReport(state,horizonDays=30){
+    assert(state&&[30,90].includes(horizonDays),'Horizonte de QA deve ser 30 ou 90 dias.');
+    const today=state.calendar.date,begin=new Date(today+'T12:00:00Z');
+    begin.setUTCDate(begin.getUTCDate()-horizonDays);
+    const from=begin.toISOString().slice(0,10),to=state.calendar.date;
+    const ledger=state.economy.ledger.filter(j=>j.date>=from&&j.date<to);
+    const byKind=j=>transactionKind(j);
+    const sum=account=>signedAccount(ledger,account);
+    const sales=sum('REVENUE'),cogs=sum('COGS'),expenses=sum('EXPENSE'),taxExpense=sum('TAX_EXPENSE');
+    const cash=balance(state,'CASH'),sheet=balanceSheet(state);
+    const dailyFixed=businesses(state).reduce((n,b)=>n+SECTORS[b.sector].dailyCost,0)+
+      (state.economy.logistics?.depot?850:0);
+    const recognized=sheet.liabilities,freeCash=cash-recognized;
+    const runway=dailyFixed?Math.floor(Math.max(0,freeCash)/dailyFixed):null;
+    const demand=state.audit.events.filter(e=>e.type==='DEMANDA.SIMULADA'&&e.date>=from&&e.date<to);
+    const missed=demand.reduce((n,e)=>n+(Number(e.data?.unmet)||0),0);
+    const requested=demand.reduce((n,e)=>n+(Number(e.data?.estimated)||0),0);
+    const lossRatioPercent=requested?Math.round(1000*missed/requested)/10:null;
+    const perUnit=businesses(state).map(b=>{
+      const local=ledger.filter(j=>journalBusinessId(state,j)===b.id);
+      const amount=code=>signedAccount(local,code);
+      const revenue=amount('REVENUE'),localCogs=amount('COGS'),localExpenses=amount('EXPENSE');
+      const recentDemand=demand.filter(e=>e.businessId===b.id);
+      const unmet=recentDemand.reduce((n,e)=>n+(Number(e.data?.unmet)||0),0);
+      const total=recentDemand.reduce((n,e)=>n+(Number(e.data?.estimated)||0),0);
+      return {id:b.id,cityId:b.cityId,sector:b.sector,revenue,cogs:localCogs,expenses:localExpenses,
+        contributionCents:revenue-localCogs-localExpenses,inventoryCents:b.products.reduce((n,p)=>n+p.stockValueCents,0),
+        demandUnmetPercent:total?Math.round(1000*unmet/total)/10:null};
+    });
+    const flags=[];
+    if(recognized>cash)flags.push({id:'LIQUIDITY',severity:'warning',label:'Obrigações reconhecidas superiores ao caixa; não representam insolvência automática.'});
+    if(runway!==null&&runway<7)flags.push({id:'RUNWAY',severity:'warning',label:'Caixa livre cobre menos de 7 dias de custo fixo estimado.'});
+    if(lossRatioPercent!==null&&lossRatioPercent>=25)flags.push({id:'STOCKOUT',severity:'warning',label:'Mais de 25% da demanda observada não foi atendida; examinar reposição e preço.'});
+    if(sales>0&&sales-cogs-expenses-taxExpense<0)flags.push({id:'MARGIN',severity:'warning',label:'Resultado do período negativo; avaliar estrutura de custos.'});
+    if(!sheet.balanced)flags.push({id:'LEDGER',severity:'critical',label:'Balanço não conciliado; não prosseguir com lançamentos.'});
+    return {asOf:today,from,to,horizonDays,units:perUnit.length,salesCents:sales,cogsCents:cogs,
+      expensesCents:expenses,taxExpenseCents:taxExpense,periodResultCents:sales-cogs-expenses-taxExpense,
+      grossMarginPercent:sales?Math.round(1000*(sales-cogs)/sales)/10:null,
+      cashCents:cash,recognizedLiabilitiesCents:recognized,freeCashCents:freeCash,
+      estimatedFixedDailyCents:dailyFixed,fixedCostRunwayDays:runway,
+      demandUnits:requested,unmetDemandUnits:missed,unmetDemandPercent:lossRatioPercent,
+      unitsReport:perUnit,balanced:sheet.balanced,flags,
+      note:'Indicadores retrospectivos do jogo, sem previsão de vendas e sem garantir que caixa futuro seja suficiente. Custos fictícios e cenários simplificados.'};
+  }
+  // Arquivo alternativo V2.9: dicionário reversível de nomes de propriedades do JSON.
+  // Não remove 1 evento ou lançamento; o save comum (v1) continua como padrão e
+  // compatível com releases 2.8. O formato compacto V2 só deve ser importado na V2.9+.
+  function packSaveWithDictionary(payload){
+    const frequency=new Map();
+    function scan(value){
+      if(Array.isArray(value)){for(const x of value)scan(x);}
+      else if(plain(value)){
+        for(const [key,x] of Object.entries(value)){
+          frequency.set(key,(frequency.get(key)||0)+1);scan(x);
+        }
+      }
+    }
+    scan(payload);
+    const keys=[...frequency.keys()].sort((a,b)=>frequency.get(b)-frequency.get(a)||a.localeCompare(b));
+    assert(keys.length<=4096,'Quantidade de propriedades do save excede limite da compactação.');
+    const indexes=new Map(keys.map((x,i)=>[x,i]));
+    function encode(value){
+      if(Array.isArray(value))return [1,...value.map(encode)];
+      if(plain(value)){
+        const out=[0];
+        for(const [key,v] of Object.entries(value)){out.push(indexes.get(key),encode(v));}
+        return out;
+      }
+      return value;
+    }
+    return {keys,records:encode(payload)};
+  }
+  function unpackSaveWithDictionary(keys,records){
+    assert(Array.isArray(keys)&&keys.length<=4096&&
+      new Set(keys).size===keys.length&&keys.every(k=>typeof k==='string'&&k.length<=150),
+      'Dicionário de backup compacto inválido.');
+    let nodes=0;
+    function decode(value,depth=0){
+      assert(depth<=90&&++nodes<=1200000,'Backup compacto excede limite de nós ou profundidade.');
+      if(!Array.isArray(value))return value;
+      assert(value.length>=1,'Nó de backup compacto vazio.');
+      if(value[0]===1)return value.slice(1).map(x=>decode(x,depth+1));
+      assert(value[0]===0&&(value.length-1)%2===0,'Nó de objeto compacto inválido.');
+      const out={};const seen=new Set();
+      for(let i=1;i<value.length;i+=2){
+        const index=value[i];assert(Number.isSafeInteger(index)&&index>=0&&index<keys.length&&!seen.has(index),
+          'Referência de chave compacta repetida ou inválida.');
+        seen.add(index);
+        Object.defineProperty(out,keys[index],{value:decode(value[i+1],depth+1),enumerable:true,writable:true,configurable:true});
+      }
+      return out;
+    }
+    return decode(records);
+  }
+  function exportSaveCompact(state){
+    validate(state);
+    const payload=clone(state),raw=JSON.stringify(payload);
+    const packed=packSaveWithDictionary(payload);
+    const output=JSON.stringify({saveFormatVersion:2,app:'Cidade dos Negócios',
+      checksumAlgorithm:'FNV1A32',checksum:hash(raw),codec:'DICT_KEYS_V1',
+      keys:packed.keys,records:packed.records});
+    assert(output.length<MAX_SAVE_CHARS,'Backup compacto ultrapassa limite seguro.');
+    return output;
+  }
+  function saveHealthReport(state){
+    validate(state);
+    const standard=JSON.stringify({saveFormatVersion:1,app:'Cidade dos Negócios',
+      checksumAlgorithm:'FNV1A32',checksum:'00000000',payload:state}).length;
+    const compact=exportSaveCompact(state).length;
+    return {version:VERSION,schemaVersion:state.schemaVersion,
+      standardChars:standard,compactChars:compact,maxChars:MAX_SAVE_CHARS,
+      standardPercent:Math.round(standard/MAX_SAVE_CHARS*1000)/10,
+      compactPercent:Math.round(compact/MAX_SAVE_CHARS*1000)/10,
+      savedPercent:Math.round((1-compact/standard)*1000)/10,
+      standardNearLimit:standard/MAX_SAVE_CHARS>=.8,compactNearLimit:compact/MAX_SAVE_CHARS>=.8,
+      note:'Formato normal V1 preserva compatibilidade de rollback; compacto V2 reversível mantém integralmente histórico, mas não é lido por versões anteriores a 2.9.0.'};
+  }
+
   function exportSave(state) {
     validate(state);const payload=clone(state),raw=JSON.stringify(payload);
     assert(raw.length<MAX_SAVE_CHARS,'Carreira excede limite de exportação');
@@ -2644,13 +2765,18 @@ const CidadeCore = (() => {
       const state=emptyLegacy(data.meta.seed);validate(state);
       return {state,migrated:true,message:'Fundação vazia CP-000 migrada; escolha nova carreira. Nenhum histórico criado.'};
     }
-    assert(plain(data)&&data.saveFormatVersion===1&&data.app==='Cidade dos Negócios'&&data.checksumAlgorithm==='FNV1A32'&&typeof data.checksum==='string'&&plain(data.payload),'Envelope de save incompatível');
+    assert(plain(data)&&[1,2].includes(data.saveFormatVersion)&&data.app==='Cidade dos Negócios'&&data.checksumAlgorithm==='FNV1A32'&&typeof data.checksum==='string','Envelope de save incompatível');
+    if(data.saveFormatVersion===2){
+      assert(data.codec==='DICT_KEYS_V1'&&Array.isArray(data.records),'Codec compacto não suportado.');
+      data.payload=unpackSaveWithDictionary(data.keys,data.records);
+    }
+    assert(plain(data.payload),'Estado interno do save incompatível.');
     assert(hash(JSON.stringify(data.payload))===data.checksum,'Checksum diverge: arquivo alterado ou corrompido');
     validate(data.payload);
     const migrated=data.payload.schemaVersion!==9,state=upgradedState(data.payload);validate(state);
     return {state,migrated,message:migrated?'Carreira migrada para V1.9: histórico preservado; cenário tributário desativado até confirmação explícita.':'Carreira restaurada com integridade validada.'};
   }
   function diagnostics(state) { if(!state) return {ok:true,message:'Nenhuma carreira ativa; aguardando criação.',cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size};validate(state);return {ok:true,revision:state.revision,events:state.audit.events.length,journals:state.economy.ledger.length,tick:state.calendar.tick,cities:CITIES.length,ufs:new Set(CITIES.map(x=>x.uf)).size,checksum:hash(JSON.stringify(state)),status:'PASS (integridade estrutural e contábil)'}; }
-  const API=Object.freeze({logisticsReport,logisticsRouteQuote,logisticsSuggestions,creditReport,financialCommitmentsReport,journeyGuide,reputationReport,dilemmaReport,DILEMMA_DEFINITIONS,rivalMarketReport,RIVAL_EVENT_TYPES,progressionReport,operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
+  const API=Object.freeze({qualityReport,saveHealthReport,exportSaveCompact,logisticsReport,logisticsRouteQuote,logisticsSuggestions,creditReport,financialCommitmentsReport,journeyGuide,reputationReport,dilemmaReport,DILEMMA_DEFINITIONS,rivalMarketReport,RIVAL_EVENT_TYPES,progressionReport,operatingPayablesReport,estimatedPayrollMonth,FISCAL_OP_TASKS,fiscalOperationsReport,RH_ROLES,rhEmployees,rhProductivity,rhReport,PARALEGAL_SERVICES,paralegalReport,FISCAL_RULE_PACKS,taxReport,taxEstimate,transitionReport,VERSION,SCHEMA_VERSION,START_DATE,ACCOUNT_CATALOG,transactionKind,incomeStatement,balanceSheet,cashFlowStatement,reconciliationReport,monthlyClose,ECONOMIC_REFERENCES,regionalProfile,regionalComparison,competitorReference,demandElasticity,CITIES,SECTORS,SUPPLIERS,businesses,activeBusiness,businessById,groupReport,inventoryReport,effectivePrice,strategyReport,dispatch,validate,overview,exportSave,importSave,diagnostics,financialReport,priceHistory,productPerformance,cityById,money,hash,dateNext});
   return API;
 })();

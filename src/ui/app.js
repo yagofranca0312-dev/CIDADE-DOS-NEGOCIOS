@@ -762,7 +762,15 @@
     $('company-unit-search').addEventListener('input',companyRenderUnitList);
     $('explore-city').addEventListener('change',e=>{viewCityId=e.target.value;inspectorOpen=false;render();updateOpenPreview();});
     $('v221-city-selector').addEventListener('change',e=>{viewCityId=e.target.value;inspectorOpen=false;$('v221-city-pick').hidden=true;render();});
-    $('map-canvas').addEventListener('click',e=>{const target=e.target.closest('[data-lot]');if(target){selectedLot=Number(target.dataset.lot);inspectorOpen=true;render();updateOpenPreview();}});
+    $('map-canvas').addEventListener('click',e=>{const target=e.target.closest('[data-lot]');if(target){
+      selectedLot=Number(target.dataset.lot);inspectorOpen=true;render();updateOpenPreview();
+      const owner=Core.businesses(state).find(x=>x.cityId===viewCityId&&x.lot===selectedLot);
+      // Lote edificado abre sua empresa na janela; lote livre exibe as opcoes de abertura.
+      if(owner&&!v31ClassicMode){
+        if(business()?.id!==owner.id)commit('EMPRESA.ATIVAR',{businessId:owner.id}).then(ok=>{if(ok)v31OpenPanel('empresa','minhas-empresas');});
+        else v31OpenPanel('empresa','minhas-empresas');
+      }
+    }});
     $('map-canvas').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const target=e.target.closest('[data-lot]');if(target){e.preventDefault();selectedLot=Number(target.dataset.lot);inspectorOpen=true;render();$('map-canvas').querySelector(`[data-lot="${selectedLot}"]`)?.focus();}}});
   $('map-lot-picker').addEventListener('change',e=>{const next=Number(e.target.value);if(Number.isInteger(next)&&next>=1&&next<=18){selectedLot=next;inspectorOpen=true;render();$('map-lot-picker').focus();}});
     $('v221-map-zoom').addEventListener('click',()=>{

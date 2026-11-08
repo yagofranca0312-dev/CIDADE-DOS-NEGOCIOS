@@ -145,7 +145,7 @@ function bindRestock(){
     renderRestock();
   });
   $('restock-cancel').addEventListener('click',()=>{restockDraft=null;renderRestock();});
-  $('restock-confirm').addEventListener('click',()=>{
+  $('restock-confirm').addEventListener('click',async()=>{
     const unit=business(),supplier=Core.SUPPLIERS.find(x=>x.id===restockDraft?.supplierId);
     const review=reviewRestockPlan(restockDraft,unit,unit?Core.inventoryReport(state):[],supplier,unit?Core.overview(state).cash:0,state?.calendar?.date,state?.revision,state);
     if(!review.valid){renderRestockSummary();notify(review.errors.join(' '),true);return;}
@@ -153,7 +153,7 @@ function bindRestock(){
     const message='Confirmar pedido para '+unit.id+'?\nFornecedor: '+supplier.name+'\n'+review.items.length+' produto(s) · '+review.units+' unidade(s)\nTotal pago agora: '+Core.money(review.total)+'\nSaldo estimado após compra: '+Core.money(review.remaining)+'\nPrevisão de entrega: '+supplier.leadDays+' dia(s).';
     if(!confirm(message))return;
     if(state.revision!==revision||business()?.id!==unitId){notify('A carreira mudou. Prepare uma nova proposta.',true);restockDraft=null;renderRestock();return;}
-    if(commit('COMPRAS.REGISTRAR',{supplierId:supplier.id,items})){
+    if(await commit('COMPRAS.REGISTRAR',{supplierId:supplier.id,items})){
       notify('Pedido consolidado confirmado. Estoque físico será recebido apenas após o prazo de entrega.');
       goto('mercado','compras');
     }

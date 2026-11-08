@@ -80,7 +80,11 @@ test('V3.0-08: auditoria ordinária devolve NO_GO sem falhar CI de evidência',(
   const out=JSON.parse(line.slice('V300_RELEASE_READINESS '.length));
   assert.equal(out.decision,'NO_GO');
   assert.equal(out.notAHomologation,true);
-  assert.equal(out.verifiedRequirements,4);
+  assert.equal(out.verifiedRequirements,5);
+  assert.equal(out.unresolved.length,13);
+  assert.ok(!out.unresolved.some(x=>x.id==='RG-07'));
+  assert.equal(evidence.requirements.find(x=>x.id==='RG-07').status,'VERIFIED');
+  assert.match(evidence.requirements.find(x=>x.id==='RG-07').evidence,/42435965283/);
   assert.equal(out.totalRequirements,18);
   assert.equal(out.gatesNotCompleted.length,5);
   assert.equal(out.candidateMissingFields.length,3);

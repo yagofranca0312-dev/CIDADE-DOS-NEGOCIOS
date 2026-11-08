@@ -51,6 +51,7 @@ O parâmetro novo é **opcional**, para não quebrar invocações históricas da
 **Classificação de risco:**
 - `PR-01`: **MITIGATED_CODE_AND_REGRESSION**, aguardando fechamento de CI do SHA final e revisão do teste visual RH;
 - `PR-02`: **CONFIRMED_UI_CAPACITY_MISMATCH_FIXED**, aguardando CI final e revisão manual dos limites em telas reais;
+- `RG-07` (decisão técnica PR-01/PR-02): **VERIFIED**, com [evidência CI 418/418 no SHA exato](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435965283); **5/18 requisitos verificados, 13/18 pendentes**;
 - `3.0.0-02` e `3.0.0-03`: **ainda PARCIAL** por lacunas de QA pessoal, cenários operacionais e aderência UX; não promovidos automaticamente;
 - `3.0.0-08`: **NO-GO**, porque ainda faltam saves pessoais, ambiente desktop do jogador, dispositivos mobile reais, carreiras longas no browser e aceite.
 

@@ -93,6 +93,7 @@ function panelHarness(state){
     '    render};\n})();');
   const ctx={CidadeCore:Core, CidadeVisual:{svgMap:()=>'<svg></svg>'},
     CidadeTianguaCena:{svgMap:()=>'<svg></svg>'},document,window:{scrollTo(){}},
+    immersiveOpen:null,v31ClassicMode:false,
     v31Render(){}, // Benchmark V3.0 mede paineis antigos isolados; UI V3.1 tem QA Playwright separado.
     console,setTimeout(){return 1},clearTimeout(){},setInterval(){return 1},clearInterval(){},URL};
   const runtime=runInNewContext(code+'\nglobalThis.__benchUI',ctx);

@@ -937,6 +937,8 @@ body .toast{z-index:10000!important;bottom:calc(90px + env(safe-area-inset-botto
 @media(max-width:360px){.v31-dock button{font-size:.49rem}.v31-top-controls button{font-size:.59rem}}
 @media(prefers-reduced-motion:reduce){.v31-dock *,.v31-context *,body.v31-overlay-open .view{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
+body.v31-immersive .v221-time-menu:not([hidden]){position:fixed!important;top:calc(95px + env(safe-area-inset-top))!important;right:16px!important;left:auto!important;z-index:170!important;background:#0b293feb;backdrop-filter:blur(13px)}
+
   </style>
 </head>
 <body>
@@ -1031,6 +1033,7 @@ body .toast{z-index:10000!important;bottom:calc(90px + env(safe-area-inset-botto
             <button type="button" id="v31-hud-alerts" aria-controls="v31-alert-panel" aria-expanded="false" title="Eventos confirmados">♧ <span id="v31-alert-count">0</span></button>
             <button type="button" id="v31-hud-pause" aria-label="Iniciar ou pausar tempo">▶ Jogar</button>
             <button type="button" id="v31-next-day" aria-label="Avançar um dia de simulação">+1 dia</button>
+            <button type="button" id="v31-hud-turns" aria-expanded="false" aria-controls="v221-time-menu" title="Avançar turnos">⏭ Turnos</button>
             <label for="v31-hud-speed">Ritmo</label><select id="v31-hud-speed" aria-label="Velocidade do tempo"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select>
             <button type="button" id="v31-classic-switch">Modo clássico</button>
           </div>
@@ -6586,6 +6589,10 @@ function bindBalancePlan(){
     });
     $('v31-lot-manage').addEventListener('click',()=>$('map-open-company').click());
     $('v31-next-day').addEventListener('click',()=>$('next-day').click());
+    $('v31-hud-turns').addEventListener('click',()=>{
+      const menu=$('v221-time-menu');menu.hidden=!menu.hidden;
+      $('v31-hud-turns').setAttribute('aria-expanded',String(!menu.hidden));
+    });
     $('v31-hud-pause').addEventListener('click',()=>{
       $('pause-btn').click();setText('v31-hud-pause',timer?'Ⅱ Pausar':'▶ Jogar');
     });

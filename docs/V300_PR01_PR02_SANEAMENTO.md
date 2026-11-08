@@ -3,7 +3,7 @@
 **Data:** 07/11/2026 — America/Fortaleza.  
 **Escopo:** riscos PR-01/PR-02 dos gates `3.0.0-02` e `3.0.0-03`, sem alterar regras contábeis, valores de cargos, motores de compra, saves V1/V2 ou `schemaVersion=9`.  
 **Branch:** `audit/v3.0-consolidacao-integral-v2-20261107`, PR #39 permanece DRAFT.  
-**Status:** **PR-01 unificado em código; PR-02 corrigido na regra de capacidade total da proposta manual. Ambos sujeitos à CI final e ao QA humano do gate 08.**
+**Status:** **PR-01 unificado, PR-02 corrigido e RG-07 técnico VERIFICADO** em [CI final Linux #42435965283 (418/418 PASS)](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435965283) e [CI Windows #42435965533 (19 BAT + 33 Chrome/Edge PASS)](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435965533). **QA humano e gate 08 permanecem pendentes.**
 
 ## PR-01 — critério único de previsão e competência da folha
 

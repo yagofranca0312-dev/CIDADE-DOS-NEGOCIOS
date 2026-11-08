@@ -20,7 +20,7 @@ function days(s,n){while(n>0){const d=Math.min(30,n);s=go(s,'TEMPO.AVANCAR_LOTE'
 function quote(s,mode='equilibrado'){return C.operationalBalanceReport(s,mode);}
 function invariants(s){C.validate(s);assert.equal(C.reconciliationReport(s).ok,true);assert.equal(C.balanceSheet(s).balanced,true);}
 test('Patch A: versão isolada, schema 9 e nenhuma migração retroativa',()=>{
- const s=start(300001);assert.equal(C.VERSION,'3.0.0-alpha.1');assert.equal(C.SCHEMA_VERSION,9);
+ const s=start(300001);assert.equal(C.VERSION,'3.0.0');assert.equal(C.SCHEMA_VERSION,9);
  assert.equal(s.schemaVersion,9);assert.equal(s.economy.logistics,undefined);
  invariants(s);
 });
@@ -159,7 +159,7 @@ test('Patch A: painel entra no executável único sem chamadas externas ou novos
  const html=readFileSync('index.html','utf8');
  for(const id of ['v300a-balance-panel','v300a-mode','v300a-summary','v300a-lines',
    'v300a-flags','v300a-price-scenarios','v300a-apply'])assert.ok(html.includes('id="'+id+'"'),id);
- assert.match(html,/v3\.0\.0-alpha\.1/);
+ assert.match(html,/v3\.0\.0/);
  const scripts=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];
  assert.equal(scripts.length,1);assert.doesNotThrow(()=>new Script(scripts[0][2]));
 });

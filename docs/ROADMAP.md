@@ -1,4 +1,51 @@
+# Estado de promoção V3.0 — 08/11/2026
+
+A V3.0.0 entrou no processo de **homologação excepcional, sob dispensa de QA manual pelo titular**. O registro de risco e as evidências técnicas encontram-se em [HOMOLOGACAO_V300_EXCEPCIONAL.md](HOMOLOGACAO_V300_EXCEPCIONAL.md). A publicação final depende da CI da promoção. O desenho imersivo V3.1 somente começa após a promoção formal e seu checkpoint. A V2.9 segue preservada para rollback.
+
+---
+
+## Estado histórico anterior à dispensa
+
 # Roadmap — Cidade dos Negócios
+
+## Estado vigente — 07/11/2026: consolidar a V2 na V3.0 ANTES da V3.1
+
+**Fonte de decisão mais recente:** roadmap interativo `roadmap_cidade_dos_negocios_v2_v3_interativo.html` (04/11/2026) — bloco `3.0.0 — Consolidação INTEGRAL da linha V2`. **Este bloco prevalece na priorização sobre decisões históricas registradas abaixo**. As datas e propostas antigas são preservadas por rastreabilidade e não significam que continuem em execução.
+
+- **Última versão homologada:** V2.9.0, `releases/v2.9.0-homologada`, commit `082faa4626cf5cb0fc54c9ef092bddd86ffce54c`.
+- **Código na `main`:** V3.0.0-alpha.1, Patch A de Economia já integrado no commit `871df2b1cd133bcad717c0194a474a35fbabcd3c`. **Não homologado**, sem versão V3.0 final.
+- **Trabalho atual:** PR [#39 — auditoria de consolidação](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/pull/39), **DRAFT**, sem merge. Preservar Patch A, schema 9 e a V2.9 estável.
+- **Missão:** consolidar mercado/economia, IA/rivais, RH/DP, Paralegal, fiscais didáticos, contabilidade, contratos/crédito, logística/produção, jornada/progressão, interface V2 e saves. A V3.1 imersiva, reconstrução estilo SimCity e novo regime tributário 2027+ **não estão autorizados como implementação dentro deste gate**.
+
+**P0-04 (08/11/2026) — persistência IndexedDB implementada e prova de longa duração repetida:** [relatório técnico e recovery](V300_P004_PERSISTENCIA_INDEXEDDB.md), [CI Windows #42488245360 — **4/4 365 dias e 4/4 1.825 dias PASS**](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42488245360). Migração de save V2.9 fictício e interrupção deliberada de transação: **12/12 verificações PASS**; a aplicação não confirma um novo dia sem gravação durável. Fallback legado de quota: 33 verificações PASS; frontend integrado: 66 PASS. Core/schema preservados, HTML offline único, sem bibliotecas externas. **Prova não substitui QA de save pessoal nem Windows físico. RG-15 continua PARTIAL, checkpoint 05 PARTIAL, Gate 08 NO-GO; 5/18 requisitos verificados, 13 pendentes.** A conclusão antiga de bloqueio por `localStorage` abaixo é **histórica antes da mitigação**. [Issue #40](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/issues/40).
+
+**P1-03 (08/11/2026) — carreira longa e bloqueio P0-04:** [dossiê de execução Chrome/Edge](V300_QA_CARREIRA_LONGA_BROWSER.md), [CI Windows #42485124066](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42485124066) e [issue P0-04 #40](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/issues/40). Teste real de `file://` via HUD da UI: **4/4 cenários de 365 dias PASS; 0/4 cenários de 1.825 dias**, bloqueados pelo `localStorage` perto de 5 MB; com cinco empresas o bloqueio surgiu no dia **425** em Chrome e Edge. O sistema preservou o último save (**fail-closed**), mas ainda não suporta a meta. **RG-15 PARTIAL; checkpoint `3.0.0-05` PARCIAL**, não homologados. Priorizar arquitetura robusta de armazenamento offline, migração V1/V2 e rollback, depois repetir os testes longos. **Gate 08 NO-GO, 5/18 VERIFIED, 13 pendentes.**
+
+**Evolução P1-02 — QA integrado em UI real:** [Relatório de 13 etapas por navegador](V300_QA_INTEGRADO_WINDOWS_HOSTED.md) e [CI Windows #42437328042 — **66/66 verificações PASS**](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42437328042): Chrome/Edge headless, carreira fictícia com duas unidades e 38 dias; compras, RH, logística, contabilidade, Patch A, crédito, folha e reload em `file://`. **RG-13 e RG-16 evoluíram de NOT_EXECUTED para PARTIAL** (não cobrem QA gráfico humano, balanceamento completo, mobile ou hardware pessoal). Checkpoint `3.0.0-03` permanece **PARTIAL**, release `3.0.0-08` **BLOCKED/NO-GO**, **5/18 requisitos verificados e 13 pendentes**. `main`, V2.9 homologada e PR #39 DRAFT protegidos.
+
+| Checkpoint | Objetivo de saída | Situação em 07/11/2026 |
+|---|---|---|
+| `3.0.0-01` | Inventário total V2, comandos e evidências | **PARCIAL:** matriz + testes; QA manual e cenários remanescentes |
+| `3.0.0-02` | Responsável único por eventos, escrita, persistência, módulos | **PARCIAL:** 8 testes, riscos de fórmulas paralelas não encerrados |
+| `3.0.0-03` | Auditoria cruzada de economia, RH, fiscais, IA, contratos, logística | **PARCIAL:** 4 testes de integração e regressões, cobertura manual pendente |
+| `3.0.0-04` | Migrar saves e proteger rollback V2→V3 | **PARCIAL:** 18 testes e V2.9 original, pendem saves reais/Windows |
+| `3.0.0-05` | Performance e estabilidade, tamanho de saves e UI | **PARCIAL:** 3 testes, 8 painéis e 5 anos em CI; pendem Windows/mobile/quota |
+| `3.0.0-06` | README, CHANGELOG, ROADMAP e tutorial únicos | **PASS DOCUMENTAL (CI):** guia unificado, seis testes novos, [370/370 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42427216125); não homologa release |
+| `3.0.0-07` | Contrato de API só leitura para apresentação V3.1 | **PASS TÉCNICO (CI):** adaptador sem mutação, 11 testes; [CI 381/381 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42428343258); interface V3.1 ainda não existe |
+| `3.0.0-08` | CI final, QA Windows/desktop/mobile, saves, aceite, snapshot de release | **AUDITORIA CONCLUÍDA: NO-GO PARA RELEASE**. [Parecer](V300_GATE08_GO_NO_GO.md), 18 requisitos, 8 testes de prontidão, [CI 389/389 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42429308063). **BLOQUEADO** até resolver riscos e QA real |
+
+**Saneamento após NO-GO — P0-01:** [guarda transacional do salvamento](V300_P0_PERSISTENCIA_TRANSACIONAL.md) implementada na branch de auditoria, com regressões Node em `localStorage` simulado e HTML regenerado; **depois foi comprovada em Chrome/Edge reais no Windows hospedado/headless, mas não no computador pessoal**. **Evolução Windows hospedado:** [33 testes Chrome/Edge PASS](V300_QA_WINDOWS_HOSTED.md) e byte-idêntico do HTML a partir de [CI Windows #42432588846](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588846). RG-06/08/10/12 recebem estado **PARCIAL** com evidência headless; **não equivalem a QA pessoal**. O gate 04/05/08 continua parcial/bloqueado até saves autênticos, BAT na instalação pessoal, Windows pessoal/mobile e aceite. **P0-03 BAT/atualizador:** [19 testes Windows em ZIPs artificiais PASS](V300_QA_BAT_SAVE_LOCAL.md), `RG-09 PARTIAL` e validador local somente leitura para cópia de save (não executado sobre arquivo pessoal). O `main` segue V3 alpha: não atualizar a instalação pessoal via BAT antes da homologação.
+
+**P1 — integridade das regras PR-01/PR-02:** [folha e propostas de compra reconciliadas](V300_PR01_PR02_SANEAMENTO.md). A previsão e o lançamento de folha usam a mesma função pró-rata; o assistente manual desconta transferências internas pendentes na capacidade, conforme o motor canônico. [CI Linux #42435702398, 418/418 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435702398); [CI Windows #42435702391, 19 BAT + 33 Chrome/Edge PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435702391), HTML reproduzível. **RG-07 VERIFIED (decisão PR-01/02)** com evidência CI, passando a **5/18 requisitos verificados e 13/18 abertos**. Gates 02/03 continuam PARCIAIS por QA humano/integrado e não liberam gate 08 NO-GO.
+
+**Evidências:** [dossiê dos oito gates](V300_CONSOLIDACAO_INTEGRAL_GATES.md) · [matriz de propriedade](V300_MATRIZ_CONTRATOS_E_PROPRIEDADE.md) · [migração/rollback](V300_MIGRACAO_ROLLBACK_SAVES.md) · [desempenho](V300_PERFORMANCE_ESTABILIDADE.md) · [guia operacional](JOGAR_GUIA_V300.md).
+
+**Sequência após a etapa 7:** documentação `06` e contrato de leitura `07` aprovados em CI → retornar às lacunas manuais dos checkpoints `01–05` → auditar prontidão **GO/NO-GO** no `08`. A publicação depende de QA real e aceite explícito; não confundir `PASS` em CI com homologação humana. Versão homologada só muda com autorização explícita após as provas obrigatórias.
+
+---
+
+## Histórico de planejamento (registros por data; não substituir o plano vigente)
+
 
 ## P0 — Fundação (checkpoint CP-000)
 

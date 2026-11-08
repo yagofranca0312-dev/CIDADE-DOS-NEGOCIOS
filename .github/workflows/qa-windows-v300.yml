@@ -1,0 +1,83 @@
+name: QA V3.0 Windows Chrome Edge — offline e persistencia
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/qa-windows-v300.yml'
+      - 'tools/qa-windows-browser-v300.mjs'
+      - 'tools/qa-windows-integrated-v300.mjs'
+      - 'tools/qa-windows-longrun-v300.mjs'
+      - 'tools/qa-windows-indexeddb-v300.mjs'
+      - 'tools/qa-windows-bat-updater-v300.ps1'
+      - 'ATUALIZAR_E_JOGAR.bat'
+      - 'JOGAR_OFFLINE.bat'
+      - 'tools/Atualizar-E-Jogar.ps1'
+      - 'tools/build.mjs'
+      - 'tools/verify-html-byte-identical-v300.mjs'
+      - 'src/**'
+      - 'index.html'
+      - 'tests/fixtures/core_v2_9_0_homologada.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-browsers:
+    name: Windows real hospedado — Chrome e Edge via file
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: windows-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verificar plataforma e HTML offline reproduzivel
+        shell: pwsh
+        run: |
+          Write-Host "Windows runner: $([System.Environment]::OSVersion.VersionString)"
+          npm run build
+          git diff --exit-code -- index.html
+          node tools/verify-html-byte-identical-v300.mjs
+      - name: QA BAT e updater com ZIPs sinteticos e rede bloqueada
+        shell: pwsh
+        run: powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File tools/qa-windows-bat-updater-v300.ps1
+      - name: Instalar somente o controlador de browser para a CI
+        shell: pwsh
+        run: npm install --no-save --no-package-lock --ignore-scripts --no-audit --no-fund playwright@1.55.1
+      - name: Executar Chrome e Edge reais em file offline (QA sintetico)
+        shell: pwsh
+        run: node tools/qa-windows-browser-v300.mjs
+      - name: QA integrado de navegacao RH compras logistica e finanças (sintetico)
+        shell: pwsh
+        run: node tools/qa-windows-integrated-v300.mjs
+      - name: QA migracao V2.9 e abort de transacao IndexedDB real (sintetico)
+        shell: pwsh
+        run: node tools/qa-windows-indexeddb-v300.mjs
+      - name: QA mobile emulado 320 390 768 com toque e recuperacao
+        shell: pwsh
+        run: node tools/qa-windows-mobile-emulado-v300.mjs
+      - name: QA carreira longa 365 e 1825 dias Chrome e Edge via UI real
+        shell: pwsh
+        run: node tools/qa-windows-longrun-v300.mjs
+      - name: Arquivar evidencias de mobile emulado
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v300-mobile-emulado-screenshots
+          path: ${{ runner.temp }}/v300-mobile-emulado-final/
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Publicar metricas sinteticas e ressalvas da carreira longa
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v300-browser-longrun-metrics
+          path: ${{ runner.temp }}/v300-browser-longrun.json
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Confirmar que artefatos do jogo nao foram modificados
+        shell: pwsh
+        run: git diff --exit-code -- index.html package.json

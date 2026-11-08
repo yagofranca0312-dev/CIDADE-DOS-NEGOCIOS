@@ -19,6 +19,12 @@ jobs:
       - run: npm run check
       - name: Benchmark de carreiras 30, 365 e 1825 dias (1 e 5 unidades)
         run: npm run bench:stability
+      - name: Benchmark V3 consolidacao — views, saves e 5 anos
+        run: npm run bench:consolidation
+      - name: Gate V3.0 de prontidao — auditar NO-GO sem liberar release
+        run: npm run audit:release
+      - name: Verificar dispensa excepcional expressa sem falsificar QA
+        run: npm run audit:release:exception
       - name: Verificar se index.html gerado corresponde ao commit
         run: git diff --exit-code -- index.html
       - name: SHA-256 do executavel

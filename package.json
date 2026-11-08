@@ -1,6 +1,6 @@
 {
   "name": "cidade-dos-negocios",
-  "version": "3.0.0-alpha.1",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
   "description": "Cidade dos Negócios V3.0 Patch A: estratégias de capital de giro, cenários de preço e reposição explícita com reserva, sem vendas artificiais",
@@ -13,7 +13,11 @@
     "bench:finance": "node tools/benchmark-v270.mjs",
     "bench:logistics": "node tools/benchmark-v280.mjs",
     "bench:quality": "node tools/benchmark-v290.mjs",
-    "bench:economy": "node tools/benchmark-v300-patch-a.mjs"
+    "bench:economy": "node tools/benchmark-v300-patch-a.mjs",
+    "bench:consolidation": "node tools/benchmark-v300-consolidation.mjs",
+    "audit:release": "node tools/v300-release-gate.mjs",
+    "audit:release:require-go": "node tools/v300-release-gate.mjs --require-go",
+    "audit:release:exception": "node tools/v300-exceptional-release-gate.mjs"
   },
   "engines": {
     "node": ">=22"

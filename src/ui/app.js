@@ -8,6 +8,7 @@
   const KEY='cidade-dos-negocios-save-v1';
   const SAFETY_KEY='cidade-dos-negocios-prior-save-v241';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
+  let commitInFlight=false,startupBlocked=true,safetyBackupAvailable=false;
   let inspectorOpen=false; // interface somente, nunca persistido
   let restockDraft=null; // proposta de compra efêmera (não entra em saves)
   const activeSection={empresa:'dashboard',mercado:'compras',administrativo:'financas'}; // somente UI, fora do save
@@ -29,42 +30,79 @@
     clearTimeout(toastTimer);toastTimer=setTimeout(()=>n.classList.remove('visible'),4500);
     setText('start-message',message);
   }
-  function saveLocal(){
-    if(!state)return false;
-    let ok=false;
+  // P0: somente o snapshot gravado e lido de volta pode tornar-se o estado ativo.
+  // Em erro de quota/permissão, o próximo comando é recusado e a carreira anterior
+  // permanece em memória. O JSON externo ainda exige conferência do usuário.
+  function persistLocal(candidate){
+    if(!candidate)return false;
     try{
-      const contents=Core.exportSave(state);
-      localStorage.setItem(KEY,contents);
-      if(localStorage.getItem(KEY)!==contents)throw Error('Falha de leitura de retorno');
-      ok=true;
+      const contents=Core.exportSave(candidate);
+      const previous=localStorage.getItem(KEY);
+      try{
+        localStorage.setItem(KEY,contents);
+        if(localStorage.getItem(KEY)!==contents)throw Error('Falha de leitura de retorno');
+      }catch(writeError){
+        // Normalmente setItem é atômico. A tentativa abaixo protege também
+        // implementações anômalas que modificam a chave antes de falhar.
+        let recovered=false;
+        try{
+          if(localStorage.getItem(KEY)!==previous){
+            if(previous===null)localStorage.removeItem(KEY);
+            else localStorage.setItem(KEY,previous);
+          }
+          recovered=localStorage.getItem(KEY)===previous;
+        }catch(_){}
+        if(!recovered)throw Error(writeError.message+'; a cópia local anterior não pôde ser confirmada');
+        throw writeError;
+      }
       autosaveStatus='Cópia local verificada neste navegador; mantenha backup JSON externo.';
-    }catch(e){autosaveStatus=`Salvamento local indisponível (${e.message}); exporte o JSON.`;notify(autosaveStatus,true);}
-    setText('autosave-label',autosaveStatus);
-    setText('footer-state',autosaveStatus.startsWith('Cópia')?'Cópia local verificada · backup JSON recomendado':'Salvamento local sem garantia');
-    return ok;
-  }
-  function backupCurrent(){
-    if(!state)return true;
-    try{
-      const raw=Core.exportSave(state);
-      localStorage.setItem(SAFETY_KEY,raw);
-      if(localStorage.getItem(SAFETY_KEY)!==raw)throw Error('Leitura de segurança divergiu');
       return true;
     }catch(error){
-      notify('Não foi possível preservar a carreira atual neste navegador ('+error.message+'). Exporte um backup JSON antes de substituí-la.',true);
+      autosaveStatus=`Salvamento local indisponível (${error.message}). Operação NÃO confirmada; a carreira anterior foi mantida. Exporte backup JSON e resolva o armazenamento antes de continuar.`;
+      notify(autosaveStatus,true);
+      return false;
+    }finally{
+      setText('autosave-label',autosaveStatus);
+      setText('footer-state',autosaveStatus.startsWith('Cópia')?'Cópia local verificada · backup JSON recomendado':'Salvamento local sem garantia');
+    }
+  }
+  // P0-04: no IndexedDB usamos JSON compacto reversível em uma transação.
+  // O estado em RAM só é ativado APÓS commit + readback da cópia durável.
+  async function persistDurable(candidate){
+    if(!candidate)return false;
+    if(CidadeDurableStore.mode()==='legacy-localstorage')return persistLocal(candidate);
+    try{
+      await CidadeDurableStore.writeCurrent(Core.exportSaveCompact(candidate));
+      autosaveStatus='Cópia local verificada no IndexedDB; mantenha backup JSON externo.';
+      return true;
+    }catch(error){
+      autosaveStatus='Salvamento local indisponível ('+error.message+'). Operação NÃO confirmada; a carreira anterior foi mantida. Exporte backup JSON e verifique o armazenamento antes de continuar.';
+      notify(autosaveStatus,true);return false;
+    }finally{
+      setText('autosave-label',autosaveStatus);
+      setText('footer-state',autosaveStatus.startsWith('Cópia')?'Cópia local verificada · backup JSON recomendado':'Salvamento local sem garantia');
+    }
+  }
+  async function backupCurrent(){
+    if(!state)return true;
+    try{
+      const raw=Core.exportSaveCompact(state);
+      await CidadeDurableStore.writeBackup(raw);
+      const saved=await CidadeDurableStore.readBackup();
+      if(saved!==raw)throw Error('Leitura da cópia de segurança divergiu');
+      safetyBackupAvailable=true;
+      return true;
+    }catch(error){
+      notify('Não foi possível preservar a carreira atual neste navegador ('+error.message+'). Exporte backup JSON antes de substituí-la.',true);
       return false;
     }
   }
   function renderSafetyBackup(){
     const button=$('restore-prior-save-btn');if(!button)return;
-    try{
-      const exists=!!localStorage.getItem(SAFETY_KEY);
-      button.disabled=!exists;
-      setText('safety-backup-status',exists?'Cópia anterior disponível. Recomenda-se também exportar um JSON.':'Nenhuma cópia anterior registrada neste navegador.');
-    }catch(error){
-      button.disabled=true;
-      setText('safety-backup-status','Armazenamento local indisponível. Utilize backup JSON.');
-    }
+    button.disabled=!safetyBackupAvailable;
+    setText('safety-backup-status',safetyBackupAvailable?
+      'Cópia anterior disponível neste navegador. Exporte também um JSON externo.':
+      'Nenhuma cópia anterior registrada neste navegador.');
   }
 
   function renderQuality(){
@@ -384,13 +422,27 @@
   /* CDN_LOGISTICS_VIEWS */
   /* CDN_FINANCE_VIEWS */
   function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
-  function commit(type,payload={}){
-    if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;financeScope='all';statementView='summary';}
-    const result=Core.dispatch(state,{type,id:nextId(),payload});
-    if(!result.ok){notify(result.error,true);return false;}
-    if(result.status==='APPLIED'){restockDraft=null;state=result.state;const chosen=business();if((type==='EMPRESA.ABRIR'||type==='EMPRESA.ATIVAR')&&chosen){viewCityId=chosen.cityId;selectedLot=chosen.lot;inspectorOpen=false;}else viewCityId=viewCityId??state.player.cityId;saveLocal();render();}
-    notify(result.message);
-    return true;
+  async function commit(type,payload={}){
+    if(startupBlocked){notify('Carregamento do save ainda não confirmado; ação recusada.',true);return false;}
+    if(commitInFlight){notify('Existe outra gravação em andamento. Aguarde a confirmação antes de repetir.',true);return false;}
+    commitInFlight=true;
+    document.body.dataset.storageBusy='true';
+    try{
+      const result=Core.dispatch(state,{type,id:nextId(),payload});
+      if(!result.ok){notify(result.error,true);return false;}
+      if(result.status==='APPLIED'){
+        if(!await persistDurable(result.state))return false;
+        if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;financeScope='all';statementView='summary';}
+        restockDraft=null;state=result.state;
+        const chosen=business();
+        if((type==='EMPRESA.ABRIR'||type==='EMPRESA.ATIVAR')&&chosen){
+          viewCityId=chosen.cityId;selectedLot=chosen.lot;inspectorOpen=false;
+        }else viewCityId=viewCityId??state.player.cityId;
+        render();
+      }
+      notify(result.message);
+      return true;
+    }finally{commitInFlight=false;document.body.dataset.storageBusy='false';}
   }
   // Rotas anteriores de Finanças e Fiscal permanecem compatíveis.
   function goto(name,requestedSection=null){
@@ -513,13 +565,14 @@
     renderSafetyBackup();
     if(tab==='sistema'){
       renderQuality();
-      const report=Core.diagnostics(state);
-      $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${report.cities} / ${report.ufs}`],['Dias concluídos',String(report.tick)],['Eventos confirmados',String(report.events)],['Checksum local',report.checksum],['Cobertura fiscal',state.fiscal.coverageStatus]].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
+      // Diagnóstico completo calcula hash de todo o save e deve ser explícito.
+      // A navegação exibe somente contadores baratos; checksum FNV1A32 fica sob demanda.
+      $('diagnostic-details').innerHTML=[['Versão do jogo',Core.VERSION],['Schema',String(state.schemaVersion)],['Revisão',String(state.revision)],['Unidade ativa',b?.id||'Nenhuma'],['Cidade ativa',ownCity.name],['Estabelecimentos',String(units.length)],['Cidades / UFs',`${Core.CITIES.length} / ${new Set(Core.CITIES.map(x=>x.uf)).size}`],['Dias concluídos',String(state.calendar.tick)],['Eventos confirmados',String(state.audit.events.length)],['Checksum local','Sob demanda: execute o diagnóstico'],['Cobertura fiscal',state.fiscal.coverageStatus]].map(x=>`<dt>${escape(x[0])}</dt><dd>${escape(x[1])}</dd>`).join('');
     }
     setText('turn-message',!b?'Abra sua primeira empresa.':b.stockUnits===0?'Seu estoque está vazio. Reabasteça.':`Sua empresa está operando há ${state.calendar.tick} dia(s).`);
     setText('turn-subtext',!b?'Clique em um lote para iniciar.':`${b.products.length} produtos · Estoque total ${b.stockUnits} un. · próximo dia ${BRDate(state.calendar.date)}.`);
     setText('autosave-label',autosaveStatus);
-    setText('footer-state',autosaveStatus.startsWith('Cópia')?'Cópia local verificada · backup JSON recomendado':'Backup JSON recomendado');
+    setText('footer-state',autosaveStatus.startsWith('Cópia')?'Cópia local verificada · backup JSON recomendado':autosaveStatus.startsWith('Salvamento local indisponível')?'Salvamento local sem garantia':'Backup JSON recomendado');
   }
   function updateBuyPreview(){
     if(!business())return;
@@ -540,24 +593,27 @@
     if(!file)return;
     if(file.size>25_000_000){notify('Save excede 25 MB.',true);return;}
     if(state?.player.cityId&&!confirm('Substituir a carreira atual pelo save importado? Recomendamos exportar antes.'))return;
+    if(startupBlocked||commitInFlight){notify('Outra operação está em andamento. Importação não iniciada.',true);return;}
+    commitInFlight=true;
+    document.body.dataset.storageBusy='true';
     try{
       const incoming=Core.importSave(await file.text());
-      if(!backupCurrent())return;
-      const previous=state;resetTimer();state=incoming.state;
-      if(!saveLocal()){
-        state=previous;render();
+      if(!await backupCurrent())return;
+      if(!await persistDurable(incoming.state)){
         notify('Importação não concluída: o novo save não pôde ser armazenado. A carreira anterior foi preservada.',true);
         return;
       }
+      resetTimer();state=incoming.state;
       restockDraft=null;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';
       render();notify(incoming.message);
     }
     catch(e){notify(`Importação rejeitada: ${e.message}. A carreira anterior foi preservada.`,true);}
+    finally{commitInFlight=false;document.body.dataset.storageBusy='false';}
   }
   function launchAuto(){
     if(timer){resetTimer();return;}
     if(!state)return;
-    timer=setInterval(()=>{if(!commit('TEMPO.AVANCAR_DIA'))resetTimer();},Math.round(1900/speed));setText('pause-btn','Ⅱ Pausar');
+    timer=setInterval(async()=>{if(commitInFlight)return;if(!await commit('TEMPO.AVANCAR_DIA'))resetTimer();},Math.round(1900/speed));setText('pause-btn','Ⅱ Pausar');
   }
   function bind(){
     bindLogistics();
@@ -570,7 +626,7 @@
       hudToggle.setAttribute('aria-expanded',String(expanded));
       hudToggle.firstChild.textContent=expanded?'Mostrar apenas os principais ':'Mostrar resultado e estoque ';
     });
-    $('career-form').addEventListener('submit',e=>{e.preventDefault();const name=$('player-name').value,companyName=$('company-name').value,cityId=$('start-city').value;if(commit('CARREIRA.CRIAR',{name,companyName,cityId,seed:(Date.now()>>>0)}))commit('MUNDO.CONCORRENCIA_ATIVAR');});
+    $('career-form').addEventListener('submit',async e=>{e.preventDefault();const name=$('player-name').value,companyName=$('company-name').value,cityId=$('start-city').value;if(await commit('CARREIRA.CRIAR',{name,companyName,cityId,seed:(Date.now()>>>0)}))await commit('MUNDO.CONCORRENCIA_ATIVAR');});
     $('rival-enable').addEventListener('click',()=>commit('MUNDO.CONCORRENCIA_ATIVAR'));
 
     // Controles V2.7: nunca alteram o estado diretamente.
@@ -585,11 +641,11 @@
       const l=Core.creditReport(state).loans.find(x=>x.id===$('credit-pay-id').value);
       $('credit-pay-amount').value=l?((l.duePrincipalCents+l.interestDueCents+l.feesDueCents||Math.min(l.remainingCents,50000))/100).toFixed(2):'';
     });
-    $('credit-payment-form').addEventListener('submit',e=>{
+    $('credit-payment-form').addEventListener('submit',async e=>{
       e.preventDefault();
       const loanId=$('credit-pay-id').value,amountCents=Math.round(Number($('credit-pay-amount').value)*100);
       if(confirm('Pagar '+Core.money(amountCents)+' com o caixa do grupo? A baixa será aplicada primeiro às multas, depois aos juros e ao principal.'))
-        if(commit('CREDITO.PAGAR',{loanId,amountCents}))$('credit-pay-amount').value='';
+        if(await commit('CREDITO.PAGAR',{loanId,amountCents}))$('credit-pay-amount').value='';
     });
     $('credit-renegotiate-form').addEventListener('submit',e=>{
       e.preventDefault();
@@ -641,12 +697,12 @@
     $('unit-switch').addEventListener('change',e=>{if(e.target.value)commit('EMPRESA.ATIVAR',{businessId:e.target.value});});
     $('finance-scope').addEventListener('change',e=>{financeScope=e.target.value;renderFinances();});
 
-    $('rh-hire-form').addEventListener('submit',e=>{
+    $('rh-hire-form').addEventListener('submit',async e=>{
       e.preventDefault();
       const name=$('rh-hire-name').value.trim(),role=$('rh-hire-role').value,businessId=$('rh-hire-unit').value;
       const def=Core.RH_ROLES[role];if(!def)return;
       if(confirm('Contratar '+name+' como '+def.label+' na unidade '+businessId+'? Salário mensal FICTÍCIO '+Core.money(def.salaryCents)+'.'))
-        if(commit('RH.CONTRATAR',{name,role,businessId}))$('rh-hire-name').value='';
+        if(await commit('RH.CONTRATAR',{name,role,businessId}))$('rh-hire-name').value='';
     });
     $('rh-unit-list').addEventListener('click',e=>{
       const dismissal=e.target.closest('[data-rh-dismiss]');
@@ -725,9 +781,9 @@
       const t=button.dataset.v221Time;const target=t==='play'?'pause-btn':t==='1'?'next-day':t==='7'?'next-week':'next-month';
       $(target).click();$('v221-time-menu').hidden=true;$('v221-hud-time').setAttribute('aria-expanded','false');
     });
-    $('map-open-company').addEventListener('click',()=>{const owner=Core.businesses(state).find(x=>x.cityId===viewCityId&&x.lot===selectedLot);if(owner&&business()?.id!==owner.id)commit('EMPRESA.ATIVAR',{businessId:owner.id});goto('empresa','minhas-empresas');if(!owner)$('sector-select').focus();});
+    $('map-open-company').addEventListener('click',async()=>{const owner=Core.businesses(state).find(x=>x.cityId===viewCityId&&x.lot===selectedLot);if(owner&&business()?.id!==owner.id){if(!await commit('EMPRESA.ATIVAR',{businessId:owner.id}))return;}goto('empresa','minhas-empresas');if(!owner)$('sector-select').focus();});
     $('sector-select').addEventListener('change',updateOpenPreview);
-    $('open-form').addEventListener('submit',e=>{e.preventDefault();if(!state)return;if(commit('EMPRESA.ABRIR',{sector:$('sector-select').value,cityId:viewCityId,lot:selectedLot}))goto('cidade');});
+    $('open-form').addEventListener('submit',async e=>{e.preventDefault();if(!state)return;if(await commit('EMPRESA.ABRIR',{sector:$('sector-select').value,cityId:viewCityId,lot:selectedLot}))goto('cidade');});
     $('buy-quantity').addEventListener('input',updateBuyPreview);
     $('buy-product').addEventListener('change',updateBuyPreview);
     $('buy-supplier').addEventListener('change',()=>{renderCommerce();updateBuyPreview();});
@@ -735,11 +791,11 @@
     $('stock-policy-form').addEventListener('submit',e=>{e.preventDefault();const productId=$('policy-product').value;commit('ESTOQUE.POLITICA_DEFINIR',{productId,reorderPoint:Number($('policy-reorder').value),targetStock:Number($('policy-target').value)});});
     $('price-product').addEventListener('change',()=>{const p=chooseProduct('price-product');if(p)$('price-value').value=(p.priceCents/100).toFixed(2);renderCommerce();});
     $('promo-product').addEventListener('change',renderCommerce);
-    $('promo-form').addEventListener('submit',e=>{e.preventDefault();const productId=$('promo-product').value,percent=Number($('promo-percent').value),days=percent?Number($('promo-days').value):0;if(commit('PROMO.DEFINIR',{productId,percent,days}))notify(percent?`Campanha de ${percent}% confirmada por ${days} dia(s) de jogo.`:'Campanha encerrada.');});
+    $('promo-form').addEventListener('submit',async e=>{e.preventDefault();const productId=$('promo-product').value,percent=Number($('promo-percent').value),days=percent?Number($('promo-days').value):0;if(await commit('PROMO.DEFINIR',{productId,percent,days}))notify(percent?`Campanha de ${percent}% confirmada por ${days} dia(s) de jogo.`:'Campanha encerrada.');});
     $('strategy-horizon').addEventListener('change',e=>{strategyHorizon=Number(e.target.value);renderStrategy();});
-    $('product-form').addEventListener('submit',e=>{e.preventDefault();
+    $('product-form').addEventListener('submit',async e=>{e.preventDefault();
       const name=$('new-product-name').value,costCents=Math.round(Number($('new-product-cost').value)*100),priceCents=Math.round(Number($('new-product-price').value)*100);
-      if(commit('PRODUTO.CADASTRAR',{name,costCents,priceCents})){$('product-form').reset();notify('Produto cadastrado. Agora configure estoque mínimo e encomende mercadorias.');}
+      if(await commit('PRODUTO.CADASTRAR',{name,costCents,priceCents})){$('product-form').reset();notify('Produto cadastrado. Agora configure estoque mínimo e encomende mercadorias.');}
     });
     for(const b of document.querySelectorAll('[data-buy-preset]'))b.addEventListener('click',()=>{$('buy-quantity').value=b.dataset.buyPreset;updateBuyPreview();$('buy-quantity').focus();});
     for(const button of document.querySelectorAll('[data-statement-view]'))button.addEventListener('click',()=>{statementView=button.dataset.statementView;renderFinances();});
@@ -766,7 +822,7 @@
     $('regional-compare-city').addEventListener('change',()=>renderRegional(Core.cityById(viewCityId)||Core.CITIES[0]));
     bindRestock();
     $('buy-form').addEventListener('submit',e=>{e.preventDefault();commit('ESTOQUE.COMPRAR',{productId:$('buy-product').value,supplierId:$('buy-supplier').value,quantity:Number($('buy-quantity').value)});});
-    $('price-form').addEventListener('submit',e=>{e.preventDefault();const p=chooseProduct('price-product'),value=$('price-value').value,cents=Math.round(Number(value)*100),before=p?.priceCents;if(commit('PRECO.DEFINIR',{productId:p?.id,cents})){const after=business().products.find(x=>x.id===p.id).priceCents;const message=`Preço de ${p.name} atualizado: ${Core.money(before)} → ${Core.money(after)}.`;setText('price-change-feedback',message);notify(message);}});
+    $('price-form').addEventListener('submit',async e=>{e.preventDefault();const p=chooseProduct('price-product'),value=$('price-value').value,cents=Math.round(Number(value)*100),before=p?.priceCents;if(await commit('PRECO.DEFINIR',{productId:p?.id,cents})){const after=business().products.find(x=>x.id===p.id).priceCents;const message=`Preço de ${p.name} atualizado: ${Core.money(before)} → ${Core.money(after)}.`;setText('price-change-feedback',message);notify(message);}});
     $('next-day').addEventListener('click',()=>commit('TEMPO.AVANCAR_DIA'));
     $('next-week').addEventListener('click',()=>commit('TEMPO.AVANCAR_LOTE',{days:7}));
     $('next-month').addEventListener('click',()=>commit('TEMPO.AVANCAR_LOTE',{days:30}));
@@ -790,38 +846,55 @@
     $('import-btn').addEventListener('click',()=>$('import-file').click());
     $('start-import').addEventListener('click',()=>$('import-file').click());
     $('import-file').addEventListener('change',async e=>{const f=e.target.files?.[0];try{await importFile(f);}finally{e.target.value='';}});
-    $('restore-prior-save-btn').addEventListener('click',()=>{
+    $('restore-prior-save-btn').addEventListener('click',async()=>{
+      if(commitInFlight||startupBlocked)return;
+      commitInFlight=true;document.body.dataset.storageBusy='true';
+      try{
       let raw;
-      try{raw=localStorage.getItem(SAFETY_KEY);}catch(error){notify(error.message,true);return;}
+      try{raw=await CidadeDurableStore.readBackup();}catch(error){notify(error.message,true);return;}
       if(!raw){notify('Não existe cópia anterior neste navegador.',true);return;}
       let incoming;
       try{incoming=Core.importSave(raw);}catch(error){notify('Backup anterior inválido: '+error.message,true);return;}
       if(!confirm('Restaurar carreira anterior? A atual será preservada como cópia de segurança.'))return;
-      if(!backupCurrent())return;
-      const previous=state;resetTimer();state=incoming.state;
-      if(!saveLocal()){
-        state=previous;
-        try{localStorage.setItem(SAFETY_KEY,raw);}catch(_){}
-        render();notify('Restauração cancelada: salvamento local não confirmado.',true);return;
+      if(!await backupCurrent())return;
+      if(!await persistDurable(incoming.state)){
+        // Voltar a cópia recuperável à versão anterior se a restauração falhou.
+        try{await CidadeDurableStore.writeBackup(raw);}catch(_){}
+        notify('Restauração cancelada: gravação não confirmada. A carreira atual foi preservada.',true);return;
       }
+      resetTimer();state=incoming.state;
       restockDraft=null;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';
       render();notify('Carreira anterior restaurada. Faça também um backup JSON.');
+      }finally{commitInFlight=false;document.body.dataset.storageBusy='false';}
     });
     $('payable-operating-unit').addEventListener('change',()=>renderFinances());
-    $('payable-operating-form').addEventListener('submit',event=>{
+    $('payable-operating-form').addEventListener('submit',async event=>{
       event.preventDefault();
       const cents=Math.round(Number($('payable-operating-amount').value)*100);
       const unit=$('payable-operating-unit').value;
       const row=Core.operatingPayablesReport(state).units.find(x=>x.businessId===unit);
       if(!row||!Number.isSafeInteger(cents)||cents<=0){notify('Selecione a unidade e informe um pagamento válido.',true);return;}
       if(!confirm('Liquidar '+Core.money(cents)+' do passivo operacional de '+unit+'? O valor reduzirá caixa e obrigação, sem lançar nova despesa.'))return;
-      if(commit('PAYABLES.PAGAR_OPERACIONAL',{businessId:unit,amountCents:cents}))$('payable-operating-amount').value='';
+      if(await commit('PAYABLES.PAGAR_OPERACIONAL',{businessId:unit,amountCents:cents}))$('payable-operating-amount').value='';
     });
-    $('run-diagnostic').addEventListener('click',()=>{try{const before=JSON.stringify(state),out=Core.diagnostics(state);if(before!==JSON.stringify(state))throw Error('Diagnóstico alterou o estado');setText('diagnostic-result',out.status+' · revisão '+out.revision);notify('Verificação estrutural e contábil aprovada.');}catch(e){setText('diagnostic-result',e.message);notify(e.message,true);}});
-    $('new-career-btn').addEventListener('click',()=>{if(!confirm('Deseja criar outra carreira? A atual será copiada para recuperação neste navegador; exporte também JSON.'))return;if(!backupCurrent())return;resetTimer();setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');try{localStorage.removeItem(KEY);}catch(e){notify('Não foi possível limpar a cópia do navegador; confira seu backup.',true);}state=null;viewCityId=null;financeQuery=null;financeScope='all';statementView='summary';render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');});
+    $('run-diagnostic').addEventListener('click',()=>{try{const before=JSON.stringify(state),out=Core.diagnostics(state);if(before!==JSON.stringify(state))throw Error('Diagnóstico alterou o estado');setText('diagnostic-result',out.status+' · revisão '+out.revision+' · checksum '+out.checksum);notify('Verificação estrutural e contábil aprovada.');}catch(e){setText('diagnostic-result',e.message);notify(e.message,true);}});
+    $('new-career-btn').addEventListener('click',async()=>{
+      if(commitInFlight||startupBlocked)return;
+      commitInFlight=true;document.body.dataset.storageBusy='true';
+      try{
+      if(!confirm('Deseja criar outra carreira? A atual será copiada para recuperação neste navegador; exporte também JSON.'))return;
+      if(!await backupCurrent())return;
+      try{await CidadeDurableStore.clearCurrent();}
+      catch(e){notify('Não foi possível confirmar a limpeza da carreira; a atual foi mantida. '+e.message,true);return;}
+      resetTimer();state=null;viewCityId=null;financeQuery=null;financeScope='all';statementView='summary';
+      setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');
+      render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');
+      }finally{commitInFlight=false;document.body.dataset.storageBusy='false';}
+    });
+
   }
   function updateOpenPreview(){const s=Core.SECTORS[$('sector-select').value],city=Core.cityById(viewCityId);if(s)setText('open-preview',`Abertura em ${city?.name||'cidade selecionada'} · lote ${String(selectedLot).padStart(2,'0')} · investimento ${Core.money(s.openCost)} do caixa compartilhado · ramo: ${s.name}.`);}
-  function start(){
+  async function start(){
     // Fonte única de versão: nunca depender de textos desatualizados no rodapé ou no topo.
     for(const id of ['intro-version','build-version','footer-version'])setText(id,`v${Core.VERSION}`);
     document.title=`Cidade dos Negócios 1 · v${Core.VERSION}`;
@@ -831,9 +904,18 @@
     }));
     comparer.value=Core.CITIES.find(c=>c.name==='Sobral').id;
     cityOptions();bind();updateOpenPreview();
-    try{const raw=localStorage.getItem(KEY);if(raw){const loaded=Core.importSave(raw);state=loaded.state;viewCityId=business()?.cityId||state.player.cityId;autosaveStatus='Cópia local verificada neste navegador; mantenha backup JSON externo.';}}
-    catch(e){autosaveStatus='Não foi possível recuperar o salvamento local; importe backup JSON.';notify(autosaveStatus+' '+e.message,true);}
+    try{
+      const raw=await CidadeDurableStore.readCurrent(Core);
+      if(raw){const loaded=Core.importSave(raw);state=loaded.state;viewCityId=business()?.cityId||state.player.cityId;autosaveStatus='Cópia local verificada no '+CidadeDurableStore.mode()+'; mantenha backup JSON externo.';}
+      safetyBackupAvailable=!!(await CidadeDurableStore.readBackup());
+      startupBlocked=false;
+    }catch(e){
+      startupBlocked=true;
+      autosaveStatus='Não foi possível confirmar o salvamento durável. Ações bloqueadas para proteger a carreira. Importe o backup em ambiente seguro. '+e.message;
+      notify(autosaveStatus,true);
+    }
     render();renderSafetyBackup();goto('cidade');
+    document.body.dataset.storageReady=startupBlocked?'blocked':'ready';
   }
   start();
 })();

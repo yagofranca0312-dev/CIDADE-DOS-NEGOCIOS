@@ -28,7 +28,7 @@ function injectTestCapital(s,cents){
   Core.validate(clone);return clone;
 }
 
-test('V3.0.0-alpha.1: passivos diários observados por unidade sem confundir RH ou tributos',()=>{
+test('V3.0.0: passivos diários observados por unidade sem confundir RH ou tributos',()=>{
   let s=days(start(3),10);
   const report=Core.operatingPayablesReport(s);
   assert.equal(report.units.length,3);
@@ -37,7 +37,7 @@ test('V3.0.0-alpha.1: passivos diários observados por unidade sem confundir RH 
   assert.equal(report.unclassified,0);
   assert.equal(Core.reconciliationReport(s).ok,true);
 });
-test('V3.0.0-alpha.1: quitação parcial reduz PAYABLE e CASH, nunca repete EXPENSE',()=>{
+test('V3.0.0: quitação parcial reduz PAYABLE e CASH, nunca repete EXPENSE',()=>{
   let s=injectTestCapital(days(start(3),10),100000);
   const id=s.world.business.id,amount=10000,before=Core.overview(s);
   const expense=Core.incomeStatement(s).expenses;
@@ -54,7 +54,7 @@ test('V3.0.0-alpha.1: quitação parcial reduz PAYABLE e CASH, nunca repete EXPE
   assert.equal(Core.dispatch(s,{id:'new-overpay',type:'PAYABLES.PAGAR_OPERACIONAL',
     payload:{businessId:id,amountCents:10000000}}).ok,false);
 });
-test('V3.0.0-alpha.1: guardas de caixa, unidade, valor, passivo e comando não alteram save',()=>{
+test('V3.0.0: guardas de caixa, unidade, valor, passivo e comando não alteram save',()=>{
   let s=days(start(3),10);
   const raw=JSON.stringify(s),id=s.world.business.id;
   for(const payload of [
@@ -65,7 +65,7 @@ test('V3.0.0-alpha.1: guardas de caixa, unidade, valor, passivo e comando não a
     assert.equal(response.ok,false);assert.equal(JSON.stringify(s),raw);
   }
 });
-test('V3.0.0-alpha.1: pagamento operacional não liquida folha de RH já apurada',()=>{
+test('V3.0.0: pagamento operacional não liquida folha de RH já apurada',()=>{
   let s=start(3);
   s=act(s,'RH.CONTRATAR',{businessId:s.world.business.id,name:'Equipe Fictícia',role:'atendimento'});
   s=injectTestCapital(days(s,30),450000);
@@ -82,7 +82,7 @@ test('V3.0.0-alpha.1: pagamento operacional não liquida folha de RH já apurada
   assert.equal(Core.operatingPayablesReport(s).total,ops.total-10000);
   assert.equal(Core.reconciliationReport(s).ok,true);
 });
-test('V3.0.0-alpha.1: folha prevista é passivo, não saída automática de caixa',()=>{
+test('V3.0.0: folha prevista é passivo, não saída automática de caixa',()=>{
   let s=start();
   const base=Core.strategyReport(s,30);
   s=act(s,'RH.CONTRATAR',{businessId:s.world.business.id,name:'Equipe Projetada',role:'atendimento'});
@@ -94,7 +94,7 @@ test('V3.0.0-alpha.1: folha prevista é passivo, não saída automática de caix
   assert.equal(p.knownObligations.tax,0);
   assert.equal(JSON.stringify(s),before);
 });
-test('V3.0.0-alpha.1: save exportado após quitação importa e detecta corrupção',()=>{
+test('V3.0.0: save exportado após quitação importa e detecta corrupção',()=>{
   let s=injectTestCapital(days(start(3),10),120000);
   s=act(s,'PAYABLES.PAGAR_OPERACIONAL',{businessId:s.world.business.id,amountCents:5000});
   const raw=Core.exportSave(s),imported=Core.importSave(raw);
@@ -103,17 +103,18 @@ test('V3.0.0-alpha.1: save exportado após quitação importa e detecta corrupç
   assert.equal(Core.operatingPayablesReport(imported.state).total,Core.operatingPayablesReport(s).total);
   assert.throws(()=>Core.importSave(raw.replace('Aporte de teste isolado','Aporte adulterado')),/Checksum/);
 });
-test('V3.0.0-alpha.1: novos controles ficam no HTML único e script compilado é sintaticamente válido',()=>{
+test('V3.0.0: novos controles ficam no HTML único e script compilado é sintaticamente válido',()=>{
   const tpl=readFileSync('src/shell/index.template.html','utf8');
   const app=readFileSync('src/ui/app.js','utf8'),html=readFileSync('index.html','utf8');
   const pkg=JSON.parse(readFileSync('package.json','utf8'));
-  assert.equal(pkg.version,'3.0.0-alpha.1');
+  assert.equal(pkg.version,'3.0.0');
   for(const id of ['payable-operating-form','payable-operating-unit','restore-prior-save-btn','safety-backup-status'])
     assert.ok(tpl.includes('id="'+id+'"'));
   assert.match(app,/SAFETY_KEY/);
   assert.match(app,/backupCurrent\(\)/);
-  assert.match(app,/if\(!saveLocal\(\)\)/);
-  assert.match(html,/const VERSION = '3\.0\.0-alpha\.1'/);
+  assert.match(app,/if\(!await persistDurable\(incoming\.state\)\)/);
+  assert.match(app,/if\(!await persistDurable\(result\.state\)\)return false;/);
+  assert.match(html,/const VERSION = '3\.0\.0'/);
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(scripts.length,1);
   assert.doesNotThrow(()=>new Script(scripts[0][1]));

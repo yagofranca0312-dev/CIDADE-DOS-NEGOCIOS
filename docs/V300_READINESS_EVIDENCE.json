@@ -1,0 +1,490 @@
+{
+  "schemaVersion": 1,
+  "assessment": "V300-08",
+  "assessmentDate": "2026-11-07",
+  "releaseTarget": "3.0.0",
+  "auditBranch": "audit/v3.0-consolidacao-integral-v2-20261107",
+  "latestVerifiedAudit": {
+    "sha": "0485c31733a64d982bac1059ae00d6e022267459",
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42489680875",
+    "result": "SUCCESS",
+    "tests": 431,
+    "scope": "Node24/Linux: 431/431 PASS, benchmarks 30/365/1825 dias, HTML determinístico, cinco contratos IndexedDB, release gate NO_GO; Windows hosted real file:// CI #42489340762: 12 migracao/abort, 4/4 1825, 66 integração, 33 fallback e 19 BAT PASS."
+  },
+  "stableBaseline": {
+    "ref": "releases/v2.9.0-homologada",
+    "sha": "082faa4626cf5cb0fc54c9ef092bddd86ffce54c",
+    "version": "2.9.0"
+  },
+  "mainAtAudit": "871df2b1cd133bcad717c0194a474a35fbabcd3c",
+  "releaseCandidate": {
+    "ref": null,
+    "sha": null,
+    "ciUrl": null
+  },
+  "checkpointStatus": [
+    {
+      "id": "3.0.0-01",
+      "status": "PARTIAL",
+      "evidence": "docs/V300_MATRIZ_CONTRATOS_E_PROPRIEDADE.md",
+      "open": "Cobertura funcional manual da linha V2"
+    },
+    {
+      "id": "3.0.0-02",
+      "status": "PARTIAL",
+      "evidence": "docs/V300_MATRIZ_CONTRATOS_E_PROPRIEDADE.md",
+      "open": "PR-01/PR-02 mitigados em código e CI; faltam percursos UI operacionais e aceite da consolidação"
+    },
+    {
+      "id": "3.0.0-03",
+      "status": "PARTIAL",
+      "evidence": "docs/V300_QA_INTEGRADO_WINDOWS_HOSTED.md",
+      "open": "66 verificações Chrome/Edge headless PASS em 13 etapas UI por navegador; ainda faltam QA visual humano, cenários alternativos de longa duração, desktop pessoal, mobile físico e aceite."
+    },
+    {
+      "id": "3.0.0-04",
+      "status": "PARTIAL",
+      "evidence": "docs/V300_MIGRACAO_ROLLBACK_SAVES.md",
+      "open": "Importação e rollback com save pessoal de verdade, ambiente Windows/file:// e quota"
+    },
+    {
+      "id": "3.0.0-05",
+      "status": "PARTIAL",
+      "evidence": "docs/V300_P004_PERSISTENCIA_INDEXEDDB.md",
+      "open": "Carreira longa 365/1825 dias passou 4/4 no Chrome/Edge Windows hospedado com IndexedDB; continuam QA hardware pessoal, avaliação visual e fluxo de recuperação autêntico."
+    },
+    {
+      "id": "3.0.0-06",
+      "status": "PASS_DOCUMENTAL_CI",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42427413403",
+      "open": "Aprovação documental não equivale a release"
+    },
+    {
+      "id": "3.0.0-07",
+      "status": "PASS_TECHNICAL_CI",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42428454609",
+      "open": "Read-model não está incorporado ao jogo; UI V3.1 fora do escopo"
+    },
+    {
+      "id": "3.0.0-08",
+      "status": "BLOCKED",
+      "evidence": "docs/V300_GATE08_GO_NO_GO.md",
+      "open": "Release e homologação integral dependem de todos os critérios e autorização explícita"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "RG-01",
+      "type": "AUTOMATED",
+      "label": "Integridade do HTML, schema 9, 381 testes e benchmarks na branch auditada",
+      "status": "VERIFIED",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42428454609"
+    },
+    {
+      "id": "RG-02",
+      "type": "AUTOMATED",
+      "label": "Snapshot V2.9 homologado preservado no SHA original",
+      "status": "VERIFIED",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/tree/releases/v2.9.0-homologada"
+    },
+    {
+      "id": "RG-03",
+      "type": "AUTOMATED",
+      "label": "Saves históricos 2–9 e formato compacto testados no core",
+      "status": "VERIFIED",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42418650812"
+    },
+    {
+      "id": "RG-04",
+      "type": "DOCUMENTAL",
+      "label": "README/CHANGELOG/ROADMAP, guia atual e contrato UI futuro",
+      "status": "VERIFIED",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42427413403"
+    },
+    {
+      "id": "RG-05",
+      "type": "TECHNICAL",
+      "label": "Encerrar os cinco checkpoints 01–05 sem pendência relevante",
+      "status": "NOT_VERIFIED",
+      "evidence": null
+    },
+    {
+      "id": "RG-06",
+      "type": "TECHNICAL",
+      "label": "Tratar explicitamente risco de perda de progresso ao falhar localStorage",
+      "status": "PARTIAL",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42488245360",
+      "qualifier": "IndexedDB com readback e transação abortada em Chrome/Edge Windows hospedado, migração de fixture V2.9, fallback localStorage com quota fail-closed; ainda sem prova de save pessoal, hardware pessoal nem recovery após falha física."
+    },
+    {
+      "id": "RG-07",
+      "type": "TECHNICAL",
+      "label": "Decidir PR-01 RH e PR-02 propostas de compra, com mitigação/regressão ou aceite fundamentado",
+      "status": "VERIFIED",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435965283",
+      "qualifier": "Critério técnico de decisão PR-01/PR-02 quitado: helper RH único e proposta manual alinhada à capacidade de transferências pendentes, sete novos testes e CI 418/418. Isto NÃO homologa QA visual/operacional nem gates 02/03/08."
+    },
+    {
+      "id": "RG-08",
+      "type": "MANUAL",
+      "label": "Windows Chrome/Edge: abrir index.html offline por file:// e via JOGAR_OFFLINE.bat",
+      "status": "PARTIAL",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588846",
+      "qualifier": "Somente Windows hospedado no GitHub com Chrome/Edge headless, file:// e dados sintéticos; QA Windows pessoal, BAT e saves reais pendentes."
+    },
+    {
+      "id": "RG-09",
+      "type": "MANUAL",
+      "label": "Windows: atualização ATUALIZAR_E_JOGAR.bat em instalação de teste, preservando V2.9",
+      "status": "PARTIAL",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42434425027",
+      "qualifier": "BAT e PS1 originais em Windows hospedado, ZIP/API e abertura do navegador interceptados. NÃO foi atualização real do main nem da instalação pessoal; BAT com script stub separado."
+    },
+    {
+      "id": "RG-10",
+      "type": "MANUAL",
+      "label": "Windows: comando→salvamento local→fechar→reabrir e reconciliação do estado",
+      "status": "PARTIAL",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588846",
+      "qualifier": "Somente Windows hospedado no GitHub com Chrome/Edge headless, file:// e dados sintéticos; QA Windows pessoal, BAT e saves reais pendentes."
+    },
+    {
+      "id": "RG-11",
+      "type": "MANUAL",
+      "label": "Save real V2.9 do jogador: backup externo, importação, comparação e rollback validado",
+      "status": "NOT_EXECUTED",
+      "evidence": null
+    },
+    {
+      "id": "RG-12",
+      "type": "MANUAL",
+      "label": "Quota localStorage cheia/bloqueada: sem falsa mensagem de durabilidade e procedimento de backup comprovado",
+      "status": "PARTIAL",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588846",
+      "qualifier": "Somente Windows hospedado no GitHub com Chrome/Edge headless, file:// e dados sintéticos; QA Windows pessoal, BAT e saves reais pendentes."
+    },
+    {
+      "id": "RG-13",
+      "type": "MANUAL",
+      "label": "Desktop Chrome/Edge e responsividade: mapa, módulos e ações sem erros de console",
+      "status": "PARTIAL",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42437328042",
+      "qualifier": "Chrome/Edge Windows hosted headless: navegação e formulários reais em 13 etapas, mas QA visual desktop completo no hardware pessoal e revisão humana pendentes."
+    },
+    {
+      "id": "RG-14",
+      "type": "MANUAL",
+      "label": "Mobile real e/ou emulador com evidência identificada: toque, rolagem e compatibilidade",
+      "status": "NOT_EXECUTED",
+      "evidence": null
+    },
+    {
+      "id": "RG-15",
+      "type": "MANUAL",
+      "label": "Carreira longa em navegador real: UI, tempos, memória e exportação/importação perto de 25MB",
+      "status": "PARTIAL",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42488245360",
+      "qualifier": "4/4 cenários 365 dias e 4/4 de 1825 dias em Chrome/Edge Windows hosted headless via file:// com IndexedDB, save JSON e reload; QA pessoal/visual/mobile e aceite pendentes. P0-04 mitigado tecnicamente."
+    },
+    {
+      "id": "RG-16",
+      "type": "MANUAL",
+      "label": "Teste de gameplay/balanceamento e cobertura dos fluxos V2 integrados",
+      "status": "PARTIAL",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42437328042",
+      "qualifier": "Carreira sintética única por navegador, 38 dias, duas empresas, operações RH/mercado/logística/crédito/folha e ledger conciliado, sem aprovação humana do balanceamento nem longa carreira em browser."
+    },
+    {
+      "id": "RG-17",
+      "type": "RELEASE",
+      "label": "Candidata V3.0.0 identificada, commit imutável e CI aprovada no SHA exato",
+      "status": "NOT_CREATED",
+      "evidence": null
+    },
+    {
+      "id": "RG-18",
+      "type": "RELEASE",
+      "label": "Aceite formal explícito do titular após inspeção das evidências, inclusive ressalvas",
+      "status": "NOT_GRANTED",
+      "evidence": null
+    }
+  ],
+  "mitigations": [
+    {
+      "id": "P0-01",
+      "risk": "RG-06",
+      "status": "IMPLEMENTED_CI_PASS_WINDOWS_HEADLESS_PASS_PERSONAL_QA_PENDING",
+      "code": "src/ui/app.js",
+      "test": "tests/persistence_p0_v300.test.mjs",
+      "report": "docs/V300_P0_PERSISTENCIA_TRANSACIONAL.md",
+      "note": "Guard P0 testado em Chrome/Edge headless no Windows hospedado via file:// com QuotaExceededError real, reload, export/import. RG-06 PARTIAL; testes manuais em instalacao do usuario ainda nao executados."
+    },
+    {
+      "id": "P0-04",
+      "risk": "RG-15",
+      "status": "MITIGATED_CODE_HOSTED_WINDOWS_PASS_PERSONAL_QA_PENDING",
+      "issue": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/issues/40",
+      "report": "docs/V300_P004_PERSISTENCIA_INDEXEDDB.md",
+      "codePaths": [
+        "src/ui/durable-store.part.js",
+        "src/ui/app.js",
+        "tools/build.mjs"
+      ],
+      "note": "IndexedDB compacto durável permite 4/4 1825 dias em Chrome/Edge Windows hosted; migração V2.9 sintética, aborto de transação e rollback fail-closed provados. Pessoal e aceite ainda não executados, Gate08 NO_GO."
+    }
+  ],
+  "windowsHostedAudit": {
+    "sha": "7cb9589d686f087189b26c3a09d847c36ebc3bf7",
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588846",
+    "result": "SUCCESS",
+    "os": "Windows NT 10.0.26100.0",
+    "browsers": [
+      "Chrome 156 (headless)",
+      "Edge 156 (headless)"
+    ],
+    "assertions": 33,
+    "fileOrigin": "file://",
+    "actualQuotaReached": true,
+    "reloadAfterClosingBrowser": true,
+    "exportImportJsonOnDisk": true,
+    "syntheticV29MigrationAndRollback": true,
+    "realUserSaveTested": false,
+    "personalWindowsInstallationTested": false,
+    "physicalMobileTested": false,
+    "report": "docs/V300_QA_WINDOWS_HOSTED.md"
+  },
+  "crossPlatformHtml": {
+    "status": "PASS_BYTE_IDENTICAL",
+    "sha256": "94ffbcf234b437c362e98f29aaf8d64cb0051702c83f0c2e68ce2f05eff6a70b",
+    "bytes": 1489147,
+    "linuxObservedCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42489680875",
+    "windowsObservedCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42489340762",
+    "verifiedUsing": "tools/verify-html-byte-identical-v300.mjs"
+  },
+  "batUpdaterQA": {
+    "status": "PASS_WINDOWS_HOSTED_OFFLINE_FIXTURE",
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42434425027",
+    "sha": "54e1212bde92d513cad5adbf7e1e29a8f53edcbe",
+    "assertions": 19,
+    "actualWindows": true,
+    "actualGitHubDownload": false,
+    "actualGameInstallationTouched": false,
+    "realUserSaveTested": false,
+    "rollbackAfterCopyFailure": true,
+    "backupIntegrityVerified": true,
+    "downgradeRefused": true,
+    "report": "docs/V300_QA_BAT_SAVE_LOCAL.md"
+  },
+  "privateSaveValidator": {
+    "status": "TESTED_SYNTHETIC_ONLY_NOT_RUN_ON_USER_SAVE",
+    "script": "tools/validar-save-pessoal-local-v300.mjs",
+    "tests": "tests/personal_save_private_v300.test.mjs",
+    "privacy": "read-only, no upload, no player/company names or balances reported",
+    "realUserSaveTested": false
+  },
+  "pr01Pr02Saneamento": {
+    "status": "MITIGATED_IN_CODE_CI_PASS_MANUAL_QA_PENDING",
+    "code": [
+      "src/core/game.js",
+      "src/ui/restock-views.part.js"
+    ],
+    "tests": "tests/v300_pr01_pr02_consistency.test.mjs",
+    "newTests": 7,
+    "pr01": "Fórmula compartilhada payrollPeriodQuote para previsão e apuração; mesma contabilização única sem mudança na regra de dias/30.",
+    "pr02": "Proposta manual agora desconta transferências internas PENDING da capacidade, em paridade com registerPurchase e Patch A. Políticas de compra manual e estratégica mantidas distintas.",
+    "nodeCi": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435702398",
+    "windowsCi": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435702391",
+    "manualQaCompleted": false,
+    "gate08Unblocked": false,
+    "report": "docs/V300_PR01_PR02_SANEAMENTO.md"
+  },
+  "windowsIntegratedQA": {
+    "status": "PASS_WINDOWS_HOSTED_BROWSER_UI",
+    "sha": "343f0b935ab2e915df3436a1c7e759a202fc658e",
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42437328042",
+    "browsers": [
+      "Chrome 156 headless Windows hosted",
+      "Edge 156 headless Windows hosted"
+    ],
+    "assertions": 66,
+    "assertionsPerBrowser": 33,
+    "stepsPerBrowser": 13,
+    "gameDaysPerBrowser": 38,
+    "unitsPerBrowser": 2,
+    "coreDispatchInvokedFromQA": false,
+    "persistedAndReloaded": true,
+    "gameplayModules": [
+      "Empresas",
+      "Mercado",
+      "RH/DP",
+      "Logística",
+      "Contabilidade",
+      "Finanças",
+      "Patch A",
+      "Crédito",
+      "Folha"
+    ],
+    "realUserSaveTested": false,
+    "actualPersonalWindowsInstallation": false,
+    "physicalMobileTested": false,
+    "visualHumanReviewCompleted": false,
+    "longBrowserCareerTested": false,
+    "report": "docs/V300_QA_INTEGRADO_WINDOWS_HOSTED.md"
+  },
+  "browserLongrunQA": {
+    "status": "PASS_ALL_SCENARIOS_HOSTED_WINDOWS_PERSONAL_QA_PENDING",
+    "issue": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/issues/40",
+    "sha": "31f906405bfbc4c589641a73406ff9127fca10eb",
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42488245360",
+    "script": "tools/qa-windows-longrun-v300.mjs",
+    "report": "docs/V300_P004_PERSISTENCIA_INDEXEDDB.md",
+    "artifact": "v300-browser-longrun-metrics",
+    "completed365": 4,
+    "total365": 4,
+    "completed1825": 4,
+    "total1825": 4,
+    "blockedByStorage": 0,
+    "hardFailures": 0,
+    "releaseBlocking": true,
+    "solutionImplemented": true,
+    "persistenceMode": "indexeddb",
+    "scenarios": [
+      {
+        "browser": "chrome",
+        "units": 1,
+        "completed365": true,
+        "completed1825": true,
+        "lastPersistedDay": 1825,
+        "saveBytesAt1825": 1879172,
+        "exportedTraditionalBytesAt1825": 5819093
+      },
+      {
+        "browser": "chrome",
+        "units": 5,
+        "completed365": true,
+        "completed1825": true,
+        "lastPersistedDay": 1825,
+        "saveBytesAt1825": 6944770,
+        "exportedTraditionalBytesAt1825": 21204106
+      },
+      {
+        "browser": "msedge",
+        "units": 1,
+        "completed365": true,
+        "completed1825": true,
+        "lastPersistedDay": 1825,
+        "saveBytesAt1825": 1872187,
+        "exportedTraditionalBytesAt1825": 5807458
+      },
+      {
+        "browser": "msedge",
+        "units": 5,
+        "completed365": true,
+        "completed1825": true,
+        "lastPersistedDay": 1825,
+        "saveBytesAt1825": 6944770,
+        "exportedTraditionalBytesAt1825": 21204106
+      }
+    ],
+    "previousFailure": {
+      "status": "PARTIAL_QUOTA_LIMITED",
+      "issue": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/issues/40",
+      "sha": "64bcb4892baf85f8b447d8701697e25233f055c9",
+      "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42485124066",
+      "script": "tools/qa-windows-longrun-v300.mjs",
+      "report": "docs/V300_QA_CARREIRA_LONGA_BROWSER.md",
+      "artifact": "v300-browser-longrun-metrics",
+      "completed365": 4,
+      "total365": 4,
+      "completed1825": 0,
+      "total1825": 4,
+      "blockedByStorage": 4,
+      "hardFailures": 0,
+      "releaseBlocking": true,
+      "scenarios": [
+        {
+          "browser": "chrome",
+          "units": 1,
+          "completed365": true,
+          "lastPersistedDay": 1625,
+          "saveBytesAtBlock": 5179860,
+          "compactBytesAtBlock": 1669977
+        },
+        {
+          "browser": "chrome",
+          "units": 5,
+          "completed365": true,
+          "lastPersistedDay": 425,
+          "saveBytesAtBlock": 4924782,
+          "compactBytesAtBlock": 1607570
+        },
+        {
+          "browser": "msedge",
+          "units": 1,
+          "completed365": true,
+          "lastPersistedDay": 1655,
+          "saveBytesAtBlock": 5248817,
+          "compactBytesAtBlock": 1687557
+        },
+        {
+          "browser": "msedge",
+          "units": 5,
+          "completed365": true,
+          "lastPersistedDay": 425,
+          "saveBytesAtBlock": 4924782,
+          "compactBytesAtBlock": 1607570
+        }
+      ],
+      "origin": "Chrome/Edge 156 Windows GitHub-hosted headless, game file://, synthetic-only. 5-unit fixture includes explicitly artificial capital.",
+      "failClosedOnQuota": true,
+      "originalSavedStateRecovered": true,
+      "exportJsonVerified": true,
+      "compactRoundtripVerified": true,
+      "actualUserSaveUsed": false,
+      "actualPersonalWindowsTested": false,
+      "physicalMobileTested": false,
+      "subjectiveVisualReviewCompleted": false,
+      "solutionImplemented": false,
+      "notes": "Quota de navegador observada ~5MB, sem extrapolar para outros browsers/hardware. CI SUCCESS é êxito do diagnóstico e não êxito do requisito 1825 dias."
+    },
+    "origin": "Chrome/Edge 156 Windows GitHub hosted headless file://. Save 5-unit includes artificial capital limited to synthetic fixture.",
+    "failClosedOnQuota": true,
+    "originalSavedStateRecovered": true,
+    "exportJsonVerified": true,
+    "compactRoundtripVerified": true,
+    "actualUserSaveUsed": false,
+    "actualPersonalWindowsTested": false,
+    "physicalMobileTested": false,
+    "subjectiveVisualReviewCompleted": false,
+    "notes": "4/4 1825 days PASS with IndexedDB, historical localStorage run was 0/4. This does NOT constitute physical/manual QA or homologation."
+  },
+  "storageDurabilityP004": {
+    "status": "IMPLEMENTED_HOSTED_WINDOWS_MIGRATION_AND_LONGRUN_PASS",
+    "code": [
+      "src/ui/durable-store.part.js",
+      "src/ui/app.js",
+      "tools/build.mjs",
+      "src/ui/restock-views.part.js"
+    ],
+    "tests": [
+      "tests/v300_indexeddb_durability_gate.test.mjs",
+      "tools/qa-windows-indexeddb-v300.mjs",
+      "tools/qa-windows-longrun-v300.mjs"
+    ],
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42488245360",
+    "migrationAndTransactionAssertions": 12,
+    "migrationFromV29Synthetic": true,
+    "indexedDbTransactionAbortFailClosed": true,
+    "writeReadback": true,
+    "previousStateRollbackAttemptOnReadbackFailure": true,
+    "migrationRemovesLegacyOnlyAfterCommit": true,
+    "legacyFallbackQuotaTests": 33,
+    "integratedE2EAssertions": 66,
+    "realUserSaveTested": false,
+    "personalWindowsTested": false,
+    "externalBackupRecommended": true,
+    "manualQaCompleted": false,
+    "report": "docs/V300_P004_PERSISTENCIA_INDEXEDDB.md",
+    "latestPostRecoveryLockCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42489340762"
+  }
+}

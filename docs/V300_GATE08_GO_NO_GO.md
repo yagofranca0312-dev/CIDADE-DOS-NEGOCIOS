@@ -122,3 +122,12 @@ Não fazer merge da PR #39, não criar `releases/v3.0.0-homologada` nem tag de r
 - **Governança:** os riscos PR-01 e PR-02 estão **mitigados em código e regressões**. O requisito técnico **RG-07 foi encerrado como VERIFIED** com evidência [CI #42435965283 (418/418 PASS)](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435965283). A matriz evolui de **4/18 para 5/18 verificados**, com **13/18 ainda pendentes**; checkpoints 02/03 continuam **PARCIAIS** por QA visual/operacional humano não executado.
 
 **Veredito mantido:** **NO-GO** de release V3.0; PR #39 DRAFT e `main`/V2.9 intocadas. Sem merge, publicação, tag ou homologação automática.
+
+
+## Adendo de QA integrado Windows hospedado — P1-02 (07/11/2026)
+
+**Nova evidência:** [`docs/V300_QA_INTEGRADO_WINDOWS_HOSTED.md`](V300_QA_INTEGRADO_WINDOWS_HOSTED.md), [CI Windows #42437328042](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42437328042) — **SUCCESS, 66/66 asserções integradas PASS**, 33 no Chrome e 33 no Edge reais, Windows hospedado/headless, `file://`, **sem dados privados**. Cada navegador percorreu **13 etapas reais da UI** e uma carreira de **duas empresas/38 dias**: comércio, recebimento, RH, logística, demonstrativos, proposta cancelada, compra Patch A, empréstimo e pagamento de folha. Navegação e propostas não lançaram razão; crédito não virou receita; baixa da folha não repetiu a despesa; reload preservou o save.
+
+**Reclassificação com escopo restrito:** `RG-13 = PARTIAL` (UI navegada e controles exercitados; não houve revisão visual por humano nem equipamento pessoal) e `RG-16 = PARTIAL` (jogo integrado exercitado em 38 dias; balanceamento e aceitação humana não concluídos). O checkpoint `3.0.0-03` segue **PARCIAL** por rotas alternativas/experiência gráfica não cobertas. **Nenhum novo requisito virou `VERIFIED`**: a matriz continua em **5/18 verificados, 13/18 pendentes**. As linhas históricas acima que dizem `RG-13/16 NOT_EXECUTED` descrevem o estágio **antes** desta rodada, não o estado atual.
+
+**Não verificado:** saves pessoais, Windows físico do usuário, resolução e acessibilidade avaliadas por pessoa, mobile real, longa carreira no navegador e aceite final. **Gate 08 mantém NO-GO**, PR #39 DRAFT, sem merge, tag, publicação ou homologação.

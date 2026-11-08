@@ -20,6 +20,8 @@
 | `3.0.0-07` | Contrato de API só leitura para apresentação V3.1 | **PASS TÉCNICO (CI):** adaptador sem mutação, 11 testes; [CI 381/381 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42428343258); interface V3.1 ainda não existe |
 | `3.0.0-08` | CI final, QA Windows/desktop/mobile, saves, aceite, snapshot de release | **AUDITORIA CONCLUÍDA: NO-GO PARA RELEASE**. [Parecer](V300_GATE08_GO_NO_GO.md), 18 requisitos, 8 testes de prontidão, [CI 389/389 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42429308063). **BLOQUEADO** até resolver riscos e QA real |
 
+**Saneamento após NO-GO — P0-01:** [guarda transacional do salvamento](V300_P0_PERSISTENCIA_TRANSACIONAL.md) implementada na branch de auditoria, com regressões Node em `localStorage` simulado e HTML regenerado; **não foi provada em Chrome/Edge Windows real**. O gate 04/05/08 continua parcial/bloqueado; RG-06 e RG-12 permanecem abertos até QA manual.
+
 **Evidências:** [dossiê dos oito gates](V300_CONSOLIDACAO_INTEGRAL_GATES.md) · [matriz de propriedade](V300_MATRIZ_CONTRATOS_E_PROPRIEDADE.md) · [migração/rollback](V300_MIGRACAO_ROLLBACK_SAVES.md) · [desempenho](V300_PERFORMANCE_ESTABILIDADE.md) · [guia operacional](JOGAR_GUIA_V300.md).
 
 **Sequência após a etapa 7:** documentação `06` e contrato de leitura `07` aprovados em CI → retornar às lacunas manuais dos checkpoints `01–05` → auditar prontidão **GO/NO-GO** no `08`. A publicação depende de QA real e aceite explícito; não confundir `PASS` em CI com homologação humana. Versão homologada só muda com autorização explícita após as provas obrigatórias.

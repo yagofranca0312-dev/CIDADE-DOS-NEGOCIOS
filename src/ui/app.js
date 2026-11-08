@@ -426,6 +426,7 @@
     if(startupBlocked){notify('Carregamento do save ainda não confirmado; ação recusada.',true);return false;}
     if(commitInFlight){notify('Existe outra gravação em andamento. Aguarde a confirmação antes de repetir.',true);return false;}
     commitInFlight=true;
+    document.body.dataset.storageBusy='true';
     try{
       const result=Core.dispatch(state,{type,id:nextId(),payload});
       if(!result.ok){notify(result.error,true);return false;}
@@ -441,7 +442,7 @@
       }
       notify(result.message);
       return true;
-    }finally{commitInFlight=false;}
+    }finally{commitInFlight=false;document.body.dataset.storageBusy='false';}
   }
   // Rotas anteriores de Finanças e Fiscal permanecem compatíveis.
   function goto(name,requestedSection=null){
@@ -592,6 +593,9 @@
     if(!file)return;
     if(file.size>25_000_000){notify('Save excede 25 MB.',true);return;}
     if(state?.player.cityId&&!confirm('Substituir a carreira atual pelo save importado? Recomendamos exportar antes.'))return;
+    if(startupBlocked||commitInFlight){notify('Outra operação está em andamento. Importação não iniciada.',true);return;}
+    commitInFlight=true;
+    document.body.dataset.storageBusy='true';
     try{
       const incoming=Core.importSave(await file.text());
       if(!await backupCurrent())return;
@@ -604,6 +608,7 @@
       render();notify(incoming.message);
     }
     catch(e){notify(`Importação rejeitada: ${e.message}. A carreira anterior foi preservada.`,true);}
+    finally{commitInFlight=false;document.body.dataset.storageBusy='false';}
   }
   function launchAuto(){
     if(timer){resetTimer();return;}

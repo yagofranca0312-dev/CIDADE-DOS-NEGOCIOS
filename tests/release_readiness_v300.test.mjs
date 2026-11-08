@@ -45,15 +45,18 @@ test('V3.0-08: gates 01–05 permanecem parciais e 06/07 somente técnica/docume
 });
 
 test('V3.0-08: persistência com write-ahead é proteção automatizada, QA real continua aberto',()=>{
-  const save=ui.split('  function persistLocal(candidate){')[1]?.split('  function backupCurrent(){')[0];
-  const commit=ui.split('  function commit(type,payload={}){')[1]?.split('  // Rotas anteriores')[0];
-  assert.ok(save&&commit,'Contrato UI de persistência candidato não localizado');
-  assert.match(save,/Core\.exportSave\(candidate\)/);
-  assert.match(save,/localStorage\.setItem\(KEY,contents\)/);
-  assert.match(save,/localStorage\.getItem\(KEY\)!==contents/);
-  assert.match(commit,/if\(!persistLocal\(result\.state\)\)return false;/);
-  assert.ok(commit.indexOf('persistLocal(result.state)')<commit.indexOf('state=result.state'),
-    'O estado só pode mudar depois de confirmar a persistência');
+  const save=ui.split('  async function persistDurable(candidate){')[1]?.split('  async function backupCurrent(){')[0];
+  const commit=ui.split('  async function commit(type,payload={}){')[1]?.split('  // Rotas anteriores')[0];
+  const durable=read('src/ui/durable-store.part.js');
+  assert.ok(save&&commit,'Contrato UI de persistência durável candidata não localizado');
+  assert.match(save,/Core\.exportSaveCompact\(candidate\)/);
+  assert.match(save,/await CidadeDurableStore\.writeCurrent/);
+  assert.match(durable,/await transact\('readwrite',store=>store\.put\(raw,key\)\)/);
+  assert.match(durable,/const previous=await read\(key\)/);
+  assert.match(durable,/await read\(key\)/);
+  assert.match(commit,/if\(!await persistDurable\(result\.state\)\)return false;/);
+  assert.ok(commit.indexOf('await persistDurable(result.state)')<commit.indexOf('state=result.state'),
+    'O estado só pode mudar depois de confirmar a persistência IndexedDB');
   const r=evidence.requirements.find(x=>x.id==='RG-06');
   assert.equal(r.status,'PARTIAL','Windows hospedado não substitui QA da instalação pessoal');
   assert.match(r.evidence,/actions\/runs\/42432588846/);

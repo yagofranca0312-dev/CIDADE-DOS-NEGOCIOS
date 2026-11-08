@@ -1,3 +1,9 @@
+# Cidade dos Negócios — V3.1.0 · interface imersiva
+
+Interface city-first, câmera de mapa, dock, painéis contextuais e mobile emulado. Motor e schema 9 da V3.0 preservados. Consulte `docs/V310_IMPLANTACAO_HOMOLOGACAO.md` para limitações e evidências.
+
+## Histórico da V3.0.0 homologada por exceção
+
 # Cidade dos Negócios — V3.0.0 · promoção excepcional autorizada (08/11/2026)
 
 **Titular autorizou a dispensa das provas manuais remanescentes e a homologação com riscos aceitos.** Identificação do executável de promoção: `3.0.0`, `schemaVersion 9`. O protocolo excepcional e as limitações constam em [HOMOLOGACAO_V300_EXCEPCIONAL.md](docs/HOMOLOGACAO_V300_EXCEPCIONAL.md). A confirmação da publicação depende de CI da promoção e do checkpoint de release; **o gate ordinário permanece NO-GO e não foi falsificado**. A V2.9 homologada fica preservada para recuperação. No Windows, exporte JSON V1 tradicional antes de trocar a versão; não há garantia de compatibilidade integral em saves pessoais não comprovados.

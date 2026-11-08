@@ -14,7 +14,7 @@ test('Módulos e pontos de entrada presentes',()=>{for(const token of ['const Ci
 test('Aviso de cobertura fiscal explícita',()=>{assert.match(html,/Cenários tributários não são apuração legal/);assert.match(html,/NOT_COVERED/);});
 test('Build reproduzível byte a byte',()=>{
  const template=readFileSync('src/shell/index.template.html','utf8'),css=readFileSync('src/shell/theme.css','utf8'),v2css=readFileSync('src/shell/v2.css','utf8'),core=readFileSync('src/core/game.js','utf8'),visual=readFileSync('src/visual/city-scene.js','utf8'),ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/company-views.part.js','utf8')+readFileSync('src/ui/restock-views.part.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
- const uiBundle=readFileSync('src/ui/app.js','utf8').replace('/* CDN_COMPANY_VIEWS */',readFileSync('src/ui/company-views.part.js','utf8')).replace('/* CDN_RESTOCK_VIEWS */',readFileSync('src/ui/restock-views.part.js','utf8')).replace('/* CDN_MARKET_VIEWS */',readFileSync('src/ui/market-views.part.js','utf8')).replace('/* CDN_FINANCE_VIEWS */',readFileSync('src/ui/finance-views.part.js','utf8')).replace('/* CDN_LOGISTICS_VIEWS */',readFileSync('src/ui/logistics-views.part.js','utf8'));
+ const uiBundle=readFileSync('src/ui/app.js','utf8').replace('/* CDN_COMPANY_VIEWS */',readFileSync('src/ui/company-views.part.js','utf8')).replace('/* CDN_RESTOCK_VIEWS */',readFileSync('src/ui/restock-views.part.js','utf8')).replace('/* CDN_MARKET_VIEWS */',readFileSync('src/ui/market-views.part.js','utf8')).replace('/* CDN_FINANCE_VIEWS */',readFileSync('src/ui/finance-views.part.js','utf8')).replace('/* CDN_LOGISTICS_VIEWS */',readFileSync('src/ui/logistics-views.part.js','utf8')).replace('/* CDN_V31_IMMERSIVE */',readFileSync('src/ui/v31-immersive.part.js','utf8'));
  const art='data:image/webp;base64,'+readFileSync('src/visual/keyart-v21.webp.b64','utf8').trim();
  const v21css=readFileSync('src/shell/v21.css','utf8').replace('__CDN_V21_KEYART__',art);
  const scene=readFileSync('src/visual/tiangua-scene.js','utf8')
@@ -23,7 +23,7 @@ test('Build reproduzível byte a byte',()=>{
   .replace('__CDN_TIANGUA_MARKET_SPRITE__','data:image/webp;base64,'+readFileSync('src/visual/scenes/tiangua/assets/mercado.webp.b64','utf8').trim())
   .replace('__CDN_TIANGUA_BAKERY_SPRITE__','data:image/webp;base64,'+readFileSync('src/visual/scenes/tiangua/assets/padaria.webp.b64','utf8').trim())
   .replace('__CDN_TIANGUA_CLOTHING_SPRITE__','data:image/webp;base64,'+readFileSync('src/visual/scenes/tiangua/assets/roupas.webp.b64','utf8').trim());
- const expected=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21css).replace('/* CDN_V22_CSS */',readFileSync('src/shell/v22.css','utf8')).replace('/* CDN_V221_CSS */',readFileSync('src/shell/v221-city.css','utf8')).replace('/* CDN_CORE */',core).replace('/* CDN_VISUAL */',visual+'\n'+scene).replace('/* CDN_UI */',readFileSync('src/ui/durable-store.part.js','utf8')+'\n'+uiBundle).replace(/\r\n?/g,'\n');
+ const expected=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21css).replace('/* CDN_V22_CSS */',readFileSync('src/shell/v22.css','utf8')).replace('/* CDN_V221_CSS */',readFileSync('src/shell/v221-city.css','utf8')).replace('/* CDN_V31_CSS */',readFileSync('src/shell/v31.css','utf8')).replace('/* CDN_CORE */',core+'\n'+readFileSync('src/contracts/v31-read-model.mjs','utf8').replace('export const V31_READ_MODEL_VERSION','const V31_READ_MODEL_VERSION').replace('export function createV31ReadModel','function createV31ReadModel')+'\nconst CidadeV31ReadModel=createV31ReadModel(CidadeCore);').replace('/* CDN_VISUAL */',visual+'\n'+scene).replace('/* CDN_UI */',readFileSync('src/ui/durable-store.part.js','utf8')+'\n'+uiBundle).replace(/\r\n?/g,'\n');
  assert.equal(createHash('sha256').update(expected).digest('hex'),createHash('sha256').update(html).digest('hex'));
 });
 
@@ -50,7 +50,7 @@ test('Hotfix: preço próprio visível, concorrente independente e confirmação
 test('V1.3: schema 5 com migração da V1 e formato de exportação validado',()=>{
  const core=readFileSync('src/core/game.js','utf8');
  assert.match(core,/SCHEMA_VERSION = 9/);
- assert.match(core,/VERSION = '3\.0\.0'/);
+ assert.match(core,/VERSION = '3\.1\.0'/);
  assert.match(core,/function importSave\(raw\)/);
  assert.match(core,/function upgradedState\(original\)/);
 });

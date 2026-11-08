@@ -202,12 +202,12 @@ test('V3.0-07: nenhuma mudança no build/HTML; adapter separado para V3.1',()=>{
   const build=readFileSync('tools/build.mjs','utf8');
   const shell=readFileSync('src/ui/app.js','utf8');
   const contract=readFileSync('src/contracts/v31-read-model.mjs','utf8');
-  assert.doesNotMatch(build,/v31-read-model/);
+  assert.match(build,/v31-read-model/);
   assert.doesNotMatch(shell,/v31-read-model/);
   assert.doesNotMatch(contract,/\bwindow\b|\bdocument\b|localStorage\.|setInterval\(|setTimeout\(|requestAnimationFrame\(/);
   assert.doesNotMatch(contract,/core\.dispatch\s*\(|Core\.dispatch\s*\(/);
   assert.match(contract,/ADVISORY_ONLY/);
   assert.match(contract,/V31_READ_MODEL_VERSION = 1/);
   const pkg=JSON.parse(readFileSync('package.json','utf8'));
-  assert.equal(pkg.version,'3.0.0');
+  assert.equal(pkg.version,'3.1.0');
 });

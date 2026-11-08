@@ -23,7 +23,13 @@ const tianguaVisual=readFileSync(resolve(cwd,'src/visual/tiangua-scene.js'),'utf
  .replace('__CDN_TIANGUA_CLOTHING_SPRITE__','data:image/webp;base64,'+tianguaSprites.roupas);
 if(tianguaVisual.includes('__CDN_TIANGUA_'))throw Error('Ativos visuais Tianguá incompletos');
 const v221css=readFileSync(resolve(cwd,'src/shell/v221-city.css'),'utf8');
+const v31css=readFileSync(resolve(cwd,'src/shell/v31.css'),'utf8');
 const core=readFileSync(resolve(cwd,'src/core/game.js'),'utf8');
+const v31contract=readFileSync(resolve(cwd,'src/contracts/v31-read-model.mjs'),'utf8')
+ .replace('export const V31_READ_MODEL_VERSION','const V31_READ_MODEL_VERSION')
+ .replace('export function createV31ReadModel','function createV31ReadModel')+
+ '\nconst CidadeV31ReadModel=createV31ReadModel(CidadeCore);';
+const v31ui=readFileSync(resolve(cwd,'src/ui/v31-immersive.part.js'),'utf8');
 const durableStore=readFileSync(resolve(cwd,'src/ui/durable-store.part.js'),'utf8');
 const uiShell=readFileSync(resolve(cwd,'src/ui/app.js'),'utf8');
 const companyViews=readFileSync(resolve(cwd,'src/ui/company-views.part.js'),'utf8');
@@ -31,7 +37,8 @@ const restockViews=readFileSync(resolve(cwd,'src/ui/restock-views.part.js'),'utf
 const marketViews=readFileSync(resolve(cwd,'src/ui/market-views.part.js'),'utf8');
 const financeViews=readFileSync(resolve(cwd,'src/ui/finance-views.part.js'),'utf8');
 const logisticsViews=readFileSync(resolve(cwd,'src/ui/logistics-views.part.js'),'utf8');
-const ui=uiShell.replace('/* CDN_COMPANY_VIEWS */',companyViews).replace('/* CDN_RESTOCK_VIEWS */',restockViews).replace('/* CDN_MARKET_VIEWS */',marketViews).replace('/* CDN_FINANCE_VIEWS */',financeViews).replace('/* CDN_LOGISTICS_VIEWS */',logisticsViews);
+const ui=uiShell.replace('/* CDN_COMPANY_VIEWS */',companyViews).replace('/* CDN_RESTOCK_VIEWS */',restockViews).replace('/* CDN_MARKET_VIEWS */',marketViews).replace('/* CDN_FINANCE_VIEWS */',financeViews).replace('/* CDN_LOGISTICS_VIEWS */',logisticsViews).replace('/* CDN_V31_IMMERSIVE */',v31ui);
+if (ui.includes('/* CDN_V31_IMMERSIVE */'))throw Error('V3.1 incompleto');
 if (ui.includes('/* CDN_COMPANY_VIEWS */') || ui.includes('/* CDN_RESTOCK_VIEWS */') || ui.includes('/* CDN_MARKET_VIEWS */') || ui.includes('/* CDN_FINANCE_VIEWS */') || ui.includes('/* CDN_LOGISTICS_VIEWS */')) throw Error('Fragmentos visuais incompletos');
 const pkg=JSON.parse(readFileSync(resolve(cwd,'package.json'),'utf8'));
 const coreVersion=core.match(/const VERSION = '([^']+)'/)?.[1];
@@ -42,8 +49,8 @@ for (const id of ['intro-version','build-version','footer-version']) {
 if (!template.includes(`<title>Cidade dos Negócios 1 · v${coreVersion}</title>`)) throw Error('Versão incorreta no título HTML');
 // Os checkouts Windows podem usar CRLF nos fragmentos. O artefato offline tem
 // serialização canônica LF em qualquer SO: mesmo arquivo deve ter mesmo SHA-256.
-const html=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21Inline).replace('/* CDN_V22_CSS */',v22css).replace('/* CDN_V221_CSS */',v221css).replace('/* CDN_CORE */',core).replace('/* CDN_VISUAL */',visual+'\n'+tianguaVisual).replace('/* CDN_UI */',durableStore+'\n'+ui).replace(/\r\n?/g,'\n');
-if (/\/\* CDN_(CSS|V2_CSS|V21_CSS|V22_CSS|V221_CSS|CORE|VISUAL|UI) \*\//.test(html)) throw Error('Build incompleto');
+const html=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21Inline).replace('/* CDN_V22_CSS */',v22css).replace('/* CDN_V221_CSS */',v221css).replace('/* CDN_V31_CSS */',v31css).replace('/* CDN_CORE */',core+'\n'+v31contract).replace('/* CDN_VISUAL */',visual+'\n'+tianguaVisual).replace('/* CDN_UI */',durableStore+'\n'+ui).replace(/\r\n?/g,'\n');
+if (/\/\* CDN_(CSS|V2_CSS|V21_CSS|V22_CSS|V221_CSS|V31_CSS|CORE|VISUAL|UI) \*\//.test(html)) throw Error('Build incompleto');
 writeFileSync(resolve(cwd,'index.html'),html,'utf8');
 const hash=createHash('sha256').update(html).digest('hex');
 console.log(`HTML gerado: ${Buffer.byteLength(html)} bytes | SHA256 ${hash}`);

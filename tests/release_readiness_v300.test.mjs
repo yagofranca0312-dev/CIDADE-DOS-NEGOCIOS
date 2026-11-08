@@ -91,7 +91,7 @@ test('V3.0-08: auditoria ordinária devolve NO_GO sem falhar CI de evidência',(
   assert.equal(out.totalRequirements,18);
   assert.equal(out.gatesNotCompleted.length,5);
   assert.equal(out.candidateMissingFields.length,3);
-  assert.equal(out.versionMismatch,false);
+  assert.equal(out.versionMismatch,true,'A auditoria antiga V3.0 nao libera a V3.1');
   assert.ok(out.unresolved.some(x=>x.id==='RG-06'));
   assert.ok(out.unresolved.some(x=>x.id==='RG-18'));
 });

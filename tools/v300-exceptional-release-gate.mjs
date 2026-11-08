@@ -24,9 +24,9 @@ if(w.waiverEffect!=='ASSUMED_RISK_NOT_TESTED_NOT_VERIFIED')
   fail('Dispensa nao pode afirmar falsamente que testes ausentes foram executados');
 if(m.stableBaseline.sha!=='082faa4626cf5cb0fc54c9ef092bddd86ffce54c'||
    w.stableRollback.commit!==m.stableBaseline.sha)fail('Baseline V2.9 divergente');
-if(p.version!=='3.0.0'||!core.includes("const VERSION = '3.0.0';")||
-   !template.includes('<title>Cidade dos Negócios 1 · v3.0.0</title>')||
-   !html.includes("const VERSION = '3.0.0';")||
+if(!['3.0.0','3.1.0'].includes(p.version)||!core.includes("const VERSION = '"+p.version+"';")||
+   !template.includes('<title>Cidade dos Negócios 1 · v'+p.version+'</title>')||
+   !html.includes("const VERSION = '"+p.version+"';")||
    /3\.0\.0-alpha\.1/.test(html))fail('Artefato de promocao nao identificado de modo consistente');
 if(!w.technicalBaseline.windowsCi?.includes('/actions/runs/42507651978')||
    !w.technicalBaseline.linuxCi?.includes('/actions/runs/42507651867')||

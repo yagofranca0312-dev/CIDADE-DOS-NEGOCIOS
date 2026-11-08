@@ -1180,6 +1180,196 @@ html:has(.onboarding:not([hidden])),body:has(.onboarding:not([hidden])){max-widt
 }
 .v31-onboard-panel .v21-hero-brand h1{max-inline-size:calc(100% - 72px)!important}
 
+
+/* V3.1.0 usabilidade: moldura independente e rolagem SOMENTE no painel ativo. */
+body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden]){
+  display:flex!important;
+  flex-direction:column!important;
+  overflow:hidden!important;
+  min-height:0!important;
+  padding:12px 16px 14px!important;
+  isolation:isolate;
+}
+body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden])>.v31-command-chrome{
+  position:relative!important;
+  top:auto!important;left:auto!important;
+  z-index:12!important;
+  flex:0 0 auto!important;
+  min-height:0;
+  margin:0!important;
+  padding:8px 9px 0!important;
+  border-radius:13px 13px 0 0;
+  background:#102e46!important;
+  backdrop-filter:none!important;
+}
+body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden])>.v31-command-metrics{
+  position:relative!important;
+  z-index:11!important;
+  flex:0 0 auto!important;
+  min-height:0;
+  margin:0!important;
+  padding:8px 9px!important;
+  border-radius:0 0 11px 11px;
+  background:#0b263d!important;
+}
+body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden])>.v23-subpane:not([hidden]){
+  display:block!important;
+  flex:1 1 auto!important;
+  min-height:0!important;
+  width:100%!important;
+  max-width:100%!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:contain!important;
+  scrollbar-gutter:stable;
+  padding:12px 8px 14px 2px;
+  margin:0!important;
+  border-radius:0 0 9px 9px;
+  background:transparent;
+  scrollbar-width:thin;
+  scrollbar-color:#648ba2 #0b283e;
+}
+body.v31-overlay-open .view[data-view]:not([data-view="cidade"])>.v23-subpane[hidden]{
+  display:none!important;
+}
+body.v31-overlay-open .v31-command-tabs .v23-subtab{
+  border-radius:10px 10px 0 0!important;
+  flex:0 0 auto;
+}
+body.v31-overlay-open .v31-command-tabs .v23-subtab[aria-selected="true"]{
+  border-bottom:3px solid #fbd487!important;
+  box-shadow:0 0 15px #f0c47e58,inset 0 1px #fff3c956!important;
+}
+body.v31-overlay-open .v31-command-metrics .v31-command-kpi{
+  min-height:66px!important;
+  padding:8px 10px!important;
+  gap:3px!important;
+}
+body.v31-overlay-open .v31-command-metrics .v31-command-kpi:before{height:2px}
+body.v31-overlay-open .v31-command-metrics .v31-command-kpi strong{
+  font-size:clamp(.88rem,1.5vw,1.2rem)!important;
+  line-height:1.15!important;
+}
+body.v31-overlay-open .v31-overlay-close{
+  position:absolute!important;
+  top:16px!important;
+  right:20px!important;
+  left:auto!important;
+  float:none!important;
+  margin:0!important;
+  z-index:60!important;
+}
+body.v31-overlay-open .v23-subpane :is(.dashboard-grid,.filter-fields,.restock-controls){
+  min-width:0;
+}
+body.v31-overlay-open .v23-subpane :is(input,select,textarea){
+  max-width:100%;
+  min-width:0;
+  box-sizing:border-box;
+}
+body.v31-overlay-open .v23-subpane .table-scroll{
+  max-width:100%;
+  overflow-x:auto;
+}
+body.v31-immersive .v22-lot-nav{
+  left:auto!important;
+  right:calc(12px + env(safe-area-inset-right))!important;
+  bottom:calc(96px + env(safe-area-inset-bottom))!important;
+  width:min(194px,calc(100vw - 24px))!important;
+  z-index:118!important;
+}
+body.v31-immersive .city-stage>.right-column{
+  left:calc(12px + env(safe-area-inset-left))!important;
+  right:auto!important;
+  bottom:calc(96px + env(safe-area-inset-bottom))!important;
+}
+@media(max-width:700px){
+  body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden]){
+    height:92dvh!important;
+    max-height:92dvh!important;
+    min-height:0!important;
+    width:100vw!important;
+    padding:8px 10px 10px!important;
+    border-radius:18px 18px 0 0!important;
+  }
+  body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden])>.v31-command-chrome{
+    padding:5px 6px 0!important;
+    margin:0!important;
+  }
+  body.v31-overlay-open .v31-command-chrome .v31-command-header{
+    padding:2px 49px 6px 4px!important;
+  }
+  body.v31-overlay-open .v31-command-chrome .v31-command-title h2{
+    font-size:1.15rem!important;line-height:1.12!important;
+    margin:3px 0!important;
+  }
+  body.v31-overlay-open .v31-command-chrome .v31-command-title p{
+    font-size:.61rem!important;line-height:1.2!important;
+  }
+  body.v31-overlay-open .v31-command-tabs .v23-subtab{
+    min-width:72px!important;
+    min-height:46px!important;
+    padding:4px 7px!important;
+    gap:2px!important;
+  }
+  body.v31-overlay-open .v31-command-tabs .v23-subtab .v31-tab-icon{
+    font-size:.96rem!important;
+  }
+  body.v31-overlay-open .v31-command-tabs .v23-subtab .v31-tab-label{
+    font-size:.6rem!important;
+  }
+  body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden])>.v31-command-metrics{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:5px!important;
+    padding:5px 6px!important;
+  }
+  body.v31-overlay-open .v31-command-metrics .v31-command-kpi{
+    padding:6px 8px!important;
+    min-height:48px!important;
+    gap:2px!important;
+    border-radius:8px!important;
+  }
+  body.v31-overlay-open .v31-command-metrics .v31-command-kpi small{
+    font-size:.54rem!important;
+    line-height:1.05!important;
+  }
+  body.v31-overlay-open .v31-command-metrics .v31-command-kpi strong{
+    font-size:.86rem!important;
+    line-height:1.05!important;
+  }
+  body.v31-overlay-open .v31-command-metrics .v31-command-kpi:before{
+    width:13px;height:2px;
+  }
+  body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden])>.v23-subpane:not([hidden]){
+    padding:8px 4px 16px 0!important;
+    min-height:0!important;
+    scrollbar-gutter:auto;
+  }
+  body.v31-overlay-open .v31-overlay-close{
+    top:10px!important;
+    right:14px!important;
+    width:38px!important;min-width:38px!important;
+    height:38px!important;min-height:38px!important;
+  }
+  body.v31-immersive .v22-lot-nav{
+    left:auto!important;
+    right:calc(8px + env(safe-area-inset-right))!important;
+    bottom:calc(83px + env(safe-area-inset-bottom))!important;
+    width:min(174px,calc(100vw - 16px))!important;
+    max-width:174px!important;
+  }
+  body.v31-immersive .city-stage>.right-column{
+    left:calc(8px + env(safe-area-inset-left))!important;
+    right:auto!important;
+    bottom:calc(84px + env(safe-area-inset-bottom))!important;
+  }
+}
+@media(max-width:700px) and (max-height:640px){
+  body.v31-overlay-open .v31-command-chrome .v31-command-title p{display:none}
+  body.v31-overlay-open .v31-command-chrome .v31-command-kicker{font-size:.54rem}
+  body.v31-overlay-open .v31-command-metrics .v31-command-kpi{min-height:42px!important}
+}
+
   </style>
 </head>
 <body>
@@ -6690,6 +6880,7 @@ function bindBalancePlan(){
     // V3.1: navegacao e camera sao apenas UI; o motor permanece a unica autoridade.
   let immersiveOpen=null,v31CameraCity=null,v31Camera={zoom:1,x:0,y:0};
   let v31ReturnFocus=null,v31LastRevision=null,v31CameraCenterPending=false;
+  const v31LastPaneKey=Object.create(null);
   const v31CameraStore='cidade-v31-camera-ui-v1';
   function v31CameraLoad(cityId){
     if(v31CameraCity===cityId)return;
@@ -6858,6 +7049,16 @@ function bindBalancePlan(){
         (metrics[i][0]==='UNIDADES SEM ESTOQUE'?Number(empty)>0:
           Number(metrics[i][1])===0));
     }
+    // Cada mudança de aba começa no topo do próprio painel; o cabeçalho não é scroller.
+    if(root==='administrativo'){
+      const shared=$('admin-shared-filters');
+      const target=surface.querySelector('[data-section-pane="administrativo:'+activeSection.administrativo+'"]');
+      if(shared&&target&&['financas','contabilidade'].includes(activeSection.administrativo)&&shared.parentElement!==target)
+        target.prepend(shared);
+    }
+    const visiblePane=surface.querySelector(':scope > .v23-subpane:not([hidden])');
+    const paneKey=visiblePane?.getAttribute('data-section-pane')||root;
+    if(visiblePane&&v31LastPaneKey[root]!==paneKey){visiblePane.scrollTop=0;v31LastPaneKey[root]=paneKey;}
     const nav=surface.querySelector('.v31-command-tabs');
     if(nav){
       const activeTab=nav.querySelector('[aria-selected="true"]');
@@ -6911,6 +7112,31 @@ function bindBalancePlan(){
       }
       const kpis=header.querySelector('.v31-command-kpis');
       if(kpis){kpis.classList.add('v31-command-metrics');chrome.after(kpis);}
+    }
+    // Repartição estática: apenas o painel ativo pode rolar, nunca a moldura modal.
+    for(const root of ['empresa','mercado','administrativo','sistema']){
+      const surface=document.querySelector('.view[data-view="'+root+'"]');
+      const panes=[...surface.querySelectorAll(':scope > .v23-subpane')];
+      const excluded=node=>node.classList.contains('v31-command-chrome')||
+        node.classList.contains('v31-command-metrics')||
+        node.classList.contains('v23-subpane')||node.id==='v31-overlay-close';
+      const loose=[...surface.children].filter(node=>!excluded(node));
+      if(root==='sistema'){
+        const system=document.createElement('div');
+        system.id='v31-system-pane';
+        system.className='v23-subpane v31-system-pane';
+        system.setAttribute('role','region');
+        system.setAttribute('aria-label','Configurações e salvamento da carreira');
+        system.append(...loose);
+        surface.append(system);
+      }else{
+        const home=root==='mercado'?'mercado:outros':
+          root==='administrativo'?'administrativo:financas':root+':dashboard';
+        const pane=panes.find(el=>el.dataset.sectionPane===home)||panes[0];
+        if(!pane)throw new Error('Painel de departamento ausente: '+root);
+        // Rivais e ferramentas de apoio permanecem acessíveis na seção apropriada.
+        pane.prepend(...loose);
+      }
     }
     for(const button of document.querySelectorAll('[data-v31-open]')){
       button.addEventListener('click',()=>{

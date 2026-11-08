@@ -1,7 +1,7 @@
 # V3.0 — Saneamento P0-01: gravação transacional do progresso no navegador
 
 **Registro técnico:** 07/11/2026 (America/Fortaleza).  
-**Status:** **MITIGAÇÃO IMPLEMENTADA E APROVADA EM CI 400/400 TESTES; QA WINDOWS/BROWSER PENDENTE**. [CI #42431354313](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42431354313), commit `d42df11e4a807a67b70336b2a8ac6cb25dc9e442`. HTML gerado com 1.479.945 bytes, SHA-256 `3dea7a0560ae97ec6b994a470068ce7d72fd9eff18f07779584ef9095cb8e398`.  
+**Status:** **MITIGAÇÃO APROVADA EM CI E EM CHROME/EDGE REAIS NO WINDOWS HOSPEDADO (33/33 PASS), COM QA PESSOAL AINDA PENDENTE**. [CI Windows #42432588846](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588846). [CI #42431354313](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42431354313), commit `d42df11e4a807a67b70336b2a8ac6cb25dc9e442`. HTML gerado com 1.479.945 bytes, SHA-256 `3dea7a0560ae97ec6b994a470068ce7d72fd9eff18f07779584ef9095cb8e398`.  
 **Origem:** [Etapa 8 — parecer NO-GO](V300_GATE08_GO_NO_GO.md), `RG-06` e `RG-12`.  
 **Branch:** `audit/v3.0-consolidacao-integral-v2-20261107`; PR #39 continua DRAFT, `main` e V2.9 homologada intocadas.
 
@@ -45,9 +45,9 @@ Arquivo: [`tests/persistence_p0_v300.test.mjs`](../tests/persistence_p0_v300.tes
 8. Avanço de 30 dias recusado preserva tick e seed RNG;
 9. Exportação/serialização que falha não aplica o comando;
 10. Importação e restauração usam `persistLocal` **antes** de trocar a carreira, teste estrutural;
-11. `RG-06` e `RG-12` seguem abertos até ensaios em navegador real.
+11. `RG-06` e `RG-12` seguem abertos **parcialmente**, apesar do ensaio real em Chrome/Edge no Windows hospedado, até teste no computador do jogador com saves autênticos e recuperação após reinício.
 
-**Teste histórico atualizado:** `tests/stabilization_v241.test.mjs` deixa de exigir o antigo `if(!saveLocal())` e protege a nova guarda. O teste do gate 8 permanece estrito: **nenhuma afirmação de QA Windows foi promovida**.
+**Teste histórico atualizado:** `tests/stabilization_v241.test.mjs` deixa de exigir o antigo `if(!saveLocal())` e protege a nova guarda. O teste do gate 8 permanece estrito: **apenas QA Windows hospedado/headless está comprovado**; nada foi promovido a QA pessoal/instalação do jogador.
 
 ## Limites honestos
 
@@ -55,7 +55,7 @@ Arquivo: [`tests/persistence_p0_v300.test.mjs`](../tests/persistence_p0_v300.tes
 - Uma execução de escrita pode lançar após modificar a chave por anomalia da implementação: o guard tenta restaurar o conteúdo anterior e alerta se não conseguir confirmar. **Não há garantia de recuperação nesse caso excepcional.**
 - O guard **não** permite continuar uma carreira com persistência local falhando. O usuário deve recuperar espaço/permissão e **exportar um JSON externo verificando o download**; não afirmar que um arquivo foi salvo só por emitir `a.click()`.
 - Saves muito grandes (1.825 dias/5 unidades) podem exceder quota muito antes do limite próprio de 25 milhões de caracteres. O backup compacto V2 exige versão V2.9+; para rollback amplo preservar JSON tradicional V1.
-- Não foram realizadas medições em Chrome/Edge Windows, modo `file://`, Android/iOS nem saves particulares. **`RG-06` continua `NOT_VERIFIED` e `RG-12` `NOT_EXECUTED` até evidência manual.**
+- Chrome/Edge **reais** em Windows hospedado (`file://`) passaram em [33 checagens automatizadas](V300_QA_WINDOWS_HOSTED.md), inclusive `QuotaExceededError` real, reinício e export/import JSON sintético. **Não houve QA no Windows do jogador, Android/iOS físico ou save pessoal. `RG-06` e `RG-12` estão `PARTIAL`, não `VERIFIED`.**
 - O HTML `index.html` deve ser regenerado no mesmo commit da correção; `npm run check`, benchmark e GitHub CI precisam validar **a branch exata** antes de declarar a mitigação técnica aprovada.
 
 ## Próximo ensaio manual obrigatório

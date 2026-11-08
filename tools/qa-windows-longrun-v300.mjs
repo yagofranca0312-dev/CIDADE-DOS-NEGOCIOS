@@ -64,6 +64,7 @@ async function startPage(context,errors){
   page.on('dialog',async d=>{if(d.type()==='confirm')await d.accept();else await d.dismiss();});
   await page.goto(TARGET,{waitUntil:'load',timeout:50000});
   await page.locator('#career-form').waitFor({state:'attached',timeout:15000});
+  await page.waitForFunction(()=>document.body.dataset.storageReady==='ready',{timeout:20000});
   return page;
 }
 async function create(page,units){
@@ -101,8 +102,9 @@ async function heapMB(ctx,page){
   }catch{return null;}
 }
 async function inspect(page){
-  return page.evaluate(key=>{
-    const raw=localStorage.getItem(key);
+  await page.waitForFunction(()=>document.body.dataset.storageReady==='ready'&&document.body.dataset.storageBusy!=='true',{timeout:50000});
+  return page.evaluate(async key=>{
+    const raw=await CidadeDurableStore.readCurrent(CidadeCore);
     if(!raw)return {present:false};
     const start=performance.now();
     const state=CidadeCore.importSave(raw).state;
@@ -151,6 +153,7 @@ async function hudAdvance(page,days){
   const t=performance.now();
   await page.locator('#v221-hud-time').click();
   await page.locator('[data-v221-time="'+days+'"]').click();
+  await page.waitForFunction(()=>document.body.dataset.storageBusy!=='true',{timeout:50000});
   const elapsed=performance.now()-t;
   const endDate=await page.locator('#date-label').textContent();
   const status=await page.locator('#autosave-label').textContent();
@@ -173,13 +176,15 @@ async function exportAndReload(page,ctx,expected,errors){
   const state=Core.importSave(raw).state;
   assert.equal(state.calendar.tick,expected.tick);
   assert.equal(Core.businesses(state).length,expected.units);
-  assert.equal(raw.length,expected.saveChars,'Download difere do save local');
+  assert.equal(state.revision,expected.revision,'Download não contém última revisão');
+  assert.ok(bytes.byteLength>0&&bytes.byteLength<25000000,'Exportação tradicional inválida ou excedente');
   const out={exportedBytes:bytes.byteLength,exportMs:null,
     exportHash16:sha(bytes).slice(0,16)};
   await page.reload({waitUntil:'load'});
   await page.locator('#game-shell').waitFor({state:'visible',timeout:25000});
-  const persisted=await page.evaluate(key=>{
-    const raw=localStorage.getItem(key);
+  await page.waitForFunction(()=>document.body.dataset.storageReady==='ready',{timeout:25000});
+  const persisted=await page.evaluate(async key=>{
+    const raw=await CidadeDurableStore.readCurrent(CidadeCore);
     const s=CidadeCore.importSave(raw).state;
     return {tick:s.calendar.tick,revision:s.revision,units:CidadeCore.businesses(s).length};
   },KEY);
@@ -204,6 +209,7 @@ async function scenario(channel,units){
     const baseline=await inspect(page);
     assertIntegrity(baseline,label+' início',units);
     assert.equal(baseline.tick,0);
+    assert.equal(await page.evaluate(()=>CidadeDurableStore.mode()),'indexeddb',label+' deve testar IndexedDB real');
     result.baseline={tick:0,saveBytes:baseline.saveBytes,heapMB:await heapMB(ctx,page)};
     let current=0;
     for(const target of [365,1825]){
@@ -220,7 +226,7 @@ async function scenario(channel,units){
             assert.equal(snapshot.tick,current,'Quota mudou progresso apesar de recusado');
             exceededAt=current+days;
             quotaStatus={atTick:current,requestedIncrement:days,
-              persistedBytes:snapshot.saveBytes,source:'Quota/storage exception from real localStorage',
+              persistedBytes:snapshot.saveBytes,source:'Falha de gravação durável detectada via IndexedDB',
               failClosed:true,firstFailedRequestedDay:exceededAt};
             result.status='BLOCKED_STORAGE';
             quota=true;

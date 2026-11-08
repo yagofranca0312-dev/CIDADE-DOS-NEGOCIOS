@@ -83,3 +83,5 @@ body .toast{z-index:10000!important;bottom:calc(90px + env(safe-area-inset-botto
 }
 @media(max-width:360px){.v31-dock button{font-size:.49rem}.v31-top-controls button{font-size:.59rem}}
 @media(prefers-reduced-motion:reduce){.v31-dock *,.v31-context *,body.v31-overlay-open .view{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+body.v31-immersive .v221-time-menu:not([hidden]){position:fixed!important;top:calc(95px + env(safe-area-inset-top))!important;right:16px!important;left:auto!important;z-index:170!important;background:#0b293feb;backdrop-filter:blur(13px)}

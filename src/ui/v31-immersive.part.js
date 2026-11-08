@@ -143,6 +143,10 @@
     });
     $('v31-lot-manage').addEventListener('click',()=>$('map-open-company').click());
     $('v31-next-day').addEventListener('click',()=>$('next-day').click());
+    $('v31-hud-turns').addEventListener('click',()=>{
+      const menu=$('v221-time-menu');menu.hidden=!menu.hidden;
+      $('v31-hud-turns').setAttribute('aria-expanded',String(!menu.hidden));
+    });
     $('v31-hud-pause').addEventListener('click',()=>{
       $('pause-btn').click();setText('v31-hud-pause',timer?'Ⅱ Pausar':'▶ Jogar');
     });

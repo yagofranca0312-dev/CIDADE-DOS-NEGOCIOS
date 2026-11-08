@@ -1,3 +1,10 @@
+# Correção visual V3.1.0 — candidata full-screen (08/11/2026)
+
+- Interface definitivamente city-first: removidos a sidebar e os controles de modo clássico, preservando comandos do Core e schema 9.
+- Onboarding compacto, HUD/dock sem sobreposição, modais com cabeçalho, abas iconizadas e grade de quatro KPIs por subaba.
+- QA automatizado mede viewport, enquadramento do onboarding, navegação das 14 subabas, preservação de saves e acessibilidade.
+- Não homologar a revisão antes do aceite humano da aparência no navegador.
+
 # V3.1.0 — Interface city-first (08/11/2026)
 
 - Dock com cinco módulos, câmera, painéis contextuais, eventos, mobile e modo clássico.

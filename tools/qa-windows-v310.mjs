@@ -86,14 +86,17 @@ for(const channel of ['chrome','msedge'])for(const width of [390,1366]){
   assert.ok(layers.toast>layers.modal && layers.modal>layers.backdrop && layers.backdrop>layers.dock,
     'Toast/backdrop/modal/dock com z-index incorreto');
   // Todos os centros de comando usam chrome fixo, trilho iconizado e KPIs antes do conteudo.
-  const panels={empresa:['dashboard','minhas-empresas','analises','comparativos'],
-    mercado:['compras','estoque','vendas','outros'],
+  const panels={mercado:['compras','estoque','vendas','outros'],
+    empresa:['dashboard','minhas-empresas','analises','comparativos'],
     administrativo:['financas','logistica','rh-dp','contabilidade','fiscal','paralegal']};
+  let activeRoot='mercado';
   for(const [root,sections] of Object.entries(panels)){
-    if(root!=='mercado'){
+    if(root!==activeRoot){
       await page.locator('#v31-overlay-close').click();
       await page.locator('#v31-dock [data-v31-open="'+(root==='empresa'?'empresa:dashboard':'administrativo:financas')+'"]').click();
+      activeRoot=root;
     }
+    assert.equal(await page.locator('[data-view="'+root+'"]').isVisible(),true,'Modal do departamento nao abriu: '+root);
     for(const section of sections){
       const button=page.locator('[data-section-tab="'+root+':'+section+'"]');
       await button.click();

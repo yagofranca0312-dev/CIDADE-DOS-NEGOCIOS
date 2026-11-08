@@ -10,3 +10,6 @@ Sem segundo dispatch, RNG, cálculo contábil, regra fiscal ou fluxo econômico.
 
 ## Homologação
 Só promover e criar `releases/v3.1.0-homologada` após CI do SHA exato, QA Windows, merge aprovado, CI da main e readback do checkpoint. Aprovação formal do titular já foi dada para o projeto e sua implantação, **não é prova de testes manuais físicos**. Saves reais privados, celular físico, experiência subjetiva e instalação pessoal ficam fora do alcance da CI e não devem ser declarados testados. V3.0.0 permanece ponto de rollback.
+
+## Retificação visual V3.1.0 (solicitada após PR #43)
+A interface ERP em mapa encaixado não atende à fundação de tela única. Esta alteração substitui a disposição antiga por viewport 100% da tela, câmera com pan/zoom em coordenadas SVG, HUD e dock sobre a cidade, modais centrais com backdrop/Escape e toast em camada superior. O motor, schema 9 e backup permanecem inalterados; expansão de bairros e atlas continuam na V3.2.0. **A homologação visual da correção depende da validação do titular no navegador.** A PR #43 e o checkpoint original permanecem preservados como histórico.

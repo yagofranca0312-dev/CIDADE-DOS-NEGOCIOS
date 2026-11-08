@@ -82,6 +82,7 @@
           <select id="speed-select" aria-label="Velocidade da simulação"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select>
         </div>
       </header>
+      <button type="button" id="v31-classic-return" hidden>◈ Voltar à cidade imersiva</button>
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
       <details class="world-warning legal-warning v21-legal-note"><summary>ⓘ SIMULAÇÃO EDUCATIVA <span>Dados econômicos simulados e tributos não oficiais · ver limites</span></summary><p>Indicadores econômicos do jogo são fictícios, salvo população e PIB identificados como oficiais. Cenários tributários não são apuração legal. Regras sem cobertura não representam isenção nem imposto zero.</p></details>
       <main class="content">
@@ -101,11 +102,13 @@
             <button type="button" class="v221-hud-cell" id="v221-hud-units" title="Gerenciar a rede de empresas"><span>▣ ESTABELECIMENTOS</span><strong id="v221-hud-count">0/5</strong><small>Unidades do grupo ▾</small></button>
             <div class="v221-city-actions"><button type="button" id="v221-event-open" title="Atividade da carreira" aria-label="Atividade da carreira">♧</button><button type="button" id="v221-help-open" title="Como jogar" aria-label="Ajuda do distrito">?</button><button type="button" id="v221-config-open" title="Backup e configurações" aria-label="Configurações e backup">⚙</button></div>
           </div>
-          <div class="v31-top-controls" aria-label="Tempo e navegação imersiva">
+          <div class="v31-top-controls" role="toolbar" aria-label="HUD: caixa, data, eventos e ritmo">
+            <div class="v31-hud-metric"><small>CAIXA ÚNICO · SIMULADO</small><strong id="v31-hud-cash">—</strong></div>
+            <div class="v31-hud-metric"><small>DATA / TURNO</small><strong id="v31-hud-date">—</strong></div>
+            <button type="button" id="v31-hud-alerts" aria-controls="v31-alert-panel" aria-expanded="false" title="Eventos confirmados">♧ <span id="v31-alert-count">0</span></button>
             <button type="button" id="v31-hud-pause" aria-label="Iniciar ou pausar tempo">▶ Jogar</button>
             <label for="v31-hud-speed">Ritmo</label><select id="v31-hud-speed" aria-label="Velocidade do tempo"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select>
-            <button type="button" id="v31-classic-switch">Interface clássica</button>
-            <span id="v31-alert-count" role="status" aria-live="polite">0 eventos recentes</span>
+            <button type="button" id="v31-classic-switch">Modo clássico</button>
           </div>
           <p class="v221-trust-ribbon" role="note"><span aria-hidden="true" class="v221-trust-dot"></span><strong>SIMULAÇÃO EDUCATIVA</strong><span>Valores financeiros fictícios do jogo · operações locais · não são saldos reais</span></p>
           <div class="v221-popover v221-time-menu" id="v221-time-menu" hidden><strong>Calendário e ritmo</strong><p>Controles do motor real.</p><div class="v221-time-actions"><button type="button" data-v221-time="play">▶ / ❚❚</button><button type="button" data-v221-time="1">+ 1 dia</button><button type="button" data-v221-time="7">+ 7 dias</button><button type="button" data-v221-time="30">+ 30 dias</button></div><label for="v221-time-speed">Velocidade</label><select id="v221-time-speed"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select></div>
@@ -121,7 +124,7 @@
                 <button type="button" id="v31-camera-plus" aria-label="Aumentar zoom">+</button>
                 <button type="button" id="v31-camera-home" aria-label="Centralizar câmera">⌂</button>
               </div>
-              <details class="v31-alerts"><summary>Eventos confirmados</summary>
+              <details class="v31-alerts" id="v31-alert-panel"><summary>Eventos confirmados</summary>
                 <ul id="v31-alert-list"><li>Sem eventos confirmados.</li></ul>
               </details>
               <div id="map-canvas" class="map-canvas" role="group" aria-label="Mapa ilustrativo clicável com 18 lotes"></div>
@@ -641,6 +644,7 @@
             <p id="qa-save-warning" class="field-hint">O limite técnico do arquivo é de 25 milhões de caracteres. A disponibilidade real do armazenamento do navegador depende do sistema e da quota local.</p>
           </article>
         </section>
+        <div id="v31-backdrop" class="v31-backdrop" hidden aria-hidden="true"></div>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
       <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v3.1.0</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>

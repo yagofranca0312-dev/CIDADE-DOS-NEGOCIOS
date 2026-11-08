@@ -8,6 +8,8 @@
 **`main` observada:** commit `871df2b1cd133bcad717c0194a474a35fbabcd3c`, `3.0.0-alpha.1` com Patch A, **não homologada**.  
 **Última auditoria automática antes deste checkpoint:** [CI #42428454609](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42428454609), commit `6f8395be3ed03e4462bc8c820233a85d8e7f8a98`, **381/381 PASS**, benchmarks e build reprodutível. Uma futura candidata final exige **CI nova em seu SHA exato**.
 
+**ADENDO posterior à emissão do NO-GO:** a [mitigação P0-01](V300_P0_PERSISTENCIA_TRANSACIONAL.md) alterou o código **na branch de auditoria** para persistir o estado candidato antes de ativá-lo, com testes simulando falhas de `localStorage`. As referências abaixo à vulnerabilidade de `commit()` descrevem a **condição existente no momento original da auditoria**, que motivou a correção; **não afirmar que a guarda está ausente no código da branch depois do patch**. O veredito geral **NO-GO** continua válido até QA Windows, recuperação de saves reais e aceite.
+
 ## 1. Veredito por checkpoint — não transformar PASS de CI em GO geral
 
 | Etapa | Objeto | Prova obtida | Condição na Etapa 8 |

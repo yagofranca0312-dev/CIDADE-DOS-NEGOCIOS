@@ -29,19 +29,41 @@
     clearTimeout(toastTimer);toastTimer=setTimeout(()=>n.classList.remove('visible'),4500);
     setText('start-message',message);
   }
-  function saveLocal(){
-    if(!state)return false;
-    let ok=false;
+  // P0: somente o snapshot gravado e lido de volta pode tornar-se o estado ativo.
+  // Em erro de quota/permissão, o próximo comando é recusado e a carreira anterior
+  // permanece em memória. O JSON externo ainda exige conferência do usuário.
+  function persistLocal(candidate){
+    if(!candidate)return false;
     try{
-      const contents=Core.exportSave(state);
-      localStorage.setItem(KEY,contents);
-      if(localStorage.getItem(KEY)!==contents)throw Error('Falha de leitura de retorno');
-      ok=true;
+      const contents=Core.exportSave(candidate);
+      const previous=localStorage.getItem(KEY);
+      try{
+        localStorage.setItem(KEY,contents);
+        if(localStorage.getItem(KEY)!==contents)throw Error('Falha de leitura de retorno');
+      }catch(writeError){
+        // Normalmente setItem é atômico. A tentativa abaixo protege também
+        // implementações anômalas que modificam a chave antes de falhar.
+        let recovered=false;
+        try{
+          if(localStorage.getItem(KEY)!==previous){
+            if(previous===null)localStorage.removeItem(KEY);
+            else localStorage.setItem(KEY,previous);
+          }
+          recovered=localStorage.getItem(KEY)===previous;
+        }catch(_){}
+        if(!recovered)throw Error(writeError.message+'; a cópia local anterior não pôde ser confirmada');
+        throw writeError;
+      }
       autosaveStatus='Cópia local verificada neste navegador; mantenha backup JSON externo.';
-    }catch(e){autosaveStatus=`Salvamento local indisponível (${e.message}); exporte o JSON.`;notify(autosaveStatus,true);}
-    setText('autosave-label',autosaveStatus);
-    setText('footer-state',autosaveStatus.startsWith('Cópia')?'Cópia local verificada · backup JSON recomendado':'Salvamento local sem garantia');
-    return ok;
+      return true;
+    }catch(error){
+      autosaveStatus=`Salvamento local indisponível (${error.message}). Operação NÃO confirmada; a carreira anterior foi mantida. Exporte backup JSON e resolva o armazenamento antes de continuar.`;
+      notify(autosaveStatus,true);
+      return false;
+    }finally{
+      setText('autosave-label',autosaveStatus);
+      setText('footer-state',autosaveStatus.startsWith('Cópia')?'Cópia local verificada · backup JSON recomendado':'Salvamento local sem garantia');
+    }
   }
   function backupCurrent(){
     if(!state)return true;
@@ -385,10 +407,20 @@
   /* CDN_FINANCE_VIEWS */
   function resetTimer(){if(timer){clearInterval(timer);timer=null;}setText('pause-btn','▶ Jogar');}
   function commit(type,payload={}){
-    if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;financeScope='all';statementView='summary';}
     const result=Core.dispatch(state,{type,id:nextId(),payload});
     if(!result.ok){notify(result.error,true);return false;}
-    if(result.status==='APPLIED'){restockDraft=null;state=result.state;const chosen=business();if((type==='EMPRESA.ABRIR'||type==='EMPRESA.ATIVAR')&&chosen){viewCityId=chosen.cityId;selectedLot=chosen.lot;inspectorOpen=false;}else viewCityId=viewCityId??state.player.cityId;saveLocal();render();}
+    if(result.status==='APPLIED'){
+      // A confirmação do motor ainda é PROVISÓRIA até o navegador confirmar
+      // a escrita. Não avançar estado, UI ou tempo se o salvamento falhar.
+      if(!persistLocal(result.state))return false;
+      if(type==='CARREIRA.CRIAR'){resetTimer();financeQuery=null;financeScope='all';statementView='summary';}
+      restockDraft=null;state=result.state;
+      const chosen=business();
+      if((type==='EMPRESA.ABRIR'||type==='EMPRESA.ATIVAR')&&chosen){
+        viewCityId=chosen.cityId;selectedLot=chosen.lot;inspectorOpen=false;
+      }else viewCityId=viewCityId??state.player.cityId;
+      render();
+    }
     notify(result.message);
     return true;
   }
@@ -520,7 +552,7 @@
     setText('turn-message',!b?'Abra sua primeira empresa.':b.stockUnits===0?'Seu estoque está vazio. Reabasteça.':`Sua empresa está operando há ${state.calendar.tick} dia(s).`);
     setText('turn-subtext',!b?'Clique em um lote para iniciar.':`${b.products.length} produtos · Estoque total ${b.stockUnits} un. · próximo dia ${BRDate(state.calendar.date)}.`);
     setText('autosave-label',autosaveStatus);
-    setText('footer-state',autosaveStatus.startsWith('Cópia')?'Cópia local verificada · backup JSON recomendado':'Backup JSON recomendado');
+    setText('footer-state',autosaveStatus.startsWith('Cópia')?'Cópia local verificada · backup JSON recomendado':autosaveStatus.startsWith('Salvamento local indisponível')?'Salvamento local sem garantia':'Backup JSON recomendado');
   }
   function updateBuyPreview(){
     if(!business())return;
@@ -544,12 +576,11 @@
     try{
       const incoming=Core.importSave(await file.text());
       if(!backupCurrent())return;
-      const previous=state;resetTimer();state=incoming.state;
-      if(!saveLocal()){
-        state=previous;render();
+      if(!persistLocal(incoming.state)){
         notify('Importação não concluída: o novo save não pôde ser armazenado. A carreira anterior foi preservada.',true);
         return;
       }
+      resetTimer();state=incoming.state;
       restockDraft=null;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';
       render();notify(incoming.message);
     }
@@ -799,12 +830,11 @@
       try{incoming=Core.importSave(raw);}catch(error){notify('Backup anterior inválido: '+error.message,true);return;}
       if(!confirm('Restaurar carreira anterior? A atual será preservada como cópia de segurança.'))return;
       if(!backupCurrent())return;
-      const previous=state;resetTimer();state=incoming.state;
-      if(!saveLocal()){
-        state=previous;
+      if(!persistLocal(incoming.state)){
         try{localStorage.setItem(SAFETY_KEY,raw);}catch(_){}
-        render();notify('Restauração cancelada: salvamento local não confirmado.',true);return;
+        notify('Restauração cancelada: salvamento local não confirmado. A carreira atual foi preservada.',true);return;
       }
+      resetTimer();state=incoming.state;
       restockDraft=null;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';
       render();notify('Carreira anterior restaurada. Faça também um backup JSON.');
     });

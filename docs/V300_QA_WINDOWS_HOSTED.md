@@ -4,6 +4,7 @@
 **Natureza da evidência:** **navegadores reais em Windows hospedado no GitHub Actions (headless)**, perfis temporários isolados, **sem acesso ao computador ou a saves pessoais de Yago**.  
 **Branch:** `audit/v3.0-consolidacao-integral-v2-20261107`, PR #39 **DRAFT**.  
 **Validação funcional observada:** [workflow QA Windows #42432384420](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432384420), commit `5be38c812b32837fee5741644a8cd0e96c0676ff`. **SUCCESS, 33/33 checagens PASS, Chrome e Edge PASS**.  
+**Reexecução final com hash byte a byte:** [QA Windows #42432588846](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588846), commit `7cb9589d686f087189b26c3a09d847c36ebc3bf7`, **SUCCESS, 33 verificações PASS em Chrome e Edge** e **HTML byte-identical PASS** no Windows. O mesmo código permanece avaliado em Linux pelo [CI #42432588829](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588829).  
 **Implementação da prova:** [`tools/qa-windows-browser-v300.mjs`](../tools/qa-windows-browser-v300.mjs), executado por [`.github/workflows/qa-windows-v300.yml`](../.github/workflows/qa-windows-v300.yml). Biblioteca de automação usada **somente no runner**, `playwright@1.55.1` (sem adicionar dependência ao jogo).
 
 ## Ambiente e cobertura real
@@ -41,7 +42,7 @@ Os dois navegadores passaram em:
 
 A primeira execução funcional gerou no Windows **1.486.310 bytes**, SHA-256 `39bc9a2dd02a122b303bb30a3f8c5f8a2f146d8eb3a3e7be4151954108c7c201`; o Linux havia gerado **1.479.945 bytes**, SHA-256 `3dea7a0560ae97ec6b994a470068ce7d72fd9eff18f07779584ef9095cb8e398`. O `git diff` considerava equivalentes linhas com CRLF/LF, mas os arquivos **não eram idênticos byte a byte**. Não confundir equivalência funcional com reprodutibilidade criptográfica.
 
-**Ação corretiva no branch:** `tools/build.mjs` passa a serializar HTML em **LF canônico** (`replace(/\\r\\n?/g,'\\n')`); [`tools/verify-html-byte-identical-v300.mjs`](../tools/verify-html-byte-identical-v300.mjs) compara **hash SHA-256 de bytes reais** com `git show HEAD:index.html`, ultrapassando a limitação do `git diff`. Os resultados da prova **posterior** devem ser citados separadamente em seus commits e runners. A verificação do hash não é autorização para merge.
+**Ação corretiva no branch:** `tools/build.mjs` passa a serializar HTML em **LF canônico** (`replace(/\\r\\n?/g,'\\n')`); [`tools/verify-html-byte-identical-v300.mjs`](../tools/verify-html-byte-identical-v300.mjs) compara **hash SHA-256 de bytes reais** com `git show HEAD:index.html`, ultrapassando a limitação do `git diff`. **Prova posterior concluída:** [QA Windows #42432588846](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588846) registra `V300_HTML_BYTE_IDENTITY {status:"PASS"}` com **1.479.945 bytes** e SHA-256 **`3dea7a0560ae97ec6b994a470068ce7d72fd9eff18f07779584ef9095cb8e398`** nos dois lados (`index.html` local e blob Git). A normalização LF resolveu a divergência observada. A verificação do hash **não é autorização para merge**.
 
 ## Provas que permanecem pendentes
 

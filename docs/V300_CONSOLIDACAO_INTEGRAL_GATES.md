@@ -252,3 +252,12 @@ A leitura de **30 cidades e 18 lotes** usa `Core.CITIES` e `Core.businesses` sem
 **Evolução dos riscos:** `RG-13 = PARTIAL` e `RG-16 = PARTIAL`, além dos controles parciais de Windows já registrados. `3.0.0-03 = PARTIAL` (cobertura integrada adicional), sem alterar o fechamento técnico de RG-07, mas ainda com QA visual, hardware do jogador, save pessoal, mobile físico e testes de carreira longa pendentes. **Prontidão permanece 5/18 verificados, 13/18 não quitados, etapa 08 bloqueada (NO-GO)**.
 
 **Próximo passo técnico:** ampliar avaliação gráfica/acessibilidade e stress de longa duração de browser, sem misturar com aprovação formal ou com implementação V3.1. Preservar PR #39 DRAFT, `main` e V2.9 homologada.
+
+
+## P1-03 — estresse de 365/1.825 dias no navegador e limitação P0-04 (08/11/2026)
+
+**Dossiê:** [`docs/V300_QA_CARREIRA_LONGA_BROWSER.md`](V300_QA_CARREIRA_LONGA_BROWSER.md) | [CI Windows #42485124066](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42485124066) | [issue #40, P0-04](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/issues/40). Testados Chrome e Edge reais, Windows hosted/headless, HTML `file://`, calendários de 365/1.825 dias, uma e cinco empresas, por botões da UI. A fixture de cinco empresas utiliza capital adicional fictício **apenas para a prova**, não comprova viabilidade financeira da expansão no jogo.
+
+**Diagnóstico:** **4/4 cenários de 365 dias PASS** com JSON/compacto íntegros, ledger conciliado, tempo de UI, heap CDP pontual, download e reload. **0/4 de 1.825 dias alcançados** por quota em `localStorage` por volta de 5 MB. Bloqueios em dia **1.625 (Chrome 1 un.)**, **1.655 (Edge 1 un.)**, **425 (ambos 5 un.)**. `persistLocal` foi **fail-closed** sem avanço indevido nem corrupção do snapshot anterior; exportação seguiu funcionando. O limite do JSON de exportação externa (25 MB) não garante capacidade equivalente no navegador.
+
+**Status:** `RG-15 = PARTIAL` (antes `NOT_EXECUTED`), `3.0.0-05 = PARTIAL`, **P0-04 OPEN/BLOCKING**. Não afirmar que regressão foi resolvida nem confundir sucesso de execução do QA com cumprimento dos requisitos. `3.0.0-08` continua **BLOCKED / NO-GO**, **5/18 verificados, 13/18 pendentes**. Nenhum merge, release, mobile pessoal, save pessoal ou homologação. Próxima análise deve tratar de armazenamento robusto com migração e rollback antes da repetição integral dos testes.

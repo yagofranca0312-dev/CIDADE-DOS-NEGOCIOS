@@ -201,10 +201,11 @@ test('V3.0 P0: importação e restauração persistem candidata antes de substit
   }
 });
 
-test('V3.0 P0: bloqueio manual de release continua enquanto QA real de quota não for realizado',()=>{
+test('V3.0 P0: Windows hospedado é PASS parcial; release bloqueada até QA pessoal',()=>{
   const evidence=JSON.parse(readFileSync('docs/V300_READINESS_EVIDENCE.json','utf8'));
   const qa=evidence.requirements.find(r=>r.id==='RG-12'),risk=evidence.requirements.find(r=>r.id==='RG-06');
-  assert.equal(qa.status,'NOT_EXECUTED');
-  assert.equal(risk.status,'NOT_VERIFIED');
+  assert.equal(qa.status,'PARTIAL');
+  assert.equal(risk.status,'PARTIAL');
+  assert.match(qa.evidence,/42432588846/);
   assert.equal(evidence.checkpointStatus.find(r=>r.id==='3.0.0-08').status,'BLOCKED');
 });

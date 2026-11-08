@@ -70,7 +70,8 @@ test('V3.1 scroll architecture: fixed modal chrome and KPI board; only visible s
   assert.match(css,/border-radius:18px 18px 0 0!important/);
   assert.match(css,/padding:6px 8px!important/);
   assert.match(css,/min-height:48px!important/);
-  assert.match(source,/system\.className='v23-subpane v31-system-pane'/);
+  assert.match(source,/data-section-pane="sistema:integridade"/);
+  assert.match(html,/data-section-tab="sistema:saves"/);
   assert.match(source,/pane\.prepend\(\.\.\.loose\)/);
   assert.match(source,/visiblePane\.scrollTop=0/);
   assert.doesNotMatch(source,/v31ClassicMode/);

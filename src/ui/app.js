@@ -11,7 +11,7 @@
   let commitInFlight=false,startupBlocked=true,safetyBackupAvailable=false;
   let inspectorOpen=false; // interface somente, nunca persistido
   let restockDraft=null; // proposta de compra efêmera (não entra em saves)
-  const activeSection={empresa:'dashboard',mercado:'compras',administrativo:'financas'}; // somente UI, fora do save
+  const activeSection={empresa:'dashboard',mercado:'compras',administrativo:'financas',sistema:'saves'}; // somente UI, fora do save
   let mapZoomed=false; // visão ampliada opcional; não altera o save
   let financeQuery=null,strategyHorizon=30,financeScope='all',statementView='summary'; // preferências de interface, independentes do GameState
   const business=()=>state?Core.activeBusiness(state):null;

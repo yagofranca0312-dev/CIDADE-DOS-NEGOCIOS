@@ -144,9 +144,9 @@
         fiscal:['revenue','cash','profit','days'],
         paralegal:['count','revision','days','schema']
       },
-      sistema:{default:['version','schema','revision','count']}
+      sistema:{saves:['version','schema','revision','count'],diagnostico:['count','cash','days','revision'],integridade:['schema','revision','days','version']}
     };
-    const active=root==='sistema'?'default':activeSection[root];
+    const active=activeSection[root];
     const selected=choices[root]?.[active]||['cash','revenue','profit','stock'];
     const metrics=selected.map(key=>keys[key]);
     const sectionNames={
@@ -157,7 +157,7 @@
       administrativo:{financas:['Finanças','Tesouraria e compromissos'],logistica:['Logística','Abastecimento e transferências'],
         'rh-dp':['Equipe e RH','Pessoas e folha'],contabilidade:['Relatórios','DRE, balanço e patrimônio'],
         fiscal:['Fiscal','Obrigações tributárias simuladas'],paralegal:['Documentos','Registros e contratos']},
-      sistema:{default:['Configurações e Saves','Proteja e recupere sua carreira local']}
+      sistema:{saves:['Configurações e Saves','Backup e recuperação local'],diagnostico:['Diagnóstico','Integridade e análise da carreira'],integridade:['Saúde do save','Compatibilidade e portabilidade']}
     };
     const [title,sub]=sectionNames[root]?.[active]||[root,'Centro de comando'];
     setText('v31-modal-title-'+root,title);
@@ -202,6 +202,8 @@
     $('v221-inspector').appendChild($('v31-lot-quick'));
     // Trilho integrado ao título, com um ícone e rótulo curto por aba.
     const tabDesign={"empresa:dashboard":["◈","Visão geral"],"empresa:minhas-empresas":["🏬","Unidades"],"empresa:analises":["📈","Análises"],"empresa:comparativos":["⚖","Comparar"],"mercado:compras":["🛒","Compras"],"mercado:estoque":["📦","Estoque"],"mercado:vendas":["💳","Vendas"],"mercado:outros":["⚙","Estratégia"],"administrativo:financas":["💰","Caixa"],"administrativo:logistica":["🚚","Logística"],"administrativo:rh-dp":["👥","Equipe"],"administrativo:contabilidade":["📊","Relatórios"],"administrativo:fiscal":["🧾","Fiscal"],"administrativo:paralegal":["📜","Documentos"]};
+    Object.assign(tabDesign,{'sistema:saves':['💾','Saves'],'sistema:diagnostico':['🔍','Diagnóstico'],
+      'sistema:integridade':['🛡','Integridade']});
     for(const root of ['empresa','mercado','administrativo','sistema']){
       const surface=document.querySelector('.view[data-view="'+root+'"]');
       const header=surface.querySelector('[data-v31-header]');
@@ -243,13 +245,18 @@
         node.classList.contains('v23-subpane')||node.id==='v31-overlay-close';
       const loose=[...surface.children].filter(node=>!excluded(node));
       if(root==='sistema'){
-        const system=document.createElement('div');
-        system.id='v31-system-pane';
-        system.className='v23-subpane v31-system-pane';
-        system.setAttribute('role','region');
-        system.setAttribute('aria-label','Configurações e salvamento da carreira');
-        system.append(...loose);
-        surface.append(system);
+        const saves=surface.querySelector('[data-section-pane="sistema:saves"]');
+        const diagnostics=surface.querySelector('[data-section-pane="sistema:diagnostico"]');
+        const integrity=surface.querySelector('[data-section-pane="sistema:integridade"]');
+        if(!saves||!diagnostics||!integrity)throw new Error('Abas da Central do Jogo ausentes');
+        const grid=saves.querySelector(':scope > .dashboard-grid');
+        const diagnosticCard=grid?.children[1];
+        if(diagnosticCard)diagnostics.append(diagnosticCard);
+        const quality=saves.querySelector('[aria-labelledby="qa-v290-title"]');
+        if(quality)diagnostics.append(quality);
+        const health=saves.querySelector('[aria-labelledby="qa-v290-backup-title"]');
+        if(health)integrity.append(health);
+        if(loose.length)saves.prepend(...loose);
       }else{
         const home=root==='mercado'?'mercado:outros':
           root==='administrativo'?'administrativo:financas':root+':dashboard';

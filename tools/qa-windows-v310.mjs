@@ -88,12 +88,13 @@ for(const channel of ['chrome','msedge'])for(const width of [390,1366]){
   // Todos os centros de comando usam chrome fixo, trilho iconizado e KPIs antes do conteudo.
   const panels={mercado:['compras','estoque','vendas','outros'],
     empresa:['dashboard','minhas-empresas','analises','comparativos'],
-    administrativo:['financas','logistica','rh-dp','contabilidade','fiscal','paralegal']};
+    administrativo:['financas','logistica','rh-dp','contabilidade','fiscal','paralegal'],
+    sistema:['saves','diagnostico','integridade']};
   let activeRoot='mercado';
   for(const [root,sections] of Object.entries(panels)){
     if(root!==activeRoot){
       await page.locator('#v31-overlay-close').click();
-      await page.locator('#v31-dock [data-v31-open="'+(root==='empresa'?'empresa:dashboard':'administrativo:rh-dp')+'"]').click();
+      await page.locator('#v31-dock [data-v31-open="'+(root==='empresa'?'empresa:dashboard':root==='sistema'?'sistema':'administrativo:rh-dp')+'"]').click();
       activeRoot=root;
     }
     assert.equal(await page.locator('[data-view="'+root+'"]').isVisible(),true,'Modal do departamento nao abriu: '+root);

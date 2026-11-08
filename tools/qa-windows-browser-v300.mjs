@@ -86,6 +86,12 @@ async function fillQuota(page){
     return {quotaHit:quota,fillerChars:bytes};
   });
 }
+async function advanceOneDay(page){
+  // Na cena Cidade da V2.2.1 a turnbar fica oculta por CSS; usar o HUD visível.
+  // O controlador de HUD aciona o MESMO botão/comando Core.dispatch da barra.
+  await page.locator('#v221-hud-time').click();
+  await page.locator('[data-v221-time="1"]').click();
+}
 async function testBrowser(channel){
   const folder=mkdtempSync(join(tmpdir(),'cidade-v300-win-'+channel+'-'));
   let context=null;
@@ -106,7 +112,7 @@ async function testBrowser(channel){
     check((await page.locator('#autosave-label').textContent()).includes('Cópia local verificada'),
       channel+': interface declara cópia após verificação de leitura');
 
-    await page.locator('#next-day').click();
+    await advanceOneDay(page);
     const advanced=await jsonInfo(page);
     check(advanced.info.tick===created.info.tick+1&&advanced.info.revision===created.info.revision+1,
       channel+': comando real avança um dia e incrementa revisão');
@@ -118,7 +124,7 @@ async function testBrowser(channel){
     check(quota.quotaHit&&quota.fillerChars>0,
       channel+': QuotaExceededError real reproduzido em localStorage file://');
     const before=await jsonInfo(page);
-    await page.locator('#next-day').click();
+    await advanceOneDay(page);
     const after=await jsonInfo(page);
     const textStatus=await page.locator('#autosave-label').textContent();
     check(after.raw===before.raw&&
@@ -130,7 +136,7 @@ async function testBrowser(channel){
       channel+': erro de quota apresenta falha, não sucesso');
 
     await page.evaluate(()=>localStorage.removeItem('qa-v300-only-quota-filler'));
-    await page.locator('#next-day').click();
+    await advanceOneDay(page);
     const recovered=await jsonInfo(page);
     check(recovered.info.tick===before.info.tick+1&&
       recovered.info.revision===before.info.revision+1,

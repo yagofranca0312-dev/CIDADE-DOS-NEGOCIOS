@@ -125,7 +125,7 @@ test('V1.9: não criar nova aba principal e versionamento uniforme em todos os p
  const tpl=readFileSync('src/shell/index.template.html','utf8'),css=readFileSync('src/shell/theme.css','utf8');
  const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
  for(const id of ['intro-version','build-version','footer-version'])assert.ok(tpl.includes(`id="${id}">v3.0.0`));
- assert.match(tpl,/<title>Cidade dos Negócios 1 · v3\.0\.0-alpha\.1<\/title>/);
+ assert.match(tpl,/<title>Cidade dos Negócios 1 · v3\.0\.0<\/title>/);
  for(const id of ['fiscal-status','fiscal-optin','fiscal-acknowledge','fiscal-assessments','fiscal-transition'])assert.ok(tpl.includes(`id="${id}"`));
  assert.match(ui,/function renderFiscal/);assert.match(ui,/FISCAL\.ATIVAR_CENARIO/);assert.match(css,/fiscal-dashboard/);
  const navs=(tpl.match(/data-tab="fiscal"/g)||[]).length;assert.equal(navs,1);

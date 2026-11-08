@@ -134,5 +134,5 @@ test('C: HTML offline único contém a tela Fiscal Operacional e scripts válido
  assert.match(ui,/FISCAL_OP\.FECHADO|FISCAL_OP\.FECHAR|data-fiscal-op-close/);
  const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
  assert.equal(scripts.length,1);assert.doesNotThrow(()=>new Script(scripts[0][1]));
- assert.match(html,/const VERSION = '3\.0\.0-alpha\.1'/);
+ assert.match(html,/const VERSION = '3\.0\.0'/);
 });

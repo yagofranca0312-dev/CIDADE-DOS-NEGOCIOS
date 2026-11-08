@@ -11,22 +11,21 @@ const readme=read('README.md'),changelog=read('CHANGELOG.md'),
   core=read('src/core/game.js'),ui=read('src/ui/app.js'),
   template=read('src/shell/index.template.html'),
   pkg=JSON.parse(read('package.json'));
-const readmeTop=readme.split('## Arquivo histórico')[0];
-const changelogTop=changelog.split('## 3.0.0')[0];
+const readmeTop=readme.split('## Histórico da última versão homologada')[0];
+const changelogTop=changelog.split('## 2.9.0 —')[0];
 const roadmapTop=roadmap.split('## Histórico de planejamento')[0];
 
-test('V3.0-06: README e CHANGELOG separam versão na main, candidata e última homologada',()=>{
+test('V3.0-06: documentos distinguem promocao excepcional e arquivo historico',()=>{
   assert.equal(pkg.version,'3.0.0');
-  assert.match(core,/const VERSION = '3\.0\.0-alpha\.1'/);
-  assert.match(template,/<title>Cidade dos Negócios 1 · v3\.0\.0-alpha\.1<\/title>/);
-  for(const [path,text] of [['README',readmeTop],['CHANGELOG',changelogTop]]){
-    assert.match(text,/3\.0\.0-alpha\.1/,path+' não identifica código atual');
-    assert.match(text,/2\.9\.0/,path+' não identifica release estável');
-    assert.match(text,/(NÃO HOMOLOGAD|sem release homologada|sem homologação)/i,path+' antecipa homologação');
-    assert.match(text,/(main|\u0060main\u0060)/,path+' não indica integração do Patch A');
-    assert.match(text,/#39/,path+' não preserva auditoria separada');
-  }
-  assert.match(readmeTop,/08[2]?faa4626cf5cb0fc54c9ef092bddd86ffce54c|082faa4626cf5cb0fc54c9ef092bddd86ffce54c/);
+  assert.match(core,/const VERSION = '3\.0\.0'/);
+  assert.match(template,/<title>Cidade dos Negócios 1 · v3\.0\.0<\/title>/);
+  assert.match(readmeTop,/3\.0\.0/);
+  assert.match(readmeTop,/2\.9\.0/);
+  assert.match(readmeTop,/excepcional/i);
+  assert.match(readmeTop,/#39/);
+  assert.match(changelogTop,/excepcional/i);
+  assert.match(changelogTop,/NÃO representa nova versão liberada|Não representa nova versão liberada/);
+  assert.match(readmeTop,/082faa4626cf5cb0fc54c9ef092bddd86ffce54c/);
   assert.doesNotMatch(readmeTop,/Nenhum tributo brasileiro está calculado|Apenas um estabelecimento é operável/);
 });
 

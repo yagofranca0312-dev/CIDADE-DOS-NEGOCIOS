@@ -141,6 +141,6 @@ test('V1.8: uma única área financeira com demonstrativos e verificações de v
  assert.match(ui,/Core\.balanceSheet/);assert.match(ui,/Core\.cashFlowStatement/);
  assert.match(ui,/Core\.reconciliationReport/);assert.match(ui,/Core\.incomeStatement/);
  assert.match(build,/intro-version/);assert.match(build,/footer-version/);
- assert.match(tpl,/id="footer-version">v3\.0\.0-alpha\.1/);
- assert.match(tpl,/<title>Cidade dos Negócios 1 · v3\.0\.0-alpha\.1<\/title>/);
+ assert.match(tpl,/id="footer-version">v3\.0\.0/);
+ assert.match(tpl,/<title>Cidade dos Negócios 1 · v3\.0\.0<\/title>/);
 });

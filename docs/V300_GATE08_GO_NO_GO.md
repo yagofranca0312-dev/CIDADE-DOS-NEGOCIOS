@@ -99,3 +99,14 @@ Enquanto os riscos, a candidata e as comprovações exigidas não estiverem vali
 **`3.0.0-08` — AUDITORIA DE PRONTIDÃO CONCLUÍDA / RELEASE BLOQUEADA (NO-GO).**  
 **`3.0.0` NÃO HOMOLOGADA. `3.0.0-alpha.1` permanece em desenvolvimento. `2.9.0` continua o último marco homologado.**  
 Não fazer merge da PR #39, não criar `releases/v3.0.0-homologada` nem tag de release, não alterar `main` ou a instalação do usuário. Os itens futuros são **planejados**, não fatos já realizados.
+
+
+## Adendo pós-auditoria — P0-03 instaladores Windows (07/11/2026)
+
+**Evidência nova:** [`docs/V300_QA_BAT_SAVE_LOCAL.md`](V300_QA_BAT_SAVE_LOCAL.md), [CI Windows #42434425027](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42434425027), **19/19 testes BAT/PS1 PASS**, além de **33/33 verificações Chrome/Edge** e hash HTML byte-idêntico. ZIP/API/abertura do atualizador foram **simulados dentro do Windows hospedado**; o código BAT/PS1 original foi exercitado em pasta descartável. Foram demonstrados proteção de saves fictícios, backup da instalação anterior, não repetição de download, downgrade recusado e restauração do HTML após falha deliberada de cópia.
+
+**Matriz:** `RG-09 = PARTIAL` com evidência real de Windows hospedado e atualização **offline simulada**; `RG-11 = NOT_EXECUTED`, pois nenhum save pessoal foi acessado ou testado. Criado [validador privado e somente leitura](../tools/validar-save-pessoal-local-v300.mjs), validado com dados sintéticos. `RG-06/08/10/12` continuam **PARTIAL**. `RG-13/14/15/16` e outros gates permanecem não quitados.
+
+**Aviso de distribuição:** `ATUALIZAR_E_JOGAR.bat` segue `main`, que contém `3.0.0-alpha.1` sem homologação; portanto **não atualizar a instalação pessoal com esse BAT enquanto o release não for aprovado**. O teste não baixou nenhuma revisão oficial real.
+
+**Decisão da auditoria continua:** **NO-GO para release da V3.0** e PR #39 DRAFT, sem merge, tag ou homologação. O próximo ensaio depende de cópia do save pessoal no Windows físico, BAT com GUI real e teste manual documentado, com consentimento do jogador.

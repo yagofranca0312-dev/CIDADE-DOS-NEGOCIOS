@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/qa-windows-v300.yml'
       - 'tools/qa-windows-browser-v300.mjs'
+      - 'tools/qa-windows-integrated-v300.mjs'
       - 'tools/qa-windows-bat-updater-v300.ps1'
       - 'ATUALIZAR_E_JOGAR.bat'
       - 'JOGAR_OFFLINE.bat'
@@ -47,6 +48,9 @@ jobs:
       - name: Executar Chrome e Edge reais em file offline (QA sintetico)
         shell: pwsh
         run: node tools/qa-windows-browser-v300.mjs
+      - name: QA integrado de navegacao RH compras logistica e finanças (sintetico)
+        shell: pwsh
+        run: node tools/qa-windows-integrated-v300.mjs
       - name: Confirmar que artefatos do jogo nao foram modificados
         shell: pwsh
         run: git diff --exit-code -- index.html package.json

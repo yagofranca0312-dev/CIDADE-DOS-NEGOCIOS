@@ -57,7 +57,6 @@ test('V3.0-08: persistência com write-ahead é proteção automatizada, QA real
   const r=evidence.requirements.find(x=>x.id==='RG-06');
   assert.equal(r.status,'PARTIAL','Windows hospedado não substitui QA da instalação pessoal');
   assert.match(r.evidence,/actions\/runs\/42432588846/);
-  assert.equal(r.evidence,null);
 });
 
 test('V3.0-08: CI Windows headless é parcial e não inventa QA pessoal/mobile',()=>{

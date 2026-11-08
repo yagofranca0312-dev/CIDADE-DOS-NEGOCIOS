@@ -184,3 +184,18 @@ A V3.0 é uma **release de unificação, regressão e estabilidade**, sem recons
 A leitura de **30 cidades e 18 lotes** usa `Core.CITIES` e `Core.businesses` sem inventar unidades, posse de rivais ou propriedades. Ações oferecidas são apenas dicas `ADVISORY_ONLY`, e a mutação continua exclusivamente em `CidadeCore.dispatch`. O adaptador pagina eventos confirmados, separa dados por cidade, omite payload interno, congela projeções e valida `worldId`/`revision` para evitar overlay obsoleto. **Cento e vinte leituras repetidas** provaram não modificar estado, ledger, eventos, RNG, calendário ou chamar `dispatch` no cenário testado. A modelagem ainda não avalia animações, FPS, toque ou acessibilidade real da futura V3.1.
 
 **Checkpoint `3.0.0-07`: PASS TÉCNICO DE CONTRATO, NÃO HOMOLOGAÇÃO DA INTERFACE V3.1.** O checkpoint 08 continua **BLOQUEADO** porque 01–05 ainda possuem evidências não executadas (saves reais, Windows/mobile, quotas, QA do jogador). O próximo passo é fazer **auditoria de prontidão GO/NO-GO e registrar pendências**, não criar release automática.
+
+
+## Etapa 8 — Auditoria de prontidão formal: NO-GO (07/11/2026)
+
+**Parecer vinculante de auditoria:** [`docs/V300_GATE08_GO_NO_GO.md`](V300_GATE08_GO_NO_GO.md).  
+**Manifesto auditável:** [`docs/V300_READINESS_EVIDENCE.json`](V300_READINESS_EVIDENCE.json), 18 requisitos `RG-01`–`RG-18`: **4 verificados documentalmente, 14 não concluídos**.  
+**Verificador:** [`tools/v300-release-gate.mjs`](../tools/v300-release-gate.mjs); `npm run audit:release` retorna `NO_GO` sem falsear CI, e `npm run audit:release:require-go` **bloqueia** com exit code 2.  
+**Regressões novas:** [`tests/release_readiness_v300.test.mjs`](../tests/release_readiness_v300.test.mjs), **8 cenários de contrato e proteção**.  
+**CI do gate:** [#42429308063](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42429308063) — **389/389 testes PASS, 0 FAIL**, benchmarks de estabilidade e painéis, audit:release e build SHA-256 PASS.
+
+**Bloqueios materiais:** checkpoint 01–05 parcialmente cobertos; `src/ui/app.js::commit` prossegue com progresso na memória se `saveLocal()` falha em quota; Windows/file:// e `ATUALIZAR_E_JOGAR.bat` sem testes práticos; importação/rollback de saves reais do jogador sem comprovação; browser mobile/desktop e desempenho de longo prazo sem QA real; candidata `3.0.0` não criada e aceite final ainda não solicitado/concedido. Riscos PR-01 e PR-02 requerem tratamento técnico ou aceite fundamentado com regressão.
+
+**Resultado separado por natureza:** execução **da auditoria** concluída; **promoção/homologação** expressamente **NO-GO/BLOQUEADA**. QA humano não foi simulado nem inventado. As versões `main 3.0.0-alpha.1` e `releases/v2.9.0-homologada` continuam intactas, PR #39 permanece DRAFT e não mesclada.
+
+**Próxima ação real:** ciclo de saneamento de bloqueadores, começando pela persistência e pelo ensaio de saves em Windows. Depois repetir checklist, criar CI de candidata no SHA exato e somente então obter decisão do titular. Esta etapa não autoriza merge nem criação de release.

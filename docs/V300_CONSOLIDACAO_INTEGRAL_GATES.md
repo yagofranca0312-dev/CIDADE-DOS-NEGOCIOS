@@ -199,3 +199,18 @@ A leitura de **30 cidades e 18 lotes** usa `Core.CITIES` e `Core.businesses` sem
 **Resultado separado por natureza:** execução **da auditoria** concluída; **promoção/homologação** expressamente **NO-GO/BLOQUEADA**. QA humano não foi simulado nem inventado. As versões `main 3.0.0-alpha.1` e `releases/v2.9.0-homologada` continuam intactas, PR #39 permanece DRAFT e não mesclada.
 
 **Próxima ação real:** ciclo de saneamento de bloqueadores, começando pela persistência e pelo ensaio de saves em Windows. Depois repetir checklist, criar CI de candidata no SHA exato e somente então obter decisão do titular. Esta etapa não autoriza merge nem criação de release.
+
+
+## Saneamento pós-NO-GO — P0-01: comandos somente após persistência confirmada (07/11/2026)
+
+**Relatório:** [`docs/V300_P0_PERSISTENCIA_TRANSACIONAL.md`](V300_P0_PERSISTENCIA_TRANSACIONAL.md).  
+**Origem:** bloqueio `RG-06` identificado na Etapa 8; gravação de `localStorage` podia falhar **após** alteração da carreira ativa.  
+**Correção na PR #39:** `src/ui/app.js::persistLocal(candidate)` grava e verifica o save **antes** de fazer `state=result.state`; erros de quota, serialização e leitura retornam falso e impedem a confirmação. Importação e restauração também persistem antes de substituir. Escrita interrompida tenta restaurar valor anterior. **Motor econômico, schema e save V1/V2 não alterados.**
+
+**Regressões:** [`tests/persistence_p0_v300.test.mjs`](../tests/persistence_p0_v300.test.mjs) — **11 testes de funções reais da UI** em VM Node com motor verdadeiro e armazenamento simulado, além de atualizar os testes legados de estabilização e do gate 08.  
+**Evidência CI inicial após regeneração:** [GitHub Actions #42431354313](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42431354313), commit `d42df11e4a807a67b70336b2a8ac6cb25dc9e442`, **400/400 testes PASS, 0 FAIL**, benchmark 30/365/1.825 dias e teste de render, build HTML único reproduzível.  
+**HTML gerado:** `index.html` com **1.479.945 bytes**, SHA-256 `3dea7a0560ae97ec6b994a470068ce7d72fd9eff18f07779584ef9095cb8e398`. Workflow temporário de compilação **removido** após sincronização; não entrou na `main`.
+
+**Estado do risco:** mitigação de **comando em memória sem save** aprovada em testes de ambiente simulado; **`RG-06` mantém NOT_VERIFIED**, `RG-12` mantém NOT_EXECUTED porque falta reproduzir quota/permissão real no Windows Chrome/Edge, fechar/reabrir o navegador, importar save real do jogador e avaliar retenção. **Gate 08 permanece NO-GO e PR #39 DRAFT.**
+
+**Próxima ação do ciclo de saneamento:** ensaio seguro e documentado de `file://` com backups externos, armazenamento cheio e rollback de uma **cópia** do save V2.9 em dois navegadores, além de mobile/longa duração. Não declarar liberação ou homologação por aprovação do CI.

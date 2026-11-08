@@ -5,11 +5,11 @@
   "releaseTarget": "3.0.0",
   "auditBranch": "audit/v3.0-consolidacao-integral-v2-20261107",
   "latestVerifiedAudit": {
-    "sha": "6f8395be3ed03e4462bc8c820233a85d8e7f8a98",
-    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42428454609",
+    "sha": "57a03b7782bcd353269d55d9e7ae5814418140f0",
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42429308063",
     "result": "SUCCESS",
-    "tests": 381,
-    "scope": "Node 24/Linux, DOM simulado; não comprova Windows/browser/mobile"
+    "tests": 389,
+    "scope": "Node 24/Linux, DOM simulado; inclui 8 testes de release readiness. Auditoria NO-GO, não QA Windows/browser/mobile."
   },
   "stableBaseline": {
     "ref": "releases/v2.9.0-homologada",

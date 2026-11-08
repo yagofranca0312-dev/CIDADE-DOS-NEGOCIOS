@@ -261,3 +261,12 @@ A leitura de **30 cidades e 18 lotes** usa `Core.CITIES` e `Core.businesses` sem
 **Diagnóstico:** **4/4 cenários de 365 dias PASS** com JSON/compacto íntegros, ledger conciliado, tempo de UI, heap CDP pontual, download e reload. **0/4 de 1.825 dias alcançados** por quota em `localStorage` por volta de 5 MB. Bloqueios em dia **1.625 (Chrome 1 un.)**, **1.655 (Edge 1 un.)**, **425 (ambos 5 un.)**. `persistLocal` foi **fail-closed** sem avanço indevido nem corrupção do snapshot anterior; exportação seguiu funcionando. O limite do JSON de exportação externa (25 MB) não garante capacidade equivalente no navegador.
 
 **Status:** `RG-15 = PARTIAL` (antes `NOT_EXECUTED`), `3.0.0-05 = PARTIAL`, **P0-04 OPEN/BLOCKING**. Não afirmar que regressão foi resolvida nem confundir sucesso de execução do QA com cumprimento dos requisitos. `3.0.0-08` continua **BLOCKED / NO-GO**, **5/18 verificados, 13/18 pendentes**. Nenhum merge, release, mobile pessoal, save pessoal ou homologação. Próxima análise deve tratar de armazenamento robusto com migração e rollback antes da repetição integral dos testes.
+
+
+## P0-04 concluído tecnicamente em Windows hospedado — sem GO (08/11/2026)
+
+[Dossiê P0-04](V300_P004_PERSISTENCIA_INDEXEDDB.md) · [CI Windows #42488245360](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42488245360) · [issue #40](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/issues/40). O problema reportado antes (0/4 de 1.825 dias no `localStorage`) foi corrigido **somente na branch de auditoria**: IndexedDB nativo, envelope V2 compacto/checksum, transações confirmadas e readback, tentativa de rollback após erro, migração de legado e preservação de backup externo.
+
+**Pós-correção:** **4/4 testes de 365 dias PASS; 4/4 testes de 1.825 dias PASS**, Chrome/Edge Windows hosted/headless, `file://`, uma e cinco empresas. **12/12 asserções de migração V2.9 fictícia e aborto de transação PASS**. Limite de 25 MB é do arquivo de exportação externo, não da quota IDB; o arquivo externo de cinco anos/cinco unidades ocupa cerca de 21,2 MB. `src/core/game.js` e schema 9 permanecem inalterados.
+
+**Classificação:** mitigação técnica **IMPLEMENTED_HOSTED_WINDOWS_PASS**, mas `RG-15` e `RG-06` **PARCIAIS** (QA físico/usuário pendente), `RG-11` **NOT_EXECUTED**, `RG-14` **NOT_EXECUTED**, checkpoint 05 ainda **PARCIAL**. As metas de browser provadas são estritas, não equivalem a validação manual de UX. **Gate 08 NO-GO, 5/18 VERIFIED, 13 pendentes**, PR #39 DRAFT, main e V2.9 intactas.

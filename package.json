@@ -1,6 +1,6 @@
 {
   "name": "cidade-dos-negocios",
-  "version": "3.0.0-alpha.1",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
   "description": "Cidade dos Negócios V3.0 Patch A: estratégias de capital de giro, cenários de preço e reposição explícita com reserva, sem vendas artificiais",

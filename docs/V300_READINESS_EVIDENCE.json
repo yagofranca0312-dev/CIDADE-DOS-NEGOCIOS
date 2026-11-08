@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "assessment": "V300-08",
+  "assessmentDate": "2026-11-07",
+  "releaseTarget": "3.0.0",
+  "auditBranch": "audit/v3.0-consolidacao-integral-v2-20261107",
+  "latestVerifiedAudit": {
+    "sha": "6f8395be3ed03e4462bc8c820233a85d8e7f8a98",
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42428454609",
+    "result": "SUCCESS",
+    "tests": 381,
+    "scope": "Node 24/Linux, DOM simulado; não comprova Windows/browser/mobile"
+  },
+  "stableBaseline": {
+    "ref": "releases/v2.9.0-homologada",
+    "sha": "082faa4626cf5cb0fc54c9ef092bddd86ffce54c",
+    "version": "2.9.0"
+  },
+  "mainAtAudit": "871df2b1cd133bcad717c0194a474a35fbabcd3c",
+  "releaseCandidate": {
+    "ref": null,
+    "sha": null,
+    "ciUrl": null
+  },
+  "checkpointStatus": [
+    {
+      "id": "3.0.0-01",
+      "status": "PARTIAL",
+      "evidence": "docs/V300_MATRIZ_CONTRATOS_E_PROPRIEDADE.md",
+      "open": "Cobertura funcional manual da linha V2"
+    },
+    {
+      "id": "3.0.0-02",
+      "status": "PARTIAL",
+      "evidence": "docs/V300_MATRIZ_CONTRATOS_E_PROPRIEDADE.md",
+      "open": "PR-01 paridade de folha e PR-02 propostas paralelas: resolver, aceitar explicitamente ou mitigar com teste"
+    },
+    {
+      "id": "3.0.0-03",
+      "status": "PARTIAL",
+      "evidence": "tests/integration_v300_consolidation.test.mjs",
+      "open": "Fluxos de UI/cenários não exercitados em navegador real"
+    },
+    {
+      "id": "3.0.0-04",
+      "status": "PARTIAL",
+      "evidence": "docs/V300_MIGRACAO_ROLLBACK_SAVES.md",
+      "open": "Importação e rollback com save pessoal de verdade, ambiente Windows/file:// e quota"
+    },
+    {
+      "id": "3.0.0-05",
+      "status": "PARTIAL",
+      "evidence": "docs/V300_PERFORMANCE_ESTABILIDADE.md",
+      "open": "Memória/tempo de UI real e persistência com quota saturada"
+    },
+    {
+      "id": "3.0.0-06",
+      "status": "PASS_DOCUMENTAL_CI",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42427413403",
+      "open": "Aprovação documental não equivale a release"
+    },
+    {
+      "id": "3.0.0-07",
+      "status": "PASS_TECHNICAL_CI",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42428454609",
+      "open": "Read-model não está incorporado ao jogo; UI V3.1 fora do escopo"
+    },
+    {
+      "id": "3.0.0-08",
+      "status": "BLOCKED",
+      "evidence": "docs/V300_GATE08_GO_NO_GO.md",
+      "open": "Release e homologação integral dependem de todos os critérios e autorização explícita"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "RG-01",
+      "type": "AUTOMATED",
+      "label": "Integridade do HTML, schema 9, 381 testes e benchmarks na branch auditada",
+      "status": "VERIFIED",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42428454609"
+    },
+    {
+      "id": "RG-02",
+      "type": "AUTOMATED",
+      "label": "Snapshot V2.9 homologado preservado no SHA original",
+      "status": "VERIFIED",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/tree/releases/v2.9.0-homologada"
+    },
+    {
+      "id": "RG-03",
+      "type": "AUTOMATED",
+      "label": "Saves históricos 2–9 e formato compacto testados no core",
+      "status": "VERIFIED",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42418650812"
+    },
+    {
+      "id": "RG-04",
+      "type": "DOCUMENTAL",
+      "label": "README/CHANGELOG/ROADMAP, guia atual e contrato UI futuro",
+      "status": "VERIFIED",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42427413403"
+    },
+    {
+      "id": "RG-05",
+      "type": "TECHNICAL",
+      "label": "Encerrar os cinco checkpoints 01–05 sem pendência relevante",
+      "status": "NOT_VERIFIED",
+      "evidence": null
+    },
+    {
+      "id": "RG-06",
+      "type": "TECHNICAL",
+      "label": "Tratar explicitamente risco de perda de progresso ao falhar localStorage",
+      "status": "NOT_VERIFIED",
+      "evidence": null
+    },
+    {
+      "id": "RG-07",
+      "type": "TECHNICAL",
+      "label": "Decidir PR-01 RH e PR-02 propostas de compra, com mitigação/regressão ou aceite fundamentado",
+      "status": "NOT_VERIFIED",
+      "evidence": null
+    },
+    {
+      "id": "RG-08",
+      "type": "MANUAL",
+      "label": "Windows Chrome/Edge: abrir index.html offline por file:// e via JOGAR_OFFLINE.bat",
+      "status": "NOT_EXECUTED",
+      "evidence": null
+    },
+    {
+      "id": "RG-09",
+      "type": "MANUAL",
+      "label": "Windows: atualização ATUALIZAR_E_JOGAR.bat em instalação de teste, preservando V2.9",
+      "status": "NOT_EXECUTED",
+      "evidence": null
+    },
+    {
+      "id": "RG-10",
+      "type": "MANUAL",
+      "label": "Windows: comando→salvamento local→fechar→reabrir e reconciliação do estado",
+      "status": "NOT_EXECUTED",
+      "evidence": null
+    },
+    {
+      "id": "RG-11",
+      "type": "MANUAL",
+      "label": "Save real V2.9 do jogador: backup externo, importação, comparação e rollback validado",
+      "status": "NOT_EXECUTED",
+      "evidence": null
+    },
+    {
+      "id": "RG-12",
+      "type": "MANUAL",
+      "label": "Quota localStorage cheia/bloqueada: sem falsa mensagem de durabilidade e procedimento de backup comprovado",
+      "status": "NOT_EXECUTED",
+      "evidence": null
+    },
+    {
+      "id": "RG-13",
+      "type": "MANUAL",
+      "label": "Desktop Chrome/Edge e responsividade: mapa, módulos e ações sem erros de console",
+      "status": "NOT_EXECUTED",
+      "evidence": null
+    },
+    {
+      "id": "RG-14",
+      "type": "MANUAL",
+      "label": "Mobile real e/ou emulador com evidência identificada: toque, rolagem e compatibilidade",
+      "status": "NOT_EXECUTED",
+      "evidence": null
+    },
+    {
+      "id": "RG-15",
+      "type": "MANUAL",
+      "label": "Carreira longa em navegador real: UI, tempos, memória e exportação/importação perto de 25MB",
+      "status": "NOT_EXECUTED",
+      "evidence": null
+    },
+    {
+      "id": "RG-16",
+      "type": "MANUAL",
+      "label": "Teste de gameplay/balanceamento e cobertura dos fluxos V2 integrados",
+      "status": "NOT_EXECUTED",
+      "evidence": null
+    },
+    {
+      "id": "RG-17",
+      "type": "RELEASE",
+      "label": "Candidata V3.0.0 identificada, commit imutável e CI aprovada no SHA exato",
+      "status": "NOT_CREATED",
+      "evidence": null
+    },
+    {
+      "id": "RG-18",
+      "type": "RELEASE",
+      "label": "Aceite formal explícito do titular após inspeção das evidências, inclusive ressalvas",
+      "status": "NOT_GRANTED",
+      "evidence": null
+    }
+  ]
+}

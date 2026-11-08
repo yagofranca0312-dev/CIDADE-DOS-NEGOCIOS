@@ -112,8 +112,8 @@ test('V3.0.0-alpha.1: novos controles ficam no HTML único e script compilado é
     assert.ok(tpl.includes('id="'+id+'"'));
   assert.match(app,/SAFETY_KEY/);
   assert.match(app,/backupCurrent\(\)/);
-  assert.match(app,/if\(!persistLocal\(incoming\.state\)\)/);
-  assert.match(app,/if\(!persistLocal\(result\.state\)\)return false;/);
+  assert.match(app,/if\(!await persistDurable\(incoming\.state\)\)/);
+  assert.match(app,/if\(!await persistDurable\(result\.state\)\)return false;/);
   assert.match(html,/const VERSION = '3\.0\.0-alpha\.1'/);
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(scripts.length,1);

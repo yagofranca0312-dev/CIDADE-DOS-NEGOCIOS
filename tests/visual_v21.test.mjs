@@ -25,7 +25,10 @@ test('V2.0 vs V2.2 economia, rng, fiscal e razão invariáveis',()=>{
  assert.equal(now.importSave(old.exportSave(a)).migrated,false);
 });
 test('Identidade REF-01 SVG, favicon único offline e arte REF-04 incorporada',()=>{
- assert.match(template,/id="city-brand-glyph"/);assert.match(template,/v21-hero-mark/);assert.match(template,/v21-sidebar-mark/);
+ assert.match(template,/id="city-brand-glyph"/);assert.match(template,/v21-hero-mark/);
+ assert.match(template,/class="v31-onboard-panel"/);
+ assert.match(template,/class="v31-dock"/);
+ assert.doesNotMatch(template,/<aside class="sidebar"/);
  assert.match(html,/<link rel="icon" type="image\/svg\+xml" href="data:image\/svg\+xml,/);
  assert.match(html,/data:image\/webp;base64,[A-Za-z0-9+/]+/);
  assert.doesNotMatch(html,/__CDN_V21_KEYART__/);

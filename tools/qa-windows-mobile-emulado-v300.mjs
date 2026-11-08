@@ -94,6 +94,11 @@ async function run(channel,width){
     await page.locator('#map-open-company').tap();
     await page.locator('#sector-select').selectOption('mercado');
     await page.locator('#open-form button[type="submit"]').tap();
+    // O submit e assincrono: nunca interpretar um snapshot anterior como falha da UI.
+    await page.waitForFunction(()=>document.getElementById('v221-hud-count')?.textContent?.includes('1/5'),
+      null,{timeout:30000});
+    await page.waitForFunction(()=>document.body.dataset.storageBusy!=='true',
+      null,{timeout:30000});
     s=await stateInfo(page);
     assert.ok(s&&s.units===1&&s.balanced&&s.reconciliation,
       label+' empresa nao inaugurada');

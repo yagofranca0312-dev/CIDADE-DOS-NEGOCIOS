@@ -55,15 +55,18 @@ test('V3.0-08: persistência com write-ahead é proteção automatizada, QA real
   assert.ok(commit.indexOf('persistLocal(result.state)')<commit.indexOf('state=result.state'),
     'O estado só pode mudar depois de confirmar a persistência');
   const r=evidence.requirements.find(x=>x.id==='RG-06');
-  assert.equal(r.status,'NOT_VERIFIED','Sem teste Windows/browser não concluir RG-06');
+  assert.equal(r.status,'PARTIAL','Windows hospedado não substitui QA da instalação pessoal');
+  assert.match(r.evidence,/actions\/runs\/42432588846/);
   assert.equal(r.evidence,null);
 });
 
-test('V3.0-08: nenhuma prova de QA Windows/mobile/usuário foi inventada',()=>{
+test('V3.0-08: CI Windows headless é parcial e não inventa QA pessoal/mobile',()=>{
+  const hostedPartial=new Set(['RG-08','RG-10','RG-12']);
   for(const id of ['RG-08','RG-09','RG-10','RG-11','RG-12','RG-13','RG-14','RG-15','RG-16']){
     const row=evidence.requirements.find(x=>x.id===id);
-    assert.equal(row.status,'NOT_EXECUTED',id);
-    assert.equal(row.evidence,null,id);
+    assert.equal(row.status,hostedPartial.has(id)?'PARTIAL':'NOT_EXECUTED',id);
+    if(hostedPartial.has(id))assert.match(row.evidence,/actions\/runs\/42432588846/);
+    else assert.equal(row.evidence,null,id);
   }
   assert.equal(evidence.requirements.find(x=>x.id==='RG-18').status,'NOT_GRANTED');
   assert.equal(evidence.requirements.find(x=>x.id==='RG-17').status,'NOT_CREATED');

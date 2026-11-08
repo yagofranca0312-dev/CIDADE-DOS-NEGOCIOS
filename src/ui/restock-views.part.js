@@ -4,12 +4,17 @@ function restockSupplierLimit(unit,row,supplier,date){
     .reduce((n,o)=>n+o.items.filter(x=>x.productId===row.id).reduce((s,x)=>s+x.quantity,0),0);
   return Math.max(0,Math.min(2000,supplier.maxDailyPerSku-ordered,100000-row.stock-row.inTransit));
 }
-function restockRoom(unit){
+function restockRoom(unit,groupState=null){
   const pending=unit.purchaseOrders.filter(o=>o.status==='PENDING').reduce((n,o)=>n+o.items.reduce((s,x)=>s+x.quantity,0),0);
-  return Math.max(0,100000-unit.stockUnits-pending);
+  // PR-02: a capacidade TOTAL do motor inclui transferências recebidas em breve.
+  // Consultar o estado já existente (sem modificar logística ou o razão).
+  const incoming=(groupState?.economy?.logistics?.transfers||[])
+    .filter(t=>t.status==='PENDING'&&t.toId===unit.id)
+    .reduce((n,t)=>n+t.quantity,0);
+  return Math.max(0,100000-unit.stockUnits-pending-incoming);
 }
-function prepareRestockPlan(unit,rows,supplier,mode,date,revision){
-  let room=restockRoom(unit);
+function prepareRestockPlan(unit,rows,supplier,mode,date,revision,groupState=null){
+  let room=restockRoom(unit,groupState);
   const ranking=rows.slice().sort((a,b)=>a.coverageDays-b.coverageDays||a.id.localeCompare(b.id));
   const amounts=new Map();
   for(const row of ranking){
@@ -20,7 +25,7 @@ function prepareRestockPlan(unit,rows,supplier,mode,date,revision){
   return {businessId:unit.id,revision,mode,supplierId:supplier.id,
     lines:rows.map(row=>({productId:row.id,selected:(amounts.get(row.id)||0)>0,quantity:amounts.get(row.id)||0}))};
 }
-function reviewRestockPlan(draft,unit,rows,supplier,cash,date,revision){
+function reviewRestockPlan(draft,unit,rows,supplier,cash,date,revision,groupState=null){
   const errors=[],inventory=new Map(rows.map(x=>[x.id,x])),products=new Map(unit?.products.map(x=>[x.id,x])||[]);
   if(!draft||!unit||!supplier||draft.businessId!==unit.id||draft.revision!==revision||draft.supplierId!==supplier.id)
     errors.push('Proposta desatualizada. Prepare novamente antes de comprar.');
@@ -38,14 +43,14 @@ function reviewRestockPlan(draft,unit,rows,supplier,cash,date,revision){
   }
   if(!items.length)errors.push('Selecione ao menos um produto com quantidade positiva.');
   if(items.length>40)errors.push('Máximo de 40 produtos por pedido.');
-  if(unit&&units>restockRoom(unit))errors.push('Capacidade total do depósito excedida.');
+  if(unit&&units>restockRoom(unit,groupState))errors.push('Capacidade total do depósito excedida.');
   if(unit&&unit.purchaseOrders.length>=20000)errors.push('Histórico de compras cheio.');
   if(!Number.isSafeInteger(total)||total>cash)errors.push('Caixa insuficiente para pagamento integral hoje.');
   return {valid:errors.length===0,errors,items,total,units,cash,remaining:cash-total};
 }
-function adjustRestockToBudget(draft,unit,rows,supplier,cash,date){
+function adjustRestockToBudget(draft,unit,rows,supplier,cash,date,groupState=null){
   const byId=new Map(rows.map(x=>[x.id,x])),products=new Map(unit.products.map(x=>[x.id,x]));
-  let available=cash,room=restockRoom(unit);
+  let available=cash,room=restockRoom(unit,groupState);
   const ranking=draft.lines.filter(x=>x.selected).slice().sort((a,b)=>
     (byId.get(a.productId)?.coverageDays??Infinity)-(byId.get(b.productId)?.coverageDays??Infinity)||a.productId.localeCompare(b.productId));
   const allocations=new Map();
@@ -62,7 +67,7 @@ function adjustRestockToBudget(draft,unit,rows,supplier,cash,date){
 function renderRestockSummary(){
   const unit=business(),supplier=Core.SUPPLIERS.find(x=>x.id===restockDraft?.supplierId);
   const rows=unit?Core.inventoryReport(state):[];
-  const review=reviewRestockPlan(restockDraft,unit,rows,supplier,unit?Core.overview(state).cash:0,state?.calendar?.date,state?.revision);
+  const review=reviewRestockPlan(restockDraft,unit,rows,supplier,unit?Core.overview(state).cash:0,state?.calendar?.date,state?.revision,state);
   $('restock-adjust-budget').disabled=!restockDraft||!review.items.length||review.total<=review.cash;
   $('restock-confirm').disabled=!restockDraft||!review.valid;
   $('restock-cancel').disabled=!restockDraft;
@@ -116,7 +121,7 @@ function bindRestock(){
     const unit=business(),supplier=Core.SUPPLIERS.find(x=>x.id===$('restock-supplier').value);
     if(!unit||!supplier){notify('Abra uma empresa e selecione um fornecedor.',true);return;}
     resetTimer(); // evitar que a carreira avance durante a revisao do pedido
-    restockDraft=prepareRestockPlan(unit,Core.inventoryReport(state),supplier,$('restock-mode').value,state.calendar.date,state.revision);
+    restockDraft=prepareRestockPlan(unit,Core.inventoryReport(state),supplier,$('restock-mode').value,state.calendar.date,state.revision,state);
     renderRestock();
   });
   $('restock-order-rows').addEventListener('change',e=>{
@@ -136,13 +141,13 @@ function bindRestock(){
   $('restock-adjust-budget').addEventListener('click',()=>{
     const unit=business(),supplier=Core.SUPPLIERS.find(x=>x.id===restockDraft?.supplierId);
     if(!unit||!supplier||!restockDraft||restockDraft.revision!==state.revision)return;
-    adjustRestockToBudget(restockDraft,unit,Core.inventoryReport(state),supplier,Core.overview(state).cash,state.calendar.date);
+    adjustRestockToBudget(restockDraft,unit,Core.inventoryReport(state),supplier,Core.overview(state).cash,state.calendar.date,state);
     renderRestock();
   });
   $('restock-cancel').addEventListener('click',()=>{restockDraft=null;renderRestock();});
   $('restock-confirm').addEventListener('click',()=>{
     const unit=business(),supplier=Core.SUPPLIERS.find(x=>x.id===restockDraft?.supplierId);
-    const review=reviewRestockPlan(restockDraft,unit,unit?Core.inventoryReport(state):[],supplier,unit?Core.overview(state).cash:0,state?.calendar?.date,state?.revision);
+    const review=reviewRestockPlan(restockDraft,unit,unit?Core.inventoryReport(state):[],supplier,unit?Core.overview(state).cash:0,state?.calendar?.date,state?.revision,state);
     if(!review.valid){renderRestockSummary();notify(review.errors.join(' '),true);return;}
     const revision=state.revision,unitId=unit.id,items=review.items.map(x=>({productId:x.productId,quantity:x.quantity}));
     const message='Confirmar pedido para '+unit.id+'?\nFornecedor: '+supplier.name+'\n'+review.items.length+' produto(s) · '+review.units+' unidade(s)\nTotal pago agora: '+Core.money(review.total)+'\nSaldo estimado após compra: '+Core.money(review.remaining)+'\nPrevisão de entrega: '+supplier.leadDays+' dia(s).';

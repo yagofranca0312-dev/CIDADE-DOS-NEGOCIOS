@@ -39,7 +39,9 @@ for (const id of ['intro-version','build-version','footer-version']) {
   if (!template.includes(`id="${id}">v${coreVersion}<`)) throw Error(`Versão incorreta no ${id}; esperado v${coreVersion}`);
 }
 if (!template.includes(`<title>Cidade dos Negócios 1 · v${coreVersion}</title>`)) throw Error('Versão incorreta no título HTML');
-const html=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21Inline).replace('/* CDN_V22_CSS */',v22css).replace('/* CDN_V221_CSS */',v221css).replace('/* CDN_CORE */',core).replace('/* CDN_VISUAL */',visual+'\n'+tianguaVisual).replace('/* CDN_UI */',ui);
+// Os checkouts Windows podem usar CRLF nos fragmentos. O artefato offline tem
+// serialização canônica LF em qualquer SO: mesmo arquivo deve ter mesmo SHA-256.
+const html=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21Inline).replace('/* CDN_V22_CSS */',v22css).replace('/* CDN_V221_CSS */',v221css).replace('/* CDN_CORE */',core).replace('/* CDN_VISUAL */',visual+'\n'+tianguaVisual).replace('/* CDN_UI */',ui).replace(/\r\n?/g,'\n');
 if (/\/\* CDN_(CSS|V2_CSS|V21_CSS|V22_CSS|V221_CSS|CORE|VISUAL|UI) \*\//.test(html)) throw Error('Build incompleto');
 writeFileSync(resolve(cwd,'index.html'),html,'utf8');
 const hash=createHash('sha256').update(html).digest('hex');

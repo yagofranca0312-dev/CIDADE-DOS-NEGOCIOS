@@ -93,7 +93,7 @@ for(const channel of ['chrome','msedge'])for(const width of [390,1366]){
   for(const [root,sections] of Object.entries(panels)){
     if(root!==activeRoot){
       await page.locator('#v31-overlay-close').click();
-      await page.locator('#v31-dock [data-v31-open="'+(root==='empresa'?'empresa:dashboard':'administrativo:financas')+'"]').click();
+      await page.locator('#v31-dock [data-v31-open="'+(root==='empresa'?'empresa:dashboard':'administrativo:rh-dp')+'"]').click();
       activeRoot=root;
     }
     assert.equal(await page.locator('[data-view="'+root+'"]').isVisible(),true,'Modal do departamento nao abriu: '+root);

@@ -851,51 +851,90 @@ button.v221-hud-cell:hover{background:#1e4254}
  }
  .v221-city-mode.v221-tiangua-scene .map-panel>.v221-city-switch-trigger>*{visibility:visible!important}
 }
-/* V3.1 — UI imersiva sem duplicar motor ou regras economicas. */
-.v31-dock[hidden],.v31-context[hidden],.v31-overlay-close[hidden]{display:none!important}
-.v31-dock{position:fixed;inset:auto 0 0;z-index:110;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding:9px max(12px,env(safe-area-inset-right)) calc(9px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));gap:8px;background:#071b2ff5;border-top:1px solid #c9a663;box-shadow:0 -10px 32px #0008}
-.v31-dock button{min-width:0;min-height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#e5f0f6;background:#16354c;border:1px solid #476b7c;border-radius:12px;font-size:.79rem;font-weight:700}
-.v31-dock button span{font-size:1.3rem}
-.v31-dock button:focus-visible,.v31-camera button:focus-visible,.v31-context button:focus-visible,.v31-overlay-close:focus-visible{outline:3px solid #ffe9a6;outline-offset:2px}
-body.v31-immersive .sidebar{display:none}
-body.v31-immersive .main-pane{width:100%;padding-bottom:90px}
-body.v31-immersive .city-stage{max-width:none}
-body.v31-immersive .map-canvas{overflow:auto;max-height:min(69vh,760px);min-height:310px;scrollbar-width:thin}
-body.v31-immersive .map-canvas svg{will-change:auto}
-body.v31-immersive .v221-city-svg{height:auto}
-.v31-camera{position:absolute;right:12px;top:92px;z-index:6;display:flex;align-items:center;gap:5px;border:1px solid #6e8a9e;background:#09263eea;padding:7px;border-radius:10px}
-.v31-camera button{border:1px solid #7594a4;color:#fff9e8;background:#173a54;border-radius:7px;min-width:37px;min-height:38px;font-size:1.15rem}
-.v31-camera output{color:#f5deb0;font-weight:800;min-width:44px;text-align:center;font-size:.75rem}
-.v31-context{background:#0b263cf2;color:#f4f5ee;border:1px solid #bfa774;border-radius:12px;padding:10px 12px;max-width:100%}
-.v31-context>strong{display:block;font-size:.77rem;margin-bottom:8px}
+/* V3.1 city-first: viewport integral, sem novo motor ou menu lateral. */
+.v31-dock[hidden],.v31-context[hidden],.v31-overlay-close[hidden],.v31-backdrop[hidden],#v31-classic-return[hidden]{display:none!important}
+body.v31-immersive{margin:0!important;overflow:hidden!important;overscroll-behavior:none}
+body.v31-immersive #game-shell{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:0!important;display:block!important;overflow:hidden!important;background:#071626}
+body.v31-immersive #game-shell>.sidebar{display:none!important}
+body.v31-immersive #game-shell>.main-pane{position:absolute!important;inset:0!important;display:block!important;width:100vw!important;height:100dvh!important;max-width:none!important;margin:0!important;padding:0!important;overflow:visible!important}
+body.v31-immersive .topbar,body.v31-immersive .game-footer,body.v31-immersive .world-warning{display:none!important}
+body.v31-immersive #game-shell .content{position:absolute!important;inset:0!important;display:block!important;width:100vw!important;height:100dvh!important;max-width:none!important;margin:0!important;padding:0!important;overflow:visible!important}
+body.v31-immersive .content>.page-title,body.v31-immersive #stats-bar,body.v31-immersive .turnbar,body.v31-immersive .v221-city-hud,body.v31-immersive .v221-trust-ribbon,body.v31-immersive .city-stage-intro{display:none!important}
+body.v31-immersive .view[data-view="cidade"]{position:fixed!important;inset:0!important;display:block!important;width:100vw!important;height:100dvh!important;min-height:0!important;margin:0!important;padding:0!important;overflow:hidden!important;z-index:1}
+body.v31-immersive .city-stage{position:absolute!important;inset:0!important;display:block!important;width:100vw!important;height:100dvh!important;max-width:none!important;min-height:0!important;margin:0!important;padding:0!important}
+body.v31-immersive .city-stage>.map-panel{position:absolute!important;inset:0!important;width:100vw!important;height:100dvh!important;max-width:none!important;min-height:0!important;padding:0!important;margin:0!important;border:0!important;border-radius:0!important;overflow:visible!important;box-shadow:none!important;background:#0a2939}
+body.v31-immersive .map-panel .panel-heading,body.v31-immersive .world-map-notice,body.v31-immersive .map-legend,body.v31-immersive .map-disclaimer,body.v31-immersive .v221-map-summary{display:none!important}
+body.v31-immersive #map-canvas{position:absolute!important;inset:0!important;width:100vw!important;height:100dvh!important;max-width:none!important;min-height:0!important;max-height:none!important;display:block!important;overflow:auto!important;scrollbar-width:none!important;overscroll-behavior:contain;touch-action:pan-x pan-y;cursor:grab;user-select:none;background:#0a2939}
+body.v31-immersive #map-canvas:active{cursor:grabbing}
+body.v31-immersive #map-canvas::-webkit-scrollbar{display:none}
+body.v31-immersive #map-canvas>svg.v221-city-svg{width:max(100vw,calc(100dvh * 2.313253))!important;height:auto!important;min-width:0!important;max-width:none!important;min-height:0!important;max-height:none!important;aspect-ratio:1536/664!important;overflow:visible!important;touch-action:pan-x pan-y}
+body.v31-immersive #map-canvas>svg.v22-city-svg{width:max(100vw,calc(100dvh * 1.580247))!important;height:auto!important;min-width:0!important;max-width:none!important;min-height:0!important;max-height:none!important;aspect-ratio:640/405!important;overflow:visible!important;touch-action:pan-x pan-y}
+body.v31-immersive .v31-top-controls{position:fixed!important;top:calc(8px + env(safe-area-inset-top));left:50%;right:auto;transform:translateX(-50%);z-index:120;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:9px;width:max-content;max-width:calc(100vw - 20px);padding:8px 12px;background:rgba(7,24,39,.78);border:1px solid #b2ccd080;border-radius:16px;box-shadow:0 9px 32px #0008;backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px)}
+.v31-hud-metric{min-width:0;display:flex;flex-direction:column;gap:2px;padding-right:9px;border-right:1px solid #8dadc050}
+.v31-hud-metric small{font-size:.59rem;color:#aacddc;font-weight:800;letter-spacing:.06em}
+.v31-hud-metric strong{font-size:.86rem;font-variant-numeric:tabular-nums;color:#f6e2ad;white-space:nowrap}
+.v31-top-controls button,.v31-top-controls select{min-height:40px;min-width:40px;padding:6px 9px;background:#163e55;border:1px solid #7494a0;border-radius:9px;color:#fff3d8;font-weight:800}
+.v31-top-controls label{font-size:.7rem;color:#b9d1dd}
+.v31-dock button:focus-visible,.v31-top-controls button:focus-visible,.v31-camera button:focus-visible,.v31-overlay-close:focus-visible,.v31-context button:focus-visible{outline:3px solid #ffe4a4;outline-offset:2px}
+body.v31-immersive .map-panel>.v221-city-switch-trigger,body.v31-immersive.v221-tiangua-scene .map-panel>.v221-city-switch-trigger{position:fixed!important;left:14px!important;top:calc(78px + env(safe-area-inset-top))!important;right:auto!important;bottom:auto!important;z-index:115!important;width:min(234px,calc(100vw - 28px))!important;min-height:43px!important;height:auto!important;padding:9px 12px!important;border:1px solid #c3ac80a0!important;border-radius:11px!important;background:rgba(7,25,42,.84)!important;box-shadow:0 8px 24px #0007!important;color:#fae4b5!important;backdrop-filter:blur(12px)}
+body.v31-immersive.v221-tiangua-scene .v221-city-switch-trigger>*{visibility:visible!important}
+body.v31-immersive .map-panel>.v221-city-switch-trigger strong{font-size:.9rem!important}
+body.v31-immersive .map-panel>.v221-city-switch-trigger small{font-size:.57rem!important}
+body.v31-immersive .v221-city-info-trigger{position:fixed!important;left:14px!important;top:calc(151px + env(safe-area-inset-top))!important;right:auto!important;z-index:112}
+body.v31-immersive .v22-lot-nav{position:fixed!important;left:14px!important;bottom:calc(100px + env(safe-area-inset-bottom))!important;z-index:114;display:flex!important;width:min(245px,calc(100vw - 28px));gap:8px;padding:8px;border:1px solid #698d97;border-radius:11px;background:rgba(6,29,46,.85);backdrop-filter:blur(12px)}
+body.v31-immersive.v31-lot-selected .v22-lot-nav{display:none!important}
+body.v31-immersive .city-stage>.right-column{position:fixed!important;left:14px!important;right:auto!important;top:auto!important;bottom:calc(100px + env(safe-area-inset-bottom))!important;width:min(440px,calc(100vw - 28px))!important;max-height:55dvh!important;margin:0!important;z-index:127!important;pointer-events:none!important}
+body.v31-immersive .city-stage>.right-column>*{pointer-events:auto!important}
+body.v31-immersive #v221-inspector{max-height:55dvh!important;overflow:auto!important;padding:12px 43px 12px 15px!important;background:rgba(6,29,46,.9)!important;border:1px solid #d6b77b!important;border-radius:14px!important;box-shadow:0 15px 42px #000a!important;backdrop-filter:blur(14px)}
+body.v31-immersive #v221-inspector .panel-heading{display:none!important}
+body.v31-immersive #v221-inspector .big-number{font-size:1.25rem;margin:0 0 4px}
+body.v31-immersive #v221-inspector .lot-status{font-size:.78rem;margin:0 0 9px}
+body.v31-immersive #v221-inspector .btn{min-height:39px;margin:0}
+body.v31-immersive .right-column .world-drawer[open]{position:fixed!important;left:14px!important;bottom:calc(100px + env(safe-area-inset-bottom))!important;width:min(520px,calc(100vw - 28px));max-height:62dvh;overflow:auto;z-index:131;background:#0b283df7;box-shadow:0 15px 44px #000b}
+.v31-context{margin-top:9px;padding-top:9px;border-top:1px solid #728f9c;color:#f7ecd4}
+.v31-context>strong{display:block;margin-bottom:7px;font-size:.74rem}
 .v31-context-actions{display:flex;flex-wrap:wrap;gap:6px}
-.v31-context button{background:#1a4059;color:#fff0cf;border:1px solid #648495;border-radius:8px;min-height:40px;padding:7px 10px;font-weight:700}
-.v31-context button:disabled{opacity:.45;cursor:not-allowed}
-.v31-top-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:#071d33;padding:7px 12px;border-bottom:1px solid #32526a}
-.v31-top-controls button,.v31-top-controls select{background:#173d54;color:#fff4d5;border:1px solid #577d90;border-radius:8px;min-height:39px;padding:5px 12px}
-.v31-top-controls label{font-size:.76rem;color:#c0dce9}
-.v31-alerts{position:absolute;right:14px;top:147px;max-width:min(340px,42vw);z-index:5;border:1px solid #446e81;border-radius:10px;background:#0b273bdc;padding:8px 12px;color:#ecf7f5;font-size:.72rem}
-.v31-alerts summary{cursor:pointer;min-height:28px}
-.v31-alerts ul{padding-left:17px;max-height:180px;overflow:auto;line-height:1.4}
+.v31-context button{min-height:37px;padding:7px 9px;background:#164057;border:1px solid #648a9a;border-radius:8px;color:#f7ead0;font-size:.73rem;font-weight:750}
+.v31-context button:disabled{opacity:.45}
+body.v31-immersive .v31-camera{position:fixed!important;right:14px!important;top:calc(79px + env(safe-area-inset-top))!important;left:auto!important;z-index:125;display:flex;align-items:center;gap:5px;padding:6px;background:rgba(6,28,43,.82);border:1px solid #7397a5;border-radius:11px;backdrop-filter:blur(12px)}
+.v31-camera button{min-width:40px;min-height:40px;background:#164057;border:1px solid #7194a4;border-radius:8px;color:#fff2d8;font-size:1.05rem}
+.v31-camera output{min-width:42px;text-align:center;font-size:.75rem;font-weight:800;color:#f8e4b7}
+body.v31-immersive .v31-alerts{position:fixed!important;right:14px;top:calc(139px + env(safe-area-inset-top));z-index:126;width:min(330px,calc(100vw - 28px));background:#0b2b40ed;border:1px solid #668996;border-radius:11px;padding:10px;color:#e9f2f5;font-size:.75rem;backdrop-filter:blur(12px)}
+body.v31-immersive .v31-alerts:not([open]){display:none!important}
+.v31-alerts ul{max-height:170px;overflow:auto;padding-left:17px}
+body.v31-immersive .v31-dock{position:fixed!important;left:50%!important;right:auto!important;bottom:calc(12px + env(safe-area-inset-bottom))!important;top:auto!important;transform:translateX(-50%);z-index:155;display:flex;align-items:center;gap:7px;width:max-content;max-width:calc(100vw - 16px);padding:7px;background:rgba(5,22,37,.84);border:1px solid #b4a17d8f;border-radius:17px;box-shadow:0 12px 36px #000b;backdrop-filter:blur(16px)}
+.v31-dock button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:87px;min-height:60px;padding:5px 9px;background:#163b54;border:1px solid #56798b;border-radius:11px;color:#eaf2f4;font-size:.68rem;font-weight:800}
+.v31-dock button span{font-size:1.22rem}
+.v31-dock button[aria-pressed="true"]{color:#ffe1a0;border-color:#ecc07d;background:#33526c}
+.v31-backdrop{position:fixed!important;inset:0!important;z-index:300!important;background:rgba(3,12,22,.57);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 body.v31-overlay-open .view[data-view="cidade"]{display:block!important}
-body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden]){position:fixed;top:72px;right:12px;bottom:94px;width:min(760px,calc(100vw - 24px));max-width:none;background:#0e2a40;z-index:190;box-sizing:border-box;overflow:auto;padding:55px 16px 28px;border:1px solid #c5a568;border-radius:15px;box-shadow:0 24px 95px #00101ef2;overscroll-behavior:contain}
-body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden]) .panel{max-width:100%}
-.v31-overlay-close{position:fixed;right:27px;top:85px;z-index:201;min-height:40px;padding:7px 15px;background:#ead4a7;color:#152b3d;border:2px solid #fff3d8;border-radius:9px;font-weight:850}
-.v31-overlay-close:not([hidden]){display:block}
+body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden]){position:fixed!important;left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;transform:translate(-50%,-50%)!important;z-index:360!important;display:block!important;width:min(960px,calc(100vw - 30px))!important;height:min(80dvh,825px)!important;min-height:0!important;max-height:calc(100dvh - 30px)!important;max-width:none!important;overflow:auto!important;overscroll-behavior:contain;margin:0!important;padding:13px 20px 24px!important;background:#0c2b42f4!important;border:1px solid #e1bf88!important;border-radius:17px!important;box-shadow:0 26px 100px #000d!important}
+.v31-overlay-close{position:sticky!important;top:0!important;left:100%;float:right;z-index:390;min-height:43px;min-width:110px;padding:8px 12px;background:#f1d9a5;color:#102b3c;border:2px solid #fff0cf;border-radius:9px;font-weight:850}
+.v31-overlay-close:not([hidden]){display:block!important}
+#v31-classic-return{position:fixed;top:12px;right:12px;z-index:200;min-height:42px;padding:9px 14px;background:#173e56;color:#f8eaca;border:1px solid #e0bc84;border-radius:9px}
+body .toast{z-index:10000!important;bottom:calc(90px + env(safe-area-inset-bottom))!important}
 @media(max-width:700px){
- .v31-dock{gap:3px;padding:5px 5px calc(6px + env(safe-area-inset-bottom))}
- .v31-dock button{min-height:54px;font-size:.59rem;padding:2px;gap:2px}
- .v31-dock button span{font-size:1.12rem}
- body.v31-immersive .main-pane{padding-bottom:75px}
- body.v31-immersive .v221-city-hud{grid-template-columns:repeat(2,minmax(0,1fr))}
- body.v31-immersive .v221-city-hud .v221-hud-cell{min-height:58px}
- body.v31-immersive .map-canvas{min-height:260px;max-height:55vh}
- .v31-camera{top:105px;right:9px}
- .v31-alerts{top:168px;right:8px;max-width:min(250px,76vw)}
- body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden]){top:auto;left:0;right:0;bottom:calc(66px + env(safe-area-inset-bottom));width:100vw;max-height:76vh;min-height:50vh;border-radius:17px 17px 0 0;padding:53px 12px 24px}
- .v31-overlay-close{top:auto;bottom:calc(66px + env(safe-area-inset-bottom) + 76vh - 52px);right:12px}
- .v31-context-actions{max-height:155px;overflow:auto}
+ body.v31-immersive .v31-top-controls{left:8px;right:8px;transform:none;width:auto;max-width:none;gap:4px 6px;padding:5px 7px;justify-content:space-between;border-radius:12px}
+ .v31-hud-metric small{font-size:.49rem}.v31-hud-metric strong{font-size:.73rem}
+ .v31-hud-metric{padding-right:5px}.v31-top-controls label{display:none}
+ .v31-top-controls button,.v31-top-controls select{min-width:33px;min-height:36px;padding:5px 6px;font-size:.65rem}
+ body.v31-immersive .map-panel>.v221-city-switch-trigger,body.v31-immersive.v221-tiangua-scene .map-panel>.v221-city-switch-trigger{top:calc(110px + env(safe-area-inset-top))!important;width:min(182px,calc(100vw - 28px))!important;min-height:38px!important}
+ body.v31-immersive .map-panel>.v221-city-switch-trigger strong{font-size:.76rem!important}
+ body.v31-immersive .map-panel>.v221-city-switch-trigger small{font-size:.5rem!important}
+ body.v31-immersive .v31-camera{top:calc(112px + env(safe-area-inset-top))!important;right:8px!important;gap:2px;padding:4px}
+ .v31-camera button{min-width:33px;min-height:35px;padding:3px}
+ .v31-camera output{min-width:35px;font-size:.67rem}
+ body.v31-immersive .v31-alerts{top:calc(166px + env(safe-area-inset-top));right:8px}
+ body.v31-immersive .v221-city-info-trigger{top:calc(165px + env(safe-area-inset-top))!important;left:8px!important}
+ body.v31-immersive .v22-lot-nav{left:8px!important;bottom:calc(85px + env(safe-area-inset-bottom))!important;width:min(205px,calc(100vw - 16px))}
+ body.v31-immersive .city-stage>.right-column{left:8px!important;bottom:calc(86px + env(safe-area-inset-bottom))!important;width:calc(100vw - 16px)!important;max-height:48dvh!important}
+ body.v31-immersive #v221-inspector{max-height:46dvh!important}
+ body.v31-immersive .v31-dock{bottom:calc(5px + env(safe-area-inset-bottom))!important;gap:3px;padding:4px;max-width:calc(100vw - 10px);border-radius:11px}
+ .v31-dock button{min-width:0;flex:1;min-height:55px;padding:4px 2px;font-size:.57rem}
+ .v31-dock button span{font-size:1.08rem}
+ body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden]){left:0!important;right:0!important;top:auto!important;bottom:0!important;transform:none!important;width:100vw!important;height:min(83dvh,790px)!important;max-height:calc(100dvh - 12px)!important;border-radius:16px 16px 0 0!important;padding:12px 13px 23px!important}
 }
+@media(max-width:360px){.v31-dock button{font-size:.49rem}.v31-top-controls button{font-size:.59rem}}
 @media(prefers-reduced-motion:reduce){.v31-dock *,.v31-context *,body.v31-overlay-open .view{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
   </style>
@@ -966,6 +1005,7 @@ body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden]) .
           <select id="speed-select" aria-label="Velocidade da simulação"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select>
         </div>
       </header>
+      <button type="button" id="v31-classic-return" hidden>◈ Voltar à cidade imersiva</button>
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
       <details class="world-warning legal-warning v21-legal-note"><summary>ⓘ SIMULAÇÃO EDUCATIVA <span>Dados econômicos simulados e tributos não oficiais · ver limites</span></summary><p>Indicadores econômicos do jogo são fictícios, salvo população e PIB identificados como oficiais. Cenários tributários não são apuração legal. Regras sem cobertura não representam isenção nem imposto zero.</p></details>
       <main class="content">
@@ -985,11 +1025,13 @@ body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden]) .
             <button type="button" class="v221-hud-cell" id="v221-hud-units" title="Gerenciar a rede de empresas"><span>▣ ESTABELECIMENTOS</span><strong id="v221-hud-count">0/5</strong><small>Unidades do grupo ▾</small></button>
             <div class="v221-city-actions"><button type="button" id="v221-event-open" title="Atividade da carreira" aria-label="Atividade da carreira">♧</button><button type="button" id="v221-help-open" title="Como jogar" aria-label="Ajuda do distrito">?</button><button type="button" id="v221-config-open" title="Backup e configurações" aria-label="Configurações e backup">⚙</button></div>
           </div>
-          <div class="v31-top-controls" aria-label="Tempo e navegação imersiva">
+          <div class="v31-top-controls" role="toolbar" aria-label="HUD: caixa, data, eventos e ritmo">
+            <div class="v31-hud-metric"><small>CAIXA ÚNICO · SIMULADO</small><strong id="v31-hud-cash">—</strong></div>
+            <div class="v31-hud-metric"><small>DATA / TURNO</small><strong id="v31-hud-date">—</strong></div>
+            <button type="button" id="v31-hud-alerts" aria-controls="v31-alert-panel" aria-expanded="false" title="Eventos confirmados">♧ <span id="v31-alert-count">0</span></button>
             <button type="button" id="v31-hud-pause" aria-label="Iniciar ou pausar tempo">▶ Jogar</button>
             <label for="v31-hud-speed">Ritmo</label><select id="v31-hud-speed" aria-label="Velocidade do tempo"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select>
-            <button type="button" id="v31-classic-switch">Interface clássica</button>
-            <span id="v31-alert-count" role="status" aria-live="polite">0 eventos recentes</span>
+            <button type="button" id="v31-classic-switch">Modo clássico</button>
           </div>
           <p class="v221-trust-ribbon" role="note"><span aria-hidden="true" class="v221-trust-dot"></span><strong>SIMULAÇÃO EDUCATIVA</strong><span>Valores financeiros fictícios do jogo · operações locais · não são saldos reais</span></p>
           <div class="v221-popover v221-time-menu" id="v221-time-menu" hidden><strong>Calendário e ritmo</strong><p>Controles do motor real.</p><div class="v221-time-actions"><button type="button" data-v221-time="play">▶ / ❚❚</button><button type="button" data-v221-time="1">+ 1 dia</button><button type="button" data-v221-time="7">+ 7 dias</button><button type="button" data-v221-time="30">+ 30 dias</button></div><label for="v221-time-speed">Velocidade</label><select id="v221-time-speed"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select></div>
@@ -1005,7 +1047,7 @@ body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden]) .
                 <button type="button" id="v31-camera-plus" aria-label="Aumentar zoom">+</button>
                 <button type="button" id="v31-camera-home" aria-label="Centralizar câmera">⌂</button>
               </div>
-              <details class="v31-alerts"><summary>Eventos confirmados</summary>
+              <details class="v31-alerts" id="v31-alert-panel"><summary>Eventos confirmados</summary>
                 <ul id="v31-alert-list"><li>Sem eventos confirmados.</li></ul>
               </details>
               <div id="map-canvas" class="map-canvas" role="group" aria-label="Mapa ilustrativo clicável com 18 lotes"></div>
@@ -1525,6 +1567,7 @@ body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden]) .
             <p id="qa-save-warning" class="field-hint">O limite técnico do arquivo é de 25 milhões de caracteres. A disponibilidade real do armazenamento do navegador depende do sistema e da quota local.</p>
           </article>
         </section>
+        <div id="v31-backdrop" class="v31-backdrop" hidden aria-hidden="true"></div>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
       </main>
       <footer class="game-footer"><span>CIDADE DOS NEGÓCIOS · <b id="footer-version">v3.1.0</b> · SIMULAÇÃO EDUCATIVA</span><span id="footer-state">Sem transmissão de dados</span></footer>

@@ -42,7 +42,7 @@ A V3.0 é uma **release de unificação, regressão e estabilidade**, sem recons
 | `3.0.0-04` | Migração de todas as carreiras V2 | **PARCIAL** | Matriz automática 18 testes novos PASS, schemas históricos 2–9, rollback Patch A→V2.9 homologada no motor original, corrupção rejeitada; ainda faltam saves pessoais reais e recuperação Windows/file:// |
 | `3.0.0-05` | Performance e estabilidade longa | **PARCIAL** | Benchmark V3 instrumentou 8 painéis, saves, relatórios e HTML; CI 364/364 PASS; hotfix de checksum sob demanda reduz Sistema ~2.110→102 ms no DOM simulado de 5 anos; Windows/mobile, quotas e navegador real pendentes |
 | `3.0.0-06` | Documentação e tutorial únicos | **PASS DOCUMENTAL (CI)** | README, CHANGELOG, ROADMAP, guia único e matriz canônica alinhados; seis novas regressões, **370/370 PASS** na CI #42427216125; QA humano e homologação geral continuam pendentes |
-| `3.0.0-07` | Preparar contrato UI V3.1 | **PENDENTE** | Definir API somente-leitura de cidade, eventos e comandos para overlays; renderização não pode mutar estado ou executar ticks |
+| `3.0.0-07` | Preparar contrato UI V3.1 | **PASS TÉCNICO (CI)** | Adaptador puro, versão contratual 1, cidade/lotes/eventos/comandos consultivos; 11 testes de leitura sem mutação, **381/381 PASS** na CI #42428343258; sem incorporar V3.1 ao HTML atual |
 | `3.0.0-08` | Gate de homologação completa | **BLOQUEADO** | Falta concluir 01–07, CI da release candidata, QA Windows/desktop/mobile, saves reais, aceite e snapshot imutável |
 
 **Nenhum checkpoint é marcado PASS por presunção.** PASS nos testes automatizados não significa PASS nos ensaios manuais.
@@ -100,7 +100,7 @@ A V3.0 é uma **release de unificação, regressão e estabilidade**, sem recons
 - **PARCIAL — gate `3.0.0-03`:** integração entre domínios testada; resta auditoria arquitetural completa de propriedades do motor, ausência de cálculo duplicado e invariante de todos os fluxos combinados.
 - **PARCIAL — gate `3.0.0-04`:** formatos V1/V2 e um legado V1.7 validados em laboratório; faltam arquivos reais de jogador, teste manual de corrupção/rollback e cobertura documental do inventário de todas as carreiras V2.
 - **PARCIAL — gate `3.0.0-05`:** desempenho da CI comprovado; falta validação de interface/navegador, mobile e Windows.
-- **PENDENTES:** documentação unificada (`3.0.0-06`), contrato UI V3.1 (`3.0.0-07`), QA humano e gate final (`3.0.0-08`).
+- **CONCLUÍDOS TECNICAMENTE:** documentação unificada (`3.0.0-06`) e contrato UI V3.1 somente leitura (`3.0.0-07`); **PENDENTES:** QA humano, correções de risco, demais lacunas dos gates 01–05 e gate final (`3.0.0-08`).
 
 **Sem promoção a versão final, sem mudança de gameplay, sem homologação de QA humano, sem merge desta PR.** A `main` permanece com o Patch A candidato preservado. A próxima etapa lógica é fechar a matriz de contratos/propriedade única (`3.0.0-01/02/03`) e documentar as lacunas de compatibilidade antes do gate final.
 
@@ -172,3 +172,15 @@ A V3.0 é uma **release de unificação, regressão e estabilidade**, sem recons
 5. Não foram alterados motor econômico, schema 9, saldos, balanço, saves ou comandos; apenas calculado diagnóstico sob demanda na UI e regenerado HTML no branch de auditoria.
 
 **Gate `3.0.0-05` continua PARCIAL:** benchmarks automatizados concluídos, mas **QA Windows/desktop/mobile, armazenamento local e arquivos reais** não executados; nenhuma homologação inferida. **Próxima etapa:** `3.0.0-06` alinhar README, CHANGELOG, ROADMAP e tutorial, preservando histórico de V2 e avisos de simulação.
+
+
+## Etapa 7 — Contrato puro de leitura para a V3.1 futura (07/11/2026)
+
+**Contrato técnico:** [`docs/V300_CONTRATO_UI_V31.md`](V300_CONTRATO_UI_V31.md).  
+**Adaptador experimental:** [`src/contracts/v31-read-model.mjs`](../src/contracts/v31-read-model.mjs), `CIDADE_V31_READ_V1` e versão contratual **1**. **Não incorporado** em `src/ui/app.js`, `tools/build.mjs` ou `index.html`.  
+**Testes específicos:** [`tests/v31_read_model_contract.test.mjs`](../tests/v31_read_model_contract.test.mjs), **11 testes novos**.  
+**CI:** [run #42428343258](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42428343258) — **381/381 PASS, 0 FAIL**, benchmark 30/365/1825 dias, modelo de oito painéis e build HTML reproduzível. 
+
+A leitura de **30 cidades e 18 lotes** usa `Core.CITIES` e `Core.businesses` sem inventar unidades, posse de rivais ou propriedades. Ações oferecidas são apenas dicas `ADVISORY_ONLY`, e a mutação continua exclusivamente em `CidadeCore.dispatch`. O adaptador pagina eventos confirmados, separa dados por cidade, omite payload interno, congela projeções e valida `worldId`/`revision` para evitar overlay obsoleto. **Cento e vinte leituras repetidas** provaram não modificar estado, ledger, eventos, RNG, calendário ou chamar `dispatch` no cenário testado. A modelagem ainda não avalia animações, FPS, toque ou acessibilidade real da futura V3.1.
+
+**Checkpoint `3.0.0-07`: PASS TÉCNICO DE CONTRATO, NÃO HOMOLOGAÇÃO DA INTERFACE V3.1.** O checkpoint 08 continua **BLOQUEADO** porque 01–05 ainda possuem evidências não executadas (saves reais, Windows/mobile, quotas, QA do jogador). O próximo passo é fazer **auditoria de prontidão GO/NO-GO e registrar pendências**, não criar release automática.

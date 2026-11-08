@@ -12,11 +12,11 @@ const readme=read('README.md'),changelog=read('CHANGELOG.md'),
   template=read('src/shell/index.template.html'),
   pkg=JSON.parse(read('package.json'));
 const readmeTop=readme.split('## Arquivo histórico')[0];
-const changelogTop=changelog.split('## 3.0.0-alpha.1')[0];
+const changelogTop=changelog.split('## 3.0.0')[0];
 const roadmapTop=roadmap.split('## Histórico de planejamento')[0];
 
 test('V3.0-06: README e CHANGELOG separam versão na main, candidata e última homologada',()=>{
-  assert.equal(pkg.version,'3.0.0-alpha.1');
+  assert.equal(pkg.version,'3.0.0');
   assert.match(core,/const VERSION = '3\.0\.0-alpha\.1'/);
   assert.match(template,/<title>Cidade dos Negócios 1 · v3\.0\.0-alpha\.1<\/title>/);
   for(const [path,text] of [['README',readmeTop],['CHANGELOG',changelogTop]]){

@@ -27,7 +27,7 @@ const row=(s,period='2026-11',id=unit(s))=>Core.fiscalOperationsReport(s).units.
 
 test('C: opt-in, schema 9 e carreira antiga sem pendências operacionais automáticas',()=>{
  let s=career(),before=Core.exportSave(s);
- assert.equal(Core.VERSION,'3.0.0-alpha.1');
+ assert.equal(Core.VERSION,'3.0.0');
  assert.equal(s.schemaVersion,9);
  assert.equal(Core.fiscalOperationsReport(s).openPeriods,0);
  assert.equal(Core.fiscalOperationsReport(s).units[0].activatedAt,null);

@@ -114,8 +114,7 @@ async function run(channel,width){
     s=await stateInfo(page);
     assert.ok(s&&s.units===1&&s.balanced&&s.reconciliation,
       label+' empresa nao inaugurada');
-    await page.locator('#v221-hud-time').tap();
-    await page.locator('[data-v221-time="1"]').tap();
+    await page.locator('#v31-next-day').tap();
     await page.waitForFunction(()=>document.body.dataset.storageBusy!=='true',
       {timeout:30000});
     const day=await stateInfo(page);

@@ -82,12 +82,12 @@ async function create(page,units){
   await page.locator('#company-name').fill('Empresa sintética QA');
   await page.locator('#start-city').selectOption('CE-TIANGUA');
   await page.locator('#career-form button[type=submit]').click();
-  await page.locator('#v221-hud-time').waitFor({state:'visible'});
+  await page.locator('#v31-hud-turns').waitFor({state:'visible'});
   await page.locator('#map-lot-picker').selectOption('1');
   await page.locator('#map-open-company').click();
   await page.locator('#sector-select').selectOption('mercado');
   await page.locator('#open-form button[type=submit]').click();
-  await page.locator('#v221-hud-time').waitFor({state:'visible'});
+  await page.locator('#v31-hud-turns').waitFor({state:'visible'});
   return 'carreira-e-inauguracao-por-UI-real-sem-aporte';
 }
 const round=x=>Number.isFinite(x)?Math.round(x*100)/100:null;
@@ -151,7 +151,7 @@ async function hudAdvance(page,days){
   // ACIONA o controle de jogo visível. Não chama Core.dispatch na página.
   const startDate=await page.locator('#date-label').textContent();
   const t=performance.now();
-  await page.locator('#v221-hud-time').click();
+  await page.locator('#v31-hud-turns').click();
   await page.locator('[data-v221-time="'+days+'"]').click();
   await page.waitForFunction(()=>document.body.dataset.storageBusy!=='true',{timeout:50000});
   const elapsed=performance.now()-t;
@@ -163,7 +163,7 @@ async function hudAdvance(page,days){
 }
 async function exportAndReload(page,ctx,expected,errors){
   // Botão original: arquivo JSON gerado de fato pelo browser Windows.
-  await page.locator('#v221-config-open').click();
+  await page.locator('#v31-dock [data-v31-open="sistema"]').click();
   const [download]=await Promise.all([
     page.waitForEvent('download',{timeout:30000}),
     page.locator('#export-btn').click()

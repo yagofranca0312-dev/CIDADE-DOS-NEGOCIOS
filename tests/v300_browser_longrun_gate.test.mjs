@@ -47,7 +47,8 @@ test('V3.0 P1-03: QAs longos são DOM real/UI Windows hosted, 5 empresas usam ca
   assert.match(script,/for\(const channel of \['chrome','msedge'\]\)/);
   assert.match(script,/for\(const units of \[1,5\]\)/);
   assert.match(script,/page\.locator\('#v221-hud-time'\)\.click\(\)/);
-  assert.match(script,/page\.locator\('\[data-v221-time="\'+days\+'"\]'\)\.click\(\)/);
+  assert.match(script,/data-v221-time/);
+  assert.match(script,/await hudAdvance\(page,days\)/);
   assert.match(script,/Performance\.getMetrics/);
   assert.match(script,/exportSaveCompact/);
   assert.match(script,/BLOCKED_STORAGE/);

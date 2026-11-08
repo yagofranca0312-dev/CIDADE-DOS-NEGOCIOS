@@ -153,7 +153,7 @@ try{
   $Before=Read-QA $Network.Install 'index.html'
   $Result=Run-Updater $Network $true
   Test-QA (($Result.Exit -eq 2)-and ((Read-QA $Network.Install 'index.html') -eq $Before)) 'Falha API preserva jogo anterior e exit 2'
-  Test-QA ((Count-QA $Network.LaunchLog -eq 1)-and
+  Test-QA (((Count-QA $Network.LaunchLog) -eq 1)-and
     (-not (Test-Path (Join-Path $Network.Install '_atualizador/versao.txt')))) 'Falha API tenta apenas abrir HTML offline anterior'
 
   $Downgrade=New-QAContext 'downgrade' '3.2.0'

@@ -18,7 +18,7 @@
 | `3.0.0-05` | Performance e estabilidade, tamanho de saves e UI | **PARCIAL:** 3 testes, 8 painéis e 5 anos em CI; pendem Windows/mobile/quota |
 | `3.0.0-06` | README, CHANGELOG, ROADMAP e tutorial únicos | **PASS DOCUMENTAL (CI):** guia unificado, seis testes novos, [370/370 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42427216125); não homologa release |
 | `3.0.0-07` | Contrato de API só leitura para apresentação V3.1 | **PASS TÉCNICO (CI):** adaptador sem mutação, 11 testes; [CI 381/381 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42428343258); interface V3.1 ainda não existe |
-| `3.0.0-08` | CI final, QA Windows/desktop/mobile, saves, aceite, snapshot de release | **BLOQUEADO**, não homologar |
+| `3.0.0-08` | CI final, QA Windows/desktop/mobile, saves, aceite, snapshot de release | **AUDITORIA CONCLUÍDA: NO-GO PARA RELEASE**. [Parecer](V300_GATE08_GO_NO_GO.md), 18 requisitos, 8 testes de prontidão, [CI 389/389 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42429308063). **BLOQUEADO** até resolver riscos e QA real |
 
 **Evidências:** [dossiê dos oito gates](V300_CONSOLIDACAO_INTEGRAL_GATES.md) · [matriz de propriedade](V300_MATRIZ_CONTRATOS_E_PROPRIEDADE.md) · [migração/rollback](V300_MIGRACAO_ROLLBACK_SAVES.md) · [desempenho](V300_PERFORMANCE_ESTABILIDADE.md) · [guia operacional](JOGAR_GUIA_V300.md).
 

@@ -5,11 +5,11 @@
   "releaseTarget": "3.0.0",
   "auditBranch": "audit/v3.0-consolidacao-integral-v2-20261107",
   "latestVerifiedAudit": {
-    "sha": "7529292c1385f6fe3132ec2c2455f9b5372bfa3a",
-    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42437647202",
+    "sha": "fa0dcb3a3597b59cd901ec4334573bb46ffd5c9b",
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42485888063",
     "result": "SUCCESS",
-    "tests": 422,
-    "scope": "Node24/Linux CI: 422/422 PASS, incluindo quatro novos contratos do QA E2E UI Windows, PR-01/PR-02, saves, benchmarks e release gate NO_GO. Validação do browser Windows hospedado em windowsIntegratedQA."
+    "tests": 426,
+    "scope": "Node24/Linux CI: 426/426 testes PASS, 4 novos contratos que preservam evidência de longa carreira PARCIAL_QUOTA_LIMITED (4/4 365 dias, 0/4 1825 dias). Benchmarks de domínio e gate NO_GO. QA Windows com browser real: ver browserLongrunQA."
   },
   "stableBaseline": {
     "ref": "releases/v2.9.0-homologada",

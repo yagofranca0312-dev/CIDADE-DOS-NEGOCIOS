@@ -49,8 +49,8 @@ test('V3.0 QA Windows: prova Chrome/Edge hosted NÃO é QA de saves reais e não
 test('V3.0 QA Windows: HTML gerado tem contrato de bytes idênticos a git show',()=>{
   const q=evidence.crossPlatformHtml;
   assert.equal(q.status,'PASS_BYTE_IDENTICAL');
-  assert.equal(q.bytes,1488829);
-  assert.equal(q.sha256,'ae41d8e0d803ed8bc37cae9f5ca0fbf332fae7332fe4eafee4d5a8cc7f6a8937');
+  assert.equal(q.bytes,1489147);
+  assert.equal(q.sha256,'94ffbcf234b437c362e98f29aaf8d64cb0051702c83f0c2e68ce2f05eff6a70b');
   assert.match(q.windowsObservedCI,/42488245360/);
   assert.ok(build.includes(".replace(/\\r\\n?/g,'\\n');"));
   const verifier=read('tools/verify-html-byte-identical-v300.mjs');

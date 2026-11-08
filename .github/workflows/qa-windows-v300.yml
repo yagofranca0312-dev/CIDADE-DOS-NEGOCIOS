@@ -6,6 +6,8 @@ on:
     paths:
       - '.github/workflows/qa-windows-v300.yml'
       - 'tools/qa-windows-browser-v300.mjs'
+      - 'tools/build.mjs'
+      - 'tools/verify-html-byte-identical-v300.mjs'
       - 'src/**'
       - 'index.html'
       - 'tests/fixtures/core_v2_9_0_homologada.js'
@@ -31,6 +33,7 @@ jobs:
           Write-Host "Windows runner: $([System.Environment]::OSVersion.VersionString)"
           npm run build
           git diff --exit-code -- index.html
+          node tools/verify-html-byte-identical-v300.mjs
       - name: Instalar somente o controlador de browser para a CI
         shell: pwsh
         run: npm install --no-save --no-package-lock --ignore-scripts --no-audit --no-fund playwright@1.55.1

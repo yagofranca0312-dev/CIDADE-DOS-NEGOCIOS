@@ -23,7 +23,7 @@ test('Build reproduzível byte a byte',()=>{
   .replace('__CDN_TIANGUA_MARKET_SPRITE__','data:image/webp;base64,'+readFileSync('src/visual/scenes/tiangua/assets/mercado.webp.b64','utf8').trim())
   .replace('__CDN_TIANGUA_BAKERY_SPRITE__','data:image/webp;base64,'+readFileSync('src/visual/scenes/tiangua/assets/padaria.webp.b64','utf8').trim())
   .replace('__CDN_TIANGUA_CLOTHING_SPRITE__','data:image/webp;base64,'+readFileSync('src/visual/scenes/tiangua/assets/roupas.webp.b64','utf8').trim());
- const expected=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21css).replace('/* CDN_V22_CSS */',readFileSync('src/shell/v22.css','utf8')).replace('/* CDN_V221_CSS */',readFileSync('src/shell/v221-city.css','utf8')).replace('/* CDN_CORE */',core).replace('/* CDN_VISUAL */',visual+'\n'+scene).replace('/* CDN_UI */',uiBundle);
+ const expected=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21css).replace('/* CDN_V22_CSS */',readFileSync('src/shell/v22.css','utf8')).replace('/* CDN_V221_CSS */',readFileSync('src/shell/v221-city.css','utf8')).replace('/* CDN_CORE */',core).replace('/* CDN_VISUAL */',visual+'\n'+scene).replace('/* CDN_UI */',readFileSync('src/ui/durable-store.part.js','utf8')+'\n'+uiBundle).replace(/\r\n?/g,'\n');
  assert.equal(createHash('sha256').update(expected).digest('hex'),createHash('sha256').update(html).digest('hex'));
 });
 

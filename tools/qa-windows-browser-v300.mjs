@@ -152,7 +152,8 @@ async function testBrowser(channel){
       channel+': fechamento e reabertura do navegador preserva save integral');
 
     // Exportação pelo botão original, validando o arquivo escrito no disco Windows.
-    await page.locator('[data-tab="sistema"]').first().click();
+    // Na cena Cidade o sidebar fica oculto; usar o atalho visível no HUD.
+    await page.locator('#v221-config-open').click();
     const [download]=await Promise.all([
       page.waitForEvent('download',{timeout:15000}),page.locator('#export-btn').click()
     ]);
@@ -207,7 +208,7 @@ async function testBrowser(channel){
 
     // Um viewport móvel EMULADO não é teste de aparelho móvel real.
     await page.setViewportSize({width:390,height:844});
-    await page.locator('[data-tab="cidade"]').first().click();
+    // Responsividade de viewport é observada sem forçar clique em sidebar oculto.
     check(await page.locator('#game-shell').isVisible(),
       channel+': viewport 390px emulado continua exibindo o jogo');
 

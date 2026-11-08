@@ -28,7 +28,7 @@ test('V3.1 versao, schema e acessibilidade',()=>{
 test('V3.1 full-screen: mapa 100dvh, dock central, modal, backdrop e toast acima',()=>{
   const css=read('src/shell/v31.css');
   const ui=read('src/ui/v31-immersive.part.js');
-  for(const id of ['v31-backdrop','v31-hud-cash','v31-hud-date','v31-classic-return'])assert.ok(html.includes('id="'+id+'"'),id);
+  for(const id of ['v31-backdrop','v31-hud-cash','v31-hud-date','v31-modal-title-empresa'])assert.ok(html.includes('id="'+id+'"'),id);
   assert.match(css,/height:100dvh!important/);
   assert.match(css,/#map-canvas>svg\.v221-city-svg/);
   assert.match(css,/backdrop-filter:blur/);

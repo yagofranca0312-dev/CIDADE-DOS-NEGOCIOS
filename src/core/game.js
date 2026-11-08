@@ -223,35 +223,34 @@ const CidadeCore = (() => {
     return {units,total,unclassified:balance(state,'PAYABLE')-total-payroll,
       note:'Somente despesas diárias identificadas no razão podem ser quitadas nesta rotina. A folha possui baixa independente.'};
   }
-  // Estimativa de folha futura da unidade ativa: mesmo critério pró-rata do reconhecimento mensal.
+  // PR-01: única regra de pró-rata do RH. Previsão e competência usam
+  // o MESMO cálculo puro; só accruePayrollMonth pode lançar EXPENSE/PAYABLE.
+  // Preserva arredondamento por colaborador e teto de 30 dias da V2.4-B.
+  function payrollPeriodQuote(staff,businessId,period){
+    const start=period+'-01';
+    const end=new Date(Date.UTC(Number(period.slice(0,4)),Number(period.slice(5,7)),0)).toISOString().slice(0,10);
+    const eligible=staff.filter(x=>x.businessId===businessId&&x.hiredAt<=end&&(!x.dismissedAt||x.dismissedAt>=start));
+    const amount=eligible.reduce((sum,x)=>{
+      const from=x.hiredAt>start?x.hiredAt:start,to=x.dismissedAt&&x.dismissedAt<end?x.dismissedAt:end;
+      const days=Math.min(30,Math.round((Date.parse(to+'T12:00:00Z')-Date.parse(from+'T12:00:00Z'))/86400000)+1);
+      return sum+Math.round(x.salaryCents*days/30);
+    },0);
+    return {amount,eligibleCount:eligible.length};
+  }
   // Nenhuma consulta gera folha no livro; cenário presume equipe inalterada.
   function estimatedPayrollMonth(state,businessId,period){
-    const start=period+'-01';
-    const end=new Date(Date.UTC(Number(period.slice(0,4)),Number(period.slice(5,7)),0)).toISOString().slice(0,10);
-    return rhEmployees(state).filter(x=>x.businessId===businessId&&x.hiredAt<=end&&(!x.dismissedAt||x.dismissedAt>=start))
-      .reduce((sum,x)=>{
-        const from=x.hiredAt>start?x.hiredAt:start,to=x.dismissedAt&&x.dismissedAt<end?x.dismissedAt:end;
-        const days=Math.min(30,Math.round((Date.parse(to+'T12:00:00Z')-Date.parse(from+'T12:00:00Z'))/86400000)+1);
-        return sum+Math.round(x.salaryCents*days/30);
-      },0);
+    return payrollPeriodQuote(rhEmployees(state),businessId,period).amount;
   }
   function accruePayrollMonth(draft,period){
-    const start=period+'-01';
-    const end=new Date(Date.UTC(Number(period.slice(0,4)),Number(period.slice(5,7)),0)).toISOString().slice(0,10);
     const staff=rhEmployees(draft);
     for(const b of businesses(draft)){
       if(draft.audit.events.some(e=>e.type==='RH.FOLHA_APURADA'&&e.businessId===b.id&&e.data?.period===period))continue;
-      const eligible=staff.filter(x=>x.businessId===b.id&&x.hiredAt<=end&&(!x.dismissedAt||x.dismissedAt>=start));
-      const amount=eligible.reduce((sum,x)=>{
-        const from=x.hiredAt>start?x.hiredAt:start,to=x.dismissedAt&&x.dismissedAt<end?x.dismissedAt:end;
-        const days=Math.min(30,Math.round((Date.parse(to+'T12:00:00Z')-Date.parse(from+'T12:00:00Z'))/86400000)+1);
-        return sum+Math.round(x.salaryCents*days/30);
-      },0);
+      const {amount,eligibleCount}=payrollPeriodQuote(staff,b.id,period);
       if(!amount)continue;
       journal(draft,'RH/DP · folha simulada '+period+' · '+b.id,[
         {account:'EXPENSE',debit:amount,credit:0},{account:'PAYABLE',debit:0,credit:amount}],b.id,'PAYROLL_ACCRUAL');
       event(draft,'RH.FOLHA_APURADA','Folha fictícia '+period+' registrada como obrigação: '+money(amount)+'.',
-        {period,amount,employees:eligible.length},b.id);
+        {period,amount,employees:eligibleCount},b.id);
     }
   }
   function initialProducts(sector,baseStock=0,basePrice=null) {

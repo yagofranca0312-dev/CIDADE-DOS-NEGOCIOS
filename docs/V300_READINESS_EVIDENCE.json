@@ -38,8 +38,8 @@
     {
       "id": "3.0.0-03",
       "status": "PARTIAL",
-      "evidence": "tests/integration_v300_consolidation.test.mjs",
-      "open": "Fluxos de UI/cenários não exercitados em navegador real"
+      "evidence": "docs/V300_QA_INTEGRADO_WINDOWS_HOSTED.md",
+      "open": "66 verificações Chrome/Edge headless PASS em 13 etapas UI por navegador; ainda faltam QA visual humano, cenários alternativos de longa duração, desktop pessoal, mobile físico e aceite."
     },
     {
       "id": "3.0.0-04",
@@ -167,8 +167,9 @@
       "id": "RG-13",
       "type": "MANUAL",
       "label": "Desktop Chrome/Edge e responsividade: mapa, módulos e ações sem erros de console",
-      "status": "NOT_EXECUTED",
-      "evidence": null
+      "status": "PARTIAL",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42437328042",
+      "qualifier": "Chrome/Edge Windows hosted headless: navegação e formulários reais em 13 etapas, mas QA visual desktop completo no hardware pessoal e revisão humana pendentes."
     },
     {
       "id": "RG-14",
@@ -188,8 +189,9 @@
       "id": "RG-16",
       "type": "MANUAL",
       "label": "Teste de gameplay/balanceamento e cobertura dos fluxos V2 integrados",
-      "status": "NOT_EXECUTED",
-      "evidence": null
+      "status": "PARTIAL",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42437328042",
+      "qualifier": "Carreira sintética única por navegador, 38 dias, duas empresas, operações RH/mercado/logística/crédito/folha e ledger conciliado, sem aprovação humana do balanceamento nem longa carreira em browser."
     },
     {
       "id": "RG-17",
@@ -281,5 +283,38 @@
     "manualQaCompleted": false,
     "gate08Unblocked": false,
     "report": "docs/V300_PR01_PR02_SANEAMENTO.md"
+  },
+  "windowsIntegratedQA": {
+    "status": "PASS_WINDOWS_HOSTED_BROWSER_UI",
+    "sha": "343f0b935ab2e915df3436a1c7e759a202fc658e",
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42437328042",
+    "browsers": [
+      "Chrome 156 headless Windows hosted",
+      "Edge 156 headless Windows hosted"
+    ],
+    "assertions": 66,
+    "assertionsPerBrowser": 33,
+    "stepsPerBrowser": 13,
+    "gameDaysPerBrowser": 38,
+    "unitsPerBrowser": 2,
+    "coreDispatchInvokedFromQA": false,
+    "persistedAndReloaded": true,
+    "gameplayModules": [
+      "Empresas",
+      "Mercado",
+      "RH/DP",
+      "Logística",
+      "Contabilidade",
+      "Finanças",
+      "Patch A",
+      "Crédito",
+      "Folha"
+    ],
+    "realUserSaveTested": false,
+    "actualPersonalWindowsInstallation": false,
+    "physicalMobileTested": false,
+    "visualHumanReviewCompleted": false,
+    "longBrowserCareerTested": false,
+    "report": "docs/V300_QA_INTEGRADO_WINDOWS_HOSTED.md"
   }
 }

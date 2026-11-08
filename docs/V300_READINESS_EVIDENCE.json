@@ -5,11 +5,11 @@
   "releaseTarget": "3.0.0",
   "auditBranch": "audit/v3.0-consolidacao-integral-v2-20261107",
   "latestVerifiedAudit": {
-    "sha": "fbcfedeff8f404e04dcd27481cf89d3204fc772d",
-    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432840831",
+    "sha": "54e1212bde92d513cad5adbf7e1e29a8f53edcbe",
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42434425051",
     "result": "SUCCESS",
-    "tests": 405,
-    "scope": "Node 24/Linux; 405 testes, integração/persistência, QA evidence matrix, benchmarks, build e release NO_GO. Browser Windows hospedado em windowsHostedAudit separadamente."
+    "tests": 408,
+    "scope": "Node 24/Linux CI; 408 PASS, synthetic local save check privacy, benchmarks, build, release NO_GO. QA Windows BAT separately via 42434425027."
   },
   "stableBaseline": {
     "ref": "releases/v2.9.0-homologada",
@@ -135,8 +135,9 @@
       "id": "RG-09",
       "type": "MANUAL",
       "label": "Windows: atualização ATUALIZAR_E_JOGAR.bat em instalação de teste, preservando V2.9",
-      "status": "NOT_EXECUTED",
-      "evidence": null
+      "status": "PARTIAL",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42434425027",
+      "qualifier": "BAT e PS1 originais em Windows hospedado, ZIP/API e abertura do navegador interceptados. NÃO foi atualização real do main nem da instalação pessoal; BAT com script stub separado."
     },
     {
       "id": "RG-10",
@@ -242,5 +243,26 @@
     "linuxObservedCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588829",
     "windowsObservedCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588846",
     "verifiedUsing": "tools/verify-html-byte-identical-v300.mjs"
+  },
+  "batUpdaterQA": {
+    "status": "PASS_WINDOWS_HOSTED_OFFLINE_FIXTURE",
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42434425027",
+    "sha": "54e1212bde92d513cad5adbf7e1e29a8f53edcbe",
+    "assertions": 19,
+    "actualWindows": true,
+    "actualGitHubDownload": false,
+    "actualGameInstallationTouched": false,
+    "realUserSaveTested": false,
+    "rollbackAfterCopyFailure": true,
+    "backupIntegrityVerified": true,
+    "downgradeRefused": true,
+    "report": "docs/V300_QA_BAT_SAVE_LOCAL.md"
+  },
+  "privateSaveValidator": {
+    "status": "TESTED_SYNTHETIC_ONLY_NOT_RUN_ON_USER_SAVE",
+    "script": "tools/validar-save-pessoal-local-v300.mjs",
+    "tests": "tests/personal_save_private_v300.test.mjs",
+    "privacy": "read-only, no upload, no player/company names or balances reported",
+    "realUserSaveTested": false
   }
 }

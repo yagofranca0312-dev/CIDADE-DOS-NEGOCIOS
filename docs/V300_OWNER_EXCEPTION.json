@@ -1,0 +1,52 @@
+{
+  "contract": "V300_OWNER_EXCEPTION_V1",
+  "date": "2026-11-08",
+  "version": "3.0.0",
+  "assessment": "PROMOCAO_EXCEPCIONAL",
+  "status": "OWNER_AUTHORIZED",
+  "ownerInstruction": "entao desconsidere esta nescessidade e homolohue",
+  "ownerAuthorizationContext": "Após parecer de auditoria NO-GO e várias confirmações de QA, titular dispensou necessidade das validações manuais pendentes e solicitou homologação imediata.",
+  "waivedRequirements": [
+    "RG-05",
+    "RG-06",
+    "RG-08",
+    "RG-09",
+    "RG-10",
+    "RG-11",
+    "RG-12",
+    "RG-13",
+    "RG-14",
+    "RG-15",
+    "RG-16"
+  ],
+  "waiverEffect": "ASSUMED_RISK_NOT_TESTED_NOT_VERIFIED",
+  "nonWaivedRequirements": [
+    "RG-17",
+    "RG-18"
+  ],
+  "technicalBaseline": {
+    "sourceCommit": "4257600b972f4e77905bb60b9cdf517c3b05e6cd",
+    "windowsCi": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42507651978",
+    "linuxCi": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42507651867",
+    "htmlSha256": "94ffbcf234b437c362e98f29aaf8d64cb0051702c83f0c2e68ce2f05eff6a70b"
+  },
+  "stableRollback": {
+    "version": "2.9.0",
+    "commit": "082faa4626cf5cb0fc54c9ef092bddd86ffce54c",
+    "ref": "releases/v2.9.0-homologada"
+  },
+  "notClaimed": [
+    "18/18 VERIFIED",
+    "QA em aparelho físico",
+    "acesso ao save privado/PC real",
+    "gameplay subjetivo aprovado",
+    "compatibilidade garantida para qualquer carreira"
+  ],
+  "promotionChecks": [
+    "versao 3.0.0 em package/core/html",
+    "CI Linux e Windows SUCCESS no commit de promocao",
+    "HTML byte-identico ao build no commit de promocao",
+    "main auditada apos merge",
+    "checkpoint imutavel e verificacao de refs"
+  ]
+}

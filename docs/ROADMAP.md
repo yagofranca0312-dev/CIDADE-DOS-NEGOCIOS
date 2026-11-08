@@ -1,3 +1,11 @@
+# Estado de promoção V3.0 — 08/11/2026
+
+A V3.0.0 entrou no processo de **homologação excepcional, sob dispensa de QA manual pelo titular**. O registro de risco e as evidências técnicas encontram-se em [HOMOLOGACAO_V300_EXCEPCIONAL.md](HOMOLOGACAO_V300_EXCEPCIONAL.md). A publicação final depende da CI da promoção. O desenho imersivo V3.1 somente começa após a promoção formal e seu checkpoint. A V2.9 segue preservada para rollback.
+
+---
+
+## Estado histórico anterior à dispensa
+
 # Roadmap — Cidade dos Negócios
 
 ## Estado vigente — 07/11/2026: consolidar a V2 na V3.0 ANTES da V3.1

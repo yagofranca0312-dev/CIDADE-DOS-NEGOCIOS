@@ -1,3 +1,14 @@
+# V3.0.0 — Registro de promoção excepcional (08/11/2026)
+
+- Titular autorizou homologação **com dispensa explícita das provas manuais remanescentes**, sem declarar que elas ocorreram; ver `docs/HOMOLOGACAO_V300_EXCEPCIONAL.md`.
+- CI anterior do código funcional: Linux 431/431; Windows Chrome/Edge 19 BAT + 33 navegador + 66 integração + 12 IndexedDB + 6 mobile emulado + 4 cenários de 1.825 dias PASS. Celular **físico** e save privado **não** testados internamente.
+- Identificação de promoção `3.0.0`, mantendo regras econômicas e save schema 9; V3.1 permanece plano futuro.
+- **O gate ordinário é histórico e continua NO-GO**; publicação excepcional requer CI da versão promovida e registro verificável da aprovação por risco assumido. V2.9 preservada.
+
+---
+
+## Arquivo histórico de auditoria pré-homologação
+
 # Histórico de versões — Cidade dos Negócios
 
 ## V3.0.0 — Consolidação integral da V2 (AUDITORIA, sem release homologada; 07/11/2026)

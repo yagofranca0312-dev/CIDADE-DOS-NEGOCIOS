@@ -1,3 +1,11 @@
+# Cidade dos Negócios — V3.0.0 · promoção excepcional autorizada (08/11/2026)
+
+**Titular autorizou a dispensa das provas manuais remanescentes e a homologação com riscos aceitos.** Identificação do executável de promoção: `3.0.0`, `schemaVersion 9`. O protocolo excepcional e as limitações constam em [HOMOLOGACAO_V300_EXCEPCIONAL.md](docs/HOMOLOGACAO_V300_EXCEPCIONAL.md). A confirmação da publicação depende de CI da promoção e do checkpoint de release; **o gate ordinário permanece NO-GO e não foi falsificado**. A V2.9 homologada fica preservada para recuperação. No Windows, exporte JSON V1 tradicional antes de trocar a versão; não há garantia de compatibilidade integral em saves pessoais não comprovados.
+
+---
+
+## Histórico técnico anterior à autorização de exceção
+
 # 🏙️ Cidade dos Negócios — situação atual e guia de jogo
 
 **Código disponível na `main`: `3.0.0-alpha.1` — Patch A Economia e Balanceamento, já integrado. V3.0.0 completa: EM CONSOLIDAÇÃO, NÃO HOMOLOGADA.**  

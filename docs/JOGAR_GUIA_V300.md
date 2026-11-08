@@ -1,3 +1,11 @@
+# Guia da V3.0.0 — Nota de homologação excepcional
+
+A versão `3.0.0` é promovida com **aceite de riscos não testados pessoalmente** pelo titular; [termo e escopo](HOMOLOGACAO_V300_EXCEPCIONAL.md). O jogo usa IndexedDB como armazenamento principal com backup JSON V1 externo recomendado. Antes de atualizar, exporte o arquivo tradicional em duas cópias. Evite o atualizador da instalação pessoal até a publicação da versão promovida ser confirmada. O guia abaixo conserva o relato histórico da versão alpha e das cautelas de QA.
+
+---
+
+## Histórico do guia antes da promoção
+
 # Guia único de jogo e recuperação — Cidade dos Negócios V3.0.0-alpha.1
 
 **Referência documental:** 07/11/2026. **Status:** V3.0.0-alpha.1 com Patch A incorporado à `main`, mas **V3.0 completa NÃO HOMOLOGADA**. A última release formalmente homologada permanece [V2.9.0](HOMOLOGACAO_V290.md), checkpoint `releases/v2.9.0-homologada`.

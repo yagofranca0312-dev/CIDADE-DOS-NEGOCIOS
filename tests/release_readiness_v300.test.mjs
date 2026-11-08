@@ -60,11 +60,11 @@ test('V3.0-08: persistência com write-ahead é proteção automatizada, QA real
 });
 
 test('V3.0-08: CI Windows headless é parcial e não inventa QA pessoal/mobile',()=>{
-  const hostedPartial=new Set(['RG-08','RG-09','RG-10','RG-12','RG-13','RG-16']);
+  const hostedPartial=new Set(['RG-08','RG-09','RG-10','RG-12','RG-13','RG-15','RG-16']);
   for(const id of ['RG-08','RG-09','RG-10','RG-11','RG-12','RG-13','RG-14','RG-15','RG-16']){
     const row=evidence.requirements.find(x=>x.id===id);
     assert.equal(row.status,hostedPartial.has(id)?'PARTIAL':'NOT_EXECUTED',id);
-    if(hostedPartial.has(id))assert.match(row.evidence,id==='RG-09'?/actions\/runs\/42434425027/:(id==='RG-13'||id==='RG-16')?/actions\/runs\/42437328042/:/actions\/runs\/42432588846/);
+    if(hostedPartial.has(id))assert.match(row.evidence,id==='RG-09'?/actions\/runs\/42434425027/:(id==='RG-13'||id==='RG-16')?/actions\/runs\/42437328042/:id==='RG-15'?/actions\/runs\/42485124066/:/actions\/runs\/42432588846/);
     else assert.equal(row.evidence,null,id);
   }
   assert.equal(evidence.requirements.find(x=>x.id==='RG-18').status,'NOT_GRANTED');

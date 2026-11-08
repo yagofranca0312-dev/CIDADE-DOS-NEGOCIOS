@@ -12,7 +12,7 @@ const take=(begin,end)=>{
   assert.ok(start>=0&&stop>start,'Trecho da UI não encontrado: '+begin);
   return app.slice(start,stop);
 };
-const persistSource=take('  function persistLocal(candidate){','  function backupCurrent(){');
+const persistSource=take('  function persistLocal(candidate){','  async function persistDurable(candidate){');
 const commitSource=take('  async function commit(type,payload={}){','  // Rotas anteriores de Finanças');
 const KEY='cidade-dos-negocios-save-v1';
 

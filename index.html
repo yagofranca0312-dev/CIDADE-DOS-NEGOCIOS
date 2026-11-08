@@ -1981,6 +1981,8 @@ body.v31-immersive .city-stage>.right-column{
    <div class="v31-command-title"><div class="v31-command-kicker">◈ CENTRO DE COMANDO · SIMULAÇÃO</div><h2 id="v31-modal-title-sistema">Central do jogo</h2><p id="v31-modal-subtitle-sistema">Saves, recuperação e diagnósticos</p></div>
    <div class="v31-command-kpis" aria-label="Indicadores confirmados da carreira"><div class="v31-command-kpi" data-v31-kpi="sistema-0"><small>Indicador</small><strong>—</strong></div><div class="v31-command-kpi" data-v31-kpi="sistema-1"><small>Indicador</small><strong>—</strong></div><div class="v31-command-kpi" data-v31-kpi="sistema-2"><small>Indicador</small><strong>—</strong></div><div class="v31-command-kpi" data-v31-kpi="sistema-3"><small>Indicador</small><strong>—</strong></div></div>
   </header>
+<nav class="v23-subnav" role="tablist" aria-label="Seções da Central do Jogo"><button type="button" role="tab" class="v23-subtab active" data-section-tab="sistema:saves" id="v23-tab-sistema-saves" aria-controls="v23-pane-sistema-saves" aria-selected="true" tabindex="0">Saves</button><button type="button" role="tab" class="v23-subtab" data-section-tab="sistema:diagnostico" id="v23-tab-sistema-diagnostico" aria-controls="v23-pane-sistema-diagnostico" aria-selected="false" tabindex="-1">Diagnóstico</button><button type="button" role="tab" class="v23-subtab" data-section-tab="sistema:integridade" id="v23-tab-sistema-integridade" aria-controls="v23-pane-sistema-integridade" aria-selected="false" tabindex="-1">Integridade</button></nav>
+<div class="v23-subpane" id="v23-pane-sistema-saves" role="tabpanel" data-section-pane="sistema:saves" aria-labelledby="v23-tab-sistema-saves">
           <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Salvamento e recuperação</h3><span class="tag-soft">M05</span></div><p class="muted">O backup JSON é o método portátil recomendado, especialmente ao atualizar o HTML no Windows.</p><div class="button-stack"><button class="btn btn-primary" type="button" id="export-btn">Exportar minha carreira (.json)</button><button class="btn btn-outline" type="button" id="export-compact-btn">Exportar backup compacto V2.9 (.json)</button><button class="btn btn-outline" type="button" id="import-btn">Importar carreira (.json)</button><button class="btn btn-outline" type="button" id="restore-prior-save-btn">Recuperar cópia anterior do navegador</button><button class="btn btn-outline" type="button" id="new-career-btn">Começar uma nova carreira</button></div><p class="field-hint" id="safety-backup-status">Verificando cópia anterior…</p><p class="field-hint" id="autosave-label">Verificando salvamento local…</p></article>
           <article class="panel"><div class="panel-heading"><h3>Diagnóstico e integridade</h3><span class="tag-soft">M06</span></div><dl class="detail-list" id="diagnostic-details"></dl><button class="btn btn-outline spaced" id="run-diagnostic" type="button">Executar verificação</button><p class="field-hint" id="diagnostic-result">—</p></article></div>
           <article class="panel spaced" aria-labelledby="qa-v290-title">
@@ -2001,6 +2003,9 @@ body.v31-immersive .city-stage>.right-column{
             <dl class="finance-list" id="qa-save-size" aria-live="polite"></dl>
             <p id="qa-save-warning" class="field-hint">O limite técnico do arquivo é de 25 milhões de caracteres. A disponibilidade real do armazenamento do navegador depende do sistema e da quota local.</p>
           </article>
+</div>
+<div class="v23-subpane" id="v23-pane-sistema-diagnostico" role="tabpanel" data-section-pane="sistema:diagnostico" aria-labelledby="v23-tab-sistema-diagnostico" hidden></div>
+<div class="v23-subpane" id="v23-pane-sistema-integridade" role="tabpanel" data-section-pane="sistema:integridade" aria-labelledby="v23-tab-sistema-integridade" hidden></div>
         </section>
         <div id="v31-backdrop" class="v31-backdrop" hidden aria-hidden="true"></div>
         <section class="turnbar"><div><div class="overline">PRÓXIMA DECISÃO</div><h3 id="turn-message">Inicie seu negócio e comece a operar.</h3><p id="turn-subtext">30 dias são suficientes para descobrir se sua estratégia funciona.</p></div><div class="turn-actions"><button id="next-day" class="btn btn-outline" type="button">+ 1 dia</button><button id="next-week" class="btn btn-primary" type="button">Avançar 7 dias →</button><button id="next-month" class="btn btn-outline" type="button">+ 30 dias</button></div></section>
@@ -5478,7 +5483,7 @@ const CidadeDurableStore=(()=>{
   let commitInFlight=false,startupBlocked=true,safetyBackupAvailable=false;
   let inspectorOpen=false; // interface somente, nunca persistido
   let restockDraft=null; // proposta de compra efêmera (não entra em saves)
-  const activeSection={empresa:'dashboard',mercado:'compras',administrativo:'financas'}; // somente UI, fora do save
+  const activeSection={empresa:'dashboard',mercado:'compras',administrativo:'financas',sistema:'saves'}; // somente UI, fora do save
   let mapZoomed=false; // visão ampliada opcional; não altera o save
   let financeQuery=null,strategyHorizon=30,financeScope='all',statementView='summary'; // preferências de interface, independentes do GameState
   const business=()=>state?Core.activeBusiness(state):null;
@@ -7023,9 +7028,9 @@ function bindBalancePlan(){
         fiscal:['revenue','cash','profit','days'],
         paralegal:['count','revision','days','schema']
       },
-      sistema:{default:['version','schema','revision','count']}
+      sistema:{saves:['version','schema','revision','count'],diagnostico:['count','cash','days','revision'],integridade:['schema','revision','days','version']}
     };
-    const active=root==='sistema'?'default':activeSection[root];
+    const active=activeSection[root];
     const selected=choices[root]?.[active]||['cash','revenue','profit','stock'];
     const metrics=selected.map(key=>keys[key]);
     const sectionNames={
@@ -7036,7 +7041,7 @@ function bindBalancePlan(){
       administrativo:{financas:['Finanças','Tesouraria e compromissos'],logistica:['Logística','Abastecimento e transferências'],
         'rh-dp':['Equipe e RH','Pessoas e folha'],contabilidade:['Relatórios','DRE, balanço e patrimônio'],
         fiscal:['Fiscal','Obrigações tributárias simuladas'],paralegal:['Documentos','Registros e contratos']},
-      sistema:{default:['Configurações e Saves','Proteja e recupere sua carreira local']}
+      sistema:{saves:['Configurações e Saves','Backup e recuperação local'],diagnostico:['Diagnóstico','Integridade e análise da carreira'],integridade:['Saúde do save','Compatibilidade e portabilidade']}
     };
     const [title,sub]=sectionNames[root]?.[active]||[root,'Centro de comando'];
     setText('v31-modal-title-'+root,title);
@@ -7081,6 +7086,8 @@ function bindBalancePlan(){
     $('v221-inspector').appendChild($('v31-lot-quick'));
     // Trilho integrado ao título, com um ícone e rótulo curto por aba.
     const tabDesign={"empresa:dashboard":["◈","Visão geral"],"empresa:minhas-empresas":["🏬","Unidades"],"empresa:analises":["📈","Análises"],"empresa:comparativos":["⚖","Comparar"],"mercado:compras":["🛒","Compras"],"mercado:estoque":["📦","Estoque"],"mercado:vendas":["💳","Vendas"],"mercado:outros":["⚙","Estratégia"],"administrativo:financas":["💰","Caixa"],"administrativo:logistica":["🚚","Logística"],"administrativo:rh-dp":["👥","Equipe"],"administrativo:contabilidade":["📊","Relatórios"],"administrativo:fiscal":["🧾","Fiscal"],"administrativo:paralegal":["📜","Documentos"]};
+    Object.assign(tabDesign,{'sistema:saves':['💾','Saves'],'sistema:diagnostico':['🔍','Diagnóstico'],
+      'sistema:integridade':['🛡','Integridade']});
     for(const root of ['empresa','mercado','administrativo','sistema']){
       const surface=document.querySelector('.view[data-view="'+root+'"]');
       const header=surface.querySelector('[data-v31-header]');
@@ -7122,13 +7129,18 @@ function bindBalancePlan(){
         node.classList.contains('v23-subpane')||node.id==='v31-overlay-close';
       const loose=[...surface.children].filter(node=>!excluded(node));
       if(root==='sistema'){
-        const system=document.createElement('div');
-        system.id='v31-system-pane';
-        system.className='v23-subpane v31-system-pane';
-        system.setAttribute('role','region');
-        system.setAttribute('aria-label','Configurações e salvamento da carreira');
-        system.append(...loose);
-        surface.append(system);
+        const saves=surface.querySelector('[data-section-pane="sistema:saves"]');
+        const diagnostics=surface.querySelector('[data-section-pane="sistema:diagnostico"]');
+        const integrity=surface.querySelector('[data-section-pane="sistema:integridade"]');
+        if(!saves||!diagnostics||!integrity)throw new Error('Abas da Central do Jogo ausentes');
+        const grid=saves.querySelector(':scope > .dashboard-grid');
+        const diagnosticCard=grid?.children[1];
+        if(diagnosticCard)diagnostics.append(diagnosticCard);
+        const quality=saves.querySelector('[aria-labelledby="qa-v290-title"]');
+        if(quality)diagnostics.append(quality);
+        const health=saves.querySelector('[aria-labelledby="qa-v290-backup-title"]');
+        if(health)integrity.append(health);
+        if(loose.length)saves.prepend(...loose);
       }else{
         const home=root==='mercado'?'mercado:outros':
           root==='administrativo'?'administrativo:financas':root+':dashboard';

@@ -73,6 +73,18 @@ for(const channel of ['chrome','msedge'])for(const width of [390,1366]){
   await page.keyboard.press('ArrowRight');
   const panAfter=await page.locator('#map-canvas').evaluate(el=>el.scrollLeft);
   assert.ok(panAfter>panBefore,'Pan por teclado nao moveu a camera');
+  // Painel de lote e seletor nao podem competir pelo mesmo canto no mobile.
+  await page.locator('#v221-inspector-close').click();
+  const mapControls=await page.evaluate(()=>{
+    const picker=document.querySelector('.v22-lot-nav'),dock=document.querySelector('#v31-dock');
+    const a=picker.getBoundingClientRect(),b=dock.getBoundingClientRect();
+    return {visible:getComputedStyle(picker).display!=='none',x:a.left,right:a.right,
+      width:innerWidth,bottom:a.bottom,dockTop:b.top};
+  });
+  assert.equal(mapControls.visible,true,'Seletor de lotes indisponivel após fechar inspetor');
+  assert.ok(mapControls.x>=mapControls.width/2-12,'Seletor de lotes continua no canto esquerdo');
+  assert.ok(mapControls.right<=mapControls.width+2,'Seletor de lotes corta a lateral');
+  assert.ok(mapControls.bottom<mapControls.dockTop+3,'Seletor de lotes invade a dock');
   await page.locator('#v31-dock [data-v31-open="mercado:compras"]').click();
   assert.equal(await page.locator('[data-view="cidade"]').isVisible(),true);
   assert.equal(await page.locator('[data-view="mercado"]').isVisible(),true);
@@ -115,7 +127,15 @@ for(const channel of ['chrome','msedge'])for(const width of [390,1366]){
           cards:cards.length,values:cards.map(c=>c.querySelector('strong').textContent.trim()),
           selectedIcon:!!active?.querySelector('.v31-tab-icon'),
           glow:!!styles&&styles.boxShadow!=='none',
-          chromeSticky:chrome?getComputedStyle(chrome).position:null};
+          chromePosition:chrome?getComputedStyle(chrome).position:null,
+          modalLayout:getComputedStyle(view).display,
+          modalDirection:getComputedStyle(view).flexDirection,
+          modalOverflow:getComputedStyle(view).overflowY,
+          activePane:view.querySelector(':scope > .v23-subpane:not([hidden])')?.dataset.sectionPane,
+          paneOverflow:getComputedStyle(view.querySelector(':scope > .v23-subpane:not([hidden])')).overflowY,
+          paneHeight:view.querySelector(':scope > .v23-subpane:not([hidden])')?.getBoundingClientRect().height,
+          modalHeight:view.getBoundingClientRect().height,
+          screenHeight:innerHeight};
       },root);
       assert.equal(geometry.order,true,'KPI deve abrir imediatamente abaixo do trilho: '+root+'/'+section);
       assert.equal(geometry.icons,true,'Aba sem icone ou titulo curto: '+root);
@@ -123,7 +143,46 @@ for(const channel of ['chrome','msedge'])for(const width of [390,1366]){
       assert.ok(geometry.values.every(v=>v&&v!=='—'&&!v.includes('undefined')),'KPI nao renderizado: '+root+'/'+section);
       assert.equal(geometry.selectedIcon,true,'Aba selecionada sem icone: '+root+'/'+section);
       assert.equal(geometry.glow,true,'Aba ativa sem iluminacao: '+root+'/'+section);
-      assert.equal(geometry.chromeSticky,'sticky','Cabecalho/trilho nao fixados');
+      assert.equal(geometry.chromePosition,'relative','Cabeçalho deve integrar fluxo fixo do modal');
+      assert.equal(geometry.modalLayout,'flex','Modal nao usa flex vertical: '+root+'/'+section);
+      assert.equal(geometry.modalDirection,'column','Flex modal nao e coluna');
+      assert.equal(geometry.modalOverflow,'hidden','Modal inteiro continua rolando');
+      assert.equal(geometry.activePane,root+':'+section,'Aba ativa sem seu painel');
+      assert.equal(geometry.paneOverflow,'auto','Rolagem deve ficar somente no pane');
+      assert.ok(geometry.paneHeight>=110,'Painel ativo sem altura util: '+root+'/'+section);
+      if(width<700)assert.ok(Math.abs(geometry.modalHeight-.92*geometry.screenHeight)<4,
+        'Bottom sheet nao ocupa 92dvh: '+JSON.stringify(geometry));
+    }
+    // Rolar uma aba longa nao pode deslocar titulo, abas, KPIs ou o botao X.
+    const scrollSection={mercado:'compras',empresa:'dashboard',administrativo:'financas',sistema:'integridade'}[root];
+    await page.locator('[data-section-tab="'+root+':'+scrollSection+'"]').click();
+    const scroll=await page.evaluate(root=>{
+      const modal=document.querySelector('.view[data-view="'+root+'"]');
+      const pane=modal.querySelector(':scope > .v23-subpane:not([hidden])');
+      const chrome=modal.querySelector('.v31-command-chrome');
+      const board=modal.querySelector('.v31-command-metrics');
+      const close=modal.querySelector('#v31-overlay-close');
+      const before=[chrome,board,close].map(x=>x.getBoundingClientRect().top);
+      const possible=pane.scrollHeight>pane.clientHeight+5;
+      pane.scrollTop=180;
+      const actual=pane.scrollTop;
+      const after=[chrome,board,close].map(x=>x.getBoundingClientRect().top);
+      return {possible,actual,stable:before.every((v,i)=>Math.abs(after[i]-v)<1),
+        modalScrollTop:modal.scrollTop,paneOverflow:getComputedStyle(pane).overflowY,
+        panels:[...modal.querySelectorAll(':scope > .v23-subpane')].length};
+    },root);
+    assert.ok(scroll.stable,'Cabecalho/KPIs/X deslocaram com rolagem: '+root);
+    assert.equal(scroll.modalScrollTop,0,'Modal exterior rolou: '+root);
+    if(scroll.possible)assert.ok(scroll.actual>0,'Conteudo longo nao rola: '+root);
+    assert.equal(scroll.paneOverflow,'auto');
+    assert.equal(scroll.panels,sections.length,'Painéis de '+root+' incompletos');
+    if(root==='sistema'){
+      await page.locator('[data-section-tab="sistema:saves"]').click();
+      assert.ok(await page.locator('#export-btn').isVisible(),'Exportacao perdida');
+      await page.locator('[data-section-tab="sistema:diagnostico"]').click();
+      assert.ok(await page.locator('#run-diagnostic').isVisible(),'Diagnostico perdido');
+      await page.locator('[data-section-tab="sistema:integridade"]').click();
+      assert.ok(await page.locator('#qa-save-health-btn').isVisible(),'Integridade do save perdida');
     }
     await page.screenshot({path:join(out,channel+'-'+width+'-'+root+'-tycoon.png')});
   }
@@ -155,7 +214,8 @@ for(const channel of ['chrome','msedge'])for(const width of [390,1366]){
   await page.screenshot({path:join(out,channel+'-'+width+'-cidade.png')});
   assert.equal(errors.length,0,errors.join(';'));
   results.push({channel,width,result:'PASS',fullscreen:true,centeredDock:true,tycoonTabs:true,perSectionKpis:true,
-    compactOnboarding:true,noClassicMode:true,modals:true,escape:true,backdrop:true,lotHitTest:true,economyUnaffected:true});
+    compactOnboarding:true,noClassicMode:true,modalFlexScroll:true,mobileBottomSheet92dvh:true,allSections:17,
+    mapControlsSeparated:true,modals:true,escape:true,backdrop:true,lotHitTest:true,economyUnaffected:true});
  }finally{if(ctx)await ctx.close();rmSync(folder,{recursive:true,force:true});}
 }
 writeFileSync(join(out,'report.json'),JSON.stringify({status:'PASS_EMULATED',physicalMobileTested:false,privateSaveTested:false,results},null,2));

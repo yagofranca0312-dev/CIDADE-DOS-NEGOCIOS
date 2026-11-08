@@ -142,6 +142,7 @@
       v31ClassicMode=false;immersiveOpen=null;goto('cidade');
     });
     $('v31-lot-manage').addEventListener('click',()=>$('map-open-company').click());
+    $('v31-next-day').addEventListener('click',()=>$('next-day').click());
     $('v31-hud-pause').addEventListener('click',()=>{
       $('pause-btn').click();setText('v31-hud-pause',timer?'Ⅱ Pausar':'▶ Jogar');
     });

@@ -93,8 +93,7 @@ async function fillQuota(page){
 async function advanceOneDay(page){
   // Na cena Cidade da V2.2.1 a turnbar fica oculta por CSS; usar o HUD visível.
   // O controlador de HUD aciona o MESMO botão/comando Core.dispatch da barra.
-  await page.locator('#v221-hud-time').click();
-  await page.locator('[data-v221-time="1"]').click();
+  await page.locator('#v31-next-day').click();
 }
 async function testBrowser(channel){
   const folder=mkdtempSync(join(tmpdir(),'cidade-v300-win-'+channel+'-'));
@@ -157,7 +156,7 @@ async function testBrowser(channel){
 
     // Exportação pelo botão original, validando o arquivo escrito no disco Windows.
     // Na cena Cidade o sidebar fica oculto; usar o atalho visível no HUD.
-    await page.locator('#v221-config-open').click();
+    await page.locator('#v31-dock [data-v31-open="sistema"]').click();
     const [download]=await Promise.all([
       page.waitForEvent('download',{timeout:15000}),page.locator('#export-btn').click()
     ]);

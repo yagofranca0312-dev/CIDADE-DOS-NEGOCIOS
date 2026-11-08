@@ -5,11 +5,11 @@
   "releaseTarget": "3.0.0",
   "auditBranch": "audit/v3.0-consolidacao-integral-v2-20261107",
   "latestVerifiedAudit": {
-    "sha": "f79b32fca86a6be8e8fdaeb7568ef0c0b7581ef1",
-    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42488477713",
+    "sha": "0485c31733a64d982bac1059ae00d6e022267459",
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42489680875",
     "result": "SUCCESS",
     "tests": 431,
-    "scope": "Node 24 Linux CI: 431/431 testes PASS, incluindo cinco novos contratos durabilidade IndexedDB. Browser Windows Chrome/Edge com 12/12 migração/abort, 4/4 365, 4/4 1825 em CI #42488245360; Gate08 NO_GO."
+    "scope": "Node24/Linux: 431/431 PASS, benchmarks 30/365/1825 dias, HTML determinístico, cinco contratos IndexedDB, release gate NO_GO; Windows hosted real file:// CI #42489340762: 12 migracao/abort, 4/4 1825, 66 integração, 33 fallback e 19 BAT PASS."
   },
   "stableBaseline": {
     "ref": "releases/v2.9.0-homologada",
@@ -257,7 +257,7 @@
     "status": "PASS_BYTE_IDENTICAL",
     "sha256": "94ffbcf234b437c362e98f29aaf8d64cb0051702c83f0c2e68ce2f05eff6a70b",
     "bytes": 1489147,
-    "linuxObservedCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42489156993",
+    "linuxObservedCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42489680875",
     "windowsObservedCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42489340762",
     "verifiedUsing": "tools/verify-html-byte-identical-v300.mjs"
   },

@@ -44,16 +44,18 @@ test('V3.0-08: gates 01–05 permanecem parciais e 06/07 somente técnica/docume
   }
 });
 
-test('V3.0-08: risco de localStorage continua aberto até teste real',()=>{
-  const saveLocal=ui.split('  function saveLocal(){')[1]?.split('  function backupCurrent(){')[0];
+test('V3.0-08: persistência com write-ahead é proteção automatizada, QA real continua aberto',()=>{
+  const save=ui.split('  function persistLocal(candidate){')[1]?.split('  function backupCurrent(){')[0];
   const commit=ui.split('  function commit(type,payload={}){')[1]?.split('  // Rotas anteriores')[0];
-  assert.ok(saveLocal&&commit,'Contrato UI a auditar não localizado');
-  assert.match(saveLocal,/localStorage\.setItem\(KEY,contents\)/);
-  assert.match(saveLocal,/return ok;/);
-  assert.match(commit,/saveLocal\(\);render\(\)/,
-    'Se persistência mudou, reaudite a evidência e o requisito RG-06 antes de desbloquear');
+  assert.ok(save&&commit,'Contrato UI de persistência candidato não localizado');
+  assert.match(save,/Core\.exportSave\(candidate\)/);
+  assert.match(save,/localStorage\.setItem\(KEY,contents\)/);
+  assert.match(save,/localStorage\.getItem\(KEY\)!==contents/);
+  assert.match(commit,/if\(!persistLocal\(result\.state\)\)return false;/);
+  assert.ok(commit.indexOf('persistLocal(result.state)')<commit.indexOf('state=result.state'),
+    'O estado só pode mudar depois de confirmar a persistência');
   const r=evidence.requirements.find(x=>x.id==='RG-06');
-  assert.equal(r.status,'NOT_VERIFIED');
+  assert.equal(r.status,'NOT_VERIFIED','Sem teste Windows/browser não concluir RG-06');
   assert.equal(r.evidence,null);
 });
 

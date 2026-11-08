@@ -5,11 +5,11 @@
   "releaseTarget": "3.0.0",
   "auditBranch": "audit/v3.0-consolidacao-integral-v2-20261107",
   "latestVerifiedAudit": {
-    "sha": "de1908e1f2fb71d6f3aedd378894a6d5b1c3e2aa",
-    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42434691887",
+    "sha": "cdc4677cb60285742b2c44ba46199355352db5f7",
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435702398",
     "result": "SUCCESS",
-    "tests": 411,
-    "scope": "Node24/Linux CI: 411 automated PASS, incluindo 3 contratos BAT e 3 testes privados do verificador de save. Windows BAT 19 PASS e Chrome/Edge 33 PASS em runner hospedado, separadamente."
+    "tests": 418,
+    "scope": "Node 24/Linux: 418/418 PASS, incluindo 7 novos cenários PR-01/PR-02; benchmarks 30/365/1825 dias, views, saves, gate NO_GO e build HTML."
   },
   "stableBaseline": {
     "ref": "releases/v2.9.0-homologada",
@@ -238,10 +238,10 @@
   },
   "crossPlatformHtml": {
     "status": "PASS_BYTE_IDENTICAL",
-    "sha256": "3dea7a0560ae97ec6b994a470068ce7d72fd9eff18f07779584ef9095cb8e398",
-    "bytes": 1479945,
-    "linuxObservedCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588829",
-    "windowsObservedCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588846",
+    "sha256": "0ac63b72913247249e2559f19009b9941f1d6b794a9f0f17c85904e9eca191c3",
+    "bytes": 1480192,
+    "linuxObservedCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435702398",
+    "windowsObservedCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435702391",
     "verifiedUsing": "tools/verify-html-byte-identical-v300.mjs"
   },
   "batUpdaterQA": {
@@ -264,5 +264,21 @@
     "tests": "tests/personal_save_private_v300.test.mjs",
     "privacy": "read-only, no upload, no player/company names or balances reported",
     "realUserSaveTested": false
+  },
+  "pr01Pr02Saneamento": {
+    "status": "MITIGATED_IN_CODE_CI_PASS_MANUAL_QA_PENDING",
+    "code": [
+      "src/core/game.js",
+      "src/ui/restock-views.part.js"
+    ],
+    "tests": "tests/v300_pr01_pr02_consistency.test.mjs",
+    "newTests": 7,
+    "pr01": "Fórmula compartilhada payrollPeriodQuote para previsão e apuração; mesma contabilização única sem mudança na regra de dias/30.",
+    "pr02": "Proposta manual agora desconta transferências internas PENDING da capacidade, em paridade com registerPurchase e Patch A. Políticas de compra manual e estratégica mantidas distintas.",
+    "nodeCi": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435702398",
+    "windowsCi": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435702391",
+    "manualQaCompleted": false,
+    "gate08Unblocked": false,
+    "report": "docs/V300_PR01_PR02_SANEAMENTO.md"
   }
 }

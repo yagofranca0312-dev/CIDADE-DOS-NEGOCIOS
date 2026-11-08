@@ -7,6 +7,7 @@ on:
       - '.github/workflows/qa-windows-v300.yml'
       - 'tools/qa-windows-browser-v300.mjs'
       - 'tools/qa-windows-integrated-v300.mjs'
+      - 'tools/qa-windows-longrun-v300.mjs'
       - 'tools/qa-windows-bat-updater-v300.ps1'
       - 'ATUALIZAR_E_JOGAR.bat'
       - 'JOGAR_OFFLINE.bat'
@@ -26,7 +27,7 @@ jobs:
     name: Windows real hospedado — Chrome e Edge via file
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: windows-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -51,6 +52,17 @@ jobs:
       - name: QA integrado de navegacao RH compras logistica e finanças (sintetico)
         shell: pwsh
         run: node tools/qa-windows-integrated-v300.mjs
+      - name: QA carreira longa 365 e 1825 dias Chrome e Edge via UI real
+        shell: pwsh
+        run: node tools/qa-windows-longrun-v300.mjs
+      - name: Publicar metricas sinteticas e ressalvas da carreira longa
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v300-browser-longrun-metrics
+          path: ${{ runner.temp }}/v300-browser-longrun.json
+          if-no-files-found: warn
+          retention-days: 30
       - name: Confirmar que artefatos do jogo nao foram modificados
         shell: pwsh
         run: git diff --exit-code -- index.html package.json

@@ -131,3 +131,14 @@ Não fazer merge da PR #39, não criar `releases/v3.0.0-homologada` nem tag de r
 **Reclassificação com escopo restrito:** `RG-13 = PARTIAL` (UI navegada e controles exercitados; não houve revisão visual por humano nem equipamento pessoal) e `RG-16 = PARTIAL` (jogo integrado exercitado em 38 dias; balanceamento e aceitação humana não concluídos). O checkpoint `3.0.0-03` segue **PARCIAL** por rotas alternativas/experiência gráfica não cobertas. **Nenhum novo requisito virou `VERIFIED`**: a matriz continua em **5/18 verificados, 13/18 pendentes**. As linhas históricas acima que dizem `RG-13/16 NOT_EXECUTED` descrevem o estágio **antes** desta rodada, não o estado atual.
 
 **Não verificado:** saves pessoais, Windows físico do usuário, resolução e acessibilidade avaliadas por pessoa, mobile real, longa carreira no navegador e aceite final. **Gate 08 mantém NO-GO**, PR #39 DRAFT, sem merge, tag, publicação ou homologação.
+
+
+## Adendo P1-03 — carreira longa no Chrome/Edge real, bloqueio P0-04 (08/11/2026)
+
+**Nova evidência:** [relatório técnico de QA de carreira longa](V300_QA_CARREIRA_LONGA_BROWSER.md), [CI Windows #42485124066](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42485124066) e [issue P0-04 #40](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/issues/40). Um roteiro automático fez ações **pelo HUD original da UI** em Chrome/Edge Windows hospedados/headless via `file://`: 365 e 1.825 dias, cenários de uma e cinco unidades (cinco unidades preparadas com capital fictício de laboratório, explicitamente não gameplay orgânico).
+
+**Resultado comprovado e bloqueante:** 4/4 cenários completaram **365 dias** com razão/estoque conciliados, exportação JSON no Windows, roundtrip compacto e reload do save. **0/4 alcançaram 1.825 dias**: o `localStorage` recusou gravações perto de **5 MB**. Último dia persistido: Chrome 1 unidade **1.625**, Edge 1 unidade **1.655**, Chrome/Edge 5 unidades **425**. Nenhum registro anterior foi perdido; a guarda de P0-01 recusou a operação não gravada. Um job CI `SUCCESS` certifica a **execução do diagnóstico**, nunca o cumprimento do objetivo de 1.825 dias.
+
+**RG-15 = PARTIAL**, não `VERIFIED`; checkpoint **05 permanece PARTIAL** e a necessidade de armazenamento durável suficiente vira risco **P0-04 aberto**. O limite **de arquivo externo até 25 MB não equivale** à quota de `localStorage`. Uma solução de persistência de longo prazo requer implementação futura, testes de migração, atomicidade e rollback; não foi aplicada neste patch. As medidas de heap via CDP são pontuais, não certificam FPS nem hardware pessoal.
+
+**Veredito inalterado: GATE 08 NO-GO**, ainda **5/18 requisitos verificados e 13/18 não quitados**. Nenhum save pessoal foi usado, nenhum mobile físico ou QA gráfico humano foi feito, a PR #39 continua DRAFT e `main`/V2.9 estáveis não foram alteradas. Não autorizar merge, tag ou homologação.

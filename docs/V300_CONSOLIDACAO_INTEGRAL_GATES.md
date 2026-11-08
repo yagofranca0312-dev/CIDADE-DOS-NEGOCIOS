@@ -225,3 +225,12 @@ A leitura de **30 cidades e 18 lotes** usa `Core.CITIES` e `Core.businesses` sem
 **Matriz de aceitação reclassificada sem inflar o GO:** `RG-06`, `RG-08`, `RG-10` e `RG-12` **PARTIAL** (evidência Windows hospedado, não computador do jogador); demais requisitos de QA manual/saves pessoais/instaladores/mobile continuam sem conclusão. Há **4/18 requisitos VERIFICADOS** e **14/18 ainda NÃO QUITADOS** no gate final. V3.0 permanece **NO-GO**; `main`, `schemaVersion=9`, baseline homologada V2.9 e PR #39 DRAFT protegidos.
 
 **Próxima ação:** QA físico no Windows do jogador usando cópias externas de save autêntico, `JOGAR_OFFLINE.bat` e `ATUALIZAR_E_JOGAR.bat` em instalação isolada; observar tela, operações, backup após reiniciar, quota real e rollback. Não declarar validação pessoal a partir de execução no runner.
+
+
+## Saneamento pós-NO-GO — QA dos instaladores e validador privado (07/11/2026)
+
+**Relatório:** [`docs/V300_QA_BAT_SAVE_LOCAL.md`](V300_QA_BAT_SAVE_LOCAL.md). **Windows hospedado:** [CI #42434425027](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42434425027), **19/19 QA BAT/PowerShell PASS**, com ZIP/commit remoto e lançamento de navegador **interceptados** e dados sintéticos, em conjunto com **33/33 Chrome/Edge PASS**. Demonstrados backup antigo, SHA gravado após cópia, saves fictícios inalterados, recusa de downgrade, falha de API e rollback do HTML numa falha de escrita. O BAT foi aberto em caminhos temporários com espaços; não houve atualização real online nem acesso ao Windows pessoal do jogador.
+
+**Validação privada pronta, não executada em arquivo pessoal:** [`tools/validar-save-pessoal-local-v300.mjs`](../tools/validar-save-pessoal-local-v300.mjs), testado com save sintético/corrompido em [`tests/personal_save_private_v300.test.mjs`](../tests/personal_save_private_v300.test.mjs). **Somente leitura**, não imprime nomes, empresas ou valores e não envia dados. O usuário poderá executar localmente em cópia independente, sem expor o original ao GitHub.
+
+**`RG-09` passou a PARTIAL**, refletindo o ensaio de updater em ambiente controlado; **`RG-11` continua NOT_EXECUTED**, sem save pessoal. `RG-06/08/10/12` também parciais, demais provas de GUI/mobile/carreira longa continuam abertas. O atualizador segue `main` (V3 alpha não homologada), portanto não executar o BAT de atualização na instalação pessoal antes de homologar a release apropriada. **Gate 08 permanece NO-GO** e PR #39 DRAFT.

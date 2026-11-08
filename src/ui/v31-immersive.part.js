@@ -109,38 +109,70 @@
     const root=immersiveOpen;
     const surface=document.querySelector('.view[data-view="'+root+'"]');
     if(!surface)return;
-    const info=Core.overview(state), units=Core.businesses(state),current=business();
+    const info=Core.overview(state),units=Core.businesses(state),current=business();
     const cash=Core.money(info.cash),revenue=Core.money(info.revenue),profit=Core.money(info.profit);
-    const stock=String(info.stock),unitStock=String(current?.stockUnits??0);
-    let title,sub,metrics;
-    if(root==='empresa'){
-      title='Empresas';sub='Sua rede e seus estabelecimentos';
-      metrics=[['CAIXA ÚNICO',cash],['FATURAMENTO',revenue],['UNIDADES',units.length+'/5'],['RESULTADO',profit]];
-    }else if(root==='mercado'){
-      title='Mercado';sub='Compras, vendas e abastecimento';
-      metrics=[['ESTOQUE DO GRUPO',stock],['ESTOQUE DA UNIDADE',unitStock],['FATURAMENTO',revenue],['CAIXA PARA COMPRAS',cash]];
-    }else if(root==='administrativo'){
-      const sections={
-        financas:['Finanças','Tesouraria e compromissos'],
-        logistica:['Logística','Abastecimento e transferências'],
-        'rh-dp':['Pessoas e RH','Equipe, vínculos e folha'],
-        contabilidade:['Relatórios','DRE, balanço e visão patrimonial'],
-        fiscal:['Fiscal','Obrigações e cenários tributários simulados'],
-        paralegal:['Paralegal','Registros e documentação']
-      };
-      [title,sub]=sections[activeSection.administrativo]||['Administração','Gestão dos departamentos'];
-      metrics=[['CAIXA ÚNICO',cash],['FATURAMENTO',revenue],['RESULTADO',profit],['ESTOQUE TOTAL',stock]];
-    }else{
-      title='Configurações e Saves';sub='Proteja e recupere sua carreira local';
-      metrics=[['VERSÃO',Core.VERSION],['SCHEMA',String(state.schemaVersion)],['REVISÃO',String(state.revision)],['UNIDADES',String(units.length)]];
-    }
+    const stock=String(info.stock),unitStock=String(current?.stockUnits??0),count=String(units.length);
+    const empty=String(units.filter(unit=>unit.stockUnits===0).length);
+    // Todos os valores provêm do Core. Não inferimos aliquota, lucro projetado ou ponto de equilíbrio.
+    const keys={
+      cash:['CAIXA ÚNICO',cash],revenue:['RECEITA ACUMULADA',revenue],
+      profit:['RESULTADO ACUMULADO',profit],stock:['ESTOQUE DA REDE',stock],
+      unitStock:['ESTOQUE DA UNIDADE',unitStock],count:['UNIDADES ATIVAS',count],
+      empty:['UNIDADES SEM ESTOQUE',empty],days:['DIAS SIMULADOS',String(state.calendar.tick)],
+      revision:['REVISÃO DO SAVE',String(state.revision)],
+      version:['VERSÃO DO JOGO',Core.VERSION],schema:['SCHEMA DO SAVE',String(state.schemaVersion)]
+    };
+    const choices={
+      empresa:{
+        dashboard:['cash','revenue','profit','count'],
+        'minhas-empresas':['count','cash','stock','empty'],
+        analises:['revenue','profit','stock','cash'],
+        comparativos:['count','revenue','profit','stock']
+      },
+      mercado:{
+        compras:['cash','unitStock','stock','empty'],
+        estoque:['stock','unitStock','empty','count'],
+        vendas:['revenue','profit','cash','stock'],
+        outros:['stock','revenue','cash','count']
+      },
+      administrativo:{
+        financas:['cash','revenue','profit','count'],
+        logistica:['stock','unitStock','empty','count'],
+        'rh-dp':['count','cash','revenue','days'],
+        contabilidade:['revenue','profit','cash','stock'],
+        fiscal:['revenue','cash','profit','days'],
+        paralegal:['count','revision','days','schema']
+      },
+      sistema:{default:['version','schema','revision','count']}
+    };
+    const active=root==='sistema'?'default':activeSection[root];
+    const selected=choices[root]?.[active]||['cash','revenue','profit','stock'];
+    const metrics=selected.map(key=>keys[key]);
+    const sectionNames={
+      empresa:{dashboard:['Empresas','Visão geral da rede'],'minhas-empresas':['Unidades','Estabelecimentos da carreira'],
+        analises:['Análises','Indicadores confirmados'],comparativos:['Comparar','Evolução da rede']},
+      mercado:{compras:['Compras','Pedidos e fornecedores'],estoque:['Estoque','Produtos da rede'],
+        vendas:['Vendas','Comercial e faturamento'],outros:['Estratégia','Mercado e concorrência']},
+      administrativo:{financas:['Finanças','Tesouraria e compromissos'],logistica:['Logística','Abastecimento e transferências'],
+        'rh-dp':['Equipe e RH','Pessoas e folha'],contabilidade:['Relatórios','DRE, balanço e patrimônio'],
+        fiscal:['Fiscal','Obrigações tributárias simuladas'],paralegal:['Documentos','Registros e contratos']},
+      sistema:{default:['Configurações e Saves','Proteja e recupere sua carreira local']}
+    };
+    const [title,sub]=sectionNames[root]?.[active]||[root,'Centro de comando'];
     setText('v31-modal-title-'+root,title);
     setText('v31-modal-subtitle-'+root,sub);
     for(let i=0;i<metrics.length;i++){
       const tile=surface.querySelector('[data-v31-kpi="'+root+'-'+i+'"]');
       tile.querySelector('small').textContent=metrics[i][0];
       tile.querySelector('strong').textContent=metrics[i][1];
-      tile.classList.toggle('v31-low-stock',root==='mercado'&&i===1&&current?.stockUnits===0);
+      tile.classList.toggle('v31-low-stock',metrics[i][0].includes('ESTOQUE')&&
+        (metrics[i][0]==='UNIDADES SEM ESTOQUE'?Number(empty)>0:
+          Number(metrics[i][1])===0));
+    }
+    const nav=surface.querySelector('.v31-command-tabs');
+    if(nav){
+      const activeTab=nav.querySelector('[aria-selected="true"]');
+      activeTab?.scrollIntoView({block:'nearest',inline:'nearest'});
     }
     // Status gerados pela UI original são apenas realçados; conteúdo e valor não mudam.
     const status={pendente:'pending',apurado:'done','em trânsito':'transit',recebido:'done',
@@ -157,12 +189,39 @@
   }
   function v31Bind(){
     $('v221-inspector').appendChild($('v31-lot-quick'));
-    // Abas do departamento sempre aparecem imediatamente abaixo da faixa de KPIs.
-    for(const root of ['empresa','mercado','administrativo']){
+    // Trilho integrado ao título, com um ícone e rótulo curto por aba.
+    const tabDesign={"empresa:dashboard":["◈","Visão geral"],"empresa:minhas-empresas":["🏬","Unidades"],"empresa:analises":["📈","Análises"],"empresa:comparativos":["⚖","Comparar"],"mercado:compras":["🛒","Compras"],"mercado:estoque":["📦","Estoque"],"mercado:vendas":["💳","Vendas"],"mercado:outros":["⚙","Estratégia"],"administrativo:financas":["💰","Caixa"],"administrativo:logistica":["🚚","Logística"],"administrativo:rh-dp":["👥","Equipe"],"administrativo:contabilidade":["📊","Relatórios"],"administrativo:fiscal":["🧾","Fiscal"],"administrativo:paralegal":["📜","Documentos"]};
+    for(const root of ['empresa','mercado','administrativo','sistema']){
       const surface=document.querySelector('.view[data-view="'+root+'"]');
       const header=surface.querySelector('[data-v31-header]');
+      if(!surface||!header)continue;
       const tabs=surface.querySelector(':scope > .v23-subnav');
-      if(header&&tabs)header.after(tabs);
+      const chrome=document.createElement('div');
+      chrome.className='v31-command-chrome';
+      surface.prepend(chrome);
+      chrome.append(header);
+      if(tabs){
+        tabs.classList.add('v31-command-tabs');
+        tabs.setAttribute('aria-label','Departamentos de '+root);
+        for(const button of tabs.querySelectorAll('[data-section-tab]')){
+          const original=button.textContent.trim();
+          const design=tabDesign[button.dataset.sectionTab]||['◈',original];
+          button.textContent='';
+          const icon=document.createElement('span');
+          icon.className='v31-tab-icon';
+          icon.setAttribute('aria-hidden','true');
+          icon.textContent=design[0];
+          const name=document.createElement('span');
+          name.className='v31-tab-label';
+          name.textContent=design[1];
+          button.append(icon,name);
+          button.setAttribute('title',original);
+          button.setAttribute('aria-label',original);
+        }
+        chrome.append(tabs);
+      }
+      const kpis=header.querySelector('.v31-command-kpis');
+      if(kpis){kpis.classList.add('v31-command-metrics');chrome.after(kpis);}
     }
     for(const button of document.querySelectorAll('[data-v31-open]')){
       button.addEventListener('click',()=>{

@@ -39,3 +39,21 @@ test('V3.1 full-screen: mapa 100dvh, dock central, modal, backdrop e toast acima
   assert.match(ui,/event\.key==='Escape'/);
   assert.match(ui,/v31CameraChange/);
 });
+
+
+test('Tycoon: abas icônicas e trilho integrado acima dos KPIs sem valores inventados',()=>{
+  const ui=read('src/ui/v31-immersive.part.js'),css=read('src/shell/v31.css');
+  assert.match(ui,/v31-command-chrome/);
+  assert.match(ui,/chrome\.append\(tabs\)/);
+  assert.match(ui,/chrome\.after\(kpis\)/);
+  assert.match(ui,/v31-tab-icon/);
+  assert.match(ui,/v31-tab-label/);
+  assert.match(ui,/choices\[root\]\?\.\[active\]/);
+  assert.match(ui,/Core\.overview\(state\)/);
+  assert.match(ui,/aria-label',original/);
+  assert.match(css,/v31-command-tabs.*v23-subtab\[aria-selected="true"\]/);
+  assert.match(css,/0 0 18px #f0c47e4b/);
+  assert.match(css,/position:sticky/);
+  assert.doesNotMatch(ui,/v31ClassicMode|v31-classic-switch|v31-classic-return/);
+  assert.doesNotMatch(html,/<aside class="sidebar"/);
+});

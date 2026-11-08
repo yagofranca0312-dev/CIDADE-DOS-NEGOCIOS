@@ -97,3 +97,10 @@ Interface / timer / formulário
 - **Risco residual:** QA de tela em dispositivo pessoal, saves autênticos, compras integradas com muitas filiais e aceite humano ainda pendentes. `3.0.0-02/03` permanecem PARCIAIS e `3.0.0-08` **NO-GO**.
 
 **Não alterar `main`, V2.9 homologada, saves pessoais ou a interface futura V3.1 por inferência de CI.**
+
+
+## 7. Execução real dos fluxos na UI Windows hospedada (07/11/2026)
+
+**Complemento à matriz de ownership:** [`docs/V300_QA_INTEGRADO_WINDOWS_HOSTED.md`](V300_QA_INTEGRADO_WINDOWS_HOSTED.md), [CI #42437328042](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42437328042). O QA integrou **dois estabelecimentos e 38 dias de operação fictícia**, com **66 verificações PASS** nos navegadores Chrome/Edge reais sob Windows hospedado/headless. Os comandos foram acionados somente por controles reais da UI: criação, inauguração, compras, RH, logística, finanças e folha; o motor foi usado apenas para **consultar** saves gravados e conciliações. A cada fluxo auditado, as regras de efeito único continuaram válidas. Navegar ou cancelar uma proposta não alterou o save.
+
+**Classificação:** `RG-13` e `RG-16` apenas **PARCIAIS**, com escopo de UI operacional e 38 dias; não equivalem a revisão humana visual, aceitação de balanceamento, save pessoal ou stress de 5 anos em Chrome/Edge. **`3.0.0-03` permanece PARTIAL, etapa 08 NO-GO**, 5/18 `VERIFIED`, 13 pendentes.

@@ -33,10 +33,13 @@ const open=async (ctx,errors,dialogs)=>{
   });
   await page.goto(TARGET,{waitUntil:'load',timeout:45000});
   await page.locator('#career-form').waitFor({state:'attached'});
+  await page.waitForFunction(()=>document.body.dataset.storageReady==='ready',{timeout:20000});
   return page;
 };
-const stateOf=async page=>page.evaluate(key=>{
-  const raw=localStorage.getItem(key);
+const stateOf=async page=>{
+  await page.waitForFunction(()=>document.body.dataset.storageReady==='ready'&&document.body.dataset.storageBusy!=='true',{timeout:25000});
+  return page.evaluate(async key=>{
+  const raw=await CidadeDurableStore.readCurrent(CidadeCore);
   if(!raw)return null;
   const state=CidadeCore.importSave(raw).state;
   const report=CidadeCore.overview(state);
@@ -61,6 +64,7 @@ const stateOf=async page=>page.evaluate(key=>{
     reconcileErrors:reconciliation.errors
   };
 },KEY);
+};
 const count=(s,kind)=>s.journalKinds.filter(x=>x===kind).length;
 const events=(s,kind)=>s.events.filter(x=>x===kind).length;
 async function nav(page,tab,section){

@@ -234,3 +234,12 @@ A leitura de **30 cidades e 18 lotes** usa `Core.CITIES` e `Core.businesses` sem
 **Validação privada pronta, não executada em arquivo pessoal:** [`tools/validar-save-pessoal-local-v300.mjs`](../tools/validar-save-pessoal-local-v300.mjs), testado com save sintético/corrompido em [`tests/personal_save_private_v300.test.mjs`](../tests/personal_save_private_v300.test.mjs). **Somente leitura**, não imprime nomes, empresas ou valores e não envia dados. O usuário poderá executar localmente em cópia independente, sem expor o original ao GitHub.
 
 **`RG-09` passou a PARTIAL**, refletindo o ensaio de updater em ambiente controlado; **`RG-11` continua NOT_EXECUTED**, sem save pessoal. `RG-06/08/10/12` também parciais, demais provas de GUI/mobile/carreira longa continuam abertas. O atualizador segue `main` (V3 alpha não homologada), portanto não executar o BAT de atualização na instalação pessoal antes de homologar a release apropriada. **Gate 08 permanece NO-GO** e PR #39 DRAFT.
+
+
+## Saneamento pós-NO-GO — P1 PR-01/PR-02: folha e capacidade (07/11/2026)
+
+**Dossiê:** [`docs/V300_PR01_PR02_SANEAMENTO.md`](V300_PR01_PR02_SANEAMENTO.md). A duplicação da fórmula de pró-rata foi eliminada: previsão e competência RH agora usam `payrollPeriodQuote`, sem mudar valor dos cargos, competência, despesa ou quitação. A cotação manual de compras passou a descontar transferências internas PENDING ao verificar a capacidade da unidade, usando o estado do grupo; esse critério já existia no motor `registerPurchase` e na cotação Patch A. **Compras manuais e estratégicas conservam políticas distintas**, mas convergem no lançamento único do pedido.
+
+**Automação:** [sete regressões novas](../tests/v300_pr01_pr02_consistency.test.mjs), [CI Linux #42435702398 — 418/418 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435702398), [CI Windows #42435702391 — 19/19 BAT e 33/33 Chrome/Edge PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435702391). O `index.html` foi regenerado com **1.480.192 bytes**, SHA-256 `0ac63b72913247249e2559f19009b9941f1d6b794a9f0f17c85904e9eca191c3` reproduzido no Windows/Linux.
+
+**Classificação:** PR-01 **MITIGATED**, PR-02 **FIXED_UI_CAPACITY**, porém gates 02 e 03 **PARCIAIS** até QA humano; gate 08 **NO-GO** até saves pessoais, mobile real, instalação Windows pessoal, carreira longa no browser e aceite. `main` e V2.9 homologada intocadas, PR #39 permanece rascunho.

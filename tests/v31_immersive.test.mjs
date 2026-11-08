@@ -57,3 +57,21 @@ test('Tycoon: abas icônicas e trilho integrado acima dos KPIs sem valores inven
   assert.doesNotMatch(ui,/v31ClassicMode|v31-classic-switch|v31-classic-return/);
   assert.doesNotMatch(html,/<aside class="sidebar"/);
 });
+
+
+test('V3.1 scroll architecture: fixed modal chrome and KPI board; only visible section pane scrolls',()=>{
+  const css=read('src/shell/v31.css');
+  const source=read('src/ui/v31-immersive.part.js');
+  assert.match(css,/display:flex!important;\s*flex-direction:column!important;\s*overflow:hidden!important/);
+  assert.match(css,/\.v23-subpane:not\(\[hidden\]\)\s*\{/);
+  assert.match(css,/overflow-y:auto!important/);
+  assert.match(css,/overscroll-behavior:contain!important/);
+  assert.match(css,/height:92dvh!important/);
+  assert.match(css,/border-radius:18px 18px 0 0!important/);
+  assert.match(css,/padding:6px 8px!important/);
+  assert.match(css,/min-height:48px!important/);
+  assert.match(source,/system\.className='v23-subpane v31-system-pane'/);
+  assert.match(source,/pane\.prepend\(\.\.\.loose\)/);
+  assert.match(source,/visiblePane\.scrollTop=0/);
+  assert.doesNotMatch(source,/v31ClassicMode/);
+});

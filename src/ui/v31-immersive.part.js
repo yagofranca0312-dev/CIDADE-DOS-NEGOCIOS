@@ -1,6 +1,7 @@
   // V3.1: navegacao e camera sao apenas UI; o motor permanece a unica autoridade.
   let immersiveOpen=null,v31CameraCity=null,v31Camera={zoom:1,x:0,y:0};
   let v31ReturnFocus=null,v31LastRevision=null,v31CameraCenterPending=false;
+  const v31LastPaneKey=Object.create(null);
   const v31CameraStore='cidade-v31-camera-ui-v1';
   function v31CameraLoad(cityId){
     if(v31CameraCity===cityId)return;
@@ -169,6 +170,16 @@
         (metrics[i][0]==='UNIDADES SEM ESTOQUE'?Number(empty)>0:
           Number(metrics[i][1])===0));
     }
+    // Cada mudança de aba começa no topo do próprio painel; o cabeçalho não é scroller.
+    if(root==='administrativo'){
+      const shared=$('admin-shared-filters');
+      const target=surface.querySelector('[data-section-pane="administrativo:'+activeSection.administrativo+'"]');
+      if(shared&&target&&['financas','contabilidade'].includes(activeSection.administrativo)&&shared.parentElement!==target)
+        target.prepend(shared);
+    }
+    const visiblePane=surface.querySelector(':scope > .v23-subpane:not([hidden])');
+    const paneKey=visiblePane?.getAttribute('data-section-pane')||root;
+    if(visiblePane&&v31LastPaneKey[root]!==paneKey){visiblePane.scrollTop=0;v31LastPaneKey[root]=paneKey;}
     const nav=surface.querySelector('.v31-command-tabs');
     if(nav){
       const activeTab=nav.querySelector('[aria-selected="true"]');
@@ -222,6 +233,31 @@
       }
       const kpis=header.querySelector('.v31-command-kpis');
       if(kpis){kpis.classList.add('v31-command-metrics');chrome.after(kpis);}
+    }
+    // Repartição estática: apenas o painel ativo pode rolar, nunca a moldura modal.
+    for(const root of ['empresa','mercado','administrativo','sistema']){
+      const surface=document.querySelector('.view[data-view="'+root+'"]');
+      const panes=[...surface.querySelectorAll(':scope > .v23-subpane')];
+      const excluded=node=>node.classList.contains('v31-command-chrome')||
+        node.classList.contains('v31-command-metrics')||
+        node.classList.contains('v23-subpane')||node.id==='v31-overlay-close';
+      const loose=[...surface.children].filter(node=>!excluded(node));
+      if(root==='sistema'){
+        const system=document.createElement('div');
+        system.id='v31-system-pane';
+        system.className='v23-subpane v31-system-pane';
+        system.setAttribute('role','region');
+        system.setAttribute('aria-label','Configurações e salvamento da carreira');
+        system.append(...loose);
+        surface.append(system);
+      }else{
+        const home=root==='mercado'?'mercado:outros':
+          root==='administrativo'?'administrativo:financas':root+':dashboard';
+        const pane=panes.find(el=>el.dataset.sectionPane===home)||panes[0];
+        if(!pane)throw new Error('Painel de departamento ausente: '+root);
+        // Rivais e ferramentas de apoio permanecem acessíveis na seção apropriada.
+        pane.prepend(...loose);
+      }
     }
     for(const button of document.querySelectorAll('[data-v31-open]')){
       button.addEventListener('click',()=>{

@@ -50,8 +50,8 @@
     {
       "id": "3.0.0-05",
       "status": "PARTIAL",
-      "evidence": "docs/V300_PERFORMANCE_ESTABILIDADE.md",
-      "open": "Memória/tempo de UI real e persistência com quota saturada"
+      "evidence": "docs/V300_QA_CARREIRA_LONGA_BROWSER.md",
+      "open": "P0-04: quota real de ~5 MB bloqueia 1.825 dias em Chrome/Edge; 365 dias passaram em 4/4 cenários. Persistência de longo prazo, performance e hardware pessoal ainda não quitados."
     },
     {
       "id": "3.0.0-06",
@@ -182,8 +182,9 @@
       "id": "RG-15",
       "type": "MANUAL",
       "label": "Carreira longa em navegador real: UI, tempos, memória e exportação/importação perto de 25MB",
-      "status": "NOT_EXECUTED",
-      "evidence": null
+      "status": "PARTIAL",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42485124066",
+      "qualifier": "Windows Chrome/Edge hosted headless: 4/4 cenários de 365 dias PASS, mas 0/4 de 1825 dias alcançados; todos bloqueados por quota localStorage, com save anterior íntegro. P0-04 issue #40 aberta. Sem QA pessoal/mobile."
     },
     {
       "id": "RG-16",
@@ -217,6 +218,18 @@
       "test": "tests/persistence_p0_v300.test.mjs",
       "report": "docs/V300_P0_PERSISTENCIA_TRANSACIONAL.md",
       "note": "Guard P0 testado em Chrome/Edge headless no Windows hospedado via file:// com QuotaExceededError real, reload, export/import. RG-06 PARTIAL; testes manuais em instalacao do usuario ainda nao executados."
+    },
+    {
+      "id": "P0-04",
+      "risk": "RG-15",
+      "status": "BLOCKED_OPEN_ISSUE_STORAGE_QUOTA",
+      "issue": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/issues/40",
+      "report": "docs/V300_QA_CARREIRA_LONGA_BROWSER.md",
+      "codePaths": [
+        "src/ui/app.js",
+        "src/core/game.js"
+      ],
+      "note": "Persistência tradicional localStorage satura antes de 1825 dias; 5 unidades para em dia 425. Ainda não foi aplicado patch de armazenamento; gate08 NO_GO."
     }
   ],
   "windowsHostedAudit": {
@@ -316,5 +329,66 @@
     "visualHumanReviewCompleted": false,
     "longBrowserCareerTested": false,
     "report": "docs/V300_QA_INTEGRADO_WINDOWS_HOSTED.md"
+  },
+  "browserLongrunQA": {
+    "status": "PARTIAL_QUOTA_LIMITED",
+    "issue": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/issues/40",
+    "sha": "64bcb4892baf85f8b447d8701697e25233f055c9",
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42485124066",
+    "script": "tools/qa-windows-longrun-v300.mjs",
+    "report": "docs/V300_QA_CARREIRA_LONGA_BROWSER.md",
+    "artifact": "v300-browser-longrun-metrics",
+    "completed365": 4,
+    "total365": 4,
+    "completed1825": 0,
+    "total1825": 4,
+    "blockedByStorage": 4,
+    "hardFailures": 0,
+    "releaseBlocking": true,
+    "scenarios": [
+      {
+        "browser": "chrome",
+        "units": 1,
+        "completed365": true,
+        "lastPersistedDay": 1625,
+        "saveBytesAtBlock": 5179860,
+        "compactBytesAtBlock": 1669977
+      },
+      {
+        "browser": "chrome",
+        "units": 5,
+        "completed365": true,
+        "lastPersistedDay": 425,
+        "saveBytesAtBlock": 4924782,
+        "compactBytesAtBlock": 1607570
+      },
+      {
+        "browser": "msedge",
+        "units": 1,
+        "completed365": true,
+        "lastPersistedDay": 1655,
+        "saveBytesAtBlock": 5248817,
+        "compactBytesAtBlock": 1687557
+      },
+      {
+        "browser": "msedge",
+        "units": 5,
+        "completed365": true,
+        "lastPersistedDay": 425,
+        "saveBytesAtBlock": 4924782,
+        "compactBytesAtBlock": 1607570
+      }
+    ],
+    "origin": "Chrome/Edge 156 Windows GitHub-hosted headless, game file://, synthetic-only. 5-unit fixture includes explicitly artificial capital.",
+    "failClosedOnQuota": true,
+    "originalSavedStateRecovered": true,
+    "exportJsonVerified": true,
+    "compactRoundtripVerified": true,
+    "actualUserSaveUsed": false,
+    "actualPersonalWindowsTested": false,
+    "physicalMobileTested": false,
+    "subjectiveVisualReviewCompleted": false,
+    "solutionImplemented": false,
+    "notes": "Quota de navegador observada ~5MB, sem extrapolar para outros browsers/hardware. CI SUCCESS é êxito do diagnóstico e não êxito do requisito 1825 dias."
   }
 }

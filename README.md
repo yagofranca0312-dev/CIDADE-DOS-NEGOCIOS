@@ -11,7 +11,7 @@ O **Patch A já presente na `main`** oferece planos de capital de giro **conserv
 
 **Limite e segurança:** são **empresas, valores, funcionários, cadastros e impostos fictícios**. O cenário fiscal V1.9 calcula apenas uma hipótese comercial restrita de 2026; o Fiscal Operacional V2.4-C só registra tarefas internas e **não apura tributos**. Nenhuma declaração, guia, cadastro ou transmissão fiscal/trabalhista é real. Saves muito grandes podem não caber no `localStorage` do navegador, mesmo quando o jogo continua operando em memória. **Exporte JSON tradicional V1 externo antes de atualizar e ao terminar sessões**; o compacto V2 exige leitor V2.9 ou posterior.
 
-**Evidência atual:** [CI da documentação e regressão V3.0 — 370/370 testes PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42427216125), incluindo seis testes novos para links, versões, menus, roteiro e limites fiscais; **não substitui QA Windows/mobile, persistência `file://`, saves reais ou aceite formal da V3.0**. As revisões anteriores preservadas abaixo são **histórico de cada momento**, não representam estado atual nem planos necessariamente vigentes.
+**Evidência atual:** [CI da consolidação técnica V3.0 — 381/381 testes PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42428343258), incluindo onze testes novos do [contrato de interface V3.1 apenas para leitura](docs/V300_CONTRATO_UI_V31.md). **A interface V3.1 não foi implementada**; o read-model não está no HTML jogável. Essa evidência **não substitui QA Windows/mobile, persistência `file://`, saves reais ou aceite formal da V3.0**. As revisões anteriores preservadas abaixo são **histórico de cada momento**, não representam estado atual nem planos necessariamente vigentes.
 
 ---
 

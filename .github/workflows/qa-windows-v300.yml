@@ -1,0 +1,42 @@
+name: QA V3.0 Windows Chrome Edge — offline e persistencia
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/qa-windows-v300.yml'
+      - 'tools/qa-windows-browser-v300.mjs'
+      - 'src/**'
+      - 'index.html'
+      - 'tests/fixtures/core_v2_9_0_homologada.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-browsers:
+    name: Windows real hospedado — Chrome e Edge via file
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verificar plataforma e HTML offline reproduzivel
+        shell: pwsh
+        run: |
+          Write-Host "Windows runner: $([System.Environment]::OSVersion.VersionString)"
+          npm run build
+          git diff --exit-code -- index.html
+      - name: Instalar somente o controlador de browser para a CI
+        shell: pwsh
+        run: npm install --no-save --no-package-lock --ignore-scripts --no-audit --no-fund playwright@1.55.1
+      - name: Executar Chrome e Edge reais em file offline (QA sintetico)
+        shell: pwsh
+        run: node tools/qa-windows-browser-v300.mjs
+      - name: Confirmar que artefatos do jogo nao foram modificados
+        shell: pwsh
+        run: git diff --exit-code -- index.html package.json

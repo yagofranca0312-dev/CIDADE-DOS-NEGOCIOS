@@ -145,7 +145,8 @@ test('V3.0-07: sugestões de ações são consultivas, sem comando nem sucesso i
   assert.equal(open.payloadFields.includes('sector'),true);
   assert.equal(hinted.actions.find(a=>a.intent==='SELECT_LOT').kind,'UI_ONLY');
   assert.equal(hinted.actions.some(a=>a.intent==='VENDA.REGISTRAR'),false);
-  assert.equal(JSON.stringify(s).includes('v31'),false);
+  assert.equal(Object.hasOwn(s,'v31ReadModel'),false);
+  assert.equal(Object.hasOwn(s.world,'overlay'),false);
   assert.equal(typeof hinted.dispatch,'undefined');
   assert.equal(typeof model.dispatch,'undefined');
   assert.equal(Object.isFrozen(hinted.actions),true);

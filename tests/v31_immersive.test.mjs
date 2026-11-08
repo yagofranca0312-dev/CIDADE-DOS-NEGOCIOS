@@ -23,3 +23,19 @@ test('V3.1 versao, schema e acessibilidade',()=>{
  assert.match(read('src/shell/v31.css'),/focus-visible/);
  assert.match(read('docs/HOMOLOGACAO_V300_EXCEPCIONAL.md'),/Não é uma certificação/);
 });
+
+
+test('V3.1 full-screen: mapa 100dvh, dock central, modal, backdrop e toast acima',()=>{
+  const css=read('src/shell/v31.css');
+  const ui=read('src/ui/v31-immersive.part.js');
+  for(const id of ['v31-backdrop','v31-hud-cash','v31-hud-date','v31-classic-return'])assert.ok(html.includes('id="'+id+'"'),id);
+  assert.match(css,/height:100dvh!important/);
+  assert.match(css,/#map-canvas>svg\.v221-city-svg/);
+  assert.match(css,/backdrop-filter:blur/);
+  assert.match(css,/transform:translate\(-50%,-50%\)/);
+  assert.match(css,/body \.toast\{z-index:10000!important/);
+  assert.match(ui,/setAttribute\('aria-modal','true'\)/);
+  assert.match(ui,/v31-backdrop'\)\.addEventListener\('click',v31ClosePanel\)/);
+  assert.match(ui,/event\.key==='Escape'/);
+  assert.match(ui,/v31CameraChange/);
+});

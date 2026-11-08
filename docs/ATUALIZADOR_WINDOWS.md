@@ -2,6 +2,8 @@
 
 **CP-001 · 2026-11-01 · Integração de atualização local**
 
+**ALERTA DE SEGURANÇA — 07/11/2026:** o atualizador abaixo acompanha `main`, que contém `3.0.0-alpha.1` **NÃO HOMOLOGADA**; a última homologada é **V2.9.0**. **Não execute `ATUALIZAR_E_JOGAR.bat` na instalação pessoal até existir uma versão de release aprovada**, pois a atualização pode substituir o jogo por uma alpha. Para jogar sem atualização, use `JOGAR_OFFLINE.bat` e mantenha backup JSON externo. A [CI Windows de BAT e PowerShell](V300_QA_BAT_SAVE_LOCAL.md) aprovou 19 verificações em pastas/ZIPs artificiais, **sem conexão real ao GitHub ou teste do Windows pessoal**. As instruções de atualização abaixo são documentação do funcionamento histórico, não autorização para executar agora.
+
 ## Instruções (uso diário)
 
 Coloque `ATUALIZAR_E_JOGAR.bat`, `JOGAR_OFFLINE.bat` e a pasta `tools/` dentro da mesma pasta que contém `index.html`:

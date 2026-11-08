@@ -255,10 +255,10 @@
   },
   "crossPlatformHtml": {
     "status": "PASS_BYTE_IDENTICAL",
-    "sha256": "ae41d8e0d803ed8bc37cae9f5ca0fbf332fae7332fe4eafee4d5a8cc7f6a8937",
-    "bytes": 1488829,
-    "linuxObservedCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42488105257",
-    "windowsObservedCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42488245360",
+    "sha256": "94ffbcf234b437c362e98f29aaf8d64cb0051702c83f0c2e68ce2f05eff6a70b",
+    "bytes": 1489147,
+    "linuxObservedCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42489271545",
+    "windowsObservedCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42489271581",
     "verifiedUsing": "tools/verify-html-byte-identical-v300.mjs"
   },
   "batUpdaterQA": {

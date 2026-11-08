@@ -56,9 +56,20 @@ jobs:
       - name: QA migracao V2.9 e abort de transacao IndexedDB real (sintetico)
         shell: pwsh
         run: node tools/qa-windows-indexeddb-v300.mjs
+      - name: QA mobile emulado 320 390 768 com toque e recuperacao
+        shell: pwsh
+        run: node tools/qa-windows-mobile-emulado-v300.mjs
       - name: QA carreira longa 365 e 1825 dias Chrome e Edge via UI real
         shell: pwsh
         run: node tools/qa-windows-longrun-v300.mjs
+      - name: Arquivar evidencias de mobile emulado
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v300-mobile-emulado-screenshots
+          path: ${{ runner.temp }}/v300-mobile-emulado-final/
+          if-no-files-found: warn
+          retention-days: 30
       - name: Publicar metricas sinteticas e ressalvas da carreira longa
         if: always()
         uses: actions/upload-artifact@v4

@@ -14,7 +14,9 @@
     "bench:logistics": "node tools/benchmark-v280.mjs",
     "bench:quality": "node tools/benchmark-v290.mjs",
     "bench:economy": "node tools/benchmark-v300-patch-a.mjs",
-    "bench:consolidation": "node tools/benchmark-v300-consolidation.mjs"
+    "bench:consolidation": "node tools/benchmark-v300-consolidation.mjs",
+    "audit:release": "node tools/v300-release-gate.mjs",
+    "audit:release:require-go": "node tools/v300-release-gate.mjs --require-go"
   },
   "engines": {
     "node": ">=22"

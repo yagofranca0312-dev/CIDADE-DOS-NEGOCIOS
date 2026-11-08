@@ -1,5 +1,5 @@
   // V3.1: navegacao e camera sao apenas UI; o motor permanece a unica autoridade.
-  let immersiveOpen=null,v31ClassicMode=false,v31CameraCity=null,v31Camera={zoom:1,x:0,y:0};
+  let immersiveOpen=null,v31CameraCity=null,v31Camera={zoom:1,x:0,y:0};
   let v31ReturnFocus=null,v31LastRevision=null,v31CameraCenterPending=false;
   const v31CameraStore='cidade-v31-camera-ui-v1';
   function v31CameraLoad(cityId){
@@ -55,7 +55,6 @@
   }
   function v31OpenPanel(root,section=null,source=null){
     if(!state)return;
-    if(v31ClassicMode){goto(root,section);return;}
     if(!['empresa','mercado','administrativo','sistema'].includes(root))return;
     if(!immersiveOpen)v31ReturnFocus=source||document.activeElement;
     immersiveOpen=root;goto(root,section);
@@ -71,15 +70,12 @@
   }
   function v31Render(){
     if(!state?.player?.cityId)return;
-    const immersive=!v31ClassicMode&&(tab==='cidade'||!!immersiveOpen);
+    const immersive=true;
     document.body.classList.toggle('v31-immersive',immersive);
     document.body.classList.toggle('v31-overlay-open',immersive&&!!immersiveOpen);
-    document.body.classList.toggle('v31-classic-mode',v31ClassicMode);
     $('v31-dock').hidden=!immersive;
-    $('v31-classic-return').hidden=!v31ClassicMode;
-    $('v31-backdrop').hidden=!immersiveOpen||v31ClassicMode;
-    $('v31-overlay-close').hidden=!immersiveOpen||v31ClassicMode;
-    $('v31-classic-switch').textContent=v31ClassicMode?'Ativar interface imersiva':'Interface clássica';
+    $('v31-backdrop').hidden=!immersiveOpen;
+    $('v31-overlay-close').hidden=!immersiveOpen;
     document.body.classList.toggle('v31-lot-selected',!!inspectorOpen);
     setText('v31-hud-cash',$('v221-hud-cash').textContent);
     setText('v31-hud-date',$('v221-date-label').textContent);
@@ -95,6 +91,7 @@
     $('v31-lot-manage').textContent=owner?'Gerenciar empresa':'Abrir empresa';
     setText('v31-hud-pause',timer?'Ⅱ Pausar':'▶ Jogar');
     $('v31-hud-speed').value=String(speed);
+    v31RenderCommandPanel();
     const key=String(state.worldId)+'/'+state.revision+'/'+viewCityId;
     if(v31LastRevision!==key){
       v31LastRevision=key;
@@ -107,8 +104,66 @@
       setText('v31-alert-count',recent.events.length+' eventos recentes');
     }
   }
+  function v31RenderCommandPanel(){
+    if(!immersiveOpen)return;
+    const root=immersiveOpen;
+    const surface=document.querySelector('.view[data-view="'+root+'"]');
+    if(!surface)return;
+    const info=Core.overview(state), units=Core.businesses(state),current=business();
+    const cash=Core.money(info.cash),revenue=Core.money(info.revenue),profit=Core.money(info.profit);
+    const stock=String(info.stock),unitStock=String(current?.stockUnits??0);
+    let title,sub,metrics;
+    if(root==='empresa'){
+      title='Empresas';sub='Sua rede e seus estabelecimentos';
+      metrics=[['CAIXA ÚNICO',cash],['FATURAMENTO',revenue],['UNIDADES',units.length+'/5'],['RESULTADO',profit]];
+    }else if(root==='mercado'){
+      title='Mercado';sub='Compras, vendas e abastecimento';
+      metrics=[['ESTOQUE DO GRUPO',stock],['ESTOQUE DA UNIDADE',unitStock],['FATURAMENTO',revenue],['CAIXA PARA COMPRAS',cash]];
+    }else if(root==='administrativo'){
+      const sections={
+        financas:['Finanças','Tesouraria e compromissos'],
+        logistica:['Logística','Abastecimento e transferências'],
+        'rh-dp':['Pessoas e RH','Equipe, vínculos e folha'],
+        contabilidade:['Relatórios','DRE, balanço e visão patrimonial'],
+        fiscal:['Fiscal','Obrigações e cenários tributários simulados'],
+        paralegal:['Paralegal','Registros e documentação']
+      };
+      [title,sub]=sections[activeSection.administrativo]||['Administração','Gestão dos departamentos'];
+      metrics=[['CAIXA ÚNICO',cash],['FATURAMENTO',revenue],['RESULTADO',profit],['ESTOQUE TOTAL',stock]];
+    }else{
+      title='Configurações e Saves';sub='Proteja e recupere sua carreira local';
+      metrics=[['VERSÃO',Core.VERSION],['SCHEMA',String(state.schemaVersion)],['REVISÃO',String(state.revision)],['UNIDADES',String(units.length)]];
+    }
+    setText('v31-modal-title-'+root,title);
+    setText('v31-modal-subtitle-'+root,sub);
+    for(let i=0;i<metrics.length;i++){
+      const tile=surface.querySelector('[data-v31-kpi="'+root+'-'+i+'"]');
+      tile.querySelector('small').textContent=metrics[i][0];
+      tile.querySelector('strong').textContent=metrics[i][1];
+      tile.classList.toggle('v31-low-stock',root==='mercado'&&i===1&&current?.stockUnits===0);
+    }
+    // Status gerados pela UI original são apenas realçados; conteúdo e valor não mudam.
+    const status={pendente:'pending',apurado:'done','em trânsito':'transit',recebido:'done',
+      pago:'done',quitado:'done',ativo:'done',concluído:'done',cancelado:'quiet',
+      aguardando:'pending'};
+    for(const cell of [...surface.querySelectorAll('.catalog-table tbody td')].slice(0,180)){
+      if(cell.children.length)continue;
+      const value=cell.textContent.trim(),kind=status[value.toLocaleLowerCase('pt-BR')];
+      if(!kind)continue;
+      const badge=document.createElement('span');
+      badge.className='v31-status-badge v31-status-'+kind;
+      badge.textContent=value;cell.replaceChildren(badge);
+    }
+  }
   function v31Bind(){
     $('v221-inspector').appendChild($('v31-lot-quick'));
+    // Abas do departamento sempre aparecem imediatamente abaixo da faixa de KPIs.
+    for(const root of ['empresa','mercado','administrativo']){
+      const surface=document.querySelector('.view[data-view="'+root+'"]');
+      const header=surface.querySelector('[data-v31-header]');
+      const tabs=surface.querySelector(':scope > .v23-subnav');
+      if(header&&tabs)header.after(tabs);
+    }
     for(const button of document.querySelectorAll('[data-v31-open]')){
       button.addEventListener('click',()=>{
         const [root,section]=button.dataset.v31Open.split(':');
@@ -133,13 +188,6 @@
         if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
         else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
       }
-    });
-    $('v31-classic-switch').addEventListener('click',()=>{
-      v31ClassicMode=true;immersiveOpen=null;
-      $('v31-backdrop').hidden=true;goto('empresa');
-    });
-    $('v31-classic-return').addEventListener('click',()=>{
-      v31ClassicMode=false;immersiveOpen=null;goto('cidade');
     });
     $('v31-lot-manage').addEventListener('click',()=>$('map-open-company').click());
     $('v31-next-day').addEventListener('click',()=>$('next-day').click());

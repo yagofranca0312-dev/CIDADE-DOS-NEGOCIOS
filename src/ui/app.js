@@ -454,10 +454,12 @@
        (statementView==='summary'||statementView==='cash'))statementView='dre';
     const sharedFilters=document.querySelector('#admin-shared-filters');
     if(sharedFilters)sharedFilters.hidden=!(root==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo));
+    // City-first é a única navegação; toda área não-cidade vira janela sobre o mapa.
+    if(state&&root!=='cidade'&&immersiveOpen!==root){v31OpenPanel(root,section);return;}
     tab=root;
     if(root==='cidade')immersiveOpen=null;
     document.body.classList.toggle('v221-city-mode',!!state?.player?.cityId&&(root==='cidade'||!!immersiveOpen));
-    document.body.classList.toggle('v31-overlay-open',!!immersiveOpen&&!v31ClassicMode);
+    document.body.classList.toggle('v31-overlay-open',!!immersiveOpen);
     document.querySelectorAll('.view[data-view]').forEach(el=>{const chosen=el.dataset.view===root||(!!immersiveOpen&&el.dataset.view==='cidade');el.hidden=!chosen;el.classList.toggle('active',chosen);});
     document.querySelectorAll('.nav-primary [data-tab]').forEach(el=>{const chosen=el.dataset.tab===root;el.classList.toggle('active',chosen);if(chosen)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');});
     document.querySelectorAll('[data-section-pane]').forEach(el=>{const [area,sub]=el.dataset.sectionPane.split(':');el.hidden=!(area===root&&activeSection[area]===sub);});
@@ -503,7 +505,7 @@
   /* CDN_V31_IMMERSIVE */
   function render(){
     const started=!!state?.player?.cityId;
-    document.body.classList.toggle('v221-city-mode',started&&(tab==='cidade'||!!immersiveOpen));
+    document.body.classList.toggle('v221-city-mode',started);
     $('onboarding').hidden=started;$('game-shell').hidden=!started;
     if(!started)return;
     const b=business(),units=Core.businesses(state),info=Core.overview(state),ownCity=Core.cityById(b?.cityId||state.player.cityId);
@@ -766,7 +768,7 @@
       selectedLot=Number(target.dataset.lot);inspectorOpen=true;render();updateOpenPreview();
       const owner=Core.businesses(state).find(x=>x.cityId===viewCityId&&x.lot===selectedLot);
       // Lote edificado abre sua empresa na janela; lote livre exibe as opcoes de abertura.
-      if(owner&&!v31ClassicMode){
+      if(owner){
         if(business()?.id!==owner.id)commit('EMPRESA.ATIVAR',{businessId:owner.id}).then(ok=>{if(ok)v31OpenPanel('empresa','minhas-empresas');});
         else v31OpenPanel('empresa','minhas-empresas');
       }
@@ -779,7 +781,7 @@
       // No modo ampliado, a faixa do mapa pode ser deslocada horizontalmente.
       if(mapZoomed){const el=$('map-canvas');el.scrollLeft=Math.max(0,(el.scrollWidth-el.clientWidth)/2);}
     });
-    $('v221-inspector-close').addEventListener('click',()=>{inspectorOpen=false;render();$('v221-hud-units').focus();});
+    $('v221-inspector-close').addEventListener('click',()=>{inspectorOpen=false;render();$('map-canvas').focus();});
     $('v221-hud-units').addEventListener('click',()=>goto('empresa'));
     $('v221-config-open').addEventListener('click',()=>goto('sistema'));
     $('v221-help-open').addEventListener('click',()=>{$('v221-help-panel').hidden=!$('v221-help-panel').hidden;});

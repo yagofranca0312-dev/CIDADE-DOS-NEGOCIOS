@@ -852,7 +852,7 @@ button.v221-hud-cell:hover{background:#1e4254}
  .v221-city-mode.v221-tiangua-scene .map-panel>.v221-city-switch-trigger>*{visibility:visible!important}
 }
 /* V3.1 city-first: viewport integral, sem novo motor ou menu lateral. */
-.v31-dock[hidden],.v31-context[hidden],.v31-overlay-close[hidden],.v31-backdrop[hidden],#v31-classic-return[hidden]{display:none!important}
+.v31-dock[hidden],.v31-context[hidden],.v31-overlay-close[hidden],.v31-backdrop[hidden]{display:none!important}
 body.v31-immersive{margin:0!important;overflow:hidden!important;overscroll-behavior:none}
 body.v31-immersive #game-shell{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:0!important;display:block!important;overflow:hidden!important;background:#071626}
 body.v31-immersive #game-shell>.sidebar{display:none!important}
@@ -911,7 +911,6 @@ body.v31-overlay-open .view[data-view="cidade"]{display:block!important}
 body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden]){position:fixed!important;left:50%!important;top:50%!important;right:auto!important;bottom:auto!important;transform:translate(-50%,-50%)!important;z-index:360!important;display:block!important;width:min(960px,calc(100vw - 30px))!important;height:min(80dvh,825px)!important;min-height:0!important;max-height:calc(100dvh - 30px)!important;max-width:none!important;overflow:auto!important;overscroll-behavior:contain;margin:0!important;padding:13px 20px 24px!important;background:#0c2b42f4!important;border:1px solid #e1bf88!important;border-radius:17px!important;box-shadow:0 26px 100px #000d!important}
 .v31-overlay-close{position:sticky!important;top:0!important;left:100%;float:right;z-index:390;min-height:43px;min-width:110px;padding:8px 12px;background:#f1d9a5;color:#102b3c;border:2px solid #fff0cf;border-radius:9px;font-weight:850}
 .v31-overlay-close:not([hidden]){display:block!important}
-#v31-classic-return{position:fixed;top:12px;right:12px;z-index:200;min-height:42px;padding:9px 14px;background:#173e56;color:#f8eaca;border:1px solid #e0bc84;border-radius:9px}
 body .toast{z-index:10000!important;bottom:calc(90px + env(safe-area-inset-bottom))!important}
 @media(max-width:700px){
  body.v31-immersive .v31-top-controls{left:8px;right:8px;transform:none;width:auto;max-width:none;gap:4px 6px;padding:5px 7px;justify-content:space-between;border-radius:12px}
@@ -939,6 +938,153 @@ body .toast{z-index:10000!important;bottom:calc(90px + env(safe-area-inset-botto
 
 body.v31-immersive .v221-time-menu:not([hidden]){position:fixed!important;top:calc(95px + env(safe-area-inset-top))!important;right:16px!important;left:auto!important;z-index:170!important;background:#0b293feb;backdrop-filter:blur(13px)}
 
+/* V3.1 city-first final: uma experiência única, sem sidebar e sem modo alternativo. */
+body #game-shell{grid-template-columns:minmax(0,1fr)}
+body #game-shell>.sidebar{display:none!important}
+body.v31-immersive .main-pane{max-width:none!important}
+/* Onboarding compacto e central, com arte de fundo preservada. */
+.onboarding{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;place-items:center!important;
+  width:100%!important;max-width:none!important;min-height:100dvh!important;
+  padding:clamp(8px,2.2vh,24px)!important;margin:0!important;gap:0!important;
+  overflow-x:hidden!important;overflow-y:auto!important;isolation:isolate;
+  background:linear-gradient(120deg,rgba(5,17,30,.62),rgba(6,24,38,.45));
+}
+.onboarding:before{inset:0!important;z-index:-1;background:radial-gradient(circle at 50% 45%,#173b5188,transparent 65%)}
+.onboarding-art{display:block;position:fixed;inset:0;z-index:-2;opacity:.45;pointer-events:none}
+.v31-onboard-panel{
+  position:relative;z-index:1;width:min(480px,calc(100vw - 20px));max-height:calc(100dvh - 16px);
+  overflow:auto;overscroll-behavior:contain;margin:0 auto;padding:clamp(14px,2.3vh,24px);
+  background:linear-gradient(160deg,rgba(13,40,60,.96),rgba(7,25,42,.93));
+  border:1px solid #bca16d86;border-radius:20px;
+  box-shadow:0 24px 90px #000c,inset 0 1px #ffffff20;
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+}
+.v31-onboard-panel .intro-copy{width:100%;max-width:none;text-align:center;padding:0!important;margin:0!important}
+.v31-onboard-panel .v21-hero-eyebrow{margin:0 auto 10px!important;font-size:.56rem;padding:5px 9px}
+.v31-onboard-panel .v21-hero-brand{justify-content:center;gap:12px;margin:0 auto 7px}
+.v31-onboard-panel .v21-hero-mark{width:60px;height:60px;flex:none;border-radius:13px}
+.v31-onboard-panel .v21-hero-brand h1{font-size:clamp(1.65rem,5.5vw,2.2rem)!important;line-height:1!important;margin:0!important;letter-spacing:-.015em}
+.v31-onboard-panel .hero-subtitle{font-size:.96rem;margin:0 0 5px!important}
+.v31-onboard-panel .intro-desc{font-size:.7rem;line-height:1.4;margin:0 auto 6px;max-width:370px}
+.v31-onboard-panel .intro-features{justify-content:center;gap:5px;margin:4px 0 0}
+.v31-onboard-panel .intro-features span{padding:4px 7px;font-size:.58rem}
+.v31-onboard-panel .v21-art-disclaimer{display:none}
+.v31-onboard-panel .fine-print{font-size:.58rem;margin:5px auto 10px!important;line-height:1.2}
+.v31-onboard-panel .start-card{background:transparent;border:0;box-shadow:none;border-top:1px solid #7494a45a;border-radius:0;padding:12px 0 0;margin:0}
+.v31-onboard-panel .start-card:before{display:none}
+.v31-onboard-panel .card-kicker{font-size:.61rem;margin-bottom:4px;text-align:center}
+.v31-onboard-panel .start-card h2{font-size:clamp(1.02rem,3.4vw,1.25rem);text-align:center;line-height:1.2;margin:0 0 4px}
+.v31-onboard-panel .start-card>.muted{font-size:.69rem;margin:0 0 9px;text-align:center;line-height:1.3}
+.v31-onboard-panel #career-form label{font-size:.72rem;margin:8px 0 3px!important}
+.v31-onboard-panel #career-form input,.v31-onboard-panel #career-form select{min-height:39px;padding:7px 11px}
+.v31-onboard-panel #career-form .field-hint{font-size:.62rem;line-height:1.35;margin:7px 0}
+.v31-onboard-panel #career-form .btn-big{margin-top:10px;min-height:42px;padding:9px 14px}
+.v31-onboard-panel #start-import{margin:4px auto 0;padding:6px 8px;font-size:.71rem}
+.v31-onboard-panel #start-message{margin-top:3px;font-size:.67rem;min-height:0}
+@media(max-height:700px){.v31-onboard-panel{padding:12px}.v31-onboard-panel .intro-features,.v31-onboard-panel .intro-desc{display:none}}
+/* Controles sobre o mapa em regiões distintas, sem camada lateral ou banner extenso. */
+body.v31-immersive .map-panel>.v221-city-switch-trigger,
+body.v31-immersive.v221-tiangua-scene .map-panel>.v221-city-switch-trigger{
+ left:calc(10px + env(safe-area-inset-left))!important;top:calc(84px + env(safe-area-inset-top))!important;
+ max-width:170px!important;min-height:40px!important;padding:6px 10px!important;
+}
+body.v31-immersive .v221-city-info-trigger{
+ left:calc(10px + env(safe-area-inset-left))!important;top:calc(143px + env(safe-area-inset-top))!important;
+ width:auto!important;min-height:38px!important;
+}
+body.v31-immersive .v22-lot-nav{
+ left:calc(10px + env(safe-area-inset-left))!important;
+ bottom:calc(94px + env(safe-area-inset-bottom))!important;
+ max-width:190px!important;
+}
+/* Centros de comando: cabeçalho, KPIs, navegação horizontal e conteúdo de jogo. */
+body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden]){
+ padding:18px 22px 28px!important;background:linear-gradient(155deg,#0b2941f8,#081e32f9)!important;
+ border:1px solid #d5b177a8!important;border-radius:20px!important;
+}
+body.v31-overlay-open .v31-command-header{
+ display:block;clear:both;margin:0 0 10px;padding:0 0 13px;
+ border-bottom:1px solid #7398a55b;
+}
+.v31-command-kicker{font-size:.62rem;font-weight:800;letter-spacing:.13em;color:#f3c57f}
+.v31-command-title h2{font-size:clamp(1.35rem,3vw,1.95rem);font-weight:900;line-height:1.1;margin:5px 0;color:#fff4d8}
+.v31-command-title p{font-size:.75rem;line-height:1.3;color:#adcad8;margin:0 0 13px}
+.v31-command-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.v31-command-kpi{
+ position:relative;min-width:0;display:flex;flex-direction:column;gap:8px;
+ padding:14px 13px;border:1px solid #638aa077;border-radius:12px;
+ background:linear-gradient(145deg,rgba(25,63,83,.86),rgba(9,38,58,.86));
+ box-shadow:inset 0 1px #ffffff13,0 6px 16px #0003;
+}
+.v31-command-kpi:before{content:"";width:20px;height:2px;background:#e7b66d;border-radius:10px}
+.v31-command-kpi small{font-size:.61rem;font-weight:800;letter-spacing:.08em;color:#b3ccda;line-height:1.3}
+.v31-command-kpi strong{font-size:clamp(1.03rem,2vw,1.42rem);font-weight:900;color:#f8e6b8;white-space:normal;overflow-wrap:anywhere;font-variant-numeric:tabular-nums;letter-spacing:-.04em}
+.v31-command-kpi.v31-low-stock{border-color:#e6a271;background:linear-gradient(155deg,#4a2c2c,#243243)}
+.v31-command-kpi.v31-low-stock strong{color:#ffc79b}
+body.v31-overlay-open .v23-subnav{
+ position:sticky;top:52px;z-index:370;display:flex!important;flex-wrap:nowrap;align-items:center;
+ overflow-x:auto;overscroll-behavior-x:contain;gap:6px;padding:9px 5px 10px;margin:0 0 16px;
+ background:#0b293ff6;border-bottom:1px solid #66869660;
+ scrollbar-width:thin;border-radius:0 0 11px 11px;
+}
+body.v31-overlay-open .v23-subnav .v23-subtab{
+ width:auto;flex:0 0 auto;min-height:39px;padding:8px 13px;border:1px solid #436b83!important;
+ background:#143a52!important;border-radius:9px!important;color:#bcd4e2!important;
+ font-size:.75rem;font-weight:800;white-space:nowrap;box-shadow:none!important;
+}
+body.v31-overlay-open .v23-subnav .v23-subtab[aria-selected="true"]{
+ background:linear-gradient(135deg,#d3a04b,#f0cb81)!important;border-color:#f3dca3!important;
+ color:#152a3c!important;box-shadow:0 2px 13px #ddb66a44!important;
+}
+body.v31-overlay-open .view-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:7px 10px;margin:0 0 11px;border-radius:9px;background:#143a4c91;border:1px solid #56768b64;color:#cde0ec;font-size:.69rem}
+body.v31-overlay-open .panel{background:linear-gradient(155deg,rgba(17,49,70,.88),rgba(11,33,52,.88));border:1px solid #426984a0;border-radius:13px;padding:clamp(12px,1.7vw,19px);box-shadow:0 8px 24px #0003}
+body.v31-overlay-open .panel-heading h3{font-size:1rem;color:#f3e6cc}
+body.v31-overlay-open :is(.company-kpi-grid,.group-highlights,.regional-indicators){gap:9px}
+body.v31-overlay-open :is(.company-metric,.group-highlights>div,.regional-indicators>div){
+ min-width:0;background:#0a2b42;border:1px solid #4b7b9188;border-radius:10px;padding:12px;
+}
+body.v31-overlay-open :is(.company-metric,.group-highlights>div) strong{font-size:clamp(1rem,2vw,1.45rem);font-weight:850;color:#f6d69a;overflow-wrap:anywhere}
+body.v31-overlay-open :is(.company-metric,.group-highlights>div) small{font-size:.67rem;color:#b7d2df}
+body.v31-overlay-open .table-scroll{max-width:100%;overflow-x:auto;border-radius:11px;border:1px solid #456c8291;background:#0b2b41}
+body.v31-overlay-open .catalog-table{width:100%;border-collapse:separate;border-spacing:0;font-size:.75rem;line-height:1.45}
+body.v31-overlay-open .catalog-table th{padding:11px 13px;background:#1b4761;color:#e9d7b2;font-size:.67rem;letter-spacing:.045em;white-space:nowrap;border-bottom:1px solid #5c7f93}
+body.v31-overlay-open .catalog-table td{padding:12px 13px;border-bottom:1px solid #446a7c55;color:#e1eaf1;vertical-align:middle}
+body.v31-overlay-open .catalog-table tbody tr:nth-child(even) td{background:#13364d95}
+body.v31-overlay-open .catalog-table tbody tr:hover td{background:#23516b9e}
+.v31-status-badge{display:inline-flex;align-items:center;gap:5px;min-height:24px;padding:3px 8px;border-radius:100px;border:1px solid #59798b;background:#1a3e54;color:#d6e8f0;font-size:.69rem;font-weight:800;white-space:nowrap}
+.v31-status-done{border-color:#5cb48b;background:#174a3b;color:#b7efd0}
+.v31-status-pending{border-color:#d8ad6c;background:#543e24;color:#ffe1a9}
+.v31-status-transit{border-color:#5aa7d0;background:#174863;color:#c5ebff}
+.v31-status-quiet{border-color:#6c8390;background:#283b48;color:#bacbd6}
+body.v31-overlay-open :is(.panel input,.panel select,.panel textarea){background:#09263d;color:#ecf5fa;border:1px solid #587e92;border-radius:9px;min-height:40px}
+body.v31-overlay-open :is(.btn,.panel button){border-radius:9px;min-height:39px}
+body.v31-overlay-open .v31-overlay-close{
+ position:sticky!important;top:2px!important;float:right!important;left:auto!important;
+ z-index:399!important;display:flex!important;align-items:center;justify-content:center;
+ padding:0!important;margin:-5px -6px 4px 8px!important;width:44px!important;min-width:44px!important;height:44px!important;
+ border:1px solid #e6c88f!important;border-radius:11px!important;
+ background:#eccc8e!important;color:#10293b!important;font-size:1.34rem!important;
+ box-shadow:0 5px 17px #0006!important;
+}
+@media(max-width:700px){
+ .v31-onboard-panel{width:calc(100vw - 16px);max-height:calc(100dvh - 12px)}
+ body.v31-immersive .map-panel>.v221-city-switch-trigger,
+ body.v31-immersive.v221-tiangua-scene .map-panel>.v221-city-switch-trigger{
+  top:calc(112px + env(safe-area-inset-top))!important;left:8px!important;width:146px!important;max-width:146px!important;
+ }
+ body.v31-immersive .v221-city-info-trigger{top:calc(171px + env(safe-area-inset-top))!important;left:8px!important}
+ body.v31-immersive .v31-camera{top:calc(168px + env(safe-area-inset-top))!important;right:8px!important}
+ body.v31-immersive .v22-lot-nav{left:8px!important;bottom:calc(83px + env(safe-area-inset-bottom))!important;max-width:178px!important}
+ .v31-command-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ .v31-command-kpi{padding:9px 10px;gap:4px}
+ .v31-command-kpi strong{font-size:.95rem}
+ body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden]){padding:10px 12px 24px!important}
+ body.v31-overlay-open .v23-subnav{top:43px}
+ body.v31-overlay-open .catalog-table{font-size:.71rem}
+ body.v31-overlay-open .catalog-table td,body.v31-overlay-open .catalog-table th{padding:9px 10px}
+}
+
   </style>
 </head>
 <body>
@@ -953,6 +1099,7 @@ body.v31-immersive .v221-time-menu:not([hidden]){position:fixed!important;top:ca
   </svg>
   <div class="onboarding" id="onboarding">
     <div class="onboarding-art" aria-hidden="true"><div class="v21-horizon"></div></div>
+    <div class="v31-onboard-panel">
     <div class="intro-copy">
       <p class="eyebrow v21-hero-eyebrow"><span class="eyebrow-dot"></span> EDIÇÃO 2 · CONSTRUA SUA HISTÓRIA</p>
       <div class="v21-hero-brand"><div class="v21-hero-mark" aria-hidden="true"><svg viewBox="0 0 80 80"><use href="#city-brand-glyph"/></svg></div>
@@ -981,20 +1128,9 @@ body.v31-immersive .v221-time-menu:not([hidden]){position:fixed!important;top:ca
       <button class="text-action" id="start-import" type="button">Já tenho um save JSON · Importar</button>
       <p id="start-message" class="status-text" aria-live="polite"></p>
     </section>
+    </div>
   </div>
   <div id="game-shell" class="game-shell" hidden>
-    <aside class="sidebar">
-      <div class="sidebar-brand"><div class="brand-mark v21-sidebar-mark" aria-hidden="true"><svg viewBox="0 0 80 80"><use href="#city-brand-glyph"/></svg></div><div><strong>CIDADE DOS<br><span>NEGÓCIOS</span></strong><small>EDIÇÃO 2 · SIMULADOR</small></div></div>
-      <div class="nav-label">SEU MUNDO</div>
-      <nav class="nav-items nav-primary" aria-label="Navegação principal">
-        <button type="button" data-tab="cidade" class="nav-item active" aria-current="page"><span aria-hidden="true">▦</span> Cidade</button>
-        <button type="button" data-tab="empresa" class="nav-item"><span aria-hidden="true">▣</span> Empresas</button>
-        <button type="button" data-tab="mercado" class="nav-item"><span aria-hidden="true">⇅</span> Mercado</button>
-        <button type="button" data-tab="administrativo" class="nav-item"><span aria-hidden="true">▥</span> Administrativo</button>
-      </nav>
-      <div class="sidebar-tools"><div class="nav-label">FERRAMENTAS</div><button type="button" data-tab="sistema" class="nav-item utility-item"><span aria-hidden="true">⚙</span> Configurações</button></div>
-      <div class="sidebar-bottom"><span class="online-dot"></span> EXECUÇÃO LOCAL <small>100% sem servidor</small></div>
-    </aside>
     <div class="main-pane">
       <header class="topbar"><div class="v221-top-brand" aria-hidden="true"><span class="v221-brand-symbol"><svg viewBox="0 0 80 80" aria-hidden="true" width="48" height="48"><use href="#city-brand-glyph"/></svg></span><span><strong>CIDADE DOS NEGÓCIOS</strong><small>EDIÇÃO 2 · DISTRITO COMERCIAL</small></span></div>
         <div><div class="overline">MUNDO ATIVO</div><h2 id="top-city">Tianguá <span>· CE</span></h2></div>
@@ -1007,7 +1143,6 @@ body.v31-immersive .v221-time-menu:not([hidden]){position:fixed!important;top:ca
           <select id="speed-select" aria-label="Velocidade da simulação"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select>
         </div>
       </header>
-      <button type="button" id="v31-classic-return" hidden>◈ Voltar à cidade imersiva</button>
       <div class="world-warning" id="other-city-warning" hidden>Cidade sem unidade da rede. Você pode abrir uma filial em um lote disponível.</div>
       <details class="world-warning legal-warning v21-legal-note"><summary>ⓘ SIMULAÇÃO EDUCATIVA <span>Dados econômicos simulados e tributos não oficiais · ver limites</span></summary><p>Indicadores econômicos do jogo são fictícios, salvo população e PIB identificados como oficiais. Cenários tributários não são apuração legal. Regras sem cobertura não representam isenção nem imposto zero.</p></details>
       <main class="content">
@@ -1035,7 +1170,6 @@ body.v31-immersive .v221-time-menu:not([hidden]){position:fixed!important;top:ca
             <button type="button" id="v31-next-day" aria-label="Avançar um dia de simulação">+1 dia</button>
             <button type="button" id="v31-hud-turns" aria-expanded="false" aria-controls="v221-time-menu" title="Avançar turnos">⏭ Turnos</button>
             <label for="v31-hud-speed">Ritmo</label><select id="v31-hud-speed" aria-label="Velocidade do tempo"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select>
-            <button type="button" id="v31-classic-switch">Modo clássico</button>
           </div>
           <p class="v221-trust-ribbon" role="note"><span aria-hidden="true" class="v221-trust-dot"></span><strong>SIMULAÇÃO EDUCATIVA</strong><span>Valores financeiros fictícios do jogo · operações locais · não são saldos reais</span></p>
           <div class="v221-popover v221-time-menu" id="v221-time-menu" hidden><strong>Calendário e ritmo</strong><p>Controles do motor real.</p><div class="v221-time-actions"><button type="button" data-v221-time="play">▶ / ❚❚</button><button type="button" data-v221-time="1">+ 1 dia</button><button type="button" data-v221-time="7">+ 7 dias</button><button type="button" data-v221-time="30">+ 30 dias</button></div><label for="v221-time-speed">Velocidade</label><select id="v221-time-speed"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select></div>
@@ -1095,9 +1229,12 @@ body.v31-immersive .v221-time-menu:not([hidden]){position:fixed!important;top:ca
             <button type="button" data-v31-open="administrativo:contabilidade"><span aria-hidden="true">▤</span>Relatórios</button>
             <button type="button" data-v31-open="sistema"><span aria-hidden="true">⚙</span>Configurações</button>
           </nav>
-          <button type="button" class="v31-overlay-close" id="v31-overlay-close" aria-label="Fechar painel e voltar ao mapa" hidden>✕ Fechar painel</button>
+          <button type="button" class="v31-overlay-close" id="v31-overlay-close" aria-label="Fechar janela e voltar à cidade" title="Fechar janela" hidden>✕</button>
         </section>
-        <section data-view="empresa" class="view" hidden><nav class="v23-subnav" role="tablist" aria-label="Seções de Empresas"><button type="button" role="tab" class="v23-subtab active" data-section-tab="empresa:dashboard" id="v23-tab-empresa-dashboard" aria-controls="v23-pane-empresa-dashboard" aria-selected="true" tabindex="0">Dashboard</button><button type="button" role="tab" class="v23-subtab" data-section-tab="empresa:minhas-empresas" id="v23-tab-empresa-minhas-empresas" aria-controls="v23-pane-empresa-minhas-empresas" aria-selected="false" tabindex="-1">Minhas Empresas</button><button type="button" role="tab" class="v23-subtab" data-section-tab="empresa:analises" id="v23-tab-empresa-analises" aria-controls="v23-pane-empresa-analises" aria-selected="false" tabindex="-1">Análises</button><button type="button" role="tab" class="v23-subtab" data-section-tab="empresa:comparativos" id="v23-tab-empresa-comparativos" aria-controls="v23-pane-empresa-comparativos" aria-selected="false" tabindex="-1">Comparativos</button></nav><div class="v23-subpane" id="v23-pane-empresa-dashboard" role="tabpanel" data-section-pane="empresa:dashboard" aria-labelledby="v23-tab-empresa-dashboard"><article class="panel group-panel"><div class="panel-heading"><h3>Visão consolidada da rede</h3><span class="tag-soft" id="v23a-dashboard-count">0/5 estabelecimentos</span></div><p class="muted">Indicadores reais da carreira, derivados dos lançamentos já confirmados. O caixa é compartilhado entre as unidades.</p><div class="group-highlights"><div><small>Caixa compartilhado</small><strong id="group-available-cash">—</strong></div><div><small>Resultado operacional consolidado</small><strong id="group-operating-result">—</strong></div></div><div class="company-kpi-grid" aria-label="Indicadores do grupo">
+        <section data-view="empresa" class="view" hidden><header class="v31-command-header" data-v31-header="empresa">
+   <div class="v31-command-title"><div class="v31-command-kicker">◈ CENTRO DE COMANDO · SIMULAÇÃO</div><h2 id="v31-modal-title-empresa">Empresas</h2><p id="v31-modal-subtitle-empresa">Rede de negócios, unidades e desempenho</p></div>
+   <div class="v31-command-kpis" aria-label="Indicadores confirmados da carreira"><div class="v31-command-kpi" data-v31-kpi="empresa-0"><small>Indicador</small><strong>—</strong></div><div class="v31-command-kpi" data-v31-kpi="empresa-1"><small>Indicador</small><strong>—</strong></div><div class="v31-command-kpi" data-v31-kpi="empresa-2"><small>Indicador</small><strong>—</strong></div><div class="v31-command-kpi" data-v31-kpi="empresa-3"><small>Indicador</small><strong>—</strong></div></div>
+  </header><nav class="v23-subnav" role="tablist" aria-label="Seções de Empresas"><button type="button" role="tab" class="v23-subtab active" data-section-tab="empresa:dashboard" id="v23-tab-empresa-dashboard" aria-controls="v23-pane-empresa-dashboard" aria-selected="true" tabindex="0">Dashboard</button><button type="button" role="tab" class="v23-subtab" data-section-tab="empresa:minhas-empresas" id="v23-tab-empresa-minhas-empresas" aria-controls="v23-pane-empresa-minhas-empresas" aria-selected="false" tabindex="-1">Minhas Empresas</button><button type="button" role="tab" class="v23-subtab" data-section-tab="empresa:analises" id="v23-tab-empresa-analises" aria-controls="v23-pane-empresa-analises" aria-selected="false" tabindex="-1">Análises</button><button type="button" role="tab" class="v23-subtab" data-section-tab="empresa:comparativos" id="v23-tab-empresa-comparativos" aria-controls="v23-pane-empresa-comparativos" aria-selected="false" tabindex="-1">Comparativos</button></nav><div class="v23-subpane" id="v23-pane-empresa-dashboard" role="tabpanel" data-section-pane="empresa:dashboard" aria-labelledby="v23-tab-empresa-dashboard"><article class="panel group-panel"><div class="panel-heading"><h3>Visão consolidada da rede</h3><span class="tag-soft" id="v23a-dashboard-count">0/5 estabelecimentos</span></div><p class="muted">Indicadores reais da carreira, derivados dos lançamentos já confirmados. O caixa é compartilhado entre as unidades.</p><div class="group-highlights"><div><small>Caixa compartilhado</small><strong id="group-available-cash">—</strong></div><div><small>Resultado operacional consolidado</small><strong id="group-operating-result">—</strong></div></div><div class="company-kpi-grid" aria-label="Indicadores do grupo">
   <div class="company-metric"><small>Receita acumulada</small><strong id="company-dashboard-revenue">—</strong></div>
   <div class="company-metric"><small>Margem bruta acumulada</small><strong id="company-dashboard-margin">—</strong></div>
   <div class="company-metric"><small>Resultado operacional (antes dos tributos)</small><strong id="company-dashboard-operating">—</strong></div>
@@ -1188,7 +1325,10 @@ body.v31-immersive .v221-time-menu:not([hidden]){position:fixed!important;top:ca
     <p class="field-hint">Valores de receita e resultado vêm dos lançamentos por unidade. Consolidação e tributos permanecem no Administrativo. A classificação não cria rankings econômicos fora do recorte escolhido.</p>
   </article>
 </div></section>
-<section data-view="mercado" class="view" hidden><div class="view-toolbar"><span>CENTRAL OPERACIONAL</span><span class="toolbar-hint">Ações e relatórios da unidade ativa.</span></div><details class="panel" id="rival-panel" open>
+<section data-view="mercado" class="view" hidden><header class="v31-command-header" data-v31-header="mercado">
+   <div class="v31-command-title"><div class="v31-command-kicker">◈ CENTRO DE COMANDO · SIMULAÇÃO</div><h2 id="v31-modal-title-mercado">Mercado</h2><p id="v31-modal-subtitle-mercado">Compras, estoque, vendas e concorrência</p></div>
+   <div class="v31-command-kpis" aria-label="Indicadores confirmados da carreira"><div class="v31-command-kpi" data-v31-kpi="mercado-0"><small>Indicador</small><strong>—</strong></div><div class="v31-command-kpi" data-v31-kpi="mercado-1"><small>Indicador</small><strong>—</strong></div><div class="v31-command-kpi" data-v31-kpi="mercado-2"><small>Indicador</small><strong>—</strong></div><div class="v31-command-kpi" data-v31-kpi="mercado-3"><small>Indicador</small><strong>—</strong></div></div>
+  </header><div class="view-toolbar"><span>CENTRAL OPERACIONAL</span><span class="toolbar-hint">Ações e relatórios da unidade ativa.</span></div><details class="panel" id="rival-panel" open>
 <summary><strong>⚔ Economia viva · V2.6</strong> — empresas rivais e acontecimentos locais</summary>
 <div class="panel-heading"><h3>Concorrência por cidade e setor</h3><span class="tag-soft" id="rival-status">Aguardando</span></div>
 <p class="field-hint">Rivais simulados disputam o mesmo mercado finito com as suas lojas. A estratégia, os eventos e os custos são fictícios; não representam empresas reais.</p>
@@ -1284,7 +1424,10 @@ body.v31-immersive .v221-time-menu:not([hidden]){position:fixed!important;top:ca
             <div class="table-scroll"><table class="catalog-table"><thead><tr><th>Produto</th><th>Estoque</th><th>Custo un.</th><th>Venda un.</th><th>Vendido*</th><th>Receita*</th><th>CMV*</th></tr></thead><tbody id="catalog-rows"></tbody></table></div>
             <p class="field-hint">* Desempenho por produto registrado a partir desta edição. Vendas antigas continuam preservadas no total contábil, sem distribuição fictícia entre SKUs.</p>
           </article></div></section>
-<section data-view="administrativo" class="view" hidden><div class="view-toolbar"><span>DEPARTAMENTOS ADMINISTRATIVOS</span><span class="toolbar-hint">Gestão financeira, contábil e fiscal da rede.</span></div><nav class="v23-subnav" role="tablist" aria-label="Departamentos administrativos"><button type="button" role="tab" class="v23-subtab active" data-section-tab="administrativo:financas" id="v23-tab-administrativo-financas" aria-controls="v23-pane-administrativo-financas" aria-selected="true" tabindex="0">Finanças</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:logistica" id="v23-tab-administrativo-logistica" aria-controls="v23-pane-administrativo-logistica" aria-selected="false" tabindex="-1">Logística</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:rh-dp" id="v23-tab-administrativo-rh-dp" aria-controls="v23-pane-administrativo-rh-dp" aria-selected="false" tabindex="-1">RH / DP</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:contabilidade" id="v23-tab-administrativo-contabilidade" aria-controls="v23-pane-administrativo-contabilidade" aria-selected="false" tabindex="-1">Contabilidade</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:fiscal" id="v23-tab-administrativo-fiscal" aria-controls="v23-pane-administrativo-fiscal" aria-selected="false" tabindex="-1">Fiscal</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:paralegal" id="v23-tab-administrativo-paralegal" aria-controls="v23-pane-administrativo-paralegal" aria-selected="false" tabindex="-1">Paralegal</button></nav><div class="admin-shared-filters" id="admin-shared-filters" aria-label="Filtros de Finanças e Contabilidade"><article class="panel finance-filters">
+<section data-view="administrativo" class="view" hidden><header class="v31-command-header" data-v31-header="administrativo">
+   <div class="v31-command-title"><div class="v31-command-kicker">◈ CENTRO DE COMANDO · SIMULAÇÃO</div><h2 id="v31-modal-title-administrativo">Administração</h2><p id="v31-modal-subtitle-administrativo">Finanças, pessoas, impostos e operações</p></div>
+   <div class="v31-command-kpis" aria-label="Indicadores confirmados da carreira"><div class="v31-command-kpi" data-v31-kpi="administrativo-0"><small>Indicador</small><strong>—</strong></div><div class="v31-command-kpi" data-v31-kpi="administrativo-1"><small>Indicador</small><strong>—</strong></div><div class="v31-command-kpi" data-v31-kpi="administrativo-2"><small>Indicador</small><strong>—</strong></div><div class="v31-command-kpi" data-v31-kpi="administrativo-3"><small>Indicador</small><strong>—</strong></div></div>
+  </header><div class="view-toolbar"><span>DEPARTAMENTOS ADMINISTRATIVOS</span><span class="toolbar-hint">Gestão financeira, contábil e fiscal da rede.</span></div><nav class="v23-subnav" role="tablist" aria-label="Departamentos administrativos"><button type="button" role="tab" class="v23-subtab active" data-section-tab="administrativo:financas" id="v23-tab-administrativo-financas" aria-controls="v23-pane-administrativo-financas" aria-selected="true" tabindex="0">Finanças</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:logistica" id="v23-tab-administrativo-logistica" aria-controls="v23-pane-administrativo-logistica" aria-selected="false" tabindex="-1">Logística</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:rh-dp" id="v23-tab-administrativo-rh-dp" aria-controls="v23-pane-administrativo-rh-dp" aria-selected="false" tabindex="-1">RH / DP</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:contabilidade" id="v23-tab-administrativo-contabilidade" aria-controls="v23-pane-administrativo-contabilidade" aria-selected="false" tabindex="-1">Contabilidade</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:fiscal" id="v23-tab-administrativo-fiscal" aria-controls="v23-pane-administrativo-fiscal" aria-selected="false" tabindex="-1">Fiscal</button><button type="button" role="tab" class="v23-subtab" data-section-tab="administrativo:paralegal" id="v23-tab-administrativo-paralegal" aria-controls="v23-pane-administrativo-paralegal" aria-selected="false" tabindex="-1">Paralegal</button></nav><div class="admin-shared-filters" id="admin-shared-filters" aria-label="Filtros de Finanças e Contabilidade"><article class="panel finance-filters">
             <div class="panel-heading"><h3>Consulta por período · Finanças e Contabilidade</h3><span class="tag-soft">M11 · NÃO ALTERA A CARREIRA</span></div>
             <div class="filter-fields">
               <div><label for="finance-scope">Estabelecimento ou grupo</label><select id="finance-scope"><option value="all">Grupo consolidado</option></select></div>
@@ -1549,7 +1692,10 @@ body.v31-immersive .v221-time-menu:not([hidden]){position:fixed!important;top:ca
     <div id="paralegal-unit-list" aria-live="polite"><p class="muted">Inaugure uma unidade para começar.</p></div>
   </article>
 </div></section>
-<section data-view="sistema" class="view" hidden>
+<section data-view="sistema" class="view" hidden><header class="v31-command-header" data-v31-header="sistema">
+   <div class="v31-command-title"><div class="v31-command-kicker">◈ CENTRO DE COMANDO · SIMULAÇÃO</div><h2 id="v31-modal-title-sistema">Central do jogo</h2><p id="v31-modal-subtitle-sistema">Saves, recuperação e diagnósticos</p></div>
+   <div class="v31-command-kpis" aria-label="Indicadores confirmados da carreira"><div class="v31-command-kpi" data-v31-kpi="sistema-0"><small>Indicador</small><strong>—</strong></div><div class="v31-command-kpi" data-v31-kpi="sistema-1"><small>Indicador</small><strong>—</strong></div><div class="v31-command-kpi" data-v31-kpi="sistema-2"><small>Indicador</small><strong>—</strong></div><div class="v31-command-kpi" data-v31-kpi="sistema-3"><small>Indicador</small><strong>—</strong></div></div>
+  </header>
           <div class="dashboard-grid"><article class="panel"><div class="panel-heading"><h3>Salvamento e recuperação</h3><span class="tag-soft">M05</span></div><p class="muted">O backup JSON é o método portátil recomendado, especialmente ao atualizar o HTML no Windows.</p><div class="button-stack"><button class="btn btn-primary" type="button" id="export-btn">Exportar minha carreira (.json)</button><button class="btn btn-outline" type="button" id="export-compact-btn">Exportar backup compacto V2.9 (.json)</button><button class="btn btn-outline" type="button" id="import-btn">Importar carreira (.json)</button><button class="btn btn-outline" type="button" id="restore-prior-save-btn">Recuperar cópia anterior do navegador</button><button class="btn btn-outline" type="button" id="new-career-btn">Começar uma nova carreira</button></div><p class="field-hint" id="safety-backup-status">Verificando cópia anterior…</p><p class="field-hint" id="autosave-label">Verificando salvamento local…</p></article>
           <article class="panel"><div class="panel-heading"><h3>Diagnóstico e integridade</h3><span class="tag-soft">M06</span></div><dl class="detail-list" id="diagnostic-details"></dl><button class="btn btn-outline spaced" id="run-diagnostic" type="button">Executar verificação</button><p class="field-hint" id="diagnostic-result">—</p></article></div>
           <article class="panel spaced" aria-labelledby="qa-v290-title">
@@ -6398,10 +6544,12 @@ function bindBalancePlan(){
        (statementView==='summary'||statementView==='cash'))statementView='dre';
     const sharedFilters=document.querySelector('#admin-shared-filters');
     if(sharedFilters)sharedFilters.hidden=!(root==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo));
+    // City-first é a única navegação; toda área não-cidade vira janela sobre o mapa.
+    if(state&&root!=='cidade'&&immersiveOpen!==root){v31OpenPanel(root,section);return;}
     tab=root;
     if(root==='cidade')immersiveOpen=null;
     document.body.classList.toggle('v221-city-mode',!!state?.player?.cityId&&(root==='cidade'||!!immersiveOpen));
-    document.body.classList.toggle('v31-overlay-open',!!immersiveOpen&&!v31ClassicMode);
+    document.body.classList.toggle('v31-overlay-open',!!immersiveOpen);
     document.querySelectorAll('.view[data-view]').forEach(el=>{const chosen=el.dataset.view===root||(!!immersiveOpen&&el.dataset.view==='cidade');el.hidden=!chosen;el.classList.toggle('active',chosen);});
     document.querySelectorAll('.nav-primary [data-tab]').forEach(el=>{const chosen=el.dataset.tab===root;el.classList.toggle('active',chosen);if(chosen)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');});
     document.querySelectorAll('[data-section-pane]').forEach(el=>{const [area,sub]=el.dataset.sectionPane.split(':');el.hidden=!(area===root&&activeSection[area]===sub);});
@@ -6445,7 +6593,7 @@ function bindBalancePlan(){
   }
   function eventsHTML(events){if(!events.length)return '<p class="muted">Nenhum evento registrado ainda.</p>';return events.map(e=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(e.text)}</p><small>${escape(e.date)} · ${escape(e.type)}</small></div></div>`).join('');}
     // V3.1: navegacao e camera sao apenas UI; o motor permanece a unica autoridade.
-  let immersiveOpen=null,v31ClassicMode=false,v31CameraCity=null,v31Camera={zoom:1,x:0,y:0};
+  let immersiveOpen=null,v31CameraCity=null,v31Camera={zoom:1,x:0,y:0};
   let v31ReturnFocus=null,v31LastRevision=null,v31CameraCenterPending=false;
   const v31CameraStore='cidade-v31-camera-ui-v1';
   function v31CameraLoad(cityId){
@@ -6501,7 +6649,6 @@ function bindBalancePlan(){
   }
   function v31OpenPanel(root,section=null,source=null){
     if(!state)return;
-    if(v31ClassicMode){goto(root,section);return;}
     if(!['empresa','mercado','administrativo','sistema'].includes(root))return;
     if(!immersiveOpen)v31ReturnFocus=source||document.activeElement;
     immersiveOpen=root;goto(root,section);
@@ -6517,15 +6664,12 @@ function bindBalancePlan(){
   }
   function v31Render(){
     if(!state?.player?.cityId)return;
-    const immersive=!v31ClassicMode&&(tab==='cidade'||!!immersiveOpen);
+    const immersive=true;
     document.body.classList.toggle('v31-immersive',immersive);
     document.body.classList.toggle('v31-overlay-open',immersive&&!!immersiveOpen);
-    document.body.classList.toggle('v31-classic-mode',v31ClassicMode);
     $('v31-dock').hidden=!immersive;
-    $('v31-classic-return').hidden=!v31ClassicMode;
-    $('v31-backdrop').hidden=!immersiveOpen||v31ClassicMode;
-    $('v31-overlay-close').hidden=!immersiveOpen||v31ClassicMode;
-    $('v31-classic-switch').textContent=v31ClassicMode?'Ativar interface imersiva':'Interface clássica';
+    $('v31-backdrop').hidden=!immersiveOpen;
+    $('v31-overlay-close').hidden=!immersiveOpen;
     document.body.classList.toggle('v31-lot-selected',!!inspectorOpen);
     setText('v31-hud-cash',$('v221-hud-cash').textContent);
     setText('v31-hud-date',$('v221-date-label').textContent);
@@ -6541,6 +6685,7 @@ function bindBalancePlan(){
     $('v31-lot-manage').textContent=owner?'Gerenciar empresa':'Abrir empresa';
     setText('v31-hud-pause',timer?'Ⅱ Pausar':'▶ Jogar');
     $('v31-hud-speed').value=String(speed);
+    v31RenderCommandPanel();
     const key=String(state.worldId)+'/'+state.revision+'/'+viewCityId;
     if(v31LastRevision!==key){
       v31LastRevision=key;
@@ -6553,8 +6698,66 @@ function bindBalancePlan(){
       setText('v31-alert-count',recent.events.length+' eventos recentes');
     }
   }
+  function v31RenderCommandPanel(){
+    if(!immersiveOpen)return;
+    const root=immersiveOpen;
+    const surface=document.querySelector('.view[data-view="'+root+'"]');
+    if(!surface)return;
+    const info=Core.overview(state), units=Core.businesses(state),current=business();
+    const cash=Core.money(info.cash),revenue=Core.money(info.revenue),profit=Core.money(info.profit);
+    const stock=String(info.stock),unitStock=String(current?.stockUnits??0);
+    let title,sub,metrics;
+    if(root==='empresa'){
+      title='Empresas';sub='Sua rede e seus estabelecimentos';
+      metrics=[['CAIXA ÚNICO',cash],['FATURAMENTO',revenue],['UNIDADES',units.length+'/5'],['RESULTADO',profit]];
+    }else if(root==='mercado'){
+      title='Mercado';sub='Compras, vendas e abastecimento';
+      metrics=[['ESTOQUE DO GRUPO',stock],['ESTOQUE DA UNIDADE',unitStock],['FATURAMENTO',revenue],['CAIXA PARA COMPRAS',cash]];
+    }else if(root==='administrativo'){
+      const sections={
+        financas:['Finanças','Tesouraria e compromissos'],
+        logistica:['Logística','Abastecimento e transferências'],
+        'rh-dp':['Pessoas e RH','Equipe, vínculos e folha'],
+        contabilidade:['Relatórios','DRE, balanço e visão patrimonial'],
+        fiscal:['Fiscal','Obrigações e cenários tributários simulados'],
+        paralegal:['Paralegal','Registros e documentação']
+      };
+      [title,sub]=sections[activeSection.administrativo]||['Administração','Gestão dos departamentos'];
+      metrics=[['CAIXA ÚNICO',cash],['FATURAMENTO',revenue],['RESULTADO',profit],['ESTOQUE TOTAL',stock]];
+    }else{
+      title='Configurações e Saves';sub='Proteja e recupere sua carreira local';
+      metrics=[['VERSÃO',Core.VERSION],['SCHEMA',String(state.schemaVersion)],['REVISÃO',String(state.revision)],['UNIDADES',String(units.length)]];
+    }
+    setText('v31-modal-title-'+root,title);
+    setText('v31-modal-subtitle-'+root,sub);
+    for(let i=0;i<metrics.length;i++){
+      const tile=surface.querySelector('[data-v31-kpi="'+root+'-'+i+'"]');
+      tile.querySelector('small').textContent=metrics[i][0];
+      tile.querySelector('strong').textContent=metrics[i][1];
+      tile.classList.toggle('v31-low-stock',root==='mercado'&&i===1&&current?.stockUnits===0);
+    }
+    // Status gerados pela UI original são apenas realçados; conteúdo e valor não mudam.
+    const status={pendente:'pending',apurado:'done','em trânsito':'transit',recebido:'done',
+      pago:'done',quitado:'done',ativo:'done',concluído:'done',cancelado:'quiet',
+      aguardando:'pending'};
+    for(const cell of [...surface.querySelectorAll('.catalog-table tbody td')].slice(0,180)){
+      if(cell.children.length)continue;
+      const value=cell.textContent.trim(),kind=status[value.toLocaleLowerCase('pt-BR')];
+      if(!kind)continue;
+      const badge=document.createElement('span');
+      badge.className='v31-status-badge v31-status-'+kind;
+      badge.textContent=value;cell.replaceChildren(badge);
+    }
+  }
   function v31Bind(){
     $('v221-inspector').appendChild($('v31-lot-quick'));
+    // Abas do departamento sempre aparecem imediatamente abaixo da faixa de KPIs.
+    for(const root of ['empresa','mercado','administrativo']){
+      const surface=document.querySelector('.view[data-view="'+root+'"]');
+      const header=surface.querySelector('[data-v31-header]');
+      const tabs=surface.querySelector(':scope > .v23-subnav');
+      if(header&&tabs)header.after(tabs);
+    }
     for(const button of document.querySelectorAll('[data-v31-open]')){
       button.addEventListener('click',()=>{
         const [root,section]=button.dataset.v31Open.split(':');
@@ -6579,13 +6782,6 @@ function bindBalancePlan(){
         if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
         else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
       }
-    });
-    $('v31-classic-switch').addEventListener('click',()=>{
-      v31ClassicMode=true;immersiveOpen=null;
-      $('v31-backdrop').hidden=true;goto('empresa');
-    });
-    $('v31-classic-return').addEventListener('click',()=>{
-      v31ClassicMode=false;immersiveOpen=null;goto('cidade');
     });
     $('v31-lot-manage').addEventListener('click',()=>$('map-open-company').click());
     $('v31-next-day').addEventListener('click',()=>$('next-day').click());
@@ -6655,7 +6851,7 @@ function bindBalancePlan(){
 
   function render(){
     const started=!!state?.player?.cityId;
-    document.body.classList.toggle('v221-city-mode',started&&(tab==='cidade'||!!immersiveOpen));
+    document.body.classList.toggle('v221-city-mode',started);
     $('onboarding').hidden=started;$('game-shell').hidden=!started;
     if(!started)return;
     const b=business(),units=Core.businesses(state),info=Core.overview(state),ownCity=Core.cityById(b?.cityId||state.player.cityId);
@@ -6918,7 +7114,7 @@ function bindBalancePlan(){
       selectedLot=Number(target.dataset.lot);inspectorOpen=true;render();updateOpenPreview();
       const owner=Core.businesses(state).find(x=>x.cityId===viewCityId&&x.lot===selectedLot);
       // Lote edificado abre sua empresa na janela; lote livre exibe as opcoes de abertura.
-      if(owner&&!v31ClassicMode){
+      if(owner){
         if(business()?.id!==owner.id)commit('EMPRESA.ATIVAR',{businessId:owner.id}).then(ok=>{if(ok)v31OpenPanel('empresa','minhas-empresas');});
         else v31OpenPanel('empresa','minhas-empresas');
       }
@@ -6931,7 +7127,7 @@ function bindBalancePlan(){
       // No modo ampliado, a faixa do mapa pode ser deslocada horizontalmente.
       if(mapZoomed){const el=$('map-canvas');el.scrollLeft=Math.max(0,(el.scrollWidth-el.clientWidth)/2);}
     });
-    $('v221-inspector-close').addEventListener('click',()=>{inspectorOpen=false;render();$('v221-hud-units').focus();});
+    $('v221-inspector-close').addEventListener('click',()=>{inspectorOpen=false;render();$('map-canvas').focus();});
     $('v221-hud-units').addEventListener('click',()=>goto('empresa'));
     $('v221-config-open').addEventListener('click',()=>goto('sistema'));
     $('v221-help-open').addEventListener('click',()=>{$('v221-help-panel').hidden=!$('v221-help-panel').hidden;});

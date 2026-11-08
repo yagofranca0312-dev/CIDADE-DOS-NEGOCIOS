@@ -40,7 +40,7 @@ O Core econômico e o `schemaVersion=9` não foram modificados. Saves externos t
 
 **Regressão do fallback:** a suíte Windows executou também os **33/33 testes anteriores de `localStorage` real**, com IndexedDB indisponibilizado **somente nesses perfis sintéticos**, preservando a detecção de `QuotaExceededError`, fail-closed, recuperação e exportação. **66/66 testes integrados de Mercado, RH, Logística, Contabilidade, Finanças e importação** e **19/19 de BAT/PowerShell isolados** permaneceram aprovados.
 
-**HTML cross-platform:** o HTML offline contendo o novo módulo possui **1.488.829 bytes** e SHA-256 **`ae41d8e0d803ed8bc37cae9f5ca0fbf332fae7332fe4eafee4d5a8cc7f6a8937`**, reproduzido byte a byte Windows/Linux nos workflows. Sem CDN ou runtime externo.
+**HTML cross-platform:** o HTML offline contendo o novo módulo possui **1.489.147 bytes** e SHA-256 **`94ffbcf234b437c362e98f29aaf8d64cb0051702c83f0c2e68ce2f05eff6a70b`**, reproduzido byte a byte Windows/Linux nos workflows. Sem CDN ou runtime externo.
 
 ## 4. O que permanece aberto
 

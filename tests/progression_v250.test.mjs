@@ -77,7 +77,7 @@ test('V2.5: interface da jornada é única e compilada sem novo menu ou script',
   for(const id of ['progression-panel','progression-goals','progression-level','progression-achievements'])
     assert.equal([...tpl.matchAll(new RegExp('id="'+id+'"','g'))].length,1);
   assert.match(app,/function renderProgression\(\)/);
-  assert.match(html,/const VERSION = '3\.0\.0-alpha\.1'/);
+  assert.match(html,/const VERSION = '3\.0\.0'/);
   assert.equal((html.match(/<script\b/g)||[]).length,1);
   const script=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(script.length,1);assert.doesNotThrow(()=>new Script(script[0][1]));

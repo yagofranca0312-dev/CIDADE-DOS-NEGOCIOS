@@ -79,5 +79,5 @@ test('RH-B: interface + HTML compilado offline sintaticamente íntegros',()=>{
  assert.match(tpl,/sem validade trabalhista ou previdenciária/);
  const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
  assert.equal(scripts.length,1);assert.doesNotThrow(()=>new Script(scripts[0][1]));
- assert.match(html,/const VERSION = '3\.0\.0-alpha\.1'/);
+ assert.match(html,/const VERSION = '3\.0\.0'/);
 });

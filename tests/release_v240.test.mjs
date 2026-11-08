@@ -21,12 +21,12 @@ test('V3.0.0: HTML único offline contém os três departamentos e versão no ca
   const template=readFileSync('src/shell/index.template.html','utf8');
   const pkg=JSON.parse(readFileSync('package.json','utf8'));
   assert.equal(pkg.version,'3.0.0');
-  assert.match(template,/<title>Cidade dos Negócios 1 · v3\.0\.0-alpha\.1<\/title>/);
+  assert.match(template,/<title>Cidade dos Negócios 1 · v3\.0\.0<\/title>/);
   for(const id of ['intro-version','build-version','footer-version'])
     assert.ok(template.includes('id="'+id+'">v3.0.0<'),id);
   for(const id of ['paralegal-unit-list','rh-hire-form','fiscal-op-unit-list'])
     assert.ok(html.includes('id="'+id+'"'),id);
-  assert.match(html,/const VERSION = '3\.0\.0-alpha\.1'/);
+  assert.match(html,/const VERSION = '3\.0\.0'/);
   assert.equal((html.match(/<script\b/g)||[]).length,1);
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(scripts.length,1);

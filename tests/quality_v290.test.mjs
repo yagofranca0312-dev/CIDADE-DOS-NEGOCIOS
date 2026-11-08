@@ -112,7 +112,7 @@ test('V2.9: HTML único incorpora painel de QA e ferramenta de backup opcional s
  const html=readFileSync('index.html','utf8');
  for(const id of ['qa-v290-title','qa-v290-summary','qa-v290-flags','qa-v290-units',
    'qa-save-health-btn','qa-save-size','export-compact-btn'])assert.ok(html.includes('id="'+id+'"'),id);
- assert.match(html,/v3\.0\.0-alpha\.1/);
+ assert.match(html,/v3\.0\.0/);
  const scripts=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];
  assert.equal(scripts.length,1);
  assert.doesNotThrow(()=>new Script(scripts[0][2]));

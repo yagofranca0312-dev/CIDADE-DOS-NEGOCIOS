@@ -112,8 +112,9 @@
       "id": "RG-06",
       "type": "TECHNICAL",
       "label": "Tratar explicitamente risco de perda de progresso ao falhar localStorage",
-      "status": "NOT_VERIFIED",
-      "evidence": null
+      "status": "PARTIAL",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588846",
+      "qualifier": "Somente Windows hospedado no GitHub com Chrome/Edge headless, file:// e dados sintéticos; QA Windows pessoal, BAT e saves reais pendentes."
     },
     {
       "id": "RG-07",
@@ -126,8 +127,9 @@
       "id": "RG-08",
       "type": "MANUAL",
       "label": "Windows Chrome/Edge: abrir index.html offline por file:// e via JOGAR_OFFLINE.bat",
-      "status": "NOT_EXECUTED",
-      "evidence": null
+      "status": "PARTIAL",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588846",
+      "qualifier": "Somente Windows hospedado no GitHub com Chrome/Edge headless, file:// e dados sintéticos; QA Windows pessoal, BAT e saves reais pendentes."
     },
     {
       "id": "RG-09",
@@ -140,8 +142,9 @@
       "id": "RG-10",
       "type": "MANUAL",
       "label": "Windows: comando→salvamento local→fechar→reabrir e reconciliação do estado",
-      "status": "NOT_EXECUTED",
-      "evidence": null
+      "status": "PARTIAL",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588846",
+      "qualifier": "Somente Windows hospedado no GitHub com Chrome/Edge headless, file:// e dados sintéticos; QA Windows pessoal, BAT e saves reais pendentes."
     },
     {
       "id": "RG-11",
@@ -154,8 +157,9 @@
       "id": "RG-12",
       "type": "MANUAL",
       "label": "Quota localStorage cheia/bloqueada: sem falsa mensagem de durabilidade e procedimento de backup comprovado",
-      "status": "NOT_EXECUTED",
-      "evidence": null
+      "status": "PARTIAL",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588846",
+      "qualifier": "Somente Windows hospedado no GitHub com Chrome/Edge headless, file:// e dados sintéticos; QA Windows pessoal, BAT e saves reais pendentes."
     },
     {
       "id": "RG-13",
@@ -204,11 +208,39 @@
     {
       "id": "P0-01",
       "risk": "RG-06",
-      "status": "IMPLEMENTED_AND_CI_PASS_MANUAL_PENDING",
+      "status": "IMPLEMENTED_CI_PASS_WINDOWS_HEADLESS_PASS_PERSONAL_QA_PENDING",
       "code": "src/ui/app.js",
       "test": "tests/persistence_p0_v300.test.mjs",
       "report": "docs/V300_P0_PERSISTENCIA_TRANSACIONAL.md",
-      "note": "commit(): persist-before-state; import/restore também. RG-06 NOT_VERIFIED até prova Windows/file://, quota real, reinício e saves."
+      "note": "Guard P0 testado em Chrome/Edge headless no Windows hospedado via file:// com QuotaExceededError real, reload, export/import. RG-06 PARTIAL; testes manuais em instalacao do usuario ainda nao executados."
     }
-  ]
+  ],
+  "windowsHostedAudit": {
+    "sha": "7cb9589d686f087189b26c3a09d847c36ebc3bf7",
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588846",
+    "result": "SUCCESS",
+    "os": "Windows NT 10.0.26100.0",
+    "browsers": [
+      "Chrome 156 (headless)",
+      "Edge 156 (headless)"
+    ],
+    "assertions": 33,
+    "fileOrigin": "file://",
+    "actualQuotaReached": true,
+    "reloadAfterClosingBrowser": true,
+    "exportImportJsonOnDisk": true,
+    "syntheticV29MigrationAndRollback": true,
+    "realUserSaveTested": false,
+    "personalWindowsInstallationTested": false,
+    "physicalMobileTested": false,
+    "report": "docs/V300_QA_WINDOWS_HOSTED.md"
+  },
+  "crossPlatformHtml": {
+    "status": "PASS_BYTE_IDENTICAL",
+    "sha256": "3dea7a0560ae97ec6b994a470068ce7d72fd9eff18f07779584ef9095cb8e398",
+    "bytes": 1479945,
+    "linuxObservedCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588829",
+    "windowsObservedCI": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588846",
+    "verifiedUsing": "tools/verify-html-byte-identical-v300.mjs"
+  }
 }

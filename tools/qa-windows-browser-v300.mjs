@@ -45,11 +45,15 @@ const launch=(userDataDir,channel)=>chromium.launchPersistentContext(userDataDir
   args:['--no-first-run','--disable-background-networking','--disable-extensions']
 });
 async function open(context,errors){
+  // P0-04: esta suíte preserva as regressões do caminho LEGADO localStorage,
+  // forçando IndexedDB ausente somente nos perfis sintéticos deste QA.
+  await context.addInitScript(()=>{Object.defineProperty(window,'indexedDB',{value:undefined,configurable:true});});
   const page=context.pages()[0]??await context.newPage();
   page.on('pageerror',err=>errors.push('pageerror: '+err.message));
   const response=await page.goto(target,{waitUntil:'load',timeout:45000});
   // file:// pode produzir resposta nula conforme versão do Playwright; prova é DOM + app.
   await page.locator('#career-form').waitFor({state:'attached',timeout:15000});
+  await page.waitForFunction(()=>document.body.dataset.storageReady==='ready',{timeout:20000});
   await page.waitForFunction(()=>document.title.includes('3.0.0-alpha.1'),{timeout:15000});
   return page;
 }

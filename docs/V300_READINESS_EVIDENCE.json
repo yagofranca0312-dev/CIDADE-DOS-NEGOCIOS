@@ -33,7 +33,7 @@
       "id": "3.0.0-02",
       "status": "PARTIAL",
       "evidence": "docs/V300_MATRIZ_CONTRATOS_E_PROPRIEDADE.md",
-      "open": "PR-01 paridade de folha e PR-02 propostas paralelas: resolver, aceitar explicitamente ou mitigar com teste"
+      "open": "PR-01/PR-02 mitigados em código e CI; faltam percursos UI operacionais e aceite da consolidação"
     },
     {
       "id": "3.0.0-03",
@@ -120,8 +120,9 @@
       "id": "RG-07",
       "type": "TECHNICAL",
       "label": "Decidir PR-01 RH e PR-02 propostas de compra, com mitigação/regressão ou aceite fundamentado",
-      "status": "NOT_VERIFIED",
-      "evidence": null
+      "status": "VERIFIED",
+      "evidence": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435965283",
+      "qualifier": "Critério técnico de decisão PR-01/PR-02 quitado: helper RH único e proposta manual alinhada à capacidade de transferências pendentes, sete novos testes e CI 418/418. Isto NÃO homologa QA visual/operacional nem gates 02/03/08."
     },
     {
       "id": "RG-08",

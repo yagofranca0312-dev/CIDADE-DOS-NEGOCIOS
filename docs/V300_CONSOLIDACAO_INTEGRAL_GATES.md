@@ -214,3 +214,14 @@ A leitura de **30 cidades e 18 lotes** usa `Core.CITIES` e `Core.businesses` sem
 **Estado do risco:** mitigação de **comando em memória sem save** aprovada em testes de ambiente simulado; **`RG-06` mantém NOT_VERIFIED**, `RG-12` mantém NOT_EXECUTED porque falta reproduzir quota/permissão real no Windows Chrome/Edge, fechar/reabrir o navegador, importar save real do jogador e avaliar retenção. **Gate 08 permanece NO-GO e PR #39 DRAFT.**
 
 **Próxima ação do ciclo de saneamento:** ensaio seguro e documentado de `file://` com backups externos, armazenamento cheio e rollback de uma **cópia** do save V2.9 em dois navegadores, além de mobile/longa duração. Não declarar liberação ou homologação por aprovação do CI.
+
+
+## Saneamento pós-NO-GO — QA Windows hospedado e HTML byte-idêntico (07/11/2026)
+
+**Ensaio funcional:** [`docs/V300_QA_WINDOWS_HOSTED.md`](V300_QA_WINDOWS_HOSTED.md) e [CI Windows #42432588846](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42432588846), **SUCCESS, 33/33 checagens PASS**, Chrome 156 e Edge 156 reais em Windows NT 10.0.26100.0, execução headless e `file://` sem servidor. Quota REAL de `localStorage` provocada com dados exclusivamente sintéticos; comando bloqueado e save anterior preservado, seguido de recuperação e reinício do navegador. Exportação e importação de JSON em perfis distintos, e compatibilidade de save **sintético** V2.9→V3→V2.9 verificadas.
+
+**Conformidade de artefato Windows/Linux:** diferença inicial CRLF/LF detectada e corrigida em `tools/build.mjs` (serialização LF); [`tools/verify-html-byte-identical-v300.mjs`](../tools/verify-html-byte-identical-v300.mjs) compara bytes reais contra o blob Git. Na CI Windows #42432588846, **PASS**: SHA-256 `3dea7a0560ae97ec6b994a470068ce7d72fd9eff18f07779584ef9095cb8e398`, **1.479.945 bytes**, idênticos ao HTML canônico Linux.
+
+**Matriz de aceitação reclassificada sem inflar o GO:** `RG-06`, `RG-08`, `RG-10` e `RG-12` **PARTIAL** (evidência Windows hospedado, não computador do jogador); demais requisitos de QA manual/saves pessoais/instaladores/mobile continuam sem conclusão. Há **4/18 requisitos VERIFICADOS** e **14/18 ainda NÃO QUITADOS** no gate final. V3.0 permanece **NO-GO**; `main`, `schemaVersion=9`, baseline homologada V2.9 e PR #39 DRAFT protegidos.
+
+**Próxima ação:** QA físico no Windows do jogador usando cópias externas de save autêntico, `JOGAR_OFFLINE.bat` e `ATUALIZAR_E_JOGAR.bat` em instalação isolada; observar tela, operações, backup após reiniciar, quota real e rollback. Não declarar validação pessoal a partir de execução no runner.

@@ -57,7 +57,7 @@ test('V3.0 E2E: apenas parciais em RG13/RG16, sem fabricar teste pessoal',()=>{
   }
   const longrun=evidence.requirements.find(x=>x.id==='RG-15');
   assert.equal(longrun.status,'PARTIAL');
-  assert.match(longrun.evidence,/42485124066/);
+  assert.match(longrun.evidence,/42488245360/);
   for(const id of ['RG-11','RG-14']){
     assert.equal(evidence.requirements.find(x=>x.id===id).status,'NOT_EXECUTED');
   }

@@ -9,6 +9,8 @@
 - **Trabalho atual:** PR [#39 — auditoria de consolidação](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/pull/39), **DRAFT**, sem merge. Preservar Patch A, schema 9 e a V2.9 estável.
 - **Missão:** consolidar mercado/economia, IA/rivais, RH/DP, Paralegal, fiscais didáticos, contabilidade, contratos/crédito, logística/produção, jornada/progressão, interface V2 e saves. A V3.1 imersiva, reconstrução estilo SimCity e novo regime tributário 2027+ **não estão autorizados como implementação dentro deste gate**.
 
+**Evolução P1-02 — QA integrado em UI real:** [Relatório de 13 etapas por navegador](V300_QA_INTEGRADO_WINDOWS_HOSTED.md) e [CI Windows #42437328042 — **66/66 verificações PASS**](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42437328042): Chrome/Edge headless, carreira fictícia com duas unidades e 38 dias; compras, RH, logística, contabilidade, Patch A, crédito, folha e reload em `file://`. **RG-13 e RG-16 evoluíram de NOT_EXECUTED para PARTIAL** (não cobrem QA gráfico humano, balanceamento completo, mobile ou hardware pessoal). Checkpoint `3.0.0-03` permanece **PARTIAL**, release `3.0.0-08` **BLOCKED/NO-GO**, **5/18 requisitos verificados e 13 pendentes**. `main`, V2.9 homologada e PR #39 DRAFT protegidos.
+
 | Checkpoint | Objetivo de saída | Situação em 07/11/2026 |
 |---|---|---|
 | `3.0.0-01` | Inventário total V2, comandos e evidências | **PARCIAL:** matriz + testes; QA manual e cenários remanescentes |

@@ -9,7 +9,7 @@ if ($Mode -eq 'child') {
     return [pscustomobject]@{sha=$env:QA_COMMIT}
   }
   function global:Invoke-WebRequest {
-    param($Uri,$Headers,$UseBasicParsing,$MaximumRedirection,$TimeoutSec,$OutFile)
+    param($Uri,$Headers,[switch]$UseBasicParsing,$MaximumRedirection,$TimeoutSec,$OutFile)
     if($env:QA_FAIL_NETWORK -eq '1'){throw 'QA: ZIP offline por projeto'}
     Copy-Item -LiteralPath $env:QA_FIXTURE_ZIP -Destination $OutFile -Force
     Add-Content -LiteralPath $env:QA_DOWNLOAD_LOG -Value 'ZIP_LOCAL_ONLY'

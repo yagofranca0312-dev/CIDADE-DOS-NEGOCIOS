@@ -25,6 +25,8 @@ jobs:
         run: npm run audit:release
       - name: Verificar dispensa excepcional expressa sem falsificar QA
         run: npm run audit:release:exception
+      - name: Conferir matriz pos-homologacao sem alterar gate historico
+        run: npm run audit:postrelease
       - name: Verificar se index.html gerado corresponde ao commit
         run: git diff --exit-code -- index.html
       - name: SHA-256 do executavel

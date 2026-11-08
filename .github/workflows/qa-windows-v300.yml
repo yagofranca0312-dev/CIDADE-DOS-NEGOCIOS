@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/qa-windows-v300.yml'
+      - 'tools/v300-postrelease-audit.mjs'
       - 'tools/qa-windows-browser-v300.mjs'
       - 'tools/qa-windows-integrated-v300.mjs'
       - 'tools/qa-windows-longrun-v300.mjs'
@@ -62,6 +63,17 @@ jobs:
       - name: QA carreira longa 365 e 1825 dias Chrome e Edge via UI real
         shell: pwsh
         run: node tools/qa-windows-longrun-v300.mjs
+      - name: Gerar auditoria pos-homologacao sem afirmar QA pessoal
+        shell: pwsh
+        run: node tools/v300-postrelease-audit.mjs --out "${{ runner.temp }}/v300-postrelease-evidence.json"
+      - name: Arquivar auditoria pos-homologacao
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v300-postrelease-evidence
+          path: ${{ runner.temp }}/v300-postrelease-evidence.json
+          if-no-files-found: warn
+          retention-days: 30
       - name: Arquivar evidencias de mobile emulado
         if: always()
         uses: actions/upload-artifact@v4

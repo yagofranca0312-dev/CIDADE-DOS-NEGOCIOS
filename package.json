@@ -17,7 +17,8 @@
     "bench:consolidation": "node tools/benchmark-v300-consolidation.mjs",
     "audit:release": "node tools/v300-release-gate.mjs",
     "audit:release:require-go": "node tools/v300-release-gate.mjs --require-go",
-    "audit:release:exception": "node tools/v300-exceptional-release-gate.mjs"
+    "audit:release:exception": "node tools/v300-exceptional-release-gate.mjs",
+    "audit:postrelease": "node tools/v300-postrelease-audit.mjs"
   },
   "engines": {
     "node": ">=22"

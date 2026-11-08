@@ -1,0 +1,32 @@
+name: TEMP sync P0-04 IndexedDB HTML audit branch only
+on:
+  push:
+    branches:
+      - audit/v3.0-consolidacao-integral-v2-20261107
+permissions:
+  contents: write
+jobs:
+  sync-offline-html:
+    if: github.ref == 'refs/heads/audit/v3.0-consolidacao-integral-v2-20261107'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/v3.0-consolidacao-integral-v2-20261107
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Compilar HTML V3.0 P0-04 offline
+        run: npm run build
+      - name: Commitar exclusivamente index.html na branch de auditoria
+        run: |
+          if ! git diff --quiet -- index.html; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add index.html
+            git commit -m "build(v3 P0-04): atualizar HTML unico offline com IndexedDB"
+            git push origin HEAD:refs/heads/audit/v3.0-consolidacao-integral-v2-20261107
+          else
+            echo "HTML já sincronizado"
+          fi

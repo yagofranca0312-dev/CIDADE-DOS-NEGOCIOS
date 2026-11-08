@@ -182,7 +182,7 @@ try{
       'saves protegidos','backup HTML','sem download repetido','erro API','downgrade',
       'ZIP sem HTML','rollback de erro de copia');
     limitation='Script original com comandos de rede e abertura mockados. Nenhum save pessoal ou associacao grafica foi validado.'
-  } | ConvertTo-Json -Compress)))
+  } | ConvertTo-Json -Compress))
 }finally{
   Remove-Item -LiteralPath $WorkRoot -Recurse -Force -ErrorAction SilentlyContinue
 }

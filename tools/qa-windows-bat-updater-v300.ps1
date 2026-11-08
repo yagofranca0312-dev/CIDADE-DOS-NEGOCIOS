@@ -19,7 +19,7 @@ if ($Mode -eq 'child') {
     Add-Content -LiteralPath $env:QA_LAUNCH_LOG -Value ('ABRIR_LOCAL:' + $FilePath)
   }
   . (Join-Path $env:QA_INSTALL 'tools\Atualizar-E-Jogar.ps1')
-  exit 99
+  exit $LASTEXITCODE
 }
 if (-not $IsWindows -and $env:OS -ne 'Windows_NT') {
   throw 'Este QA de BAT/PowerShell so pode ser declarado no Windows real.'

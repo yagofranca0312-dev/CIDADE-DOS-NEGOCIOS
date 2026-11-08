@@ -1,7 +1,7 @@
 # V3.0 — Saneamento P0-01: gravação transacional do progresso no navegador
 
 **Registro técnico:** 07/11/2026 (America/Fortaleza).  
-**Status:** **MITIGAÇÃO IMPLEMENTADA NA BRANCH DE AUDITORIA; QA WINDOWS/BROWSER PENDENTE**.  
+**Status:** **MITIGAÇÃO IMPLEMENTADA E APROVADA EM CI 400/400 TESTES; QA WINDOWS/BROWSER PENDENTE**. [CI #42431354313](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42431354313), commit `d42df11e4a807a67b70336b2a8ac6cb25dc9e442`. HTML gerado com 1.479.945 bytes, SHA-256 `3dea7a0560ae97ec6b994a470068ce7d72fd9eff18f07779584ef9095cb8e398`.  
 **Origem:** [Etapa 8 — parecer NO-GO](V300_GATE08_GO_NO_GO.md), `RG-06` e `RG-12`.  
 **Branch:** `audit/v3.0-consolidacao-integral-v2-20261107`; PR #39 continua DRAFT, `main` e V2.9 homologada intocadas.
 

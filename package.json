@@ -16,7 +16,8 @@
     "bench:economy": "node tools/benchmark-v300-patch-a.mjs",
     "bench:consolidation": "node tools/benchmark-v300-consolidation.mjs",
     "audit:release": "node tools/v300-release-gate.mjs",
-    "audit:release:require-go": "node tools/v300-release-gate.mjs --require-go"
+    "audit:release:require-go": "node tools/v300-release-gate.mjs --require-go",
+    "audit:release:exception": "node tools/v300-exceptional-release-gate.mjs"
   },
   "engines": {
     "node": ">=22"

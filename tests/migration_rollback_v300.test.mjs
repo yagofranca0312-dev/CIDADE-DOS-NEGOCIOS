@@ -65,7 +65,7 @@ test('V3.0 migração: fixture V2.9 está byte a byte ligada ao blob do release 
   assert.equal(hash,'048d174cd2e952d61a255c84c97dbb40dceaf50a');
   assert.equal(stable.VERSION,'2.9.0');
   assert.equal(stable.SCHEMA_VERSION,9);
-  assert.equal(current.VERSION,'3.0.0');
+  assert.equal(current.VERSION,'3.1.0');
 });
 
 const historical=[

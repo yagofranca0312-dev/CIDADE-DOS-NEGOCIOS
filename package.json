@@ -1,9 +1,9 @@
 {
   "name": "cidade-dos-negocios",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "private": true,
   "type": "module",
-  "description": "Cidade dos Negócios V3.0 Patch A: estratégias de capital de giro, cenários de preço e reposição explícita com reserva, sem vendas artificiais",
+  "description": "Cidade dos Negócios V3.1.0 — interface city-first com contratos puros e paineis flutuantes",
   "scripts": {
     "build": "node tools/build.mjs",
     "test": "node --test tests/*.test.mjs",

@@ -1,0 +1,36 @@
+name: V3.1 Gerar HTML canonico na branch de implementacao
+on:
+  push:
+    branches:
+      - feature/v3.1.0-city-first-20261108
+    paths:
+      - '.github/workflows/v310-build-branch.yml'
+      - 'src/**'
+      - 'tools/build.mjs'
+permissions:
+  contents: write
+jobs:
+  compile:
+    if: github.repository == 'yagofranca0312-dev/CIDADE-DOS-NEGOCIOS'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Gerar o HTML unico offline a partir de fontes auditaveis
+        run: npm run build
+      - name: Integrar exclusivamente o artefato compilado na branch
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "HTML ja corresponde as fontes"
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add index.html
+            git commit -m "build(v3.1.0): generated reproducible offline HTML"
+            git push origin HEAD:refs/heads/feature/v3.1.0-city-first-20261108
+          fi

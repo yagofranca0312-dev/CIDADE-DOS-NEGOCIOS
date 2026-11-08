@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/qa-windows-v300.yml'
       - 'tools/v300-postrelease-audit.mjs'
+      - 'tools/qa-windows-v310.mjs'
       - 'tools/qa-windows-browser-v300.mjs'
       - 'tools/qa-windows-integrated-v300.mjs'
       - 'tools/qa-windows-longrun-v300.mjs'
@@ -60,6 +61,17 @@ jobs:
       - name: QA mobile emulado 320 390 768 com toque e recuperacao
         shell: pwsh
         run: node tools/qa-windows-mobile-emulado-v300.mjs
+      - name: V3.1 QA cidade imersiva, camera, overlays e mobile
+        shell: pwsh
+        run: node tools/qa-windows-v310.mjs
+      - name: Arquivar provas visuais V3.1
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v310-city-first-desktop-mobile
+          path: ${{ runner.temp }}/v310-visual-evidence/
+          if-no-files-found: warn
+          retention-days: 30
       - name: QA carreira longa 365 e 1825 dias Chrome e Edge via UI real
         shell: pwsh
         run: node tools/qa-windows-longrun-v300.mjs

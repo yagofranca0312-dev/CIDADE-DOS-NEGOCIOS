@@ -54,7 +54,7 @@ async function open(context,errors){
   // file:// pode produzir resposta nula conforme versão do Playwright; prova é DOM + app.
   await page.locator('#career-form').waitFor({state:'attached',timeout:15000});
   await page.waitForFunction(()=>document.body.dataset.storageReady==='ready',{timeout:20000});
-  await page.waitForFunction(()=>document.title.includes('3.0.0'),{timeout:15000});
+  await page.waitForFunction(()=>document.title.includes('3.1.0'),{timeout:15000});
   return page;
 }
 function validateWindowsHosted(){

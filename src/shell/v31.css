@@ -1,0 +1,46 @@
+/* V3.1 — UI imersiva sem duplicar motor ou regras economicas. */
+.v31-dock[hidden],.v31-context[hidden],.v31-overlay-close[hidden]{display:none!important}
+.v31-dock{position:fixed;inset:auto 0 0;z-index:110;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));padding:9px max(12px,env(safe-area-inset-right)) calc(9px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));gap:8px;background:#071b2ff5;border-top:1px solid #c9a663;box-shadow:0 -10px 32px #0008}
+.v31-dock button{min-width:0;min-height:62px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#e5f0f6;background:#16354c;border:1px solid #476b7c;border-radius:12px;font-size:.79rem;font-weight:700}
+.v31-dock button span{font-size:1.3rem}
+.v31-dock button:focus-visible,.v31-camera button:focus-visible,.v31-context button:focus-visible,.v31-overlay-close:focus-visible{outline:3px solid #ffe9a6;outline-offset:2px}
+body.v31-immersive .sidebar{display:none}
+body.v31-immersive .main-pane{width:100%;padding-bottom:90px}
+body.v31-immersive .city-stage{max-width:none}
+body.v31-immersive .map-canvas{overflow:auto;max-height:min(69vh,760px);min-height:310px;scrollbar-width:thin}
+body.v31-immersive .map-canvas svg{will-change:auto}
+body.v31-immersive .v221-city-svg{height:auto}
+.v31-camera{position:absolute;right:12px;top:92px;z-index:6;display:flex;align-items:center;gap:5px;border:1px solid #6e8a9e;background:#09263eea;padding:7px;border-radius:10px}
+.v31-camera button{border:1px solid #7594a4;color:#fff9e8;background:#173a54;border-radius:7px;min-width:37px;min-height:38px;font-size:1.15rem}
+.v31-camera output{color:#f5deb0;font-weight:800;min-width:44px;text-align:center;font-size:.75rem}
+.v31-context{background:#0b263cf2;color:#f4f5ee;border:1px solid #bfa774;border-radius:12px;padding:10px 12px;max-width:100%}
+.v31-context>strong{display:block;font-size:.77rem;margin-bottom:8px}
+.v31-context-actions{display:flex;flex-wrap:wrap;gap:6px}
+.v31-context button{background:#1a4059;color:#fff0cf;border:1px solid #648495;border-radius:8px;min-height:40px;padding:7px 10px;font-weight:700}
+.v31-context button:disabled{opacity:.45;cursor:not-allowed}
+.v31-top-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:#071d33;padding:7px 12px;border-bottom:1px solid #32526a}
+.v31-top-controls button,.v31-top-controls select{background:#173d54;color:#fff4d5;border:1px solid #577d90;border-radius:8px;min-height:39px;padding:5px 12px}
+.v31-top-controls label{font-size:.76rem;color:#c0dce9}
+.v31-alerts{position:absolute;right:14px;top:147px;max-width:min(340px,42vw);z-index:5;border:1px solid #446e81;border-radius:10px;background:#0b273bdc;padding:8px 12px;color:#ecf7f5;font-size:.72rem}
+.v31-alerts summary{cursor:pointer;min-height:28px}
+.v31-alerts ul{padding-left:17px;max-height:180px;overflow:auto;line-height:1.4}
+body.v31-overlay-open .view[data-view="cidade"]{display:block!important}
+body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden]){position:fixed;top:72px;right:12px;bottom:94px;width:min(760px,calc(100vw - 24px));max-width:none;background:#0e2a40;z-index:190;box-sizing:border-box;overflow:auto;padding:55px 16px 28px;border:1px solid #c5a568;border-radius:15px;box-shadow:0 24px 95px #00101ef2;overscroll-behavior:contain}
+body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden]) .panel{max-width:100%}
+.v31-overlay-close{position:fixed;right:27px;top:85px;z-index:201;min-height:40px;padding:7px 15px;background:#ead4a7;color:#152b3d;border:2px solid #fff3d8;border-radius:9px;font-weight:850}
+.v31-overlay-close:not([hidden]){display:block}
+@media(max-width:700px){
+ .v31-dock{gap:3px;padding:5px 5px calc(6px + env(safe-area-inset-bottom))}
+ .v31-dock button{min-height:54px;font-size:.59rem;padding:2px;gap:2px}
+ .v31-dock button span{font-size:1.12rem}
+ body.v31-immersive .main-pane{padding-bottom:75px}
+ body.v31-immersive .v221-city-hud{grid-template-columns:repeat(2,minmax(0,1fr))}
+ body.v31-immersive .v221-city-hud .v221-hud-cell{min-height:58px}
+ body.v31-immersive .map-canvas{min-height:260px;max-height:55vh}
+ .v31-camera{top:105px;right:9px}
+ .v31-alerts{top:168px;right:8px;max-width:min(250px,76vw)}
+ body.v31-overlay-open .view[data-view]:not([data-view="cidade"]):not([hidden]){top:auto;left:0;right:0;bottom:calc(66px + env(safe-area-inset-bottom));width:100vw;max-height:76vh;min-height:50vh;border-radius:17px 17px 0 0;padding:53px 12px 24px}
+ .v31-overlay-close{top:auto;bottom:calc(66px + env(safe-area-inset-bottom) + 76vh - 52px);right:12px}
+ .v31-context-actions{max-height:155px;overflow:auto}
+}
+@media(prefers-reduced-motion:reduce){.v31-dock *,.v31-context *,body.v31-overlay-open .view{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

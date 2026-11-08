@@ -455,8 +455,10 @@
     const sharedFilters=document.querySelector('#admin-shared-filters');
     if(sharedFilters)sharedFilters.hidden=!(root==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo));
     tab=root;
-    document.body.classList.toggle('v221-city-mode',!!state?.player?.cityId&&root==='cidade');
-    document.querySelectorAll('.view[data-view]').forEach(el=>{const chosen=el.dataset.view===root;el.hidden=!chosen;el.classList.toggle('active',chosen);});
+    if(root==='cidade')immersiveOpen=null;
+    document.body.classList.toggle('v221-city-mode',!!state?.player?.cityId&&(root==='cidade'||!!immersiveOpen));
+    document.body.classList.toggle('v31-overlay-open',!!immersiveOpen&&!v31ClassicMode);
+    document.querySelectorAll('.view[data-view]').forEach(el=>{const chosen=el.dataset.view===root||(!!immersiveOpen&&el.dataset.view==='cidade');el.hidden=!chosen;el.classList.toggle('active',chosen);});
     document.querySelectorAll('.nav-primary [data-tab]').forEach(el=>{const chosen=el.dataset.tab===root;el.classList.toggle('active',chosen);if(chosen)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');});
     document.querySelectorAll('[data-section-pane]').forEach(el=>{const [area,sub]=el.dataset.sectionPane.split(':');el.hidden=!(area===root&&activeSection[area]===sub);});
     document.querySelectorAll('[data-section-tab]').forEach(el=>{const [area,sub]=el.dataset.sectionTab.split(':');const chosen=activeSection[area]===sub;el.classList.toggle('active',chosen);el.setAttribute('aria-selected',String(chosen));el.tabIndex=chosen?0:-1;});
@@ -498,9 +500,10 @@
     $('map-canvas').dataset.urbanSize=p.tier;
   }
   function eventsHTML(events){if(!events.length)return '<p class="muted">Nenhum evento registrado ainda.</p>';return events.map(e=>`<div class="event-item"><i class="event-dot"></i><div><p>${escape(e.text)}</p><small>${escape(e.date)} · ${escape(e.type)}</small></div></div>`).join('');}
+  /* CDN_V31_IMMERSIVE */
   function render(){
     const started=!!state?.player?.cityId;
-    document.body.classList.toggle('v221-city-mode',started&&tab==='cidade');
+    document.body.classList.toggle('v221-city-mode',started&&(tab==='cidade'||!!immersiveOpen));
     $('onboarding').hidden=started;$('game-shell').hidden=!started;
     if(!started)return;
     const b=business(),units=Core.businesses(state),info=Core.overview(state),ownCity=Core.cityById(b?.cityId||state.player.cityId);
@@ -573,6 +576,7 @@
     setText('turn-subtext',!b?'Clique em um lote para iniciar.':`${b.products.length} produtos · Estoque total ${b.stockUnits} un. · próximo dia ${BRDate(state.calendar.date)}.`);
     setText('autosave-label',autosaveStatus);
     setText('footer-state',autosaveStatus.startsWith('Cópia')?'Cópia local verificada · backup JSON recomendado':autosaveStatus.startsWith('Salvamento local indisponível')?'Salvamento local sem garantia':'Backup JSON recomendado');
+    v31Render();
   }
   function updateBuyPreview(){
     if(!business())return;
@@ -618,6 +622,7 @@
   function bind(){
     bindLogistics();
     bindBalancePlan();
+    v31Bind();
     // Somente estado de apresentação; não grava em save nem executa comandos econômicos.
     const hudToggle=$('stats-more-toggle');
     hudToggle.addEventListener('click',()=>{
@@ -781,7 +786,7 @@
       const t=button.dataset.v221Time;const target=t==='play'?'pause-btn':t==='1'?'next-day':t==='7'?'next-week':'next-month';
       $(target).click();$('v221-time-menu').hidden=true;$('v221-hud-time').setAttribute('aria-expanded','false');
     });
-    $('map-open-company').addEventListener('click',async()=>{const owner=Core.businesses(state).find(x=>x.cityId===viewCityId&&x.lot===selectedLot);if(owner&&business()?.id!==owner.id){if(!await commit('EMPRESA.ATIVAR',{businessId:owner.id}))return;}goto('empresa','minhas-empresas');if(!owner)$('sector-select').focus();});
+    $('map-open-company').addEventListener('click',async()=>{const owner=Core.businesses(state).find(x=>x.cityId===viewCityId&&x.lot===selectedLot);if(owner&&business()?.id!==owner.id){if(!await commit('EMPRESA.ATIVAR',{businessId:owner.id}))return;}v31OpenPanel('empresa','minhas-empresas',$('map-open-company'));if(!owner)$('sector-select').focus();});
     $('sector-select').addEventListener('change',updateOpenPreview);
     $('open-form').addEventListener('submit',async e=>{e.preventDefault();if(!state)return;if(await commit('EMPRESA.ABRIR',{sector:$('sector-select').value,cityId:viewCityId,lot:selectedLot}))goto('cidade');});
     $('buy-quantity').addEventListener('input',updateBuyPreview);

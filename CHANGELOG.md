@@ -1,3 +1,9 @@
+# V3.1.0 — Interface city-first (08/11/2026)
+
+- Dock com cinco módulos, câmera, painéis contextuais, eventos, mobile e modo clássico.
+- Contrato de leitura puro integrado ao HTML, mesmo Core.dispatch, schema 9 e save.
+- Homologação condicionada à CI, readback e checkpoint imutável.
+
 # V3.0.0 — Registro de promoção excepcional (08/11/2026)
 
 - Titular autorizou homologação **com dispensa explícita das provas manuais remanescentes**, sem declarar que elas ocorreram; ver `docs/HOMOLOGACAO_V300_EXCEPCIONAL.md`.

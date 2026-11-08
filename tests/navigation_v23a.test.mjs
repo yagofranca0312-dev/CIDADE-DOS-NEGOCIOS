@@ -56,7 +56,7 @@ test('V2.3-A executa o roteamento legado e subáreas sem alterar estado econômi
   const tabs=panels.map(v=>({dataset:{sectionTab:v},classList:cls(),setAttribute:noop,tabIndex:0}));
   const data={player:{cityId:'CE-TIANGUA'},economy:{ledger:[{value:7}]},revision:12};
   let renderCount=0;
-  const context={state:data,tab:'cidade',activeSection:{empresa:'dashboard',mercado:'compras',administrativo:'financas'},
+  const context={state:data,tab:'cidade',immersiveOpen:null,v31ClassicMode:false,activeSection:{empresa:'dashboard',mercado:'compras',administrativo:'financas'},
     document:{body:{classList:cls()},querySelector:s=>panes.find(x=>s==='[data-section-pane="'+x.dataset.sectionPane+'"]')||null,
       querySelectorAll:s=>s==='.view[data-view]'?rootElems:s==='.nav-primary [data-tab]'?nav:s==='[data-section-pane]'?panes:s==='[data-section-tab]'?tabs:[]},
     window:{scrollTo:noop},setText:noop,render:()=>{renderCount++;}};
@@ -75,9 +75,9 @@ test('V2.3-A build offline contém script compilável e módulo fiscal',()=>{
   const scripts=[...built.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(scripts.length,1);assert.doesNotThrow(()=>new Script(scripts[0][1]));
   assert.match(built,/data-section-pane="administrativo:fiscal"/);
-  assert.match(built,/const VERSION = '3\.0\.0'/);
+  assert.match(built,/const VERSION = '3\.1\.0'/);
 });
 
 test('V2.3-A: Gerenciar do mapa abre diretamente Minhas Empresas',()=>{
- assert.match(app,/\$\('map-open-company'\)\.addEventListener\('click',[\s\S]*?goto\('empresa','minhas-empresas'\)/);
+ assert.match(app,/\$\('map-open-company'\)\.addEventListener\('click',[\s\S]*?v31OpenPanel\('empresa','minhas-empresas'/);
 });

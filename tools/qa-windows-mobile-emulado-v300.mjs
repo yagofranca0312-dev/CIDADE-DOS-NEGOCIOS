@@ -37,35 +37,31 @@ async function ready(page){
     {timeout:30000});
 }
 async function nav(page,root,section){
-  // Em telas moveis, Configuracoes pertence ao botao especial da topbar,
-  // nao ao menu principal de quatro abas.
-  if(root==='sistema'){
+  // V3.1 mantém os formulários antigos dentro dos overlays, acessíveis pelo dock.
+  const target={empresa:'empresa:dashboard',mercado:'mercado:compras',
+    administrativo:'administrativo:rh-dp',sistema:'sistema'}[root];
+  const dock=page.locator('#v31-dock [data-v31-open="'+target+'"]');
+  if(await dock.isVisible())await dock.tap();
+  else if(root==='sistema'){
     const top=page.locator('.topbar .mobile-settings[data-tab="sistema"]');
     if(await top.isVisible())await top.tap();
-    else{
-      const sidebar=page.locator('.sidebar-tools [data-tab="sistema"]');
-      if(await sidebar.isVisible())await sidebar.tap();
-      else{
-        await page.locator('.nav-primary [data-tab="cidade"]').tap();
-        await page.locator('#v221-config-open').tap();
-      }
-    }
+    else await page.locator('.sidebar-tools [data-tab="sistema"]').tap();
   }else await page.locator('.nav-primary [data-tab="'+root+'"]').tap();
   assert.equal(await page.locator('[data-view="'+root+'"]').isVisible(),true,
     'Aba '+root+' nao abriu');
   if(section){
-    const b=page.locator('[data-section-tab="'+root+':'+section+'"]');
-    await b.tap();
+    const button=page.locator('[data-section-tab="'+root+':'+section+'"]');
+    await button.tap();
     assert.equal(await page.locator('[data-section-pane="'+root+':'+section+'"]').isVisible(),true,
       'Subarea '+section+' nao abriu');
   }
 }
 async function layout(page,width,label){
   const obj=await page.evaluate(()=>{
-    const nav=[...document.querySelectorAll('.nav-primary [data-tab]')]
+    const nav=[...document.querySelectorAll('.nav-primary [data-tab],#v31-dock [data-v31-open]')]
       .filter(x=>{const r=x.getBoundingClientRect();const st=getComputedStyle(x);
         return st.display!=='none'&&r.width>0&&r.height>0;})
-      .map(x=>({tab:x.dataset.tab,width:x.getBoundingClientRect().width,
+      .map(x=>({tab:x.dataset.tab||x.dataset.v31Open,width:x.getBoundingClientRect().width,
         height:x.getBoundingClientRect().height}));
     return {viewport:innerWidth,scrollWidth:document.documentElement.scrollWidth,
       nav,gameVisible:!document.getElementById('game-shell').hidden};

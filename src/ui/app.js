@@ -848,6 +848,8 @@
     $('import-file').addEventListener('change',async e=>{const f=e.target.files?.[0];try{await importFile(f);}finally{e.target.value='';}});
     $('restore-prior-save-btn').addEventListener('click',async()=>{
       if(commitInFlight||startupBlocked)return;
+      commitInFlight=true;document.body.dataset.storageBusy='true';
+      try{
       let raw;
       try{raw=await CidadeDurableStore.readBackup();}catch(error){notify(error.message,true);return;}
       if(!raw){notify('Não existe cópia anterior neste navegador.',true);return;}
@@ -863,6 +865,7 @@
       resetTimer();state=incoming.state;
       restockDraft=null;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';
       render();notify('Carreira anterior restaurada. Faça também um backup JSON.');
+      }finally{commitInFlight=false;document.body.dataset.storageBusy='false';}
     });
     $('payable-operating-unit').addEventListener('change',()=>renderFinances());
     $('payable-operating-form').addEventListener('submit',async event=>{
@@ -877,6 +880,8 @@
     $('run-diagnostic').addEventListener('click',()=>{try{const before=JSON.stringify(state),out=Core.diagnostics(state);if(before!==JSON.stringify(state))throw Error('Diagnóstico alterou o estado');setText('diagnostic-result',out.status+' · revisão '+out.revision+' · checksum '+out.checksum);notify('Verificação estrutural e contábil aprovada.');}catch(e){setText('diagnostic-result',e.message);notify(e.message,true);}});
     $('new-career-btn').addEventListener('click',async()=>{
       if(commitInFlight||startupBlocked)return;
+      commitInFlight=true;document.body.dataset.storageBusy='true';
+      try{
       if(!confirm('Deseja criar outra carreira? A atual será copiada para recuperação neste navegador; exporte também JSON.'))return;
       if(!await backupCurrent())return;
       try{await CidadeDurableStore.clearCurrent();}
@@ -884,6 +889,7 @@
       resetTimer();state=null;viewCityId=null;financeQuery=null;financeScope='all';statementView='summary';
       setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');
       render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');
+      }finally{commitInFlight=false;document.body.dataset.storageBusy='false';}
     });
 
   }

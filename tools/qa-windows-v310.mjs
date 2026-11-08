@@ -23,7 +23,8 @@ for(const channel of ['chrome','msedge'])for(const width of [390,1366]){
   });
   assert.equal(onboarding.sidebarCount,0,'Barra lateral antiga ainda existe no DOM');
   assert.ok(onboarding.cardWidth<=Math.min(500,width)+2,'Card de entrada desproporcional');
-  assert.ok(onboarding.x>=-2 && onboarding.x+onboarding.cardWidth<=width+2,'Card sai da largura');
+  assert.ok(onboarding.x>=-2 && onboarding.x+onboarding.cardWidth<=onboarding.w+2,
+    'Card sai da largura: '+JSON.stringify(onboarding));
   assert.ok(onboarding.y>=-2 && onboarding.y+onboarding.cardHeight<=onboarding.h+2,'Card sai da altura');
   assert.ok(onboarding.artWidth>=width-2 && onboarding.artHeight>=onboarding.h-2,'Arte de fundo nao cobre viewport');
   await page.screenshot({path:join(out,channel+'-'+width+'-onboarding.png')});

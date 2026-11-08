@@ -43,7 +43,7 @@ A V3.0 é uma **release de unificação, regressão e estabilidade**, sem recons
 | `3.0.0-05` | Performance e estabilidade longa | **PARCIAL** | Benchmark V3 instrumentou 8 painéis, saves, relatórios e HTML; CI 364/364 PASS; hotfix de checksum sob demanda reduz Sistema ~2.110→102 ms no DOM simulado de 5 anos; Windows/mobile, quotas e navegador real pendentes |
 | `3.0.0-06` | Documentação e tutorial únicos | **PASS DOCUMENTAL (CI)** | README, CHANGELOG, ROADMAP, guia único e matriz canônica alinhados; seis novas regressões, **370/370 PASS** na CI #42427216125; QA humano e homologação geral continuam pendentes |
 | `3.0.0-07` | Preparar contrato UI V3.1 | **PASS TÉCNICO (CI)** | Adaptador puro, versão contratual 1, cidade/lotes/eventos/comandos consultivos; 11 testes de leitura sem mutação, **381/381 PASS** na CI #42428343258; sem incorporar V3.1 ao HTML atual |
-| `3.0.0-08` | Gate de homologação completa | **BLOQUEADO** | Falta concluir 01–07, CI da release candidata, QA Windows/desktop/mobile, saves reais, aceite e snapshot imutável |
+| `3.0.0-08` | Gate de homologação completa | **BLOQUEADO — PARECER NO-GO** | Auditoria de prontidão executada, relatório GO/NO-GO e 18 requisitos verificáveis; [CI 389/389 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42429308063). Gates 01–05 parciais, quota/localStorage, Windows/mobile/saves reais, candidata e aceite pendentes |
 
 **Nenhum checkpoint é marcado PASS por presunção.** PASS nos testes automatizados não significa PASS nos ensaios manuais.
 

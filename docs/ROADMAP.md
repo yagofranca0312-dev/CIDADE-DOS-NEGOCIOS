@@ -17,12 +17,12 @@
 | `3.0.0-04` | Migrar saves e proteger rollback V2→V3 | **PARCIAL:** 18 testes e V2.9 original, pendem saves reais/Windows |
 | `3.0.0-05` | Performance e estabilidade, tamanho de saves e UI | **PARCIAL:** 3 testes, 8 painéis e 5 anos em CI; pendem Windows/mobile/quota |
 | `3.0.0-06` | README, CHANGELOG, ROADMAP e tutorial únicos | **PASS DOCUMENTAL (CI):** guia unificado, seis testes novos, [370/370 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42427216125); não homologa release |
-| `3.0.0-07` | Contrato de API só leitura para apresentação V3.1 | **PENDENTE** |
+| `3.0.0-07` | Contrato de API só leitura para apresentação V3.1 | **PASS TÉCNICO (CI):** adaptador sem mutação, 11 testes; [CI 381/381 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42428343258); interface V3.1 ainda não existe |
 | `3.0.0-08` | CI final, QA Windows/desktop/mobile, saves, aceite, snapshot de release | **BLOQUEADO**, não homologar |
 
 **Evidências:** [dossiê dos oito gates](V300_CONSOLIDACAO_INTEGRAL_GATES.md) · [matriz de propriedade](V300_MATRIZ_CONTRATOS_E_PROPRIEDADE.md) · [migração/rollback](V300_MIGRACAO_ROLLBACK_SAVES.md) · [desempenho](V300_PERFORMANCE_ESTABILIDADE.md) · [guia operacional](JOGAR_GUIA_V300.md).
 
-**Sequência:** fechar a documentação `06` → preparar contrato UI V3.1 `07` → retornar às lacunas manuais dos checkpoints `01–05` → release gate `08`. Não confundir `PASS` no CI com homologação humana. Versão homologada só muda com autorização explícita após as provas obrigatórias.
+**Sequência após a etapa 7:** documentação `06` e contrato de leitura `07` aprovados em CI → retornar às lacunas manuais dos checkpoints `01–05` → auditar prontidão **GO/NO-GO** no `08`. A publicação depende de QA real e aceite explícito; não confundir `PASS` em CI com homologação humana. Versão homologada só muda com autorização explícita após as provas obrigatórias.
 
 ---
 

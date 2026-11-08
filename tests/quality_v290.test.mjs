@@ -19,7 +19,7 @@ function step(s,days){
 test('V2.9: mantém schema9, versão alpha e importação do envelope V1 legado intacta',()=>{
  let s=career(29001);
  assert.equal(Core.SCHEMA_VERSION,9);
- assert.equal(Core.VERSION,'3.0.0-alpha.1');
+ assert.equal(Core.VERSION,'3.0.0');
  const old=Core.exportSave(s),envelope=JSON.parse(old);
  assert.equal(envelope.saveFormatVersion,1);
  assert.equal(JSON.stringify(Core.importSave(old).state),JSON.stringify(s));

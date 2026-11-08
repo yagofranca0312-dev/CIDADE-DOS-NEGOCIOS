@@ -24,7 +24,7 @@ test('V3.0-08: inventário possui oito checkpoints em ordem e 18 requisitos expl
 });
 
 test('V3.0-08: cores históricos e branch ainda não são release V3.0 homologada',()=>{
-  assert.equal(pkg.version,'3.0.0-alpha.1');
+  assert.equal(pkg.version,'3.0.0');
   assert.equal(evidence.stableBaseline.version,'2.9.0');
   assert.equal(evidence.stableBaseline.sha,'082faa4626cf5cb0fc54c9ef092bddd86ffce54c');
   assert.equal(evidence.mainAtAudit,'871df2b1cd133bcad717c0194a474a35fbabcd3c');
@@ -91,7 +91,7 @@ test('V3.0-08: auditoria ordinária devolve NO_GO sem falhar CI de evidência',(
   assert.equal(out.totalRequirements,18);
   assert.equal(out.gatesNotCompleted.length,5);
   assert.equal(out.candidateMissingFields.length,3);
-  assert.equal(out.versionMismatch,true);
+  assert.equal(out.versionMismatch,false);
   assert.ok(out.unresolved.some(x=>x.id==='RG-06'));
   assert.ok(out.unresolved.some(x=>x.id==='RG-18'));
 });

@@ -5,11 +5,11 @@
   "releaseTarget": "3.0.0",
   "auditBranch": "audit/v3.0-consolidacao-integral-v2-20261107",
   "latestVerifiedAudit": {
-    "sha": "54e1212bde92d513cad5adbf7e1e29a8f53edcbe",
-    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42434425051",
+    "sha": "de1908e1f2fb71d6f3aedd378894a6d5b1c3e2aa",
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42434691887",
     "result": "SUCCESS",
-    "tests": 408,
-    "scope": "Node 24/Linux CI; 408 PASS, synthetic local save check privacy, benchmarks, build, release NO_GO. QA Windows BAT separately via 42434425027."
+    "tests": 411,
+    "scope": "Node24/Linux CI: 411 automated PASS, incluindo 3 contratos BAT e 3 testes privados do verificador de save. Windows BAT 19 PASS e Chrome/Edge 33 PASS em runner hospedado, separadamente."
   },
   "stableBaseline": {
     "ref": "releases/v2.9.0-homologada",

@@ -32,7 +32,12 @@ test('V3.0 QA Windows: prova Chrome/Edge hosted NÃO é QA de saves reais e não
   }
   assert.equal(evidence.requirements.find(x=>x.id==='RG-09').status,'PARTIAL');
   assert.match(evidence.requirements.find(x=>x.id==='RG-09').evidence,/42434425027/);
-  for(const id of ['RG-11','RG-13','RG-14','RG-15','RG-16']){
+  for(const id of ['RG-13','RG-16']){
+    const row=evidence.requirements.find(x=>x.id===id);
+    assert.equal(row.status,'PARTIAL');
+    assert.match(row.evidence,/42437328042/);
+  }
+  for(const id of ['RG-11','RG-14','RG-15']){
     assert.equal(evidence.requirements.find(x=>x.id===id).status,'NOT_EXECUTED');
   }
   assert.equal(evidence.checkpointStatus.find(x=>x.id==='3.0.0-08').status,'BLOCKED');

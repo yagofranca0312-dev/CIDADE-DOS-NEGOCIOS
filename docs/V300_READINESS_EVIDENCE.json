@@ -5,11 +5,11 @@
   "releaseTarget": "3.0.0",
   "auditBranch": "audit/v3.0-consolidacao-integral-v2-20261107",
   "latestVerifiedAudit": {
-    "sha": "57a03b7782bcd353269d55d9e7ae5814418140f0",
-    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42429308063",
+    "sha": "d42df11e4a807a67b70336b2a8ac6cb25dc9e442",
+    "ciUrl": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42431354313",
     "result": "SUCCESS",
-    "tests": 389,
-    "scope": "Node 24/Linux, DOM simulado; inclui 8 testes de release readiness. Auditoria NO-GO, não QA Windows/browser/mobile."
+    "tests": 400,
+    "scope": "Node 24/Linux CI com DOM simulado e 11 testes da guarda P0 (storage mock); NÃO testou Chrome/Windows/mobile/file:// ou save real."
   },
   "stableBaseline": {
     "ref": "releases/v2.9.0-homologada",
@@ -198,6 +198,17 @@
       "label": "Aceite formal explícito do titular após inspeção das evidências, inclusive ressalvas",
       "status": "NOT_GRANTED",
       "evidence": null
+    }
+  ],
+  "mitigations": [
+    {
+      "id": "P0-01",
+      "risk": "RG-06",
+      "status": "IMPLEMENTED_AND_CI_PASS_MANUAL_PENDING",
+      "code": "src/ui/app.js",
+      "test": "tests/persistence_p0_v300.test.mjs",
+      "report": "docs/V300_P0_PERSISTENCIA_TRANSACIONAL.md",
+      "note": "commit(): persist-before-state; import/restore também. RG-06 NOT_VERIFIED até prova Windows/file://, quota real, reinício e saves."
     }
   ]
 }

@@ -18,7 +18,8 @@ Interface / timer / formulário
              fiscal simulado / fiscal operacional / logística / IA
           -> journal() (único push no ledger) e event() (único push nos eventos)
       -> validate(draft) e commit atômico do novo estado
-  -> render() + saveLocal() (localStorage com leitura de retorno)
+  -> persistLocal(estadoCandidato) (escrita e leitura verificadas ANTES da troca)
+  -> state = estadoCandidato; render() só após confirmação da persistência
   -> exportSave() V1 ou exportSaveCompact() V2 para portabilidade
   -> importSave() verifica checksum e estrutura antes de substituir estado
 ```
@@ -84,3 +85,15 @@ Interface / timer / formulário
 - **Próxima etapa sugerida:** matriz de migração e integridade de saves reais de V2, QA de rollback, documentação canônica; depois hardware/browser e aceite da V3.0.
 
 **PROTEÇÃO:** não publicar V3.0.0 como homologada, não fazer merge automático da PR #39, não reverter ou reimplementar o Patch A, não usar dados financeiros ou fiscais reais em testes.
+
+
+## 6. Saneamento pós-inventário — PR-01/PR-02 (07/11/2026)
+
+**Este adendo atualiza o risco registrado na §4 sem apagar a conclusão histórica de 07/11.** [Relatório técnico completo](V300_PR01_PR02_SANEAMENTO.md). A PR #39 continua DRAFT; não se declara homologação da V3.
+
+- **PR-01 / folha: mitigado em código e testes.** `payrollPeriodQuote(staff,businessId,period)` é a **única fórmula** de pró-rata usada pela leitura `estimatedPayrollMonth` e pelo lançamento `accruePayrollMonth`. A estimativa não escreve e o pagamento de folha baixa passivo e caixa, sem segundo lançamento de despesa. Regra de 30 dias e arredondamento históricos preservados.
+- **PR-02 / capacidade de compra: erro de cotação da UI corrigido.** A capacidade total calculada por `restockRoom(unit,groupState)` considera entradas logísticas internas pendentes, além de estoque físico e pedidos de fornecedor; era omitida na interface manual apesar de já existir no motor `registerPurchase` e no Patch A. Preparação, validação e ajuste ao orçamento recebem o mesmo estado do grupo. As estratégias de compra manual versus Patch A **não** foram artificialmente igualadas; continuam com metas e reservas próprias, mas compartilham o escritor contábil de compras.
+- **Provas:** [7 novos testes PR-01/PR-02](../tests/v300_pr01_pr02_consistency.test.mjs), [CI Linux #42435702398 — 418/418 PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435702398), [CI Windows #42435702391 — 19 BAT e 33 browser PASS](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/42435702391); HTML offline recompilado e SHA-256 byte-idêntico `0ac63b72913247249e2559f19009b9941f1d6b794a9f0f17c85904e9eca191c3`, 1.480.192 bytes.
+- **Risco residual:** QA de tela em dispositivo pessoal, saves autênticos, compras integradas com muitas filiais e aceite humano ainda pendentes. `3.0.0-02/03` permanecem PARCIAIS e `3.0.0-08` **NO-GO**.
+
+**Não alterar `main`, V2.9 homologada, saves pessoais ou a interface futura V3.1 por inferência de CI.**

@@ -37,7 +37,20 @@ async function ready(page){
     {timeout:30000});
 }
 async function nav(page,root,section){
-  await page.locator('.nav-primary [data-tab="'+root+'"]').tap();
+  // Em telas moveis, Configuracoes pertence ao botao especial da topbar,
+  // nao ao menu principal de quatro abas.
+  if(root==='sistema'){
+    const top=page.locator('.topbar .mobile-settings[data-tab="sistema"]');
+    if(await top.isVisible())await top.tap();
+    else{
+      const sidebar=page.locator('.sidebar-tools [data-tab="sistema"]');
+      if(await sidebar.isVisible())await sidebar.tap();
+      else{
+        await page.locator('.nav-primary [data-tab="cidade"]').tap();
+        await page.locator('#v221-config-open').tap();
+      }
+    }
+  }else await page.locator('.nav-primary [data-tab="'+root+'"]').tap();
   assert.equal(await page.locator('[data-view="'+root+'"]').isVisible(),true,
     'Aba '+root+' nao abriu');
   if(section){

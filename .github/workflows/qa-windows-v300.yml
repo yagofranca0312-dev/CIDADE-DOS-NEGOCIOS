@@ -6,6 +6,10 @@ on:
     paths:
       - '.github/workflows/qa-windows-v300.yml'
       - 'tools/qa-windows-browser-v300.mjs'
+      - 'tools/qa-windows-bat-updater-v300.ps1'
+      - 'ATUALIZAR_E_JOGAR.bat'
+      - 'JOGAR_OFFLINE.bat'
+      - 'tools/Atualizar-E-Jogar.ps1'
       - 'tools/build.mjs'
       - 'tools/verify-html-byte-identical-v300.mjs'
       - 'src/**'
@@ -34,6 +38,9 @@ jobs:
           npm run build
           git diff --exit-code -- index.html
           node tools/verify-html-byte-identical-v300.mjs
+      - name: QA BAT e updater com ZIPs sinteticos e rede bloqueada
+        shell: pwsh
+        run: powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File tools/qa-windows-bat-updater-v300.ps1
       - name: Instalar somente o controlador de browser para a CI
         shell: pwsh
         run: npm install --no-save --no-package-lock --ignore-scripts --no-audit --no-fund playwright@1.55.1

@@ -2,7 +2,7 @@
 
 **CP-001 · 2026-11-01 · Integração de atualização local**
 
-**ALERTA DE SEGURANÇA — 07/11/2026:** o atualizador abaixo acompanha `main`, que contém `3.0.0-alpha.1` **NÃO HOMOLOGADA**; a última homologada é **V2.9.0**. **Não execute `ATUALIZAR_E_JOGAR.bat` na instalação pessoal até existir uma versão de release aprovada**, pois a atualização pode substituir o jogo por uma alpha. Para jogar sem atualização, use `JOGAR_OFFLINE.bat` e mantenha backup JSON externo. A [CI Windows de BAT e PowerShell](V300_QA_BAT_SAVE_LOCAL.md) aprovou 19 verificações em pastas/ZIPs artificiais, **sem conexão real ao GitHub ou teste do Windows pessoal**. As instruções de atualização abaixo são documentação do funcionamento histórico, não autorização para executar agora.
+**ATUALIZAÇÃO DE STATUS — 09/11/2026:** a V3.1.0 foi autorizada para homologação e integração à `main`, com **aceite provisório do visual da cidade**; o acabamento urbano será reconstruído futuramente. O atualizador consulta `main`, portanto execute-o **somente após confirmação de CI da `main` e checkpoint `releases/v3.1.0-homologada`**. Antes de atualizar, faça backup JSON tradicional externo, feche o navegador e confira a instalação existente. [Registro V3.1.0](HOMOLOGACAO_V310.md). A CI aprovou a candidata, mas não executou o BAT no Windows pessoal nem inspecionou o save privado. **Histórico:** o alerta de 07/11/2026 sobre `3.0.0-alpha.1` foi superado pela promoção homologada.
 
 ## Instruções (uso diário)
 

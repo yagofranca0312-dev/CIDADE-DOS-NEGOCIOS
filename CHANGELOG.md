@@ -1,3 +1,11 @@
+# V3.1.0 — Homologação para atualização (09/11/2026)
+
+- Titular autorizou merge e homologação no projeto principal e atualização local mesmo sem satisfação estética com a cidade atual.
+- Visual urbano atual congelado nesta versão; reconstrução futura tratada em ciclo independente.
+- Release preserva motor, 18 lotes, schema 9 e lógica fiscal/econômica. Câmera começa em 100%; SVG sem hotspot e sem legenda residual.
+- Candidata aprovada em CI Linux e Windows Chrome/Edge no mesmo SHA; CI de `main` e checkpoint de release são etapas finais controladas.
+- Atualizador Windows `ATUALIZAR_E_JOGAR.bat` lê a `main`; exportar backup JSON externo antes da atualização e confirmar com o registro formal em `docs/HOMOLOGACAO_V310.md`.
+
 # V3.1.0 — Refino de câmera e remoção de legenda/hotspot do SVG (09/11/2026)
 
 - Mapa de Tianguá sem legenda dinâmica desenhada, sem hotspot/ação do letreiro e sem botão fantasma.

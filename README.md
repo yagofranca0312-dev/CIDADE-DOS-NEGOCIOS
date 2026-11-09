@@ -1,3 +1,15 @@
+# Cidade dos Negócios — V3.1.0 HOMOLOGADA (09/11/2026)
+
+**Publicação autorizada pelo titular com ressalva visual:** o jogo pode ser atualizado e utilizado na forma atual, mas a apresentação da cidade será reconstruída em um ciclo futuro; não foi considerada esteticamente concluída. A V3.1.0 inclui interface imersiva city-first, câmera em 100%, HUD, dock e modais, preservando motor e schema 9.
+
+**Windows:** antes de atualizar, exporte o backup JSON tradicional da carreira e guarde fora da pasta do jogo. Com o jogo fechado, execute `ATUALIZAR_E_JOGAR.bat`; ele lê a `main` homologada, baixa o pacote e abre o HTML local. Para jogar sem baixar atualizações, use `JOGAR_OFFLINE.bat`. Se ainda não instalou o pacote completo, baixe o ZIP da branch `main`. **O teste em CI não equivale a teste físico no seu computador ou com seus saves privados.**
+
+[Registro de homologação V3.1.0](docs/HOMOLOGACAO_V310.md) · [Instruções de atualização](docs/ATUALIZADOR_WINDOWS.md) · [Plano e limitações V3.1.0](docs/V310_IMPLANTACAO_HOMOLOGACAO.md)
+
+---
+
+## Histórico anterior à homologação V3.1.0
+
 # Cidade dos Negócios — V3.1.0 · interface imersiva
 
 Interface city-first, câmera de mapa, dock, painéis contextuais e mobile emulado. Motor e schema 9 da V3.0 preservados. Consulte `docs/V310_IMPLANTACAO_HOMOLOGACAO.md` para limitações e evidências.

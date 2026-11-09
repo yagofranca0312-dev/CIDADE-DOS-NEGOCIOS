@@ -1,5 +1,7 @@
 # Cidade dos Negócios V3.1.0 — Implantação e homologação
 
+**Decisão atual (09/11/2026):** o titular autorizou a promoção à produção e homologação, apesar da insatisfação com a apresentação urbana. Reconstrução visual futura, fora do escopo da V3.1.0 liberada. Critérios de CI e checkpoint verificados no [registro formal](HOMOLOGACAO_V310.md). **Avisos de aceite pendente nas seções abaixo são históricos e anteriores à decisão final.**
+
 **Fonte:** roadmap HTML V2–V3 v2026.11.04/1. **Autorização:** protótipo e implantação aprovados pelo titular em 08/11/2026.
 
 ## Checkpoints 3.1.0-01 a 09

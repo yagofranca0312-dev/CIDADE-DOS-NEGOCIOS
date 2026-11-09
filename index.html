@@ -3756,7 +3756,7 @@ const CidadeCore = (() => {
     const fiscalBlocked=fiscalOverdue(state);
     const available=Math.max(0,ceiling-outstanding);
     return {eligible:authorized&&!blocked&&!fiscalBlocked&&available>=50000,
-      reason:!units.length?'Inaugure uma unidade.':state.calendar.tick<7?'Opere pelo menos sete dias.':sales<10000?'É necessário histórico positivo de vendas.':fiscalBlocked?'Regularize os tributos vencidos (Certidão Negativa bloqueada) antes de contratar novo crédito bancário.':blocked?'Regularize parcelas, encargos vencidos ou limite histórico.':available<50000?'Limite disponível inferior ao empréstimo mínimo de R$ 500.':'Elegível para crédito fictício.',
+      reason:fiscalBlocked?'Regularize os tributos vencidos (Certidão Negativa bloqueada) antes de contratar novo crédito bancário.':!units.length?'Inaugure uma unidade.':state.calendar.tick<7?'Opere pelo menos sete dias.':sales<10000?'É necessário histórico positivo de vendas.':blocked?'Regularize parcelas, encargos vencidos ou limite histórico.':available<50000?'Limite disponível inferior ao empréstimo mínimo de R$ 500.':'Elegível para crédito fictício.',
       salesLast30Cents:sales,projected30Cents:projected30,creditLimitCents:ceiling,
       outstandingPrincipalCents:outstanding,availableCents:available,
       monthlyRateBasisPoints:FINANCE_RATE_BP,terms:FINANCE_TERMS.slice()};

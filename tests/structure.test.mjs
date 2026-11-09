@@ -23,7 +23,7 @@ test('Build reproduzível byte a byte',()=>{
   .replace('__CDN_TIANGUA_MARKET_SPRITE__','data:image/webp;base64,'+readFileSync('src/visual/scenes/tiangua/assets/mercado.webp.b64','utf8').trim())
   .replace('__CDN_TIANGUA_BAKERY_SPRITE__','data:image/webp;base64,'+readFileSync('src/visual/scenes/tiangua/assets/padaria.webp.b64','utf8').trim())
   .replace('__CDN_TIANGUA_CLOTHING_SPRITE__','data:image/webp;base64,'+readFileSync('src/visual/scenes/tiangua/assets/roupas.webp.b64','utf8').trim());
- const expected=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21css).replace('/* CDN_V22_CSS */',readFileSync('src/shell/v22.css','utf8')).replace('/* CDN_V221_CSS */',readFileSync('src/shell/v221-city.css','utf8')).replace('/* CDN_V31_CSS */',readFileSync('src/shell/v31.css','utf8')).replace('/* CDN_CORE */',core+'\n'+readFileSync('src/contracts/v31-read-model.mjs','utf8').replace('export const V31_READ_MODEL_VERSION','const V31_READ_MODEL_VERSION').replace('export function createV31ReadModel','function createV31ReadModel')+'\nconst CidadeV31ReadModel=createV31ReadModel(CidadeCore);').replace('/* CDN_VISUAL */',visual+'\n'+scene).replace('/* CDN_UI */',readFileSync('src/ui/durable-store.part.js','utf8')+'\n'+uiBundle).replace(/\r\n?/g,'\n');
+ const expected=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21css).replace('/* CDN_V22_CSS */',readFileSync('src/shell/v22.css','utf8')).replace('/* CDN_V221_CSS */',readFileSync('src/shell/v221-city.css','utf8')).replace('/* CDN_V31_CSS */',readFileSync('src/shell/v31.css','utf8')+'\n'+readFileSync('src/shell/v32-fiscal.css','utf8')).replace('/* CDN_CORE */',core+'\n'+readFileSync('src/contracts/v31-read-model.mjs','utf8').replace('export const V31_READ_MODEL_VERSION','const V31_READ_MODEL_VERSION').replace('export function createV31ReadModel','function createV31ReadModel')+'\nconst CidadeV31ReadModel=createV31ReadModel(CidadeCore);').replace('/* CDN_VISUAL */',visual+'\n'+scene).replace('/* CDN_UI */',readFileSync('src/ui/durable-store.part.js','utf8')+'\n'+uiBundle).replace(/\r\n?/g,'\n');
  assert.equal(createHash('sha256').update(expected).digest('hex'),createHash('sha256').update(html).digest('hex'));
 });
 
@@ -49,8 +49,8 @@ test('Hotfix: preço próprio visível, concorrente independente e confirmação
 });
 test('V1.3: schema 5 com migração da V1 e formato de exportação validado',()=>{
  const core=readFileSync('src/core/game.js','utf8');
- assert.match(core,/SCHEMA_VERSION = 9/);
- assert.match(core,/VERSION = '3\.1\.0'/);
+ assert.match(core,/SCHEMA_VERSION = 10/);
+ assert.match(core,/VERSION = '3\.2\.0'/);
  assert.match(core,/function importSave\(raw\)/);
  assert.match(core,/function upgradedState\(original\)/);
 });

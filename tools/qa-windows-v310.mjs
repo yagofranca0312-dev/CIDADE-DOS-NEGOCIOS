@@ -131,7 +131,7 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   await page.locator('#map-lot-picker').focus();
   await page.locator('#map-lot-picker').selectOption('2');
   assert.match(await page.locator('#selected-lot').textContent(),/Lote 02/);
-  await page.locator('#map-lot-picker').blur();
+  await page.locator('#map-lot-picker').evaluate(el=>el.blur());
   // O hotspot transparente acompanha o letreiro da arte, sem bloco de texto extra.
   if(await page.locator('#map-canvas .v31-city-art-hotspot').count()){
     await page.locator('#map-canvas .v31-city-art-hotspot').click();

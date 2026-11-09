@@ -132,9 +132,20 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   await page.locator('#map-lot-picker').selectOption('2');
   assert.match(await page.locator('#selected-lot').textContent(),/Lote 02/);
   await page.locator('#map-lot-picker').evaluate(el=>el.blur());
-  // O hotspot transparente acompanha o letreiro da arte, sem bloco de texto extra.
+  // O letreiro e um alvo da cena SVG, nao um botao fixo na viewport.
+  // Ele pode estar fora de tela apos pan/zoom; revele a origem antes do hit-test.
   if(await page.locator('#map-canvas .v31-city-art-hotspot').count()){
-    await page.locator('#map-canvas .v31-city-art-hotspot').click();
+    await page.locator('#map-canvas').evaluate(el=>{el.scrollLeft=0;el.scrollTop=0;});
+    const art=await page.evaluate(()=>{
+      const r=document.querySelector('.v31-city-art-hotspot rect').getBoundingClientRect(),
+        viewport=document.getElementById('map-canvas').getBoundingClientRect();
+      return {x:r.x,y:r.y,w:r.width,h:r.height,
+        vw:viewport.width,vh:viewport.height,canvasLeft:viewport.left,canvasTop:viewport.top,
+        scrollLeft:document.getElementById('map-canvas').scrollLeft};
+    });
+    assert.ok(art.x+art.w>art.canvasLeft&&art.x<art.canvasLeft+art.vw,
+      'Letreiro fora da area visivel apos pan: '+JSON.stringify(art));
+    await page.locator('#map-canvas .v31-city-art-hotspot rect').click();
     assert.equal(await page.locator('[data-view="sistema"]').isVisible(),true,'Letreiro não abre seletor');
     assert.equal(await page.locator('#v221-city-pick').isVisible(),true,'Municípios indisponíveis');
     assert.equal(await page.locator('#v221-city-selector').isVisible(),true);

@@ -27,8 +27,8 @@ const row=(s,period='2026-11',id=unit(s))=>Core.fiscalOperationsReport(s).units.
 
 test('C: opt-in, schema 9 e carreira antiga sem pendências operacionais automáticas',()=>{
  let s=career(),before=Core.exportSave(s);
- assert.equal(Core.VERSION,'3.1.0');
- assert.equal(s.schemaVersion,9);
+ assert.equal(Core.VERSION,'3.2.0');
+ assert.equal(s.schemaVersion,10);
  assert.equal(Core.fiscalOperationsReport(s).openPeriods,0);
  assert.equal(Core.fiscalOperationsReport(s).units[0].activatedAt,null);
  assert.equal(Core.exportSave(s),before,'relatório é consulta pura');
@@ -111,7 +111,7 @@ test('C: RH e Paralegal coexistem e cenário tributário antigo permanece opt-in
  s=advance(s,30);
  assert.equal(Core.rhReport(s).totalActive,1);
  assert.equal(Core.paralegalReport(s)[0].processes[0].status,'CONCLUIDO');
- assert.equal(Core.taxReport(s).mode,'DEMONSTRACAO_ECONOMICA');
+ assert.equal(Core.taxReport(s).mode,'ATIVO');
  assert.equal(Core.overview(s).taxPayable,0);
  assert.equal(request(s,'FISCAL.PAGAR_SIMULADO',{period:'2026-11'}).ok,false);
 });
@@ -120,7 +120,7 @@ test('C: roundtrip de save preserva marcações e fechamento sem retroagir o est
  s=apply(s,'FISCAL_OP.CONCLUIR_TAREFA',{businessId:id,period:'2026-11',task:'vendas'});
  const before=JSON.stringify(Core.fiscalOperationsReport(s)),saved=Core.exportSave(s);
  const restored=Core.importSave(saved);
- assert.equal(restored.migrated,false);assert.equal(restored.state.schemaVersion,9);
+ assert.equal(restored.migrated,false);assert.equal(restored.state.schemaVersion,10);
  assert.equal(JSON.stringify(Core.fiscalOperationsReport(restored.state)),before);
  assert.equal(Core.exportSave(restored.state),saved);
 });
@@ -134,5 +134,5 @@ test('C: HTML offline único contém a tela Fiscal Operacional e scripts válido
  assert.match(ui,/FISCAL_OP\.FECHADO|FISCAL_OP\.FECHAR|data-fiscal-op-close/);
  const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
  assert.equal(scripts.length,1);assert.doesNotThrow(()=>new Script(scripts[0][1]));
- assert.match(html,/const VERSION = '3\.1\.0'/);
+ assert.match(html,/const VERSION = '3\.2\.0'/);
 });

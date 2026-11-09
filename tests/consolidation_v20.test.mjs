@@ -18,21 +18,30 @@ function career(C,{extra=false,tax=false}={}){
  return s;
 }
 test('V2.4-A preserva schema 9 e mantém motor fiscal/contábil verificável',()=>{
- assert.equal(now.SCHEMA_VERSION,9);assert.equal(now.VERSION,'3.1.0');
+ assert.equal(now.SCHEMA_VERSION,10);assert.equal(now.VERSION,'3.2.0');
  assert.ok(now.PARALEGAL_SERVICES.cadastro);
  assert.equal(typeof now.balanceSheet,'function');assert.equal(typeof now.taxReport,'function');
 });
-test('V2.0 e V1.9 produzem mesma rede, estoque, balanço, caixa e RNG',()=>{
+test('V2.0 e V1.9 preservam operação física, RNG e receitas, com fiscal V3.2 isolado',()=>{
  for(const opts of [{},{extra:true},{tax:true}]){
   const a=career(old,opts),b=career(now,opts);
-  for(const key of ['world','player','rng','calendar','economy','fiscal','audit'])assert.deepEqual(norm(a[key]),norm(b[key]),`${key}, ${JSON.stringify(opts)}`);
-  for(const fn of ['overview','groupReport','balanceSheet','reconciliationReport','incomeStatement','cashFlowStatement','taxReport'])assert.deepEqual(norm(old[fn](a)),norm(now[fn](b)),fn);
+  for(const key of ['world','player','rng','calendar'])assert.deepEqual(norm(a[key]),norm(b[key]),key);
+  for(const key of ['cash','inventoryValue','inTransit','revenue','cogs','stock'])
+   assert.equal(now.overview(b)[key],old.overview(a)[key],key);
+  assert.equal(now.balanceSheet(b).balanced,true);
+  assert.equal(now.reconciliationReport(b).ok,true);
+  assert.equal(now.overview(b).taxPayable,b.fiscal.assessments.reduce((n,a)=>n+a.amount-a.paid,0));
  }
 });
-test('V2.0 importa save genuíno da V1.9 sem migração, retrabalho nem correção retroativa',()=>{
- const a=career(old,{extra:true});const payload=old.exportSave(a);const x=now.importSave(payload);
- assert.equal(x.migrated,false);assert.deepEqual(norm(x.state),norm(a));
- assert.equal(now.exportSave(x.state),payload);
+test('V2.0: save genuíno V1.9 migra para fiscal ativo sem reescrever razão histórico',()=>{
+ const a=career(old,{extra:true}),snapshot=JSON.stringify(a.economy.ledger);
+ const restored=now.importSave(old.exportSave(a));
+ assert.equal(restored.migrated,true);
+ assert.equal(restored.state.schemaVersion,10);
+ assert.equal(restored.state.fiscal.mode,'ATIVO');
+ assert.equal(JSON.stringify(restored.state.economy.ledger),snapshot);
+ assert.equal(restored.state.calendar.date,a.calendar.date);
+ assert.equal(restored.state.rng.seed,a.rng.seed);
 });
 test('V2.0 navegação tem quatro áreas e comandos fiscais/backup ficam acessíveis',()=>{
  const template=readFileSync('src/shell/index.template.html','utf8');

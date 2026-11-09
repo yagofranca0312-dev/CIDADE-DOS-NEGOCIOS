@@ -106,7 +106,7 @@ test('V2.3-D: mudanças são de apresentação, não adicionam comandos econômi
   Core.financialReport(state);Core.cashFlowStatement(state);Core.incomeStatement(state);Core.balanceSheet(state);
   Core.reconciliationReport(state);
   assert.equal(Core.exportSave(state),before);
-  assert.equal(state.schemaVersion,9);
+  assert.equal(state.schemaVersion,10);
 });
 test('V2.3-D: HTML único offline reúne o Fiscal, tesouraria e razão sem duplicação',()=>{
   const built=readFileSync('index.html','utf8');
@@ -114,5 +114,5 @@ test('V2.3-D: HTML único offline reúne o Fiscal, tesouraria e razão sem dupli
   assert.equal(scripts.length,1);assert.doesNotThrow(()=>new Script(scripts[0][1]));
   for(const id of ['admin-shared-filters','treasury-cash','finance-summary','journal-events','fiscal-summary'])
     assert.ok(built.includes('id="'+id+'"'),id);
-  assert.match(built,/const VERSION = '3\.1\.0'/);
+  assert.match(built,/const VERSION = '3\.2\.0'/);
 });

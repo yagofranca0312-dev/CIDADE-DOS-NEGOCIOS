@@ -867,8 +867,8 @@ body.v31-immersive .map-panel .panel-heading,body.v31-immersive .world-map-notic
 body.v31-immersive #map-canvas{position:absolute!important;inset:0!important;width:100vw!important;height:100dvh!important;max-width:none!important;min-height:0!important;max-height:none!important;display:block!important;overflow:auto!important;scrollbar-width:none!important;overscroll-behavior:contain;touch-action:pan-x pan-y;cursor:grab;user-select:none;background:#0a2939}
 body.v31-immersive #map-canvas:active{cursor:grabbing}
 body.v31-immersive #map-canvas::-webkit-scrollbar{display:none}
-body.v31-immersive #map-canvas>svg.v221-city-svg{width:max(100vw,calc(100dvh * 2.313253))!important;height:auto!important;min-width:0!important;max-width:none!important;min-height:0!important;max-height:none!important;aspect-ratio:1536/664!important;overflow:visible!important;touch-action:pan-x pan-y}
-body.v31-immersive #map-canvas>svg.v22-city-svg{width:max(100vw,calc(100dvh * 1.580247))!important;height:auto!important;min-width:0!important;max-width:none!important;min-height:0!important;max-height:none!important;aspect-ratio:640/405!important;overflow:visible!important;touch-action:pan-x pan-y}
+body.v31-immersive #map-canvas>svg.v221-city-svg{width:100vw!important;max-width:100vw!important;height:100dvh!important;max-height:100dvh!important;min-width:0!important;min-height:0!important;object-fit:contain!important;aspect-ratio:1536/664!important;overflow:visible!important;touch-action:pan-x pan-y}
+body.v31-immersive #map-canvas>svg.v22-city-svg{width:100vw!important;max-width:100vw!important;height:100dvh!important;max-height:100dvh!important;min-width:0!important;min-height:0!important;object-fit:contain!important;aspect-ratio:640/405!important;overflow:visible!important;touch-action:pan-x pan-y}
 body.v31-immersive .v31-top-controls{position:fixed!important;top:calc(8px + env(safe-area-inset-top));left:50%;right:auto;transform:translateX(-50%);z-index:120;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:9px;width:max-content;max-width:calc(100vw - 20px);padding:8px 12px;background:rgba(7,24,39,.78);border:1px solid #b2ccd080;border-radius:16px;box-shadow:0 9px 32px #0008;backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px)}
 .v31-hud-metric{min-width:0;display:flex;flex-direction:column;gap:2px;padding-right:9px;border-right:1px solid #8dadc050}
 .v31-hud-metric small{font-size:.59rem;color:#aacddc;font-weight:800;letter-spacing:.06em}
@@ -1403,10 +1403,6 @@ body.v31-immersive.v221-tiangua-scene .map-panel>.v221-city-switch-trigger:focus
 body.v31-immersive.v221-tiangua-scene .map-panel>.v221-city-switch-trigger:focus-visible>*{
  visibility:visible!important;
 }
-body.v31-immersive .v31-city-art-hotspot{cursor:pointer}
-body.v31-immersive .v31-city-art-hotspot:focus-visible>rect{
- stroke:#ffe7ab;stroke-width:3;fill-opacity:.05;
-}
 body.v31-immersive .v221-city-info-trigger{display:none!important}
 /* Seleção direta dos 18 terrenos pelo SVG. O seletor nativo é apenas acessível
    por teclado: Tab -> foco revela o controle temporariamente. */
@@ -1520,12 +1516,29 @@ body.v31-overlay-open #v31-city-manager{
  body.v31-immersive .v31-top-controls button{min-width:27px!important;padding:4px!important}
 }
 
-/* V3.1.0: suprimir definitivamente o resumo/legenda legado que vaza no mapa desktop. 
-   NÃO ocultar .v221-live-legend, que faz parte do SVG do cenário e acompanha o jogo. */
+/* V3.1.0: remover integralmente resumos antigos, inclusive elementos SVG residuais. */
+body.v31-immersive .v221-live-legend,
 body.v31-immersive .map-legend,
 body.v31-immersive #v221-map-summary,
 body.v31-immersive .v221-summary-entries {
   display: none !important;
+}
+/* O letreiro integrado à arte não é atalho ou botão. */
+body.v31-immersive .map-panel>.v221-city-switch-trigger,
+body.v31-immersive.v221-city-mode.v221-tiangua-scene .map-panel>.v221-city-switch-trigger{
+  display:none!important;
+}
+@media(max-width:768px){
+  body.v31-immersive #map-canvas{
+    display:grid!important;align-items:center!important;
+    justify-items:center!important;align-content:center!important;
+  }
+  body.v31-immersive #map-canvas>svg.v221-city-svg,
+  body.v31-immersive #map-canvas>svg.v22-city-svg{
+    width:100vw!important;max-width:100vw!important;
+    height:auto!important;max-height:calc(100dvh - 110px)!important;
+    object-fit:contain!important;
+  }
 }
 
   </style>
@@ -1620,7 +1633,7 @@ body.v31-immersive .v221-summary-entries {
           <div class="v221-city-pick" id="v221-city-pick" hidden><label for="v221-city-selector">Explorar município</label><select id="v221-city-selector" aria-label="Cidade a explorar"></select><button type="button" id="v221-city-pick-close">Fechar</button></div>
           <div class="city-stage-intro"><div><span class="stage-eyebrow">UM MUNDO DE NEGÓCIOS</span><strong>Seu próximo movimento começa na cidade.</strong></div><span class="stage-live"><span aria-hidden="true">●</span> SIMULAÇÃO LOCAL</span></div>
           <div class="dashboard-grid city-stage">
-            <article class="panel map-panel"><button type="button" class="v221-city-switch-trigger" id="v221-city-switch-trigger" aria-label="Explorar cidades"><strong id="v221-map-city-title">Tianguá · CE</strong><small>DISTRITO COMERCIAL · ESCOLHER CIDADE ▾</small></button><div class="panel-heading"><div><div class="overline">MAPA URBANO · ESTILIZADO</div><h3 id="map-title">Seu distrito comercial</h3></div><span class="tag-soft" id="map-uf">CE</span></div>
+            <article class="panel map-panel"><button type="button" class="v221-city-switch-trigger" id="v221-city-switch-trigger" tabindex="-1" aria-hidden="true" hidden><strong id="v221-map-city-title">Tianguá · CE</strong><small>DISTRITO COMERCIAL · ESCOLHER CIDADE ▾</small></button><div class="panel-heading"><div><div class="overline">MAPA URBANO · ESTILIZADO</div><h3 id="map-title">Seu distrito comercial</h3></div><span class="tag-soft" id="map-uf">CE</span></div>
               <div class="world-map-notice">SELECIONE UM LOTE NO MAPA OU USE O SELETOR</div>
               <div class="v31-camera" role="group" aria-label="Câmera do mapa">
                 <button type="button" id="v31-camera-minus" aria-label="Reduzir zoom">−</button>
@@ -5465,22 +5478,7 @@ const CidadeTianguaCena=(()=>{
       parts.push('<text x="'+x+'" y="'+(y+7)+'" text-anchor="middle" font-family="system-ui,Segoe UI,Arial" font-size="18" font-weight="850" fill="#fff7e8" pointer-events="none">'+String(l.number).padStart(2,'0')+'</text>');
       parts.push('</g>');
     }
-    // A legenda na arte original continha CONTAGENS DEMONSTRATIVAS.
-    // Cobrir exatamente essa área por uma legenda viva do jogo (mesmas coordenadas SVG),
-    // que continua alinhada mesmo com zoom/redimensionamento.
-    const amount=unitMap.size,free=18-amount;
-    parts.push('<g class="v221-live-legend" aria-hidden="true" pointer-events="none">');
-    parts.push('<rect x="15" y="529" width="202" height="115" rx="13" fill="#071b2e" stroke="#c6a56a" stroke-width="1.3"/>');
-    for(const [i,color,label] of [[0,'#93b870',free+' disponíveis'],[1,'#f0bf66',amount+' empresa'+(amount===1?'':'s')],[2,'#19b5ec','seleção ativa']]){
-      const y=555+i*30;
-      parts.push('<rect x="33" y="'+(y-9)+'" width="19" height="19" rx="4" fill="'+color+'"/>');
-      parts.push('<text x="63" y="'+(y+5)+'" font-size="15" font-weight="700" font-family="system-ui,Arial" fill="#e7eff3">'+escape(label)+'</text>');
-    }
-    parts.push('</g>');
-    // Hotspot transparente alinhado ao letreiro já desenhado na arte (SVG 1536 x 664).
-    // Não duplica textos, não bloqueia os lotes e acompanha o zoom e a câmera.
-    parts.push('<g class="v31-city-art-hotspot" data-city-switch-art="true" tabindex="0" role="button" aria-label="Explorar municípios pelo letreiro da cidade">');
-    parts.push('<title>Escolher município</title><rect x="0" y="0" width="465" height="96" rx="9" fill="#000" fill-opacity=".001" pointer-events="all"/></g>');
+    // Letreiro da imagem é decorativo; sem legenda/overlay ou hotspot SVG.
     parts.push('</g></svg>');
     return parts.join('');
   }
@@ -7051,13 +7049,10 @@ function bindBalancePlan(){
   const v31CameraStore='cidade-v31-camera-ui-v1';
   function v31CameraLoad(cityId){
     if(v31CameraCity===cityId)return;
-    v31CameraCity=cityId;v31CameraCenterPending=false;
-    try{
-      const c=JSON.parse(sessionStorage.getItem(v31CameraStore)||'{}')[cityId];
-      if(c&&[c.zoom,c.x,c.y].every(Number.isFinite)){
-        v31Camera={zoom:Math.min(2.4,Math.max(1,c.zoom)),x:Math.max(0,c.x),y:Math.max(0,c.y)};
-      }else{v31Camera={zoom:1,x:0,y:0};v31CameraCenterPending=true;}
-    }catch(_){v31Camera={zoom:1,x:0,y:0};v31CameraCenterPending=true;}
+    // Sempre inicia em 100% na praça central; zoom de outra sessão não é restaurado.
+    v31CameraCity=cityId;
+    v31Camera={zoom:1,x:0,y:0};
+    v31CameraCenterPending=true;
   }
   function v31CameraSave(){
     try{const all=JSON.parse(sessionStorage.getItem(v31CameraStore)||'{}');
@@ -7326,7 +7321,10 @@ function bindBalancePlan(){
     cityAction.className='btn btn-outline v31-city-manager';
     cityAction.textContent='🌐 Explorar municípios';
     cityAction.setAttribute('aria-controls','v221-city-pick');
-    cityAction.addEventListener('click',()=>$('v221-city-switch-trigger').click());
+    cityAction.addEventListener('click',()=>{
+      const pick=$('v221-city-pick');pick.hidden=!pick.hidden;
+      if(!pick.hidden)$('v221-city-selector').focus();
+    });
     saves.prepend($('v221-city-pick'));
     saves.prepend(cityAction);
     for(const button of document.querySelectorAll('[data-v31-open]')){
@@ -7382,17 +7380,6 @@ function bindBalancePlan(){
       v31CameraApply();v31CameraSave();
     });
     const canvas=$('map-canvas');
-    // A arte de Tianguá tem um hotspot SVG alinhado ao letreiro e não ao viewport:
-    // o alvo acompanha pan/zoom, sem camada fixa invisível sobre os lotes.
-    canvas.addEventListener('click',event=>{
-      if(event.target.closest('[data-city-switch-art]'))$('v221-city-switch-trigger').click();
-    });
-    canvas.addEventListener('keydown',event=>{
-      if(!event.target.closest('[data-city-switch-art]'))return;
-      if(event.key==='Enter'||event.key===' '){
-        event.preventDefault();$('v221-city-switch-trigger').click();
-      }
-    });
     canvas.setAttribute('tabindex','0');
     canvas.setAttribute('aria-label','Cidade: arraste para explorar, teclas de seta para deslocar, mais e menos para aproximar; Tab para lotes');
     canvas.addEventListener('keydown',event=>{
@@ -7717,11 +7704,6 @@ function bindBalancePlan(){
     $('v221-config-open').addEventListener('click',()=>goto('sistema'));
     $('v221-help-open').addEventListener('click',()=>{$('v221-help-panel').hidden=!$('v221-help-panel').hidden;});
     $('v221-help-close').addEventListener('click',()=>{$('v221-help-panel').hidden=true;});
-    $('v221-city-switch-trigger').addEventListener('click',()=>{
-      v31OpenPanel('sistema','saves',$('v221-city-switch-trigger'));
-      $('v221-city-pick').hidden=false;
-      $('v221-city-selector').focus();
-    });
     $('v221-city-pick-close').addEventListener('click',()=>{$('v221-city-pick').hidden=true;});
     $('v221-event-open').addEventListener('click',()=>{$('v221-activity').open=!$('v221-activity').open;$('v221-observatory').open=false;});
     $('v221-hud-time').addEventListener('click',()=>{const el=$('v221-time-menu');el.hidden=!el.hidden;$('v221-hud-time').setAttribute('aria-expanded',String(!el.hidden));$('v221-time-speed').value=$('speed-select').value;});

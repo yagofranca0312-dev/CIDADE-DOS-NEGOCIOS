@@ -54,7 +54,7 @@ async function open(context,errors){
   // file:// pode produzir resposta nula conforme versão do Playwright; prova é DOM + app.
   await page.locator('#career-form').waitFor({state:'attached',timeout:15000});
   await page.waitForFunction(()=>document.body.dataset.storageReady==='ready',{timeout:20000});
-  await page.waitForFunction(()=>document.title.includes('3.1.0'),{timeout:15000});
+  await page.waitForFunction(()=>document.title.includes('3.2.0'),{timeout:15000});
   return page;
 }
 function validateWindowsHosted(){
@@ -110,7 +110,7 @@ async function testBrowser(channel){
     await page.locator('#career-form button[type=submit]').click();
     await page.waitForFunction(()=>!document.getElementById('game-shell').hidden);
     const created=await jsonInfo(page);
-    check(Boolean(created.raw&&created.info&&created.info.revision>=1&&created.info.version===9),
+    check(Boolean(created.raw&&created.info&&created.info.revision>=1&&created.info.version===10),
       channel+': carreira criada e exportada como envelope verificável');
     check((await page.locator('#autosave-label').textContent()).includes('Cópia local verificada'),
       channel+': interface declara cópia após verificação de leitura');

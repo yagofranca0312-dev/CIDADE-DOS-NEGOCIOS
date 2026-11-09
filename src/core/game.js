@@ -1874,6 +1874,8 @@ const CidadeCore = (() => {
     const standardCents=650+distanceUnits*85+quantity*22;
     const feeCents=(from.depot||to.depot)?Math.round(standardCents*.75):standardCents;
     return {fromId,toId,originCity:a.name,destinationCity:b.name,
+      interstateHypothesisRateBp:a.uf===b.uf?0:200,
+      interstateTaxScenario:'INFORMATIVO_SEM_EFEITO_CONTABIL',
       distanceUnits,days,quantity,baseFeeCents:standardCents,feeCents,
       discountCents:standardCents-feeCents,
       distanceType:'SIMULATED_INDEX_NOT_KM',
@@ -2173,9 +2175,11 @@ const CidadeCore = (() => {
       const valueCents=logisticsRemoveStock(draft,from,sector,productId,fromP.name,quantity);
       assert(valueCents>0,'Transferência não permite mercadoria sem valor contábil.');
       const id='tr-'+(++lg.seq),dueDate=addDays(draft.calendar.date,quote.days);
+      const interstateFiscalScenarioCents=quote.interstateHypothesisRateBp?bp(valueCents,quote.interstateHypothesisRateBp):0;
       lg.transfers.push({id,fromId:from.id,toId:to.id,sector,productId,productName:fromP.name,
         quantity,valueCents,lotPieces:lots,date:draft.calendar.date,dueDate,
         feeCents:quote.feeCents,distanceUnits:quote.distanceUnits,
+        interstateFiscalScenarioCents,
         receivedAt:null,deliveredQuantity:0,lostQuantity:0,deliveredValueCents:0,status:'PENDING'});
       journal(draft,'Expedição de estoque interfilial '+id,[
         {account:'IN_TRANSIT',debit:valueCents,credit:0},
@@ -2188,7 +2192,8 @@ const CidadeCore = (() => {
       lg.metrics.fees+=quote.feeCents;
       event(draft,'LOGISTICA.EXPEDIDA','Transferência '+id+' '+from.id+' → '+to.id+'; '+quantity+' unidade(s). Sem faturamento interno.',
         {tripId:id,fromId:from.id,toId:to.id,quantity,valueCents,feeCents:quote.feeCents,dueDate,
-          distanceUnits:quote.distanceUnits,distanceType:'SIMULATED_INDEX_NOT_KM'},from.depot?null:from.id);
+          distanceUnits:quote.distanceUnits,distanceType:'SIMULATED_INDEX_NOT_KM',
+          interstateFiscalScenarioCents,interstateFiscalNote:'Custo hipotético de 2% entre UFs, apenas informativo, sem DIFAL legal ou lançamento.'},from.depot?null:from.id);
       return;
     }
     if(type==='LOGISTICA.INSUMO.COMPRAR'){

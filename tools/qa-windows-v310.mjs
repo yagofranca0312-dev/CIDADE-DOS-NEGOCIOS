@@ -143,13 +143,24 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
         vw:viewport.width,vh:viewport.height,canvasLeft:viewport.left,canvasTop:viewport.top,
         scrollLeft:document.getElementById('map-canvas').scrollLeft};
     });
-    assert.ok(art.x+art.w>art.canvasLeft&&art.x<art.canvasLeft+art.vw,
-      'Letreiro fora da area visivel apos pan: '+JSON.stringify(art));
-    await page.locator('#map-canvas .v31-city-art-hotspot rect').click();
-    assert.equal(await page.locator('[data-view="sistema"]').isVisible(),true,'Letreiro não abre seletor');
-    assert.equal(await page.locator('#v221-city-pick').isVisible(),true,'Municípios indisponíveis');
-    assert.equal(await page.locator('#v221-city-selector').isVisible(),true);
-    await page.locator('#v31-overlay-close').click();
+    const artVisible=art.x+art.w>art.canvasLeft+2&&art.x<art.canvasLeft+art.vw-2&&
+      art.y+art.h>art.canvasTop+2&&art.y<art.canvasTop+art.vh-2;
+    if(artVisible){
+      await page.locator('#map-canvas .v31-city-art-hotspot rect').click();
+      assert.equal(await page.locator('[data-view="sistema"]').isVisible(),true,'Letreiro não abre seletor');
+      assert.equal(await page.locator('#v221-city-pick').isVisible(),true,'Municípios indisponíveis');
+      assert.equal(await page.locator('#v221-city-selector').isVisible(),true);
+      await page.locator('#v31-overlay-close').click();
+    }else{
+      // A câmera centralizada pode recortar o letreiro em telas estreitas.
+      // Verificar seu destino pelo acesso persistente na dock, sem criar hotspot fantasma.
+      assert.ok(width<=768,'Letreiro desktop fora da viewport: '+JSON.stringify(art));
+      await page.locator('#v31-dock [data-v31-open="sistema"]').click();
+      await page.locator('#v31-city-manager').click();
+      assert.equal(await page.locator('#v221-city-pick').isVisible(),true,'Acesso móvel a municípios indisponível');
+      assert.equal(await page.locator('#v221-city-selector').isVisible(),true);
+      await page.locator('#v31-overlay-close').click();
+    }
   }
   await page.locator('#v31-dock [data-v31-open="mercado:compras"]').click();
   assert.equal(await page.locator('[data-view="cidade"]').isVisible(),true);

@@ -40,7 +40,7 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
     const sidebar=document.querySelector('.sidebar');
     const metric=(id)=>document.getElementById(id).textContent;
     return {width:innerWidth,height:innerHeight,map:{x:r.x,y:r.y,w:r.width,h:r.height},
-      svg:{w:sr.width,h:sr.height},
+      svg:{x:sr.x,y:sr.y,w:sr.width,h:sr.height},canvasScroll:{x:canvas.scrollLeft,y:canvas.scrollTop},
       dock:{x:dock.x,w:dock.width},
       sidebarRemoved:sidebar===null,
       classicControls:document.querySelectorAll('#v31-classic-switch,#v31-classic-return').length,
@@ -60,7 +60,16 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   assert.equal(geometry.topbarHidden,true,'Topbar antigo ainda ocupa a tela');
   assert.ok(Math.abs(geometry.map.x)<=2 && Math.abs(geometry.map.y)<=2,'Mapa nao inicia na origem da viewport');
   assert.ok(geometry.map.w>=width-2 && geometry.map.h>=geometry.height-2,'Mapa nao ocupa 100% da viewport');
-  assert.ok(geometry.svg.w>=width-3 && geometry.svg.h>=geometry.height-3,'Cena SVG nao cobre a viewport');
+  assert.ok(Math.abs(geometry.svg.w-width)<3,'SVG extrapola a largura natural da viewport');
+  if(width<=768){
+    const expectedHeight=width*664/1536;
+    assert.ok(Math.abs(geometry.svg.h-expectedHeight)<4,'SVG mobile não respeita proporção original: '+JSON.stringify(geometry.svg));
+    assert.ok(geometry.svg.y>58,'Mapa não está centralizado abaixo do HUD');
+    assert.ok(geometry.svg.y+geometry.svg.h<geometry.height-70,'Mapa esconde lotes sob a dock');
+  }else assert.ok(Math.abs(geometry.svg.h-geometry.height)<3,'SVG desktop não usa viewport com contain');
+  assert.equal(geometry.canvasScroll.x,0,'Zoom/pan inicial horizontal não está zerado');
+  assert.equal(geometry.canvasScroll.y,0,'Zoom/pan inicial vertical não está zerado');
+  assert.equal(await page.locator('#v31-camera-label').textContent(),'100%');
   assert.ok(geometry.scrollWidth<=width+4,'Rolagem horizontal fora do viewport');
   assert.ok(Math.abs(geometry.dock.x+geometry.dock.w/2-width/2)<=4,'Dock nao centralizada');
   assert.ok(geometry.cash!=='—' && geometry.date!=='—','HUD sem dados reais da carreira');
@@ -94,8 +103,7 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
     units:getComputedStyle(document.getElementById('unit-switch-container')).display,
     sidebar:document.querySelector('.sidebar-brand')?.getBoundingClientRect().width||0,
     cityInfoCount:document.querySelectorAll('.v221-city-info-trigger').length,
-    switchHidden:document.body.classList.contains('v221-tiangua-scene')
-      ?getComputedStyle(document.getElementById('v221-city-switch-trigger')).opacity==='0':true
+    switchHidden:getComputedStyle(document.getElementById('v221-city-switch-trigger')).display==='none'
   }));
   assert.equal(residual.units,'none','Unidade ativa legada ainda aparece');
   assert.equal(residual.sidebar,0,'Brand lateral residual ocupa o mapa');
@@ -139,41 +147,16 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   await page.locator('#map-lot-picker').selectOption('2');
   assert.match(await page.locator('#selected-lot').textContent(),/Lote 02/);
   await page.locator('#map-lot-picker').evaluate(el=>el.blur());
-  // O letreiro e um alvo da cena SVG, nao um botao fixo na viewport.
-  // Ele pode estar fora de tela apos pan/zoom; revele a origem antes do hit-test.
-  if(await page.locator('#map-canvas .v31-city-art-hotspot').count()){
-    await page.locator('#map-canvas').evaluate(el=>{el.scrollLeft=0;el.scrollTop=0;});
-    const art=await page.evaluate(()=>{
-      const r=document.querySelector('.v31-city-art-hotspot rect').getBoundingClientRect(),
-        viewport=document.getElementById('map-canvas').getBoundingClientRect();
-      return {x:r.x,y:r.y,w:r.width,h:r.height,
-        vw:viewport.width,vh:viewport.height,canvasLeft:viewport.left,canvasTop:viewport.top,
-        scrollLeft:document.getElementById('map-canvas').scrollLeft};
-    });
-    const exposedWidth=Math.min(art.x+art.w,art.canvasLeft+art.vw)-Math.max(art.x,art.canvasLeft);
-    const artVisible=exposedWidth>22&&art.y+art.h>art.canvasTop+16&&art.y<art.canvasTop+art.vh-16;
-    if(artVisible){
-      const clickX=Math.max(art.canvasLeft+14,art.x+18);
-      const clickY=Math.min(art.canvasTop+art.vh-12,art.y+art.h-14);
-      const artHit=await page.evaluate(({x,y})=>
-        !!document.elementFromPoint(x,y)?.closest('[data-city-switch-art]'),{x:clickX,y:clickY});
-      assert.equal(artHit,true,'Hotspot SVG não recebe clique físico: '+JSON.stringify({art,clickX,clickY}));
-      await page.mouse.click(clickX,clickY);
-      assert.equal(await page.locator('[data-view="sistema"]').isVisible(),true,'Letreiro não abre seletor');
-      assert.equal(await page.locator('#v221-city-pick').isVisible(),true,'Municípios indisponíveis');
-      assert.equal(await page.locator('#v221-city-selector').isVisible(),true);
-      await page.locator('#v31-overlay-close').click();
-    }else{
-      // A câmera centralizada pode recortar o letreiro em telas estreitas.
-      // Verificar seu destino pelo acesso persistente na dock, sem criar hotspot fantasma.
-      assert.ok(width<=768,'Letreiro desktop fora da viewport: '+JSON.stringify(art));
-      await page.locator('#v31-dock [data-v31-open="sistema"]').click();
-      await page.locator('#v31-city-manager').click();
-      assert.equal(await page.locator('#v221-city-pick').isVisible(),true,'Acesso móvel a municípios indisponível');
-      assert.equal(await page.locator('#v221-city-selector').isVisible(),true);
-      await page.locator('#v31-overlay-close').click();
-    }
-  }
+  // Letreiro decorativo e nenhuma legenda interna; apenas dock abre Configurações.
+  assert.equal(await page.locator('#map-canvas .v31-city-art-hotspot,#map-canvas [data-city-switch-art],#map-canvas .v221-live-legend').count(),0);
+  await page.locator('#map-canvas .v221-urban-base').dispatchEvent('click');
+  assert.equal(await page.locator('[data-view="sistema"]').isVisible(),false,'Clicar na arte abre Configurações indevidamente');
+  assert.equal(await page.locator('#v221-city-pick').isVisible(),false,'Clicar na arte abre cidades indevidamente');
+  await page.locator('#v31-dock [data-v31-open="sistema"]').click();
+  await page.locator('#v31-city-manager').click();
+  assert.equal(await page.locator('#v221-city-pick').isVisible(),true,'Cidades não acessíveis pelo Dock > Configurações');
+  assert.equal(await page.locator('#v221-city-selector').isVisible(),true);
+  await page.locator('#v31-overlay-close').click();
   await page.locator('#v31-dock [data-v31-open="mercado:compras"]').click();
   assert.equal(await page.locator('[data-view="cidade"]').isVisible(),true);
   assert.equal(await page.locator('[data-view="mercado"]').isVisible(),true);
@@ -303,7 +286,7 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   assert.equal(await page.locator('.sidebar').count(),0,'Sidebar reapareceu depois dos modais');
   assert.equal(await page.locator('#map-canvas').isVisible(),true,'Cidade desapareceu depois dos modais');
   await page.reload({waitUntil:'load'});await page.waitForFunction(()=>document.body.dataset.storageReady==='ready');
-  assert.equal(await page.locator('#v31-camera-label').textContent(),'125%');
+  assert.equal(await page.locator('#v31-camera-label').textContent(),'100%','Reload deve reiniciar com zoom natural');
   await page.locator('#v31-camera-home').click();
   assert.equal(await page.locator('#map-canvas [data-lot]').count(),18);
   await page.locator('#map-lot-picker').focus();
@@ -313,7 +296,7 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   assert.equal(errors.length,0,errors.join(';'));
   results.push({channel,width,result:'PASS',fullscreen:true,centeredDock:true,tycoonTabs:true,perSectionKpis:true,
     compactOnboarding:true,noClassicMode:true,modalFlexScroll:true,mobileBottomSheet92dvh:true,allSections:17,
-    mapControlsHidden:true,hudOneLine:true,cityArtHotspot:true,observatoryInAnalytics:true,accessibleLotPicker:true,modals:true,escape:true,backdrop:true,lotHitTest:true,economyUnaffected:true});
+    mapControlsHidden:true,hudOneLine:true,nonInteractiveBanner:true,noSvgLegend:true,viewportFit:true,defaultZoom100:true,observatoryInAnalytics:true,accessibleLotPicker:true,modals:true,escape:true,backdrop:true,lotHitTest:true,economyUnaffected:true});
  }finally{if(ctx)await ctx.close();rmSync(folder,{recursive:true,force:true});}
 }
 writeFileSync(join(out,'report.json'),JSON.stringify({status:'PASS_EMULATED',physicalMobileTested:false,privateSaveTested:false,results},null,2));

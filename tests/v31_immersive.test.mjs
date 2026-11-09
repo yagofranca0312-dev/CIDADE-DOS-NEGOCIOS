@@ -78,12 +78,12 @@ test('V3.1 scroll architecture: fixed modal chrome and KPI board; only visible s
 });
 
 
-test('V3.1 city cleanup: no fixed duplicates, art hotspot and keyboard lot picker',()=>{
+test('V3.1 city cleanup: noninteractive banner and keyboard-only lot picker',()=>{
  const html=read('index.html'),scene=read('src/visual/tiangua-scene.js');
  const css=read('src/shell/v31.css'),ui=read('src/ui/v31-immersive.part.js');
  assert.doesNotMatch(html,/id="v221-city-info-trigger"/);
- assert.match(scene,/data-city-switch-art="true"/);
- assert.match(scene,/width="465" height="96"/);
+ assert.doesNotMatch(scene,/data-city-switch-art|v31-city-art-hotspot|v221-live-legend/);
+ assert.doesNotMatch(ui,/data-city-switch-art/);
  assert.match(ui,/reports\.appendChild\(\$\('v221-observatory'\)\)/);
  assert.match(ui,/saves\.prepend\(cityAction\)/);
  assert.match(css,/#unit-switch-container/);
@@ -96,11 +96,22 @@ test('V3.1 city cleanup: no fixed duplicates, art hotspot and keyboard lot picke
  assert.match(ui,/recent\.events\.length\)\)/);
 });
 
-test('V3.1 desktop: ocultação explícita de todos os cartões de resumo legados',()=>{
+test('V3.1 desktop: ocultação de cartões de resumo legados e SVG',()=>{
   const css=read('src/shell/v31.css');
-  const expected=/body\.v31-immersive \.map-legend,\s*body\.v31-immersive #v221-map-summary,\s*body\.v31-immersive \.v221-summary-entries\s*\{\s*display:\s*none\s*!important;\s*\}/;
+  const expected=/body\.v31-immersive \.v221-live-legend,\s*body\.v31-immersive \.map-legend,\s*body\.v31-immersive #v221-map-summary,\s*body\.v31-immersive \.v221-summary-entries\s*\{\s*display:\s*none\s*!important;\s*\}/;
   assert.match(css,expected);
-  // Legenda do cenário SVG mantém a contagem dinâmica e nunca é removida.
-  assert.match(read('src/visual/tiangua-scene.js'),/class="v221-live-legend"/);
-  assert.doesNotMatch(css,/body\.v31-immersive \.v221-live-legend\s*\{\s*display:\s*none/);
+  // Nenhum grupo textual ou hotspot é desenhado sobre a arte aprovada.
+  assert.doesNotMatch(read('src/visual/tiangua-scene.js'),/v221-live-legend|data-city-switch-art/);
+  assert.match(css,/object-fit:contain!important/);
+});
+
+test('V3.1 câmera natural: inicia 100%, não restaura zoom salvo e ajusta mapas à viewport',()=>{
+  const source=read('src/ui/v31-immersive.part.js'),css=read('src/shell/v31.css');
+  assert.match(source,/v31Camera=\{zoom:1,x:0,y:0\};\s*v31CameraCenterPending=true/);
+  assert.doesNotMatch(source,/sessionStorage\.getItem\(v31CameraStore\)/);
+  assert.match(css,/#map-canvas>svg\.v221-city-svg\{width:100vw!important;max-width:100vw!important;height:100dvh!important;max-height:100dvh!important/);
+  assert.match(css,/#map-canvas>svg\.v22-city-svg\{width:100vw!important/);
+  assert.match(css,/max-height:calc\(100dvh - 110px\)!important/);
+  assert.doesNotMatch(source,/data-city-switch-art/);
+  assert.doesNotMatch(read('src/ui/app.js'),/v31OpenPanel\('sistema','saves',\$\('v221-city-switch-trigger'\)\)/);
 });

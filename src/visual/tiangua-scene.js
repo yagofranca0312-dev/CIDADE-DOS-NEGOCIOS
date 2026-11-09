@@ -73,22 +73,7 @@ const CidadeTianguaCena=(()=>{
       parts.push('<text x="'+x+'" y="'+(y+7)+'" text-anchor="middle" font-family="system-ui,Segoe UI,Arial" font-size="18" font-weight="850" fill="#fff7e8" pointer-events="none">'+String(l.number).padStart(2,'0')+'</text>');
       parts.push('</g>');
     }
-    // A legenda na arte original continha CONTAGENS DEMONSTRATIVAS.
-    // Cobrir exatamente essa área por uma legenda viva do jogo (mesmas coordenadas SVG),
-    // que continua alinhada mesmo com zoom/redimensionamento.
-    const amount=unitMap.size,free=18-amount;
-    parts.push('<g class="v221-live-legend" aria-hidden="true" pointer-events="none">');
-    parts.push('<rect x="15" y="529" width="202" height="115" rx="13" fill="#071b2e" stroke="#c6a56a" stroke-width="1.3"/>');
-    for(const [i,color,label] of [[0,'#93b870',free+' disponíveis'],[1,'#f0bf66',amount+' empresa'+(amount===1?'':'s')],[2,'#19b5ec','seleção ativa']]){
-      const y=555+i*30;
-      parts.push('<rect x="33" y="'+(y-9)+'" width="19" height="19" rx="4" fill="'+color+'"/>');
-      parts.push('<text x="63" y="'+(y+5)+'" font-size="15" font-weight="700" font-family="system-ui,Arial" fill="#e7eff3">'+escape(label)+'</text>');
-    }
-    parts.push('</g>');
-    // Hotspot transparente alinhado ao letreiro já desenhado na arte (SVG 1536 x 664).
-    // Não duplica textos, não bloqueia os lotes e acompanha o zoom e a câmera.
-    parts.push('<g class="v31-city-art-hotspot" data-city-switch-art="true" tabindex="0" role="button" aria-label="Explorar municípios pelo letreiro da cidade">');
-    parts.push('<title>Escolher município</title><rect x="0" y="0" width="465" height="96" rx="9" fill="#000" fill-opacity=".001" pointer-events="all"/></g>');
+    // Letreiro da imagem é decorativo; sem legenda/overlay ou hotspot SVG.
     parts.push('</g></svg>');
     return parts.join('');
   }

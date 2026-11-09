@@ -14,8 +14,8 @@ body.v31-immersive .map-panel .panel-heading,body.v31-immersive .world-map-notic
 body.v31-immersive #map-canvas{position:absolute!important;inset:0!important;width:100vw!important;height:100dvh!important;max-width:none!important;min-height:0!important;max-height:none!important;display:block!important;overflow:auto!important;scrollbar-width:none!important;overscroll-behavior:contain;touch-action:pan-x pan-y;cursor:grab;user-select:none;background:#0a2939}
 body.v31-immersive #map-canvas:active{cursor:grabbing}
 body.v31-immersive #map-canvas::-webkit-scrollbar{display:none}
-body.v31-immersive #map-canvas>svg.v221-city-svg{width:max(100vw,calc(100dvh * 2.313253))!important;height:auto!important;min-width:0!important;max-width:none!important;min-height:0!important;max-height:none!important;aspect-ratio:1536/664!important;overflow:visible!important;touch-action:pan-x pan-y}
-body.v31-immersive #map-canvas>svg.v22-city-svg{width:max(100vw,calc(100dvh * 1.580247))!important;height:auto!important;min-width:0!important;max-width:none!important;min-height:0!important;max-height:none!important;aspect-ratio:640/405!important;overflow:visible!important;touch-action:pan-x pan-y}
+body.v31-immersive #map-canvas>svg.v221-city-svg{width:100vw!important;max-width:100vw!important;height:100dvh!important;max-height:100dvh!important;min-width:0!important;min-height:0!important;object-fit:contain!important;aspect-ratio:1536/664!important;overflow:visible!important;touch-action:pan-x pan-y}
+body.v31-immersive #map-canvas>svg.v22-city-svg{width:100vw!important;max-width:100vw!important;height:100dvh!important;max-height:100dvh!important;min-width:0!important;min-height:0!important;object-fit:contain!important;aspect-ratio:640/405!important;overflow:visible!important;touch-action:pan-x pan-y}
 body.v31-immersive .v31-top-controls{position:fixed!important;top:calc(8px + env(safe-area-inset-top));left:50%;right:auto;transform:translateX(-50%);z-index:120;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:9px;width:max-content;max-width:calc(100vw - 20px);padding:8px 12px;background:rgba(7,24,39,.78);border:1px solid #b2ccd080;border-radius:16px;box-shadow:0 9px 32px #0008;backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px)}
 .v31-hud-metric{min-width:0;display:flex;flex-direction:column;gap:2px;padding-right:9px;border-right:1px solid #8dadc050}
 .v31-hud-metric small{font-size:.59rem;color:#aacddc;font-weight:800;letter-spacing:.06em}
@@ -550,10 +550,6 @@ body.v31-immersive.v221-tiangua-scene .map-panel>.v221-city-switch-trigger:focus
 body.v31-immersive.v221-tiangua-scene .map-panel>.v221-city-switch-trigger:focus-visible>*{
  visibility:visible!important;
 }
-body.v31-immersive .v31-city-art-hotspot{cursor:pointer}
-body.v31-immersive .v31-city-art-hotspot:focus-visible>rect{
- stroke:#ffe7ab;stroke-width:3;fill-opacity:.05;
-}
 body.v31-immersive .v221-city-info-trigger{display:none!important}
 /* Seleção direta dos 18 terrenos pelo SVG. O seletor nativo é apenas acessível
    por teclado: Tab -> foco revela o controle temporariamente. */
@@ -667,10 +663,27 @@ body.v31-overlay-open #v31-city-manager{
  body.v31-immersive .v31-top-controls button{min-width:27px!important;padding:4px!important}
 }
 
-/* V3.1.0: suprimir definitivamente o resumo/legenda legado que vaza no mapa desktop. 
-   NÃO ocultar .v221-live-legend, que faz parte do SVG do cenário e acompanha o jogo. */
+/* V3.1.0: remover integralmente resumos antigos, inclusive elementos SVG residuais. */
+body.v31-immersive .v221-live-legend,
 body.v31-immersive .map-legend,
 body.v31-immersive #v221-map-summary,
 body.v31-immersive .v221-summary-entries {
   display: none !important;
+}
+/* O letreiro integrado à arte não é atalho ou botão. */
+body.v31-immersive .map-panel>.v221-city-switch-trigger,
+body.v31-immersive.v221-city-mode.v221-tiangua-scene .map-panel>.v221-city-switch-trigger{
+  display:none!important;
+}
+@media(max-width:768px){
+  body.v31-immersive #map-canvas{
+    display:grid!important;align-items:center!important;
+    justify-items:center!important;align-content:center!important;
+  }
+  body.v31-immersive #map-canvas>svg.v221-city-svg,
+  body.v31-immersive #map-canvas>svg.v22-city-svg{
+    width:100vw!important;max-width:100vw!important;
+    height:auto!important;max-height:calc(100dvh - 110px)!important;
+    object-fit:contain!important;
+  }
 }

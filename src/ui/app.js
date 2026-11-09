@@ -786,11 +786,6 @@
     $('v221-config-open').addEventListener('click',()=>goto('sistema'));
     $('v221-help-open').addEventListener('click',()=>{$('v221-help-panel').hidden=!$('v221-help-panel').hidden;});
     $('v221-help-close').addEventListener('click',()=>{$('v221-help-panel').hidden=true;});
-    $('v221-city-switch-trigger').addEventListener('click',()=>{
-      v31OpenPanel('sistema','saves',$('v221-city-switch-trigger'));
-      $('v221-city-pick').hidden=false;
-      $('v221-city-selector').focus();
-    });
     $('v221-city-pick-close').addEventListener('click',()=>{$('v221-city-pick').hidden=true;});
     $('v221-event-open').addEventListener('click',()=>{$('v221-activity').open=!$('v221-activity').open;$('v221-observatory').open=false;});
     $('v221-hud-time').addEventListener('click',()=>{const el=$('v221-time-menu');el.hidden=!el.hidden;$('v221-hud-time').setAttribute('aria-expanded',String(!el.hidden));$('v221-time-speed').value=$('speed-select').value;});

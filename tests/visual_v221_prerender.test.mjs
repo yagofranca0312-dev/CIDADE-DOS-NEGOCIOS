@@ -36,17 +36,16 @@ test('V221 hotfix lote 03: imóvel embutido é apenas fachada do cenário, placa
   const bakery=scene.svgMap(city,[{id:'P',cityId:city.id,lot:3,sector:'padaria'}],3);
   assert.match(bakery,/>PADARIA<\/text>/);
 });
-test('V221 hotfix seleção outros lotes é insetada e legenda reflete o motor',()=>{
+test('V221 hotfix seleção dos lotes é insetada e SVG não inclui legendas ou hotspot',()=>{
   const l=data.lots.find(x=>x.number===8);
   const svg=scene.svgMap(city,[],8);
   const polygon=svg.match(/class="v221-selection-line" points="([^"]+)"/);
   assert.ok(polygon);
   const old=l.footprint.map(x=>x.join(',')).join(' ');
   assert.notEqual(polygon[1],old,'a linha não pode cobrir ruas/bordas da quadra');
-  assert.match(svg,/18 disponíveis/);
+  assert.doesNotMatch(svg,/v221-live-legend|data-city-switch-art|disponíveis|seleção ativa/);
   const owned=scene.svgMap(city,[{id:'A',cityId:city.id,lot:8,sector:'padaria'},{id:'B',cityId:city.id,lot:17,sector:'roupas'}],8);
-  assert.match(owned,/16 disponíveis/);
-  assert.match(owned,/2 empresas/);
+  assert.doesNotMatch(owned,/v221-live-legend|data-city-switch-art|disponíveis|seleção ativa/);
   assert.equal((owned.match(/data-building-for=/g)||[]).length,2);
 });
 test('V221 hotfix usa imagem aprovada intocada, mantém tamanho e histórico fiscal',()=>{

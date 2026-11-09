@@ -1,3 +1,12 @@
+# V3.1.0 — Refino de câmera e remoção de legenda/hotspot do SVG (09/11/2026)
+
+- Mapa de Tianguá sem legenda dinâmica desenhada, sem hotspot/ação do letreiro e sem botão fantasma.
+- HTML/CSS herdado oculto, com redundâncias removidas da cena SVG.
+- SVG adapta-se ao viewport com object-fit contain; mobile centralizado sem arrasto inicial.
+- Câmera inicia sempre em 100%; zoom após clique nos controles +/−.
+- Configurações e saves somente via Dock; cidades em Configurações > Saves.
+- Core e saves intactos; QA de desktop/mobile obrigatória antes da homologação.
+
 # Refino V3.1.0 — mapa sem controles redundantes (08/11/2026)
 
 - Letreiro da arte SVG com hotspot transparente; troca de cidade também via Configurações.

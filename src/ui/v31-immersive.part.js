@@ -5,13 +5,10 @@
   const v31CameraStore='cidade-v31-camera-ui-v1';
   function v31CameraLoad(cityId){
     if(v31CameraCity===cityId)return;
-    v31CameraCity=cityId;v31CameraCenterPending=false;
-    try{
-      const c=JSON.parse(sessionStorage.getItem(v31CameraStore)||'{}')[cityId];
-      if(c&&[c.zoom,c.x,c.y].every(Number.isFinite)){
-        v31Camera={zoom:Math.min(2.4,Math.max(1,c.zoom)),x:Math.max(0,c.x),y:Math.max(0,c.y)};
-      }else{v31Camera={zoom:1,x:0,y:0};v31CameraCenterPending=true;}
-    }catch(_){v31Camera={zoom:1,x:0,y:0};v31CameraCenterPending=true;}
+    // Sempre inicia em 100% na praça central; zoom de outra sessão não é restaurado.
+    v31CameraCity=cityId;
+    v31Camera={zoom:1,x:0,y:0};
+    v31CameraCenterPending=true;
   }
   function v31CameraSave(){
     try{const all=JSON.parse(sessionStorage.getItem(v31CameraStore)||'{}');
@@ -280,7 +277,10 @@
     cityAction.className='btn btn-outline v31-city-manager';
     cityAction.textContent='🌐 Explorar municípios';
     cityAction.setAttribute('aria-controls','v221-city-pick');
-    cityAction.addEventListener('click',()=>$('v221-city-switch-trigger').click());
+    cityAction.addEventListener('click',()=>{
+      const pick=$('v221-city-pick');pick.hidden=!pick.hidden;
+      if(!pick.hidden)$('v221-city-selector').focus();
+    });
     saves.prepend($('v221-city-pick'));
     saves.prepend(cityAction);
     for(const button of document.querySelectorAll('[data-v31-open]')){
@@ -336,17 +336,6 @@
       v31CameraApply();v31CameraSave();
     });
     const canvas=$('map-canvas');
-    // A arte de Tianguá tem um hotspot SVG alinhado ao letreiro e não ao viewport:
-    // o alvo acompanha pan/zoom, sem camada fixa invisível sobre os lotes.
-    canvas.addEventListener('click',event=>{
-      if(event.target.closest('[data-city-switch-art]'))$('v221-city-switch-trigger').click();
-    });
-    canvas.addEventListener('keydown',event=>{
-      if(!event.target.closest('[data-city-switch-art]'))return;
-      if(event.key==='Enter'||event.key===' '){
-        event.preventDefault();$('v221-city-switch-trigger').click();
-      }
-    });
     canvas.setAttribute('tabindex','0');
     canvas.setAttribute('aria-label','Cidade: arraste para explorar, teclas de seta para deslocar, mais e menos para aproximar; Tab para lotes');
     canvas.addEventListener('keydown',event=>{

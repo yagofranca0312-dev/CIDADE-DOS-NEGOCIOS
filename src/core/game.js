@@ -744,7 +744,7 @@ const CidadeCore = (() => {
     const assessment={id:'TAX-'+period,period,regime:f.regime,dueDate:taxMonthNext(period)+'-20',
       revenue:d.revenue,rbt12:d.rbt12,breakdown:d.breakdown,principalCents:amount,
       fineCents:0,interestCents:0,amount,paid:0,principalPaidCents:0,
-      status:amount>0?'OPEN':'SETTLED',creditsCreated:d.creditsCreated,
+      status:amount>0?'OPEN':'SETTLED',creditsCreated:d.creditsCreated,tests2026:d.tests2026,
       coverageStatus:'SIMULATED_PARTIAL',rulePackId:'FISCAL-V32-EDU-1'};
     f.assessments.push(assessment);
     if(amount)journal(state,'Apuração fiscal fictícia '+period,[
@@ -794,7 +794,10 @@ const CidadeCore = (() => {
     journal(state,'Pagamento tributário fictício '+a.period,[
       {account:'TAX_PAYABLE',debit:amount,credit:0},
       {account:'CASH',debit:0,credit:amount}],null,'TAX_PAYMENT');
-    a.principalPaidCents=Math.min(a.principalCents,(a.principalPaidCents||0)+amount);
+    // Guias anteriores à V3.2 não têm principalCents; preservar sua estrutura
+    // e permitir quitação sem criar NaN ou reescrever memoria fiscal legada.
+    if(a.principalCents!==undefined)
+      a.principalPaidCents=Math.min(a.principalCents,(a.principalPaidCents||0)+amount);
     a.paid+=amount;a.status=a.paid===a.amount?'PAID':a.status;
     event(state,'FISCAL.PAGO','Guia educativa '+a.period+': pagamento '+money(amount)+'.',
       {period:a.period,amountCents:amount,pendingCents:a.amount-a.paid});

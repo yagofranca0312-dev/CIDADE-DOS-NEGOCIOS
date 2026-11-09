@@ -149,7 +149,7 @@ test('V1.5: 180 dias com três filiais, pedidos e vendas conciliados por unidade
   const r=C.groupReport(s),overview=C.overview(s);
   assert.equal(r.units.reduce((n,x)=>n+x.revenue,0),overview.revenue);
   assert.equal(r.units.reduce((n,x)=>n+x.cogs,0),overview.cogs);
-  assert.equal(r.units.reduce((n,x)=>n+x.expenses,0),overview.expenses);
+  assert.equal(r.units.reduce((n,x)=>n+x.expenses,0),overview.expenses-C.balanceSheet(s).accounts.INTEREST_EXPENSE); // Juros fiscais do grupo não são despesas atribuídas às unidades.
   assert.equal(r.units.reduce((n,x)=>n+x.stockValue,0),overview.inventoryValue);
   assert.equal(r.units.reduce((n,x)=>n+x.inTransit,0),overview.inTransit);
   assert.equal(C.diagnostics(s).ok,true);

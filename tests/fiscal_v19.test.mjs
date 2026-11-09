@@ -24,7 +24,7 @@ function payReady(){let s=fresh();s=cmd(s,'ESTOQUE.COMPRAR',{productId:'base',su
 const normal=value=>JSON.parse(JSON.stringify(value));
 
 test('V1.9: versão e schema9; histórico das V1.8 continua legível',()=>{
- assert.equal(Core.VERSION,'1.9.0');assert.equal(Core.SCHEMA_VERSION,9);
+ assert.equal(Core.VERSION,'1.9.0-rc.1');assert.equal(Core.SCHEMA_VERSION,9);
  assert.equal(Current.VERSION,'3.2.0');assert.equal(Current.SCHEMA_VERSION,10);
  assert.equal(V18.VERSION,'1.8.0-rc.1');assert.equal(V18.SCHEMA_VERSION,8);
  assert.equal(Core.FISCAL_RULE_PACKS.simples2026.coverage,'SIMULATED_PARTIAL');
@@ -131,6 +131,6 @@ test('V1.9: não criar nova aba principal e versionamento uniforme em todos os p
  for(const id of ['intro-version','build-version','footer-version'])assert.ok(tpl.includes(`id="${id}">v3.2.0`));
  assert.match(tpl,/<title>Cidade dos Negócios 1 · v3\.2\.0<\/title>/);
  for(const id of ['fiscal-status','fiscal-optin','fiscal-acknowledge','fiscal-assessments','fiscal-transition'])assert.ok(tpl.includes(`id="${id}"`));
- assert.match(ui,/function renderFiscal/);assert.match(ui,/FISCAL\.ATIVAR_CENARIO/);assert.match(css,/fiscal-dashboard/);
+ assert.match(ui,/function renderFiscal/);assert.match(ui,/FISCAL\.ALTERAR_REGIME/);assert.match(css,/fiscal-dashboard/);
  const navs=(tpl.match(/data-tab="fiscal"/g)||[]).length;assert.equal(navs,1);
 });

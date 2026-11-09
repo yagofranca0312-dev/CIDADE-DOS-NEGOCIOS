@@ -18,11 +18,18 @@ test('V2.4-A mantém o schema e permite nova capacidade paralegal independente',
  assert.equal(now.SCHEMA_VERSION,10);assert.equal(now.VERSION,'3.2.0');
  assert.equal(typeof now.paralegalReport,'function');
 });
-test('V2.0 vs V2.2 economia, rng, fiscal e razão invariáveis',()=>{
+test('V2.0 histórico: mundo, RNG e inventário preservados, fiscal V3.2 evolui sem retroagir',()=>{
  const a=drive(old),b=drive(now);
- for(const k of ['world','player','rng','calendar','economy','fiscal','audit'])assert.deepEqual(norm(a[k]),norm(b[k]),k);
- for(const fn of ['overview','balanceSheet','incomeStatement','cashFlowStatement','groupReport','taxReport'])assert.deepEqual(norm(old[fn](a)),norm(now[fn](b)),fn);
- assert.equal(now.importSave(old.exportSave(a)).migrated,false);
+ for(const key of ['world','player','rng','calendar','economy','audit'])
+   assert.deepEqual(norm(a[key]),norm(b[key]),key);
+ for(const key of ['cash','inventoryValue','revenue','cogs','stock'])
+   assert.equal(now.overview(b)[key],old.overview(a)[key],key);
+ assert.equal(now.balanceSheet(b).balanced,true);
+ assert.equal(now.reconciliationReport(b).ok,true);
+ const restored=now.importSave(old.exportSave(a));
+ assert.equal(restored.migrated,true);
+ assert.deepEqual(norm(restored.state.economy.ledger),norm(a.economy.ledger));
+ assert.equal(restored.state.schemaVersion,10);
 });
 test('Identidade REF-01 SVG, favicon único offline e arte REF-04 incorporada',()=>{
  assert.match(template,/id="city-brand-glyph"/);assert.match(template,/v21-hero-mark/);

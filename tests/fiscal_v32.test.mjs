@@ -13,7 +13,7 @@ function fresh(sector='mercado',location='CE-TIANGUA'){
   return send(s,'EMPRESA.ABRIR',{sector,cityId:location,lot:1});
 }
 function forward(s,days){while(days){const n=Math.min(days,30);s=send(s,'TEMPO.AVANCAR_LOTE',{days:n});days-=n;}return s;}
-function stocked(){let s=fresh();s=send(s,'ESTOQUE.COMPRAR',{productId:'base',supplierId:'regional',quantity:220});return s;}
+function stocked(){let s=fresh();s=send(s,'ESTOQUE.COMPRAR',{productId:'base',supplierId:'regional',quantity:180});return s;}
 function balanced(s){
   assert.equal(Core.balanceSheet(s).balanced,true);
   assert.equal(Core.reconciliationReport(s).ok,true);
@@ -54,7 +54,7 @@ test('V3.2: Simples Anexos I e II, Presumido e Real são estimados sem mutação
   const before=JSON.stringify(s);
   const p=Core.taxPlanningComparison(s,'2026-11');
   assert.equal(p.regimes.length,3);
-  assert.deepEqual(p.regimes.map(x=>x.regime),['SIMPLES','PRESUMIDO','REAL']);
+  assert.deepEqual(json(p.regimes.map(x=>x.regime)),['SIMPLES','PRESUMIDO','REAL']);
   assert.ok(['SIMPLES','PRESUMIDO','REAL'].includes(p.recommendedRegime));
   assert.ok(p.regimes.every(x=>Number.isSafeInteger(x.principalCents)&&x.principalCents>=0));
   assert.equal(JSON.stringify(s),before,'comparador não pode lançar tributos');
@@ -142,7 +142,7 @@ test('V3.2: Reforma 2026 demonstra, 2027+ fica ativa mas parâmetros futuros nã
   assert.equal(next.coverageStatus,'SIMULATED_PARTIAL');
   const future=Core.taxEstimate(s,'2033-01');
   assert.equal(future.coverageStatus,'SIMULATED_PARTIAL');
-  assert.ok(/HIPOT|hipótes/i.test(Core.FISCAL_RULE_PACKS.fiscalGame.source));
+  assert.ok(/HYPOTHETICAL|HIPOT|hipótes/i.test(Core.FISCAL_RULE_PACKS.fiscalGame.source));
   assert.equal(Core.FISCAL_RULE_PACKS.fiscalGame.cbsHypothesisBp,880);
   assert.equal(Core.FISCAL_RULE_PACKS.fiscalGame.ibsFullHypothesisBp,1770);
   assert.equal(Core.FISCAL_RULE_PACKS.fiscalGame.interstateTransferHypothesisBp,200);

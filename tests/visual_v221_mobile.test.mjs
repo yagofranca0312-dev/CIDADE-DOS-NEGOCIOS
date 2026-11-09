@@ -14,7 +14,8 @@ test('V221 mobile: situação dos lotes vem da carreira e não da imagem estáti
  for(const id of ['v221-legend-free','v221-legend-owned','v221-legend-selection'])assert.match(template,new RegExp(`id="${id}"`));
  assert.match(ui,/18-cityUnits\.length/);
  assert.match(ui,/cityUnits\.length===1\?'empresa':'empresas'/);
- assert.match(scene,/const amount=unitMap\.size,free=18-amount/);
+ // A contagem real continua nos relatórios e no DOM, nunca sobre os lotes.
+ assert.doesNotMatch(scene,/v221-live-legend|const amount=unitMap\.size|data-city-switch-art/);
 });
 test('V221 mobile: panorama responsivo por padrão com zoom de navegação opt-in',()=>{
  assert.match(css,/width:100%!important;min-width:0!important;height:auto!important/);

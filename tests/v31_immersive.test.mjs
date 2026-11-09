@@ -108,7 +108,9 @@ test('V3.1 desktop: ocultação de cartões de resumo legados e SVG',()=>{
 test('V3.1 câmera natural: inicia 100%, não restaura zoom salvo e ajusta mapas à viewport',()=>{
   const source=read('src/ui/v31-immersive.part.js'),css=read('src/shell/v31.css');
   assert.match(source,/v31Camera=\{zoom:1,x:0,y:0\};\s*v31CameraCenterPending=true/);
-  assert.doesNotMatch(source,/sessionStorage\.getItem\(v31CameraStore\)/);
+  const load=source.match(/function v31CameraLoad\(cityId\)\{([\s\S]*?)\n  \}/)?.[1];
+  assert.ok(load,'Função de inicialização da câmera ausente');
+  assert.doesNotMatch(load,/sessionStorage/,'A inicialização não pode restaurar zoom/pan antigos');
   assert.match(css,/#map-canvas>svg\.v221-city-svg\{width:100vw!important;max-width:100vw!important;height:100dvh!important;max-height:100dvh!important/);
   assert.match(css,/#map-canvas>svg\.v22-city-svg\{width:100vw!important/);
   assert.match(css,/max-height:calc\(100dvh - 110px\)!important/);

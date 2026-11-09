@@ -143,10 +143,15 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
         vw:viewport.width,vh:viewport.height,canvasLeft:viewport.left,canvasTop:viewport.top,
         scrollLeft:document.getElementById('map-canvas').scrollLeft};
     });
-    const artVisible=art.x+art.w>art.canvasLeft+2&&art.x<art.canvasLeft+art.vw-2&&
-      art.y+art.h>art.canvasTop+2&&art.y<art.canvasTop+art.vh-2;
+    const exposedWidth=Math.min(art.x+art.w,art.canvasLeft+art.vw)-Math.max(art.x,art.canvasLeft);
+    const artVisible=exposedWidth>22&&art.y+art.h>art.canvasTop+16&&art.y<art.canvasTop+art.vh-16;
     if(artVisible){
-      await page.locator('#map-canvas .v31-city-art-hotspot rect').click();
+      const clickX=Math.max(art.canvasLeft+14,art.x+18);
+      const clickY=Math.min(art.canvasTop+art.vh-12,art.y+art.h-14);
+      const artHit=await page.evaluate(({x,y})=>
+        !!document.elementFromPoint(x,y)?.closest('[data-city-switch-art]'),{x:clickX,y:clickY});
+      assert.equal(artHit,true,'Hotspot SVG não recebe clique físico: '+JSON.stringify({art,clickX,clickY}));
+      await page.mouse.click(clickX,clickY);
       assert.equal(await page.locator('[data-view="sistema"]').isVisible(),true,'Letreiro não abre seletor');
       assert.equal(await page.locator('#v221-city-pick').isVisible(),true,'Municípios indisponíveis');
       assert.equal(await page.locator('#v221-city-selector').isVisible(),true);

@@ -2126,7 +2126,7 @@ body.v31-immersive.v221-city-mode.v221-tiangua-scene .map-panel>.v221-city-switc
   <div class="view-toolbar"><span>FISCAL / GESTÃO ESTRATÉGICA V3.2.0</span><span class="tag-soft">SIMULAÇÃO EDUCATIVA · SEM TRANSMISSÃO</span></div>
   <article class="panel fiscal-v32-section">
     <div class="panel-heading"><h3>1 · Enquadramento e planejamento tributário</h3><span class="v31-status-badge" id="fiscal-status">Motor ativo</span></div>
-    <p class="field-hint">Regras e parâmetros deste jogo são hipóteses educativas: não emitem CNPJ, DAS, DARF, DAE, CND ou documentos oficiais. Sem NCM/CFOP, ST, benefícios e dados completos, não representam apuração legal.</p>
+    <p class="field-hint">Regras e parâmetros deste jogo são hipóteses educativas: não emitem CNPJ, DAS, DARF, DAE, CND ou documentos oficiais. Cenários tributários não são apuração legal. Sem NCM/CFOP, ST, benefícios e dados completos, não representam apuração legal. Não coberto não significa alíquota zero.</p>
     <div class="fiscal-v32-kpis" role="group" aria-label="Situação tributária fictícia">
       <div><small>Regime vigente</small><strong id="fiscal-current-regime">Simples Nacional</strong></div>
       <div><small>Regularidade no jogo</small><strong id="fiscal-regularity">Regular</strong></div>
@@ -2165,7 +2165,7 @@ body.v31-immersive.v221-city-mode.v221-tiangua-scene .map-panel>.v221-city-switc
     <p id="fiscal-transition-note" class="field-hint"></p>
     <p class="field-hint">Os parâmetros hipotéticos de CBS 8,8%, IBS 17,7% e custo interestadual 2% são números de gameplay; não são alíquotas oficiais nem regras fiscais efetivas. A transição percentual 2029–2032 reproduz a estrutura geral divulgada pela Receita Federal.</p>
     <div class="panel-heading"><h4>Fiscal Operacional · checklists por unidade</h4><span class="tag-soft">V2.4-C PRESERVADO</span></div>
-    <p class="field-hint">Conferências de vendas, estoque e razão por competência, com datas fictícias do jogo. Não geram obrigações públicas ou impostos adicionais.</p>
+    <p class="field-hint">Conferências de vendas, estoque e razão por competência, com datas fictícias do jogo; não representam vencimentos ou obrigações brasileiras. Não geram obrigações públicas ou impostos adicionais.</p>
     <p class="field-hint" id="fiscal-op-summary" aria-live="polite">Nenhuma rotina ativada.</p>
     <div id="fiscal-op-unit-list" aria-live="polite"><p class="muted">Inaugure uma empresa para começar.</p></div>
   </article>
@@ -4092,6 +4092,8 @@ const CidadeCore = (() => {
     const standardCents=650+distanceUnits*85+quantity*22;
     const feeCents=(from.depot||to.depot)?Math.round(standardCents*.75):standardCents;
     return {fromId,toId,originCity:a.name,destinationCity:b.name,
+      interstateHypothesisRateBp:a.uf===b.uf?0:200,
+      interstateTaxScenario:'INFORMATIVO_SEM_EFEITO_CONTABIL',
       distanceUnits,days,quantity,baseFeeCents:standardCents,feeCents,
       discountCents:standardCents-feeCents,
       distanceType:'SIMULATED_INDEX_NOT_KM',
@@ -4391,9 +4393,11 @@ const CidadeCore = (() => {
       const valueCents=logisticsRemoveStock(draft,from,sector,productId,fromP.name,quantity);
       assert(valueCents>0,'Transferência não permite mercadoria sem valor contábil.');
       const id='tr-'+(++lg.seq),dueDate=addDays(draft.calendar.date,quote.days);
+      const interstateFiscalScenarioCents=quote.interstateHypothesisRateBp?bp(valueCents,quote.interstateHypothesisRateBp):0;
       lg.transfers.push({id,fromId:from.id,toId:to.id,sector,productId,productName:fromP.name,
         quantity,valueCents,lotPieces:lots,date:draft.calendar.date,dueDate,
         feeCents:quote.feeCents,distanceUnits:quote.distanceUnits,
+        interstateFiscalScenarioCents,
         receivedAt:null,deliveredQuantity:0,lostQuantity:0,deliveredValueCents:0,status:'PENDING'});
       journal(draft,'Expedição de estoque interfilial '+id,[
         {account:'IN_TRANSIT',debit:valueCents,credit:0},
@@ -4406,7 +4410,8 @@ const CidadeCore = (() => {
       lg.metrics.fees+=quote.feeCents;
       event(draft,'LOGISTICA.EXPEDIDA','Transferência '+id+' '+from.id+' → '+to.id+'; '+quantity+' unidade(s). Sem faturamento interno.',
         {tripId:id,fromId:from.id,toId:to.id,quantity,valueCents,feeCents:quote.feeCents,dueDate,
-          distanceUnits:quote.distanceUnits,distanceType:'SIMULATED_INDEX_NOT_KM'},from.depot?null:from.id);
+          distanceUnits:quote.distanceUnits,distanceType:'SIMULATED_INDEX_NOT_KM',
+          interstateFiscalScenarioCents,interstateFiscalNote:'Custo hipotético de 2% entre UFs, apenas informativo, sem DIFAL legal ou lançamento.'},from.depot?null:from.id);
       return;
     }
     if(type==='LOGISTICA.INSUMO.COMPRAR'){

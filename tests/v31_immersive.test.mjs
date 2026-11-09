@@ -76,3 +76,22 @@ test('V3.1 scroll architecture: fixed modal chrome and KPI board; only visible s
   assert.match(source,/visiblePane\.scrollTop=0/);
   assert.doesNotMatch(source,/v31ClassicMode/);
 });
+
+
+test('V3.1 city cleanup: no fixed duplicates, art hotspot and keyboard lot picker',()=>{
+ const html=read('index.html'),scene=read('src/visual/tiangua-scene.js');
+ const css=read('src/shell/v31.css'),ui=read('src/ui/v31-immersive.part.js');
+ assert.doesNotMatch(html,/id="v221-city-info-trigger"/);
+ assert.match(scene,/data-city-switch-art="true"/);
+ assert.match(scene,/width="465" height="96"/);
+ assert.match(ui,/reports\.appendChild\(\$\('v221-observatory'\)\)/);
+ assert.match(ui,/saves\.prepend\(cityAction\)/);
+ assert.match(css,/#unit-switch-container/);
+ assert.match(css,/\.v22-lot-nav:focus-within/);
+ assert.match(css,/clip-path:inset\(50%\)!important/);
+ assert.match(css,/@media\(max-width:768px\)/);
+ assert.match(css,/flex-wrap:nowrap!important/);
+ assert.match(css,/max-height:48px!important/);
+ assert.match(html,/id="v31-next-day"[^>]*>\+1<\/button>/);
+ assert.match(ui,/recent\.events\.length\)\)/);
+});

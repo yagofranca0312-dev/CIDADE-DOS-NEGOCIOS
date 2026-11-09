@@ -1,3 +1,11 @@
+# Refino V3.1.0 — mapa sem controles redundantes (08/11/2026)
+
+- Letreiro da arte SVG com hotspot transparente; troca de cidade também via Configurações.
+- Observatório IBGE transferido para Análises; removido o botão Cidade.
+- Seletor de lotes somente para acessibilidade, exibido sob foco.
+- HUD mobile rígido de 48px em linha única, comandos compactos e sem sobreposição.
+- Aguardando CI completa e aceite humano de V3.1.0 antes do merge.
+
 # Correção visual V3.1.0 — candidata full-screen (08/11/2026)
 
 - Interface definitivamente city-first: removidos a sidebar e os controles de modo clássico, preservando comandos do Core e schema 9.

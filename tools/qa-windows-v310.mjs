@@ -7,7 +7,7 @@ import {chromium} from 'playwright';
 const url=pathToFileURL(resolve('index.html')).href,out=join(process.env.RUNNER_TEMP||tmpdir(),'v310-visual-evidence');
 mkdirSync(out,{recursive:true});
 const results=[];
-for(const channel of ['chrome','msedge'])for(const width of [390,1366]){
+for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
  const folder=mkdtempSync(join(tmpdir(),'cidade-v310-'+channel+'-'));let ctx;
  try{
   ctx=await chromium.launchPersistentContext(folder,{channel,headless:true,viewport:{width,height:width<600?844:900},isMobile:width<600,hasTouch:width<600});
@@ -57,6 +57,43 @@ for(const channel of ['chrome','msedge'])for(const width of [390,1366]){
   assert.ok(geometry.scrollWidth<=width+4,'Rolagem horizontal fora do viewport');
   assert.ok(Math.abs(geometry.dock.x+geometry.dock.w/2-width/2)<=4,'Dock nao centralizada');
   assert.ok(geometry.cash!=='—' && geometry.date!=='—','HUD sem dados reais da carreira');
+  // HUD mobile rigidamente em uma única linha e semanticamente acessível.
+  if(width<=768){
+    const hud=await page.evaluate(()=>{
+      const el=document.querySelector('.v31-top-controls'),r=el.getBoundingClientRect(),
+        cs=getComputedStyle(el),items=[...el.children].filter(x=>getComputedStyle(x).display!=='none');
+      const centers=items.map(x=>Math.round(x.getBoundingClientRect().top+x.getBoundingClientRect().height/2));
+      return {height:r.height,wrap:cs.flexWrap,overflow:cs.overflowX,
+        maxHeight:cs.maxHeight,rowSpread:Math.max(...centers)-Math.min(...centers),
+        pause:document.querySelector('#v31-hud-pause').textContent.trim(),
+        day:document.querySelector('#v31-next-day').textContent.trim(),
+        turns:document.querySelector('#v31-hud-turns').textContent.trim(),
+        events:document.querySelector('#v31-alert-count').textContent.trim(),
+        speedLabel:document.querySelector('#v31-hud-speed').getAttribute('aria-label'),
+        scrollable:el.scrollWidth>=el.clientWidth};
+    });
+    assert.ok(hud.height<=48.6,'HUD excedeu 48px: '+JSON.stringify(hud));
+    assert.equal(hud.wrap,'nowrap','HUD mobile quebrou linha');
+    assert.equal(hud.overflow,'auto','HUD mobile não é horizontalmente rolável');
+    assert.ok(hud.rowSpread<7,'Controles estão em mais de uma linha: '+JSON.stringify(hud));
+    assert.ok(['▶','❚❚'].includes(hud.pause),'Tempo ainda exibe texto longo');
+    assert.equal(hud.day,'+1','Botão dia ainda exibe texto longo');
+    assert.equal(hud.turns,'⏭','Botão turnos ainda exibe texto longo');
+    assert.match(hud.events,/^\d+$/,'Contador de eventos não é compacto');
+    assert.equal(hud.speedLabel,'Velocidade do tempo');
+  }
+  // Componentes legados nunca podem aparecer por trás da dock.
+  const residual=await page.evaluate(()=>({
+    units:getComputedStyle(document.getElementById('unit-switch-container')).display,
+    sidebar:document.querySelector('.sidebar-brand')?.getBoundingClientRect().width||0,
+    cityInfoCount:document.querySelectorAll('.v221-city-info-trigger').length,
+    switchHidden:document.body.classList.contains('v221-tiangua-scene')
+      ?getComputedStyle(document.getElementById('v221-city-switch-trigger')).opacity==='0':true
+  }));
+  assert.equal(residual.units,'none','Unidade ativa legada ainda aparece');
+  assert.equal(residual.sidebar,0,'Brand lateral residual ocupa o mapa');
+  assert.equal(residual.cityInfoCount,0,'Botão Cidade duplicado ainda existe');
+  assert.equal(residual.switchHidden,true,'Letreiro SVG ainda tem caixa de texto duplicada');
   const before=await page.evaluate(async()=>{
    const raw=await CidadeDurableStore.readCurrent(CidadeCore),s=CidadeCore.importSave(raw).state;
    return {revision:s.revision,tick:s.calendar.tick,cash:CidadeCore.overview(s).cash,schema:s.schemaVersion};
@@ -73,18 +110,36 @@ for(const channel of ['chrome','msedge'])for(const width of [390,1366]){
   await page.keyboard.press('ArrowRight');
   const panAfter=await page.locator('#map-canvas').evaluate(el=>el.scrollLeft);
   assert.ok(panAfter>panBefore,'Pan por teclado nao moveu a camera');
-  // Painel de lote e seletor nao podem competir pelo mesmo canto no mobile.
+  // O seletor é SR-only fora do foco, mas é alcançável por Tab/teclado.
   await page.locator('#v221-inspector-close').click();
-  const mapControls=await page.evaluate(()=>{
-    const picker=document.querySelector('.v22-lot-nav'),dock=document.querySelector('#v31-dock');
-    const a=picker.getBoundingClientRect(),b=dock.getBoundingClientRect();
-    return {visible:getComputedStyle(picker).display!=='none',x:a.left,right:a.right,
-      width:innerWidth,bottom:a.bottom,dockTop:b.top};
+  const lotBefore=await page.evaluate(()=>{
+    const picker=document.querySelector('.v22-lot-nav');
+    const r=picker.getBoundingClientRect();
+    return {w:r.width,h:r.height,clip:getComputedStyle(picker).clipPath,
+      display:getComputedStyle(picker).display};
   });
-  assert.equal(mapControls.visible,true,'Seletor de lotes indisponivel após fechar inspetor');
-  assert.ok(mapControls.x>=mapControls.width/2-12,'Seletor de lotes continua no canto esquerdo');
-  assert.ok(mapControls.right<=mapControls.width+2,'Seletor de lotes corta a lateral');
-  assert.ok(mapControls.bottom<mapControls.dockTop+3,'Seletor de lotes invade a dock');
+  assert.equal(lotBefore.display,'flex','Atalho acessível removido do DOM');
+  assert.ok(lotBefore.w<=2 && lotBefore.h<=2,'Seletor de lotes ainda ocupa o mapa: '+JSON.stringify(lotBefore));
+  assert.match(lotBefore.clip,/inset\(50%\)/,'Seletor não está visualmente recortado');
+  await page.locator('#map-lot-picker').focus();
+  const lotFocused=await page.evaluate(()=>{
+    const picker=document.querySelector('.v22-lot-nav'),r=picker.getBoundingClientRect();
+    return {w:r.width,clip:getComputedStyle(picker).clipPath,focused:document.activeElement.id};
+  });
+  assert.equal(lotFocused.focused,'map-lot-picker','Navegação por teclado perdida');
+  assert.ok(lotFocused.w>100,'Seletor não aparece quando recebe foco');
+  await page.locator('#map-lot-picker').focus();
+  await page.locator('#map-lot-picker').selectOption('2');
+  assert.match(await page.locator('#selected-lot').textContent(),/Lote 02/);
+  await page.locator('#map-lot-picker').blur();
+  // O hotspot transparente acompanha o letreiro da arte, sem bloco de texto extra.
+  if(await page.locator('#map-canvas .v31-city-art-hotspot').count()){
+    await page.locator('#map-canvas .v31-city-art-hotspot').click();
+    assert.equal(await page.locator('[data-view="sistema"]').isVisible(),true,'Letreiro não abre seletor');
+    assert.equal(await page.locator('#v221-city-pick').isVisible(),true,'Municípios indisponíveis');
+    assert.equal(await page.locator('#v221-city-selector').isVisible(),true);
+    await page.locator('#v31-overlay-close').click();
+  }
   await page.locator('#v31-dock [data-v31-open="mercado:compras"]').click();
   assert.equal(await page.locator('[data-view="cidade"]').isVisible(),true);
   assert.equal(await page.locator('[data-view="mercado"]').isVisible(),true);
@@ -137,6 +192,14 @@ for(const channel of ['chrome','msedge'])for(const width of [390,1366]){
           modalHeight:view.getBoundingClientRect().height,
           screenHeight:innerHeight};
       },root);
+      if(root==='empresa'&&section==='analises'){
+        assert.equal(await page.locator('#v221-observatory').count(),1);
+        await page.locator('#v221-observatory summary').click();
+        assert.ok(await page.locator('#regional-population').isVisible(),'IBGE não migrou para Análises');
+      }
+      if(root==='sistema'&&section==='saves'){
+        assert.equal(await page.locator('#v31-city-manager').isVisible(),true,'Acesso alternativo a cidades indisponível');
+      }
       assert.equal(geometry.order,true,'KPI deve abrir imediatamente abaixo do trilho: '+root+'/'+section);
       assert.equal(geometry.icons,true,'Aba sem icone ou titulo curto: '+root);
       assert.equal(geometry.cards,4,'Modal sem 4 KPIs: '+root+'/'+section);
@@ -209,13 +272,14 @@ for(const channel of ['chrome','msedge'])for(const width of [390,1366]){
   assert.equal(await page.locator('#v31-camera-label').textContent(),'125%');
   await page.locator('#v31-camera-home').click();
   assert.equal(await page.locator('#map-canvas [data-lot]').count(),18);
+  await page.locator('#map-lot-picker').focus();
   await page.locator('#map-lot-picker').selectOption('2');
   assert.equal(await page.locator('#v31-lot-quick').isVisible(),true);
   await page.screenshot({path:join(out,channel+'-'+width+'-cidade.png')});
   assert.equal(errors.length,0,errors.join(';'));
   results.push({channel,width,result:'PASS',fullscreen:true,centeredDock:true,tycoonTabs:true,perSectionKpis:true,
     compactOnboarding:true,noClassicMode:true,modalFlexScroll:true,mobileBottomSheet92dvh:true,allSections:17,
-    mapControlsSeparated:true,modals:true,escape:true,backdrop:true,lotHitTest:true,economyUnaffected:true});
+    mapControlsHidden:true,hudOneLine:true,cityArtHotspot:true,observatoryInAnalytics:true,accessibleLotPicker:true,modals:true,escape:true,backdrop:true,lotHitTest:true,economyUnaffected:true});
  }finally{if(ctx)await ctx.close();rmSync(folder,{recursive:true,force:true});}
 }
 writeFileSync(join(out,'report.json'),JSON.stringify({status:'PASS_EMULATED',physicalMobileTested:false,privateSaveTested:false,results},null,2));

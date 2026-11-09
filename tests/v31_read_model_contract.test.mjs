@@ -46,7 +46,7 @@ test('V3.0-07: projeção lê unidade real, cidade e lote, sem alterar inventár
   const before=JSON.stringify(s),city=model.readCity(s,{selectedLot:2});
   assert.equal(city.worldId,s.worldId);
   assert.equal(city.revision,s.revision);
-  assert.equal(city.schemaVersion,9);
+  assert.equal(city.schemaVersion,10);
   assert.equal(city.city.name,'Tianguá');
   assert.equal(city.lots.length,18);
   assert.equal(city.lots[1].unit.id,core.activeBusiness(s).id);
@@ -209,5 +209,5 @@ test('V3.0-07: nenhuma mudança no build/HTML; adapter separado para V3.1',()=>{
   assert.match(contract,/ADVISORY_ONLY/);
   assert.match(contract,/V31_READ_MODEL_VERSION = 1/);
   const pkg=JSON.parse(readFileSync('package.json','utf8'));
-  assert.equal(pkg.version,'3.1.0');
+  assert.equal(pkg.version,'3.2.0');
 });

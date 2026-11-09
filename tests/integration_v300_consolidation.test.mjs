@@ -113,11 +113,11 @@ test('V3.0 consolidação: save da V1.7 migra sem reescrever ledger e sem ativa�
   const prevLedger=JSON.stringify(old.economy.ledger),prevEvents=JSON.stringify(old.audit.events),prevCash=Legacy.overview(old).cash;
   const migrated=C.importSave(Legacy.exportSave(old));
   assert.equal(migrated.migrated,true);
-  assert.equal(migrated.state.schemaVersion,9);
+  assert.equal(migrated.state.schemaVersion,10);
   assert.equal(JSON.stringify(migrated.state.economy.ledger),prevLedger);
   assert.equal(JSON.stringify(migrated.state.audit.events),prevEvents);
   assert.equal(C.overview(migrated.state).cash,prevCash);
-  assert.equal(migrated.state.fiscal.coverageStatus,'NOT_COVERED');
+  assert.equal(migrated.state.fiscal.coverageStatus,'SIMULATED_PARTIAL');
   assert.equal(C.creditReport(migrated.state).principalOutstanding,0);
   assert.equal(C.rhReport(migrated.state).totalActive,0);
   assert.equal(C.logisticsReport(migrated.state).enabled,false);

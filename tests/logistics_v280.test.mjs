@@ -41,7 +41,7 @@ function buyToStore(s,id,productId='base',quantity=60){
 }
 test('V2.8: backward-compatible schema9 does not invent logistics on old careers',()=>{
  const s=open(career(28001));
- assert.equal(s.schemaVersion,9);
+ assert.equal(s.schemaVersion,10);
  assert.equal(s.economy.logistics,undefined);
  assert.equal(C.logisticsReport(s).enabled,false);
  assert.equal(C.logisticsReport(s).totalPhysicalUnits,s.world.business.stockUnits);

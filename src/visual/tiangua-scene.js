@@ -85,6 +85,10 @@ const CidadeTianguaCena=(()=>{
       parts.push('<text x="63" y="'+(y+5)+'" font-size="15" font-weight="700" font-family="system-ui,Arial" fill="#e7eff3">'+escape(label)+'</text>');
     }
     parts.push('</g>');
+    // Hotspot transparente alinhado ao letreiro já desenhado na arte (SVG 1536 x 664).
+    // Não duplica textos, não bloqueia os lotes e acompanha o zoom e a câmera.
+    parts.push('<g class="v31-city-art-hotspot" data-city-switch-art="true" role="button" tabindex="0" aria-label="Explorar municípios pelo letreiro da cidade">');
+    parts.push('<title>Escolher município</title><rect x="0" y="0" width="465" height="96" rx="9" fill="#000" fill-opacity=".001" pointer-events="all"/></g>');
     parts.push('</g></svg>');
     return parts.join('');
   }

@@ -516,3 +516,153 @@ body.v31-immersive .city-stage>.right-column{
   body.v31-overlay-open .v31-command-chrome .v31-command-kicker{font-size:.54rem}
   body.v31-overlay-open .v31-command-metrics .v31-command-kpi{min-height:42px!important}
 }
+
+
+
+/* V3.1.0 city-first: remoção da poluição visual sem remover teclado, cenário ou dados. */
+body.v31-immersive #unit-switch-container,
+body.v31-immersive .sidebar-brand,
+body.v31-immersive .sidebar,
+body.v31-immersive .sidebar-tools,
+body.v31-immersive .sidebar-bottom,
+body.v31-immersive #v221-hud-units,
+body.v31-immersive .topbar-controls,
+body.v31-immersive .v221-city-info-trigger{display:none!important}
+/* Tianguá já possui título/letreiro dentro da própria arte SVG. O botão
+   nativo fica disponível para teclado e leitor de tela, não sobre o mapa. */
+body.v31-immersive.v221-tiangua-scene .map-panel>.v221-city-switch-trigger{
+ position:absolute!important;
+ top:0!important;left:0!important;right:auto!important;bottom:auto!important;
+ width:1px!important;height:1px!important;min-width:1px!important;max-width:1px!important;min-height:1px!important;
+ padding:0!important;margin:0!important;border:0!important;
+ overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;
+ opacity:0!important;box-shadow:none!important;background:transparent!important;
+ pointer-events:none!important;transform:none!important;
+}
+body.v31-immersive.v221-tiangua-scene .map-panel>.v221-city-switch-trigger:focus-visible{
+ width:200px!important;height:auto!important;max-width:200px!important;
+ min-height:40px!important;padding:8px 11px!important;
+ clip-path:none!important;overflow:visible!important;white-space:normal!important;
+ opacity:1!important;pointer-events:auto!important;
+ background:#0b293fed!important;border:1px solid #e7c68b!important;
+ z-index:180!important;outline:3px solid #ffe5a6!important;
+}
+body.v31-immersive.v221-tiangua-scene .map-panel>.v221-city-switch-trigger:focus-visible>*{
+ visibility:visible!important;
+}
+body.v31-immersive .v31-city-art-hotspot{cursor:pointer}
+body.v31-immersive .v31-city-art-hotspot:focus-visible>rect{
+ stroke:#ffe7ab;stroke-width:3;fill-opacity:.05;
+}
+body.v31-immersive .v221-city-info-trigger{display:none!important}
+/* Seleção direta dos 18 terrenos pelo SVG. O seletor nativo é apenas acessível
+   por teclado: Tab -> foco revela o controle temporariamente. */
+body.v31-immersive .v22-lot-nav,
+body.v31-immersive.v31-lot-selected .v22-lot-nav{
+ position:fixed!important;top:0!important;left:0!important;
+ right:auto!important;bottom:auto!important;
+ display:flex!important;align-items:center!important;
+ width:1px!important;height:1px!important;max-width:1px!important;
+ min-width:1px!important;min-height:1px!important;
+ margin:0!important;padding:0!important;border:0!important;
+ overflow:hidden!important;clip-path:inset(50%)!important;
+ white-space:nowrap!important;opacity:0!important;
+ pointer-events:none!important;box-shadow:none!important;background:transparent!important;
+ z-index:132!important;
+}
+body.v31-immersive .v22-lot-nav:focus-within,
+body.v31-immersive.v31-lot-selected .v22-lot-nav:focus-within{
+ top:auto!important;left:calc(10px + env(safe-area-inset-left))!important;
+ bottom:calc(90px + env(safe-area-inset-bottom))!important;right:auto!important;
+ display:flex!important;flex-wrap:wrap!important;
+ width:min(230px,calc(100vw - 20px))!important;height:auto!important;
+ max-width:230px!important;min-width:0!important;min-height:46px!important;
+ padding:8px 12px!important;margin:0!important;
+ overflow:visible!important;clip-path:none!important;
+ white-space:normal!important;opacity:1!important;
+ border:1px solid #e5be7c!important;border-radius:10px!important;
+ background:#08273fec!important;box-shadow:0 7px 22px #0008!important;
+ pointer-events:auto!important;z-index:170!important;
+}
+body.v31-immersive .v22-lot-nav:focus-within label{font-size:.73rem}
+body.v31-immersive .v22-lot-nav:focus-within select{max-width:145px;min-width:105px}
+/* As estatísticas IBGE são consultadas em Empresas > Análises. */
+body.v31-overlay-open #v23-pane-empresa-analises #v221-observatory{
+ display:block!important;position:static!important;
+ width:100%!important;max-width:none!important;max-height:none!important;
+ margin:12px 0 0;padding:0;border:1px solid #66879b!important;
+ border-radius:12px;background:#0b293df2!important;
+ overflow:visible!important;box-shadow:none!important;
+}
+body.v31-overlay-open #v23-pane-empresa-analises #v221-observatory>summary{
+ display:list-item;cursor:pointer;min-height:43px;padding:10px 13px;
+ color:#f7dfad;font-size:.85rem;font-weight:800;
+}
+body.v31-overlay-open #v23-pane-empresa-analises #v221-observatory>.panel{
+ margin:8px 10px 12px!important;
+}
+body.v31-overlay-open #v23-pane-sistema-saves #v221-city-pick:not([hidden]){
+ display:block!important;position:static!important;
+ top:auto!important;right:auto!important;bottom:auto!important;left:auto!important;
+ width:100%!important;max-width:100%!important;margin:8px 0 16px!important;
+ background:#0e3149!important;box-shadow:none!important;
+}
+body.v31-overlay-open #v31-city-manager{
+ display:inline-flex;align-items:center;justify-content:center;
+ margin:8px 0 12px;min-height:40px;
+}
+@media(max-width:768px){
+ body.v31-immersive .v31-top-controls{
+   position:fixed!important;top:calc(5px + env(safe-area-inset-top))!important;
+   left:8px!important;right:8px!important;transform:none!important;
+   display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+   align-items:center!important;justify-content:flex-start!important;
+   width:auto!important;max-width:none!important;max-height:48px!important;
+   height:48px!important;gap:4px!important;padding:4px 8px!important;
+   overflow-x:auto!important;overflow-y:hidden!important;
+   scrollbar-width:none;overscroll-behavior-x:contain;
+   -webkit-overflow-scrolling:touch;border-radius:11px!important;
+ }
+ body.v31-immersive .v31-top-controls::-webkit-scrollbar{display:none}
+ body.v31-immersive .v31-top-controls>.v31-hud-metric{
+   display:flex!important;flex:0 0 auto!important;
+   gap:1px!important;padding:0 5px 0 0!important;
+   max-width:104px;min-width:0;
+ }
+ body.v31-immersive .v31-top-controls>.v31-hud-metric small{
+   font-size:.44rem!important;letter-spacing:.015em;line-height:1.1;
+   white-space:nowrap;
+ }
+ body.v31-immersive .v31-top-controls>.v31-hud-metric strong{
+   display:block!important;min-width:0;max-width:100%;
+   font-size:.63rem!important;line-height:1.15!important;
+   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+ }
+ body.v31-immersive .v31-top-controls button,
+ body.v31-immersive .v31-top-controls select{
+   flex:0 0 auto!important;min-width:30px!important;min-height:34px!important;
+   height:34px!important;padding:4px 6px!important;
+   font-size:.74rem!important;line-height:1!important;
+   white-space:nowrap!important;
+ }
+ body.v31-immersive .v31-top-controls label{display:none!important}
+ body.v31-immersive #v31-hud-speed{
+   width:41px!important;min-width:41px!important;
+   max-width:41px!important;padding:2px 1px!important;
+ }
+ body.v31-immersive #v31-hud-alerts{display:inline-flex;align-items:center;gap:2px}
+ body.v31-immersive .v31-camera{
+   top:calc(64px + env(safe-area-inset-top))!important;
+   right:8px!important;
+ }
+ body.v31-immersive .v31-alerts{
+   top:calc(111px + env(safe-area-inset-top))!important;
+   right:8px!important;
+ }
+}
+@media(max-width:360px){
+ body.v31-immersive .v31-top-controls{gap:2px!important;padding:4px 5px!important}
+ body.v31-immersive .v31-top-controls>.v31-hud-metric{max-width:88px;padding-right:3px!important}
+ body.v31-immersive .v31-top-controls>.v31-hud-metric strong{font-size:.56rem!important}
+ body.v31-immersive .v31-top-controls button{min-width:27px!important;padding:4px!important}
+}

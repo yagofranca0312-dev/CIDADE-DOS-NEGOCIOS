@@ -49,6 +49,7 @@
     const old=document.querySelector('.view[data-view="'+immersiveOpen+'"]');
     old?.removeAttribute('aria-modal');old?.removeAttribute('role');
     immersiveOpen=null;$('v31-backdrop').hidden=true;
+    $('v221-city-pick').hidden=true;
     goto('cidade');
     const focus=v31ReturnFocus;v31ReturnFocus=null;
     if(focus?.isConnected)focus.focus();
@@ -90,7 +91,9 @@
     document.querySelectorAll('#v31-dock [data-v31-open]').forEach(b=>b.setAttribute('aria-pressed',String(immersiveOpen===b.dataset.v31Open.split(':')[0])));
     for(const button of $('v31-lot-quick').querySelectorAll('[data-v31-open]'))button.disabled=!owner;
     $('v31-lot-manage').textContent=owner?'Gerenciar empresa':'Abrir empresa';
-    setText('v31-hud-pause',timer?'Ⅱ Pausar':'▶ Jogar');
+    setText('v31-hud-pause',timer?'❚❚':'▶');
+    $('v31-hud-pause').setAttribute('aria-label',timer?'Pausar simulação':'Iniciar simulação');
+    $('v31-hud-pause').title=timer?'Pausar simulação':'Iniciar simulação';
     $('v31-hud-speed').value=String(speed);
     v31RenderCommandPanel();
     const key=String(state.worldId)+'/'+state.revision+'/'+viewCityId;
@@ -102,7 +105,9 @@
         const li=document.createElement('li');li.textContent=event.date+' · '+event.text;return li;
       }));
       if(!recent.events.length){const li=document.createElement('li');li.textContent='Sem eventos confirmados.';list.appendChild(li);}
-      setText('v31-alert-count',recent.events.length+' eventos recentes');
+      setText('v31-alert-count',String(recent.events.length));
+      $('v31-hud-alerts').setAttribute('aria-label',recent.events.length+' eventos recentes');
+      $('v31-hud-alerts').title=recent.events.length+' eventos recentes';
     }
   }
   function v31RenderCommandPanel(){
@@ -266,6 +271,18 @@
         pane.prepend(...loose);
       }
     }
+    // Recursos municipais deixam de ocupar o mapa; ficam dentro dos departamentos.
+    const reports=$('v23-pane-empresa-analises');
+    reports.appendChild($('v221-observatory'));
+    const saves=$('v23-pane-sistema-saves');
+    const cityAction=document.createElement('button');
+    cityAction.type='button';cityAction.id='v31-city-manager';
+    cityAction.className='btn btn-outline v31-city-manager';
+    cityAction.textContent='🌐 Explorar municípios';
+    cityAction.setAttribute('aria-controls','v221-city-pick');
+    cityAction.addEventListener('click',()=>$('v221-city-switch-trigger').click());
+    saves.prepend($('v221-city-pick'));
+    saves.prepend(cityAction);
     for(const button of document.querySelectorAll('[data-v31-open]')){
       button.addEventListener('click',()=>{
         const [root,section]=button.dataset.v31Open.split(':');
@@ -298,7 +315,10 @@
       $('v31-hud-turns').setAttribute('aria-expanded',String(!menu.hidden));
     });
     $('v31-hud-pause').addEventListener('click',()=>{
-      $('pause-btn').click();setText('v31-hud-pause',timer?'Ⅱ Pausar':'▶ Jogar');
+      $('pause-btn').click();
+      setText('v31-hud-pause',timer?'❚❚':'▶');
+      $('v31-hud-pause').setAttribute('aria-label',timer?'Pausar simulação':'Iniciar simulação');
+      $('v31-hud-pause').title=timer?'Pausar simulação':'Iniciar simulação';
     });
     $('v31-hud-speed').addEventListener('change',event=>{
       $('speed-select').value=event.target.value;
@@ -316,6 +336,17 @@
       v31CameraApply();v31CameraSave();
     });
     const canvas=$('map-canvas');
+    // A arte de Tianguá tem um hotspot SVG alinhado ao letreiro e não ao viewport:
+    // o alvo acompanha pan/zoom, sem camada fixa invisível sobre os lotes.
+    canvas.addEventListener('click',event=>{
+      if(event.target.closest('[data-city-switch-art]'))$('v221-city-switch-trigger').click();
+    });
+    canvas.addEventListener('keydown',event=>{
+      if(!event.target.closest('[data-city-switch-art]'))return;
+      if(event.key==='Enter'||event.key===' '){
+        event.preventDefault();$('v221-city-switch-trigger').click();
+      }
+    });
     canvas.setAttribute('tabindex','0');
     canvas.setAttribute('aria-label','Cidade: arraste para explorar, teclas de seta para deslocar, mais e menos para aproximar; Tab para lotes');
     canvas.addEventListener('keydown',event=>{

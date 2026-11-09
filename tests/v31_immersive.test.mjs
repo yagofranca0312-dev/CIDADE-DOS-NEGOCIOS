@@ -95,3 +95,12 @@ test('V3.1 city cleanup: no fixed duplicates, art hotspot and keyboard lot picke
  assert.match(html,/id="v31-next-day"[^>]*>\+1<\/button>/);
  assert.match(ui,/recent\.events\.length\)\)/);
 });
+
+test('V3.1 desktop: ocultação explícita de todos os cartões de resumo legados',()=>{
+  const css=read('src/shell/v31.css');
+  const expected=/body\.v31-immersive \.map-legend,\s*body\.v31-immersive #v221-map-summary,\s*body\.v31-immersive \.v221-summary-entries\s*\{\s*display:\s*none\s*!important;\s*\}/;
+  assert.match(css,expected);
+  // Legenda do cenário SVG mantém a contagem dinâmica e nunca é removida.
+  assert.match(read('src/visual/tiangua-scene.js'),/class="v221-live-legend"/);
+  assert.doesNotMatch(css,/body\.v31-immersive \.v221-live-legend\s*\{\s*display:\s*none/);
+});

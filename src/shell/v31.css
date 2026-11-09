@@ -666,3 +666,11 @@ body.v31-overlay-open #v31-city-manager{
  body.v31-immersive .v31-top-controls>.v31-hud-metric strong{font-size:.56rem!important}
  body.v31-immersive .v31-top-controls button{min-width:27px!important;padding:4px!important}
 }
+
+/* V3.1.0: suprimir definitivamente o resumo/legenda legado que vaza no mapa desktop. 
+   NÃO ocultar .v221-live-legend, que faz parte do SVG do cenário e acompanha o jogo. */
+body.v31-immersive .map-legend,
+body.v31-immersive #v221-map-summary,
+body.v31-immersive .v221-summary-entries {
+  display: none !important;
+}

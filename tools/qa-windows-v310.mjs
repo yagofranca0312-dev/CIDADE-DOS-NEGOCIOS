@@ -48,7 +48,14 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
       scrollWidth:document.documentElement.scrollWidth,
       cash:metric('v31-hud-cash'),date:metric('v31-hud-date')};
   });
-  assert.equal(geometry.sidebarRemoved,true,'Sidebar ERP nao foi removida do HTML');
+  // Regressão do card residual: nenhuma legenda herdada ocupa ou pinta o canto inferior esquerdo.
+  const summaryLegacy=await page.evaluate(()=>[...document.querySelectorAll(
+    '.map-legend,#v221-map-summary,.v221-summary-entries'
+  )].map(el=>({selector:el.id?'#'+el.id:'.'+el.classList[0],
+    display:getComputedStyle(el).display,rect:el.getBoundingClientRect().toJSON()})));
+  assert.ok(summaryLegacy.length>=2,'Instrumentacao legada nao localizada');
+  assert.ok(summaryLegacy.every(el=>el.display==='none'),'Card legado vazando no mapa: '+JSON.stringify(summaryLegacy));
+    assert.equal(geometry.sidebarRemoved,true,'Sidebar ERP nao foi removida do HTML');
   assert.equal(geometry.classicControls,0,'Alternancia classica ainda existe');
   assert.equal(geometry.topbarHidden,true,'Topbar antigo ainda ocupa a tela');
   assert.ok(Math.abs(geometry.map.x)<=2 && Math.abs(geometry.map.y)<=2,'Mapa nao inicia na origem da viewport');

@@ -119,7 +119,7 @@
     // Todos os valores provêm do Core. Não inferimos aliquota, lucro projetado ou ponto de equilíbrio.
     const keys={
       cash:['CAIXA ÚNICO',cash],revenue:['RECEITA ACUMULADA',revenue],
-      profit:['RESULTADO ACUMULADO',profit],stock:['ESTOQUE DA REDE',stock],
+      profit:['RESULTADO ACUMULADO',profit],taxPayable:['TRIBUTOS A PAGAR',Core.money(info.taxPayable)],stock:['ESTOQUE DA REDE',stock],
       unitStock:['ESTOQUE DA UNIDADE',unitStock],count:['UNIDADES ATIVAS',count],
       empty:['UNIDADES SEM ESTOQUE',empty],days:['DIAS SIMULADOS',String(state.calendar.tick)],
       revision:['REVISÃO DO SAVE',String(state.revision)],
@@ -143,7 +143,7 @@
         logistica:['stock','unitStock','empty','count'],
         'rh-dp':['count','cash','revenue','days'],
         contabilidade:['revenue','profit','cash','stock'],
-        fiscal:['revenue','cash','profit','days'],
+        fiscal:['taxPayable','cash','revenue','profit'],
         paralegal:['count','revision','days','schema']
       },
       sistema:{saves:['version','schema','revision','count'],diagnostico:['count','cash','days','revision'],integridade:['schema','revision','days','version']}

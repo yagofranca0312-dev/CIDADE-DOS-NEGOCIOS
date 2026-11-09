@@ -276,3 +276,7 @@ Um estado posterior não pode ser inferido do anterior; registrar evidência par
 - GitHub Actions 42120265061: **257 PASS / 0 FAIL**, seis cenários de estabilidade, HTML offline compilado identicamente, SHA-256 `21d4f8856d4bff1fd7af2eb9c496aa5cec3a8cc2fa75e67bdde10efb67df511c`.
 - A meta de reserva pode ser coberta por capital próprio, mas capital não conta como receita nem desbloqueia conquistas de faturamento.
 - `schemaVersion 9` e mecânica de V2.4.1 preservados. **V2.5.0-alpha.1 segue candidata para teste, NÃO homologada como V2.5.0 estável.** QA Windows não verificado.
+
+
+## V3.2.0 — Módulo Fiscal Estratégico (escopo da rodada 09/11/2026)
+O titular direcionou a V3.2.0 para motor Fiscal estratégico, sem reconstrução gráfica da cidade. Cenários Simples, Presumido e Real, checklist V2.4-C preservado, apuração mensal automática, Mora fictícia, crédito fiscal, pagamentos, comparador e IVA Dual 2026–2033. Todos os parâmetros sem respaldo normativo como taxa fixa legal são rotulados hipóteses educativas. A referência V3.1.0 homologada permanece preservada em releases/v3.1.0-homologada; a promoção depende de build e CI verde da candidata, Windows e main, sem alegar QA físico.

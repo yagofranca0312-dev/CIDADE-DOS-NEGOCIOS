@@ -1,0 +1,20 @@
+/* V3.2 fiscal: classes novas, sem modificar o CSS imersivo da V3.1. */
+.fiscal-v32-section{margin:8px 0 18px;padding:16px}
+.fiscal-v32-section .panel-heading h3{font-size:1.08rem}
+.fiscal-v32-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:8px;margin:12px 0}
+.fiscal-v32-kpis>div{border:1px solid rgba(149,187,198,.38);background:rgba(8,38,54,.55);border-radius:10px;padding:10px;min-width:0}
+.fiscal-v32-kpis small{display:block;color:#bdd8e1;font-size:.72rem}
+.fiscal-v32-kpis strong{display:block;margin-top:4px;color:#ffdf9e;font-size:.93rem;overflow-wrap:anywhere}
+.fiscal-v32-settings{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px;margin:12px 0}
+.fiscal-v32-settings label{display:flex;flex:1 1 175px;flex-direction:column;gap:4px;font-size:.77rem;color:#cde0e7}
+.fiscal-v32-settings select{width:100%;min-height:43px;max-width:100%;background:#102d43;color:#f6f5ea;border:1px solid #7796a2;border-radius:8px;padding:8px}
+.fiscal-v32-settings button{min-height:43px}
+.fiscal-v32-section .table-scroll{max-width:100%;overflow-x:auto}
+.fiscal-v32-section .catalog-table{min-width:730px}
+.fiscal-v32-best{background:rgba(185,139,59,.18)}
+.fiscal-v32-assessment{margin:10px 0;border:1px solid rgba(146,176,182,.42);border-radius:11px;padding:12px;background:rgba(8,37,54,.56)}
+.fiscal-v32-assessment>summary{cursor:pointer;line-height:1.6}
+.fiscal-v32-assessment .finance-list{margin:10px 0}
+.fiscal-v32-overdue{color:#ffb8aa!important;border-color:#bc4d45!important;background:rgba(130,38,35,.22)!important}
+.fiscal-v32-section .v31-status-badge{display:inline-block;padding:3px 8px;border-radius:9px;font-weight:700;font-size:.75rem}
+@media(max-width:768px){.fiscal-v32-section{padding:10px}.fiscal-v32-settings{gap:7px}.fiscal-v32-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.fiscal-v32-kpis>div{padding:7px}}

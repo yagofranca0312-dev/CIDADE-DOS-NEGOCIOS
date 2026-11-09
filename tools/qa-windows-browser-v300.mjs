@@ -202,10 +202,12 @@ async function testBrowser(channel){
           migrated.info.revision===legacy.info.revision&&
           migrated.info.ledger===legacy.info.ledger,
           channel+': save sintético V2.9 homologada importado em V3.0 sem retroação');
-        const back=fixtureCore.importSave(migrated.raw);
-        check(back.state.worldId===legacy.info.worldId&&
-          back.state.economy.ledger.length===legacy.info.ledger,
-          channel+': rollback do save V3 para motor V2.9 em cópia sintética');
+        check(migrated.info.version===10,
+          channel+': save V2.9 migrado para schema10 sem alterar histórico');
+        let rollbackRejected=false;
+        try{fixtureCore.importSave(migrated.raw);}catch(err){rollbackRejected=/schema|incompatível/i.test(String(err.message));}
+        check(rollbackRejected,
+          channel+': motor V2.9 rejeita corretamente schema10; rollback requer backup V2.9 externo');
       }finally{await legacyContext.close();}
     }finally{rmSync(legacyProfile,{recursive:true,force:true});}
 

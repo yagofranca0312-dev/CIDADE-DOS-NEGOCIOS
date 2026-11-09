@@ -79,8 +79,7 @@ for(const channel of ['chrome','msedge']){
         return request;
       };
     });
-    await page.locator('#v221-hud-time').click();
-    await page.locator('[data-v221-time="1"]').click();
+    await page.locator('#v31-next-day').click();
     await page.waitForFunction(()=>document.body.dataset.storageBusy!=='true',{timeout:30000});
     v=await read(page);
     const notice=await page.locator('#autosave-label').textContent();
@@ -90,8 +89,7 @@ for(const channel of ['chrome','msedge']){
       IDBObjectStore.prototype.put=window.__qaOriginalIdbPut;
       delete window.__qaOriginalIdbPut;
     });
-    await page.locator('#v221-hud-time').click();
-    await page.locator('[data-v221-time="1"]').click();
+    await page.locator('#v31-next-day').click();
     v=await read(page);
     chk(v.tick===1&&v.revision>1&&v.raw!==before,
       channel+': recuperação do IndexedDB grava apenas um dia após a falha');

@@ -68,12 +68,17 @@ const stateOf=async page=>{
 const count=(s,kind)=>s.journalKinds.filter(x=>x===kind).length;
 const events=(s,kind)=>s.events.filter(x=>x===kind).length;
 async function nav(page,tab,section){
-  const root=page.locator('.nav-primary [data-tab="'+tab+'"]');
-  if(await page.locator('[data-view="'+tab+'"]').isHidden() && await root.isVisible())await root.click();
+  const close=page.locator('#v31-overlay-close');
+  if(await close.isVisible())await close.click();
+  const root={empresa:'empresa:dashboard',mercado:'mercado:compras',
+    administrativo:'administrativo:rh-dp',sistema:'sistema'}[tab];
+  const dock=page.locator('#v31-dock [data-v31-open="'+root+'"]');
+  if(await dock.isVisible())await dock.click();
+  else await page.locator('.nav-primary [data-tab="'+tab+'"]').click();
   if(section){
-    const tabButton=page.locator('[data-section-tab="'+tab+':'+section+'"]');
-    await tabButton.click();
-    assert.equal(await tabButton.getAttribute('aria-selected'),'true',
+    const button=page.locator('[data-section-tab="'+tab+':'+section+'"]');
+    await button.click();
+    assert.equal(await button.getAttribute('aria-selected'),'true',
       'Subaba não selecionada: '+tab+'/'+section);
     assert.ok(await page.locator('[data-section-pane="'+tab+':'+section+'"]').isVisible(),
       'Conteúdo da subaba não ficou visível: '+tab+'/'+section);
@@ -81,14 +86,14 @@ async function nav(page,tab,section){
   assert.ok(await page.locator('[data-view="'+tab+'"]').isVisible(),'Navegação falhou: '+tab);
 }
 async function city(page){
-  // O mapa tem HUD próprio. Da cena Cidade, side nav é oculto por CSS.
+  if(await page.locator('#v31-overlay-close').isVisible())await page.locator('#v31-overlay-close').click();
   if(await page.locator('[data-view="cidade"]').isVisible())return;
   await page.locator('.nav-primary [data-tab="cidade"]').click();
-  await page.locator('#v221-hud-time').waitFor({state:'visible'});
+  await page.locator('#v31-hud-turns').waitFor({state:'visible'});
 }
 async function advance(page,span){
   await city(page);
-  await page.locator('#v221-hud-time').click();
+  await page.locator('#v31-hud-turns').click();
   await page.locator('[data-v221-time="'+span+'"]').click();
 }
 async function newUnit(page,lot){
@@ -98,7 +103,7 @@ async function newUnit(page,lot){
   assert.ok(await page.locator('#open-form').isVisible(),'Formulário de abertura invisível');
   await page.locator('#sector-select').selectOption('mercado');
   await page.locator('#open-form button[type="submit"]').click();
-  await page.locator('#v221-hud-time').waitFor({state:'visible'});
+  await page.locator('#v31-hud-turns').waitFor({state:'visible'});
 }
 async function runChannel(channel){
   const dir=mkdtempSync(join(tmpdir(),'cdnegocios-v300-integrated-'+channel+'-'));
@@ -121,7 +126,7 @@ async function runChannel(channel){
       await page.locator('#company-name').fill('Rede Sintética QA');
       await page.locator('#start-city').selectOption('CE-TIANGUA');
       await page.locator('#career-form button[type=submit]').click();
-      await page.locator('#v221-hud-time').waitFor({state:'visible'});
+      await page.locator('#v31-hud-turns').waitFor({state:'visible'});
       const s=await stateOf(page);
       check(s.units.length===0&&s.schemaVersion===9&&s.balanced&&s.logistics.clearing,
         'início íntegro sem compras ou empresas',channel);
@@ -134,7 +139,6 @@ async function runChannel(channel){
       check(s.balanced&&s.logistics.clearing,'abertura contabilmente conciliada',channel);
     });
     await stage('03-mercado-compra-real',async()=>{
-      await page.locator('#v221-hud-units').click();
       await nav(page,'mercado','compras');
       const before=await stateOf(page);
       await page.locator('#buy-product').selectOption('base');
@@ -166,7 +170,6 @@ async function runChannel(channel){
         'segunda unidade aberta pelo mapa, sem reconstruir save',channel);
     });
     await stage('06-contratar-rh-com-confirmacao',async()=>{
-      await page.locator('#v221-hud-units').click();
       await nav(page,'administrativo','rh-dp');
       const before=await stateOf(page);
       await page.locator('#rh-hire-unit').selectOption(first);
@@ -243,7 +246,6 @@ async function runChannel(channel){
         // Situação econômica não é mockada: mais uma semana real via HUD.
         await advance(page,'7');s=await stateOf(page);
       }
-      await page.locator('#v221-hud-units').click();
       await nav(page,'administrativo','financas');
       check(await page.locator('#credit-contract-submit').isEnabled()&&s.credit.eligible,
         'UI reflete elegibilidade derivada das vendas realizadas',channel);
@@ -261,7 +263,6 @@ async function runChannel(channel){
     await stage('12-fechar-competencia-e-pagar-folha',async()=>{
       const before=await stateOf(page);
       await advance(page,'30');
-      await page.locator('#v221-hud-units').click();
       await nav(page,'administrativo','rh-dp');
       const accrued=await stateOf(page);
       check(accrued.rh.pending>0&&

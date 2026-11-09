@@ -37,6 +37,9 @@ async function ready(page){
     {timeout:30000});
 }
 async function nav(page,root,section){
+  // O backdrop é modal: fechar janela aberta antes de acionar outro item da dock.
+  const close=page.locator('#v31-overlay-close');
+  if(await close.isVisible())await close.click();
   // V3.1 mantém os formulários antigos dentro dos overlays, acessíveis pelo dock.
   const target={empresa:'empresa:dashboard',mercado:'mercado:compras',
     administrativo:'administrativo:rh-dp',sistema:'sistema'}[root];
@@ -111,8 +114,7 @@ async function run(channel,width){
     s=await stateInfo(page);
     assert.ok(s&&s.units===1&&s.balanced&&s.reconciliation,
       label+' empresa nao inaugurada');
-    await page.locator('#v221-hud-time').tap();
-    await page.locator('[data-v221-time="1"]').tap();
+    await page.locator('#v31-next-day').tap();
     await page.waitForFunction(()=>document.body.dataset.storageBusy!=='true',
       {timeout:30000});
     const day=await stateInfo(page);

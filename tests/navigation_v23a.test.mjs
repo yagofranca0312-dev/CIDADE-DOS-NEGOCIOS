@@ -8,9 +8,11 @@ const app=readFileSync('src/ui/app.js','utf8');
 const built=readFileSync('index.html','utf8');
 
 test('V2.3-A possui quatro abas principais e Configurações independente',()=>{
-  const nav=template.match(/<nav class="nav-items nav-primary"[\s\S]*?<\/nav>/)?.[0];assert.ok(nav);
-  assert.deepEqual([...nav.matchAll(/data-tab="([^"]+)"/g)].map(x=>x[1]),['cidade','empresa','mercado','administrativo']);
-  assert.match(template,/data-tab="sistema"/);
+  const nav=template.match(/<nav class="v31-dock"[\s\S]*?<\/nav>/)?.[0];assert.ok(nav);
+  assert.deepEqual([...nav.matchAll(/data-v31-open="([^"]+)"/g)].map(x=>x[1]),
+    ['empresa:dashboard','mercado:compras','administrativo:rh-dp','administrativo:contabilidade','sistema']);
+  assert.match(template,/data-view="cidade"/);
+  assert.doesNotMatch(template,/<aside class="sidebar"/);
 });
 
 test('V2.3-A possui 13 subáreas, identificadores únicos e vínculos ARIA válidos',()=>{
@@ -51,20 +53,23 @@ test('V2.3-A executa o roteamento legado e subáreas sem alterar estado econômi
   const noop=()=>{};
   const cls=()=>({toggle:noop});
   const rootElems=roots.map(v=>({dataset:{view:v},classList:cls(),hidden:true}));
-  const nav=roots.slice(0,4).map(v=>({dataset:{tab:v},classList:cls(),setAttribute:noop,removeAttribute:noop}));
+  const nav=[]; // Navegacao principal agora usa dock permanente, fora do roteador do motor.
   const panes=panels.map(v=>({dataset:{sectionPane:v},hidden:true}));
   const tabs=panels.map(v=>({dataset:{sectionTab:v},classList:cls(),setAttribute:noop,tabIndex:0}));
   const data={player:{cityId:'CE-TIANGUA'},economy:{ledger:[{value:7}]},revision:12};
   let renderCount=0;
-  const context={state:data,tab:'cidade',immersiveOpen:null,v31ClassicMode:false,activeSection:{empresa:'dashboard',mercado:'compras',administrativo:'financas'},
+  const context={state:data,tab:'cidade',immersiveOpen:null,activeSection:{empresa:'dashboard',mercado:'compras',administrativo:'financas'},
     document:{body:{classList:cls()},querySelector:s=>panes.find(x=>s==='[data-section-pane="'+x.dataset.sectionPane+'"]')||null,
       querySelectorAll:s=>s==='.view[data-view]'?rootElems:s==='.nav-primary [data-tab]'?nav:s==='[data-section-pane]'?panes:s==='[data-section-tab]'?tabs:[]},
     window:{scrollTo:noop},setText:noop,render:()=>{renderCount++;}};
   const before=JSON.stringify(data);
-  runInNewContext(code+'\n goto("fiscal");',context);
+  runInNewContext(code,context);
+  context.v31OpenPanel=(root,section)=>{context.immersiveOpen=root;context.goto(root,section);};
+  runInNewContext('goto("fiscal");',context);
   assert.equal(context.tab,'administrativo');assert.equal(context.activeSection.administrativo,'fiscal');
   assert.equal(panes.find(x=>x.dataset.sectionPane==='administrativo:fiscal').hidden,false);
-  assert.equal(nav.find(x=>x.dataset.tab==='administrativo').tabIndex,undefined);
+  assert.equal(context.immersiveOpen,'administrativo');
+  assert.equal(rootElems.find(x=>x.dataset.view==='cidade').hidden,false,'Cidade permanece aberta sob janela');
   runInNewContext('goto("financas");goto("mercado","estoque");goto("empresa","minhas-empresas");',context);
   assert.equal(context.activeSection.administrativo,'financas');assert.equal(context.activeSection.mercado,'estoque');
   assert.equal(context.activeSection.empresa,'minhas-empresas');assert.equal(context.tab,'empresa');

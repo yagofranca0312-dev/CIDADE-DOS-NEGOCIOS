@@ -49,6 +49,9 @@ jobs:
       - name: Instalar somente o controlador de browser para a CI
         shell: pwsh
         run: npm install --no-save --no-package-lock --ignore-scripts --no-audit --no-fund playwright@1.55.1
+      - name: V3.1 QA cidade imersiva, camera, overlays e mobile
+        shell: pwsh
+        run: node tools/qa-windows-v310.mjs
       - name: Executar Chrome e Edge reais em file offline (QA sintetico)
         shell: pwsh
         run: node tools/qa-windows-browser-v300.mjs
@@ -61,9 +64,6 @@ jobs:
       - name: QA mobile emulado 320 390 768 com toque e recuperacao
         shell: pwsh
         run: node tools/qa-windows-mobile-emulado-v300.mjs
-      - name: V3.1 QA cidade imersiva, camera, overlays e mobile
-        shell: pwsh
-        run: node tools/qa-windows-v310.mjs
       - name: Arquivar provas visuais V3.1
         if: always()
         uses: actions/upload-artifact@v4

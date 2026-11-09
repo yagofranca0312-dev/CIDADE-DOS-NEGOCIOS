@@ -11,7 +11,7 @@
   let commitInFlight=false,startupBlocked=true,safetyBackupAvailable=false;
   let inspectorOpen=false; // interface somente, nunca persistido
   let restockDraft=null; // proposta de compra efêmera (não entra em saves)
-  const activeSection={empresa:'dashboard',mercado:'compras',administrativo:'financas'}; // somente UI, fora do save
+  const activeSection={empresa:'dashboard',mercado:'compras',administrativo:'financas',sistema:'saves'}; // somente UI, fora do save
   let mapZoomed=false; // visão ampliada opcional; não altera o save
   let financeQuery=null,strategyHorizon=30,financeScope='all',statementView='summary'; // preferências de interface, independentes do GameState
   const business=()=>state?Core.activeBusiness(state):null;
@@ -454,10 +454,12 @@
        (statementView==='summary'||statementView==='cash'))statementView='dre';
     const sharedFilters=document.querySelector('#admin-shared-filters');
     if(sharedFilters)sharedFilters.hidden=!(root==='administrativo'&&['financas','contabilidade'].includes(activeSection.administrativo));
+    // City-first é a única navegação; toda área não-cidade vira janela sobre o mapa.
+    if(state&&root!=='cidade'&&immersiveOpen!==root){v31OpenPanel(root,section);return;}
     tab=root;
     if(root==='cidade')immersiveOpen=null;
     document.body.classList.toggle('v221-city-mode',!!state?.player?.cityId&&(root==='cidade'||!!immersiveOpen));
-    document.body.classList.toggle('v31-overlay-open',!!immersiveOpen&&!v31ClassicMode);
+    document.body.classList.toggle('v31-overlay-open',!!immersiveOpen);
     document.querySelectorAll('.view[data-view]').forEach(el=>{const chosen=el.dataset.view===root||(!!immersiveOpen&&el.dataset.view==='cidade');el.hidden=!chosen;el.classList.toggle('active',chosen);});
     document.querySelectorAll('.nav-primary [data-tab]').forEach(el=>{const chosen=el.dataset.tab===root;el.classList.toggle('active',chosen);if(chosen)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');});
     document.querySelectorAll('[data-section-pane]').forEach(el=>{const [area,sub]=el.dataset.sectionPane.split(':');el.hidden=!(area===root&&activeSection[area]===sub);});
@@ -503,7 +505,7 @@
   /* CDN_V31_IMMERSIVE */
   function render(){
     const started=!!state?.player?.cityId;
-    document.body.classList.toggle('v221-city-mode',started&&(tab==='cidade'||!!immersiveOpen));
+    document.body.classList.toggle('v221-city-mode',started);
     $('onboarding').hidden=started;$('game-shell').hidden=!started;
     if(!started)return;
     const b=business(),units=Core.businesses(state),info=Core.overview(state),ownCity=Core.cityById(b?.cityId||state.player.cityId);
@@ -762,7 +764,15 @@
     $('company-unit-search').addEventListener('input',companyRenderUnitList);
     $('explore-city').addEventListener('change',e=>{viewCityId=e.target.value;inspectorOpen=false;render();updateOpenPreview();});
     $('v221-city-selector').addEventListener('change',e=>{viewCityId=e.target.value;inspectorOpen=false;$('v221-city-pick').hidden=true;render();});
-    $('map-canvas').addEventListener('click',e=>{const target=e.target.closest('[data-lot]');if(target){selectedLot=Number(target.dataset.lot);inspectorOpen=true;render();updateOpenPreview();}});
+    $('map-canvas').addEventListener('click',e=>{const target=e.target.closest('[data-lot]');if(target){
+      selectedLot=Number(target.dataset.lot);inspectorOpen=true;render();updateOpenPreview();
+      const owner=Core.businesses(state).find(x=>x.cityId===viewCityId&&x.lot===selectedLot);
+      // Lote edificado abre sua empresa na janela; lote livre exibe as opcoes de abertura.
+      if(owner){
+        if(business()?.id!==owner.id)commit('EMPRESA.ATIVAR',{businessId:owner.id}).then(ok=>{if(ok)v31OpenPanel('empresa','minhas-empresas');});
+        else v31OpenPanel('empresa','minhas-empresas');
+      }
+    }});
     $('map-canvas').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const target=e.target.closest('[data-lot]');if(target){e.preventDefault();selectedLot=Number(target.dataset.lot);inspectorOpen=true;render();$('map-canvas').querySelector(`[data-lot="${selectedLot}"]`)?.focus();}}});
   $('map-lot-picker').addEventListener('change',e=>{const next=Number(e.target.value);if(Number.isInteger(next)&&next>=1&&next<=18){selectedLot=next;inspectorOpen=true;render();$('map-lot-picker').focus();}});
     $('v221-map-zoom').addEventListener('click',()=>{
@@ -771,14 +781,12 @@
       // No modo ampliado, a faixa do mapa pode ser deslocada horizontalmente.
       if(mapZoomed){const el=$('map-canvas');el.scrollLeft=Math.max(0,(el.scrollWidth-el.clientWidth)/2);}
     });
-    $('v221-inspector-close').addEventListener('click',()=>{inspectorOpen=false;render();$('v221-hud-units').focus();});
+    $('v221-inspector-close').addEventListener('click',()=>{inspectorOpen=false;render();$('map-canvas').focus();});
     $('v221-hud-units').addEventListener('click',()=>goto('empresa'));
     $('v221-config-open').addEventListener('click',()=>goto('sistema'));
     $('v221-help-open').addEventListener('click',()=>{$('v221-help-panel').hidden=!$('v221-help-panel').hidden;});
     $('v221-help-close').addEventListener('click',()=>{$('v221-help-panel').hidden=true;});
-    $('v221-city-switch-trigger').addEventListener('click',()=>{$('v221-city-pick').hidden=!$('v221-city-pick').hidden;});
     $('v221-city-pick-close').addEventListener('click',()=>{$('v221-city-pick').hidden=true;});
-    $('v221-city-info-trigger').addEventListener('click',()=>{$('v221-observatory').open=!$('v221-observatory').open;$('v221-activity').open=false;});
     $('v221-event-open').addEventListener('click',()=>{$('v221-activity').open=!$('v221-activity').open;$('v221-observatory').open=false;});
     $('v221-hud-time').addEventListener('click',()=>{const el=$('v221-time-menu');el.hidden=!el.hidden;$('v221-hud-time').setAttribute('aria-expanded',String(!el.hidden));$('v221-time-speed').value=$('speed-select').value;});
     $('v221-time-speed').addEventListener('change',e=>{$('speed-select').value=e.target.value;$('speed-select').dispatchEvent(new Event('change'));});

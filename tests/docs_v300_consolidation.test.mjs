@@ -41,8 +41,9 @@ test('V3.0-06: roadmap atual explicita oito gates, plano de consolidação antes
 });
 
 test('V3.0-06: tutorial usa os cinco menus existentes e compra confirmada',()=>{
-  for(const key of ['cidade','empresa','mercado','administrativo','sistema'])
-    assert.match(template,new RegExp('data-tab="'+key+'"'));
+  assert.match(template,/data-view="cidade"/);
+  for(const key of ['empresa:dashboard','mercado:compras','administrativo:rh-dp','administrativo:contabilidade','sistema'])
+    assert.match(template,new RegExp('data-v31-open="'+key+'"'));
   for(const section of ['financas','logistica','rh-dp','contabilidade','fiscal','paralegal'])
     assert.match(template,new RegExp('data-section-pane="administrativo:'+section+'"'));
   for(const heading of ['Antes de jogar','Começar uma carreira','Compras planejadas','Módulos empresariais',

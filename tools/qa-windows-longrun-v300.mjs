@@ -132,7 +132,7 @@ async function inspect(page){
 }
 function assertIntegrity(result,label,units){
   assert.equal(result.present,true,label+' sem save');
-  assert.equal(result.schema,9,label+' schema divergiu');
+  assert.equal(result.schema,10,label+' schema divergiu');
   assert.equal(result.units,units,label+' unidades divergiu');
   assert.equal(result.balanced,true,label+' balanço divergente');
   assert.equal(result.balancingDifference,0,label+' diferença no balanço');

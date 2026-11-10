@@ -687,3 +687,39 @@ body.v31-immersive.v221-city-mode.v221-tiangua-scene .map-panel>.v221-city-switc
     object-fit:contain!important;
   }
 }
+
+/* V3.3.0 / microetapa 01 — camera responsiva sem barras vazias.
+   O SVG mantém proporção nativa. Em telas estreitas, a cidade excede a largura
+   da viewport: o jogador acessa as bordas por arrasto, teclado ou seletor. */
+body.v31-immersive #map-canvas{
+  display:block!important;
+  align-items:normal!important;
+  justify-items:normal!important;
+  align-content:normal!important;
+  width:100vw!important;
+  height:100dvh!important;
+  overflow:auto!important;
+  background:#0a2939;
+}
+body.v31-immersive #map-canvas>svg.v221-city-svg{
+  display:block!important;
+  width:max(100vw,231.325301dvh)!important; /* 1536 / 664 */
+  max-width:none!important;
+  min-width:0!important;
+  height:auto!important;
+  min-height:100dvh!important;
+  max-height:none!important;
+  aspect-ratio:1536/664!important;
+  object-fit:fill!important;
+}
+body.v31-immersive #map-canvas>svg.v22-city-svg{
+  display:block!important;
+  width:max(100vw,158.024691dvh)!important; /* 640 / 405 */
+  max-width:none!important;
+  min-width:0!important;
+  height:auto!important;
+  min-height:100dvh!important;
+  max-height:none!important;
+  aspect-ratio:640/405!important;
+  object-fit:fill!important;
+}

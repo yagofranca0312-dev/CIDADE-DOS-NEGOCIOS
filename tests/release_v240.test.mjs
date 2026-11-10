@@ -5,7 +5,7 @@ import {runInNewContext,Script} from 'node:vm';
 const source=readFileSync('src/core/game.js','utf8');
 const core=runInNewContext(source+'\nCidadeCore',{});
 test('V3.0.0: identifica versão estável, mantém schema 9 e três departamentos ativos',()=>{
-  assert.equal(core.VERSION,'3.2.0');
+  assert.equal(core.VERSION,'3.3.0');
   assert.equal(core.SCHEMA_VERSION,10);
   assert.equal(typeof core.paralegalReport,'function');
   assert.equal(typeof core.rhReport,'function');
@@ -20,13 +20,13 @@ test('V3.0.0: HTML único offline contém os três departamentos e versão no ca
   const html=readFileSync('index.html','utf8');
   const template=readFileSync('src/shell/index.template.html','utf8');
   const pkg=JSON.parse(readFileSync('package.json','utf8'));
-  assert.equal(pkg.version,'3.2.0');
-  assert.match(template,/<title>Cidade dos Negócios 1 · v3\.2\.0<\/title>/);
+  assert.equal(pkg.version,'3.3.0');
+  assert.match(template,/<title>Cidade dos Negócios 1 · v3\.3\.0<\/title>/);
   for(const id of ['intro-version','build-version','footer-version'])
-    assert.ok(template.includes('id="'+id+'">v3.2.0<'),id);
+    assert.ok(template.includes('id="'+id+'">v3.3.0<'),id);
   for(const id of ['paralegal-unit-list','rh-hire-form','fiscal-op-unit-list'])
     assert.ok(html.includes('id="'+id+'"'),id);
-  assert.match(html,/const VERSION = '3\.2\.0'/);
+  assert.match(html,/const VERSION = '3\.3\.0'/);
   assert.equal((html.match(/<script\b/g)||[]).length,1);
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(scripts.length,1);

@@ -60,15 +60,17 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   assert.equal(geometry.topbarHidden,true,'Topbar antigo ainda ocupa a tela');
   assert.ok(Math.abs(geometry.map.x)<=2 && Math.abs(geometry.map.y)<=2,'Mapa nao inicia na origem da viewport');
   assert.ok(geometry.map.w>=width-2 && geometry.map.h>=geometry.height-2,'Mapa nao ocupa 100% da viewport');
-  assert.ok(Math.abs(geometry.svg.w-width)<3,'SVG extrapola a largura natural da viewport');
-  if(width<=768){
-    const expectedHeight=width*664/1536;
-    assert.ok(Math.abs(geometry.svg.h-expectedHeight)<4,'SVG mobile não respeita proporção original: '+JSON.stringify(geometry.svg));
-    assert.ok(geometry.svg.y>58,'Mapa não está centralizado abaixo do HUD');
-    assert.ok(geometry.svg.y+geometry.svg.h<geometry.height-70,'Mapa esconde lotes sob a dock');
-  }else assert.ok(Math.abs(geometry.svg.h-geometry.height)<3,'SVG desktop não usa viewport com contain');
-  assert.equal(geometry.canvasScroll.x,0,'Zoom/pan inicial horizontal não está zerado');
-  assert.equal(geometry.canvasScroll.y,0,'Zoom/pan inicial vertical não está zerado');
+  // V3.3.0: o cenário usa cover sem distorção; o excedente lateral é rolável.
+  const ratio=1536/664;
+  const expectedWidth=Math.max(width,geometry.height*ratio);
+  const expectedHeight=expectedWidth/ratio;
+  assert.ok(Math.abs(geometry.svg.w-expectedWidth)<5,'SVG não cobre a viewport na proporção original: '+JSON.stringify(geometry.svg));
+  assert.ok(Math.abs(geometry.svg.h-expectedHeight)<5,'SVG deformado ou com faixa vazia: '+JSON.stringify(geometry.svg));
+  assert.ok(geometry.svg.x<=2 && geometry.svg.x+geometry.svg.w>=width-2,'Mapa não preenche a largura visível');
+  assert.ok(geometry.svg.y<=2 && geometry.svg.y+geometry.svg.h>=geometry.height-2,'Mapa não preenche a altura visível');
+  assert.ok(Math.abs(geometry.canvasScroll.x-Math.max(0,(expectedWidth-width)/2))<7,
+    'Enquadramento não inicia centralizado horizontalmente: '+JSON.stringify(geometry.canvasScroll));
+  assert.ok(Math.abs(geometry.canvasScroll.y)<3,'Enquadramento inicial vertical incorreto');
   assert.equal(await page.locator('#v31-camera-label').textContent(),'100%');
   assert.ok(geometry.scrollWidth<=width+4,'Rolagem horizontal fora do viewport');
   assert.ok(Math.abs(geometry.dock.x+geometry.dock.w/2-width/2)<=4,'Dock nao centralizada');

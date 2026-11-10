@@ -32,6 +32,14 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   await page.locator('#start-city').selectOption('CE-TIANGUA');
   await page.locator('#career-form button[type=submit]').click();
   await page.locator('#v31-dock').waitFor({state:'visible'});
+  // A inicializacao da carreira faz dois commits: CRIAR e CONCORRENCIA_ATIVAR.
+  // Capturar o baseline da camera so depois da segunda gravacao estar duravel.
+  await page.waitForFunction(async()=>{
+    const raw=await CidadeDurableStore.readCurrent(CidadeCore);
+    if(!raw)return false;
+    const saved=CidadeCore.importSave(raw).state;
+    return saved.audit.events.some(event=>event.type==='MUNDO.CONCORRENCIA_ATIVADA');
+  },null,{timeout:45000});
   // Viewport real, sem menu lateral e sem altura de painel ERP.
   const geometry=await page.evaluate(()=>{
     const canvas=document.getElementById('map-canvas'),svg=canvas.querySelector('svg');

@@ -1,9 +1,9 @@
 {
   "name": "cidade-dos-negocios",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "private": true,
   "type": "module",
-  "description": "Cidade dos Negócios V3.1.0 — interface city-first com contratos puros e paineis flutuantes",
+  "description": "Cidade dos Negócios V3.2.0 — FiscalEngine estrategico e interface imersiva",
   "scripts": {
     "build": "node tools/build.mjs",
     "test": "node --test tests/*.test.mjs",

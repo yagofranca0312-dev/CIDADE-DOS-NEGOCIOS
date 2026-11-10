@@ -54,7 +54,7 @@ async function open(context,errors){
   // file:// pode produzir resposta nula conforme versão do Playwright; prova é DOM + app.
   await page.locator('#career-form').waitFor({state:'attached',timeout:15000});
   await page.waitForFunction(()=>document.body.dataset.storageReady==='ready',{timeout:20000});
-  await page.waitForFunction(()=>document.title.includes('3.1.0'),{timeout:15000});
+  await page.waitForFunction(()=>document.title.includes('3.2.0'),{timeout:15000});
   return page;
 }
 function validateWindowsHosted(){
@@ -110,7 +110,7 @@ async function testBrowser(channel){
     await page.locator('#career-form button[type=submit]').click();
     await page.waitForFunction(()=>!document.getElementById('game-shell').hidden);
     const created=await jsonInfo(page);
-    check(Boolean(created.raw&&created.info&&created.info.revision>=1&&created.info.version===9),
+    check(Boolean(created.raw&&created.info&&created.info.revision>=1&&created.info.version===10),
       channel+': carreira criada e exportada como envelope verificável');
     check((await page.locator('#autosave-label').textContent()).includes('Cópia local verificada'),
       channel+': interface declara cópia após verificação de leitura');
@@ -202,10 +202,12 @@ async function testBrowser(channel){
           migrated.info.revision===legacy.info.revision&&
           migrated.info.ledger===legacy.info.ledger,
           channel+': save sintético V2.9 homologada importado em V3.0 sem retroação');
-        const back=fixtureCore.importSave(migrated.raw);
-        check(back.state.worldId===legacy.info.worldId&&
-          back.state.economy.ledger.length===legacy.info.ledger,
-          channel+': rollback do save V3 para motor V2.9 em cópia sintética');
+        check(migrated.info.version===10,
+          channel+': save V2.9 migrado para schema10 sem alterar histórico');
+        let rollbackRejected=false;
+        try{fixtureCore.importSave(migrated.raw);}catch(err){rollbackRejected=/schema|incompatível/i.test(String(err.message));}
+        check(rollbackRejected,
+          channel+': motor V2.9 rejeita corretamente schema10; rollback requer backup V2.9 externo');
       }finally{await legacyContext.close();}
     }finally{rmSync(legacyProfile,{recursive:true,force:true});}
 

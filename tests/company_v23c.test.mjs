@@ -97,7 +97,7 @@ test('V2.3-C: datas, filtros, rankings e tendências são consultas sem mutaçã
     for(const dimension of ['unit','city','sector'])m.companyComparisonRows(state,core,w,dimension,'all','all','operating');
   }
   assert.equal(core.exportSave(state),before);
-  assert.equal(state.schemaVersion,9);
+  assert.equal(state.schemaVersion,10);
 });
 test('V2.3-C: interface tem navegação, filtros, indicadores, comparativos e HTML compilável',()=>{
   const t=readFileSync('src/shell/index.template.html','utf8'),app=readFileSync('src/ui/app.js','utf8');

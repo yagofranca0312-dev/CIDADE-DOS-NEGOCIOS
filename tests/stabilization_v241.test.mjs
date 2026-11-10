@@ -98,7 +98,7 @@ test('V3.0.0: save exportado após quitação importa e detecta corrupção',()=
   let s=injectTestCapital(days(start(3),10),120000);
   s=act(s,'PAYABLES.PAGAR_OPERACIONAL',{businessId:s.world.business.id,amountCents:5000});
   const raw=Core.exportSave(s),imported=Core.importSave(raw);
-  assert.equal(imported.state.schemaVersion,9);
+  assert.equal(imported.state.schemaVersion,10);
   assert.equal(JSON.stringify(imported.state),JSON.stringify(s));
   assert.equal(Core.operatingPayablesReport(imported.state).total,Core.operatingPayablesReport(s).total);
   assert.throws(()=>Core.importSave(raw.replace('Aporte de teste isolado','Aporte adulterado')),/Checksum/);
@@ -107,14 +107,14 @@ test('V3.0.0: novos controles ficam no HTML único e script compilado é sintati
   const tpl=readFileSync('src/shell/index.template.html','utf8');
   const app=readFileSync('src/ui/app.js','utf8'),html=readFileSync('index.html','utf8');
   const pkg=JSON.parse(readFileSync('package.json','utf8'));
-  assert.equal(pkg.version,'3.1.0');
+  assert.equal(pkg.version,'3.2.0');
   for(const id of ['payable-operating-form','payable-operating-unit','restore-prior-save-btn','safety-backup-status'])
     assert.ok(tpl.includes('id="'+id+'"'));
   assert.match(app,/SAFETY_KEY/);
   assert.match(app,/backupCurrent\(\)/);
   assert.match(app,/if\(!await persistDurable\(incoming\.state\)\)/);
   assert.match(app,/if\(!await persistDurable\(result\.state\)\)return false;/);
-  assert.match(html,/const VERSION = '3\.1\.0'/);
+  assert.match(html,/const VERSION = '3\.2\.0'/);
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(scripts.length,1);
   assert.doesNotThrow(()=>new Script(scripts[0][1]));

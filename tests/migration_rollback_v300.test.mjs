@@ -65,7 +65,7 @@ test('V3.0 migração: fixture V2.9 está byte a byte ligada ao blob do release 
   assert.equal(hash,'048d174cd2e952d61a255c84c97dbb40dceaf50a');
   assert.equal(stable.VERSION,'2.9.0');
   assert.equal(stable.SCHEMA_VERSION,9);
-  assert.equal(current.VERSION,'3.1.0');
+  assert.equal(current.VERSION,'3.2.0');
 });
 
 const historical=[
@@ -90,8 +90,8 @@ for(const [label,fixture,schema] of historical){
     assert.equal(before.schemaVersion,schema);
     const original=json(before),exported=legacy.exportSave(before);
     const imported=current.importSave(exported),after=imported.state;
-    assert.equal(imported.migrated,schema!==9);
-    assert.equal(after.schemaVersion,9);
+    assert.equal(imported.migrated,true);
+    assert.equal(after.schemaVersion,10);
     compareBeforeAfter(before,after,legacy);
     assert.equal(json(before),original,'Motor antigo teve snapshot mutado durante migração');
     assert.equal(after.audit.events.length,before.audit.events.length,'Criou eventos retroativos');
@@ -101,23 +101,25 @@ for(const [label,fixture,schema] of historical){
   });
 }
 
-test('V3.0 rollback: carreira REAL do motor V2.9.0 homologado abre sem transformação na alpha',()=>{
+test('V3.2: carreira real V2.9 é migrada mantendo razão, RNG, unidades e estoque',()=>{
   let s=create(stable,300473);
   s=apply(stable,s,'ESTOQUE.COMPRAR',{quantity:100,productId:'base',supplierId:'regional'});
   s=days(stable,s,5);
   const before=json(s),blob=stable.exportSave(s),compact=stable.exportSaveCompact(s);
   for(const data of [blob,compact]){
     const imported=current.importSave(data);
-    assert.equal(imported.migrated,false);
-    assert.equal(json(imported.state),before);
+    assert.equal(imported.migrated,true);
+    assert.equal(imported.state.schemaVersion,10);
+    assert.equal(imported.state.fiscal.regime,'SIMPLES');
+    assert.equal(imported.state.fiscal.taxStartDate,s.calendar.date);
     compareBeforeAfter(s,imported.state,stable);
     integrity(imported.state);
-    assert.equal(json(stable.importSave(current.exportSave(imported.state)).state),before);
-    assert.equal(json(stable.importSave(current.exportSaveCompact(imported.state)).state),before);
+    pureRestore(imported.state);
   }
+  assert.equal(json(s),before);
 });
 
-test('V3.0 rollback: Patch A exporta V1 e V2 legíveis pela V2.9 homologada',()=>{
+test('V3.2: formato V1/V2 permanece portátil, mas schema 10 não faz downgrade inseguro para V2.9',()=>{
   let s=create(current,300474);
   const plan=current.operationalBalanceReport(s,'equilibrado');
   assert.ok(plan.spendCents>0);
@@ -125,28 +127,17 @@ test('V3.0 rollback: Patch A exporta V1 e V2 legíveis pela V2.9 homologada',()=
     payload:{mode:plan.mode,businessId:plan.businessId,revision:plan.revision,quoteId:plan.quoteId}};
   const result=current.dispatch(s,cmd);
   assert.equal(result.ok,true,result.error);s=result.state;
-  assert.equal(s.audit.events.some(e=>e.type==='ECONOMIA.COMPRA_PLANEJADA'),true);
+  assert.ok(s.audit.events.some(e=>e.type==='ECONOMIA.COMPRA_PLANEJADA'));
   const snapshot=json(s);
   for(const raw of [current.exportSave(s),current.exportSaveCompact(s)]){
-    const oldReader=stable.importSave(raw);
-    assert.equal(oldReader.migrated,false);
-    assert.equal(json(oldReader.state),snapshot,'V2.9 perdeu dado escrito pelo Patch A');
-    assert.equal(json(stable.importSave(stable.exportSave(oldReader.state)).state),snapshot);
-    integrity(oldReader.state);
+    assert.equal(json(current.importSave(raw).state),snapshot);
+    assert.throws(()=>stable.importSave(raw),/schema|incompatível/i,
+      'Não prometer downgrade automático para schema 9');
   }
-  // O motor antigo não possui o comando Patch A, mas deve conseguir seguir o jogo
-  // a partir de um snapshot já comprado e sem perda de saldos.
-  const downgraded=stable.importSave(current.exportSave(s)).state;
-  const oldNext=apply(stable,downgraded,'TEMPO.AVANCAR_DIA');
-  const newNext=apply(current,s,'TEMPO.AVANCAR_DIA');
-  assert.equal(json(oldNext.economy.ledger),json(newNext.economy.ledger));
-  assert.equal(json(oldNext.audit.events),json(newNext.audit.events));
-  assert.equal(stable.overview(oldNext).cash,current.overview(newNext).cash);
-  assert.equal(stable.overview(oldNext).stock,current.overview(newNext).stock);
-  integrity(newNext);
+  integrity(s);
 });
 
-test('V3.0 rollback: renda de empréstimo, filiais e histórico do CD preservados no V2.9',()=>{
+test('V3.2: empréstimo, filiais, RH e CD de V2.9 são preservados na migração',()=>{
   let s=create(stable,300475);
   s=apply(stable,s,'ESTOQUE.COMPRAR',{quantity:200,productId:'base',supplierId:'regional'});
   s=days(stable,s,7);
@@ -159,8 +150,9 @@ test('V3.0 rollback: renda de empréstimo, filiais e histórico do CD preservado
   const original=json(s);
   for(const format of [stable.exportSave(s),stable.exportSaveCompact(s)]){
     const imported=current.importSave(format);
-    assert.equal(imported.migrated,false);
-    assert.equal(json(imported.state),original);
+    assert.equal(imported.migrated,true);
+    assert.equal(imported.state.schemaVersion,10);
+    compareBeforeAfter(s,imported.state,stable);
     assert.equal(current.balanceSheet(imported.state).difference,0);
     assert.equal(current.creditReport(imported.state).principalOutstanding,
       stable.creditReport(s).principalOutstanding);
@@ -169,6 +161,7 @@ test('V3.0 rollback: renda de empréstimo, filiais e histórico do CD preservado
     assert.equal(current.rhReport(imported.state).pendingCents,stable.rhReport(s).pendingCents);
     integrity(imported.state);
   }
+  assert.equal(json(s),original);
 });
 
 test('V3.0 recuperação: backup alterado e schema novo rejeitados antes de entregar estado',()=>{
@@ -180,7 +173,7 @@ test('V3.0 recuperação: backup alterado e schema novo rejeitados antes de entr
   badHash.payload.calendar.tick+=1;
   assert.throws(()=>current.importSave(json(badHash)),/Checksum/);
   const unknownSchema=JSON.parse(json(standard));
-  unknownSchema.payload.schemaVersion=10;
+  unknownSchema.payload.schemaVersion=11;
   unknownSchema.checksum=current.hash(json(unknownSchema.payload));
   assert.throws(()=>current.importSave(json(unknownSchema)),/schema incompatível/i);
   const balancedButInvalid=JSON.parse(json(standard));
@@ -210,7 +203,7 @@ test('V3.0 recuperação: CP-000 sem atividade migra; CP-000 com atividade falha
     world:{entities:[]},player:{},calendar:{tick:0},history:[]};
   const clean=current.importSave(json(empty));
   assert.equal(clean.migrated,true);
-  assert.equal(clean.state.schemaVersion,9);
+  assert.equal(clean.state.schemaVersion,10);
   assert.equal(clean.state.economy.ledger.length,0);
   assert.equal(clean.state.audit.events.length,0);
   assert.equal(current.overview(clean.state).cash,0);
@@ -228,7 +221,7 @@ test('V3.0 recuperação: exportação tradicional V1 continua padrão e preserv
   assert.equal(compact.checksum,current.hash(snapshot));
   assert.equal(json(current.importSave(json(standard)).state),snapshot);
   assert.equal(json(current.importSave(json(compact)).state),snapshot);
-  assert.equal(json(stable.importSave(json(standard)).state),snapshot);
-  assert.equal(json(stable.importSave(json(compact)).state),snapshot);
-  assert.equal(current.saveHealthReport(s).schemaVersion,9);
+  assert.throws(()=>stable.importSave(json(standard)),/schema|incompatível/i);
+  assert.throws(()=>stable.importSave(json(compact)),/schema|incompatível/i);
+  assert.equal(current.saveHealthReport(s).schemaVersion,10);
 });

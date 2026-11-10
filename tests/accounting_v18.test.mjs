@@ -14,7 +14,7 @@ const advance=(s,days)=>{while(days>0){const x=Math.min(30,days);s=act(s,'TEMPO.
 function sample(){let s=init();s=open(s);s=act(s,'ESTOQUE.COMPRAR',{productId:'base',supplierId:'regional',quantity:160});s=advance(s,3);return s;}
 
 test('V1.8: versão visível e plano de contas com sinais, com migração de schema de save 8→9',()=>{
- assert.equal(Core.VERSION,'3.1.0');assert.equal(Core.SCHEMA_VERSION,9);
+ assert.equal(Core.VERSION,'3.2.0');assert.equal(Core.SCHEMA_VERSION,10);
  assert.equal(Core.ACCOUNT_CATALOG.CASH.normal,'DEBIT');
  assert.equal(Core.ACCOUNT_CATALOG.PAYABLE.normal,'CREDIT');
  assert.equal(Core.ACCOUNT_CATALOG.COGS.group,'COST');
@@ -26,7 +26,7 @@ test('V1.8: capital e abertura: DRE, balanço e caixa conciliam sem impostos',()
  const s=open(init());const snapshot=JSON.stringify(s);
  const dre=Core.incomeStatement(s),bp=Core.balanceSheet(s),cash=Core.cashFlowStatement(s),check=Core.reconciliationReport(s);
  assert.equal(dre.revenue,0);assert.equal(dre.openingExpenses,750000);
- assert.equal(dre.operatingResult,-750000);assert.equal(dre.fiscalCoverage,'NOT_COVERED');
+ assert.equal(dre.operatingResult,-750000);assert.equal(dre.fiscalCoverage,'SIMULATED_PARTIAL');
  assert.equal(bp.assets,2250000);assert.equal(bp.paidInCapital,3000000);
  assert.equal(bp.retainedEarnings,-750000);assert.equal(bp.equity,2250000);
  assert.equal(bp.difference,0);assert.equal(bp.balanced,true);
@@ -81,7 +81,7 @@ test('V1.8: DRE por filial soma no consolidado, sem caixa bancário por unidade'
 test('V1.8: períodos mensais e histórico de cortes são imóveis, fechamento não registra transações',()=>{
  let s=sample(),initial=JSON.stringify(s);
  const nov=Core.monthlyClose(s,'2026-11');assert.equal(nov.status,'GERENCIAL_CONSULTA');
- assert.equal(nov.fiscalCoverage,'NOT_COVERED');assert.equal(nov.operatingResult,Core.incomeStatement(s,'month','2026-11-01').operatingResult);
+ assert.equal(nov.fiscalCoverage,'SIMULATED_PARTIAL');assert.equal(nov.operatingResult,Core.incomeStatement(s,'month','2026-11-01').operatingResult);
  assert.equal(JSON.stringify(s),initial);
  const day=Core.incomeStatement(s,'day','2026-11-01');const cash=Core.cashFlowStatement(s,'day','2026-11-01');
  s=advance(s,40);
@@ -111,7 +111,7 @@ test('V1.8: 365 dias em três unidades com partidas e inventários conciliados',
  const bp=Core.balanceSheet(s),q=Core.reconciliationReport(s),cf=Core.cashFlowStatement(s);
  assert.ok(bp.balanced);assert.equal(bp.difference,0);assert.equal(q.ok,true);assert.equal(q.unitRows.length,3);
  assert.equal(cf.reconciled,true);assert.equal(cf.closingCash,Core.overview(s).cash);
- assert.equal(Core.incomeStatement(s).operatingResult,Core.overview(s).profit);
+ assert.equal(Core.incomeStatement(s).resultAfterSimulatedTax,Core.overview(s).profit);
  const saved=Core.exportSave(s),loaded=Core.importSave(saved);
  assert.equal(loaded.migrated,false);assert.deepEqual(JSON.parse(JSON.stringify(loaded.state)),JSON.parse(JSON.stringify(s)));
 });
@@ -126,7 +126,7 @@ test('V1.8: importação do save produzido na V1.7 homologada é idêntica, sem 
  const restored=Core.importSave(json);
  assert.equal(restored.migrated,true,'Esquema do save 8 é elevado para 9 sem lançar tributos');
  assert.equal(JSON.stringify(restored.state.economy.ledger),JSON.stringify(s.economy.ledger),'Lançamentos históricos devem permanecer equivalentes');
- assert.equal(restored.state.fiscal.coverageStatus,'NOT_COVERED');
+ assert.equal(restored.state.fiscal.coverageStatus,'SIMULATED_PARTIAL');
  assert.equal(Core.balanceSheet(restored.state).difference,0);
  assert.equal(Core.reconciliationReport(restored.state).ok,true);
  assert.equal(Core.cashFlowStatement(restored.state).closingCash,V17.overview(s).cash);
@@ -141,6 +141,6 @@ test('V1.8: uma única área financeira com demonstrativos e verificações de v
  assert.match(ui,/Core\.balanceSheet/);assert.match(ui,/Core\.cashFlowStatement/);
  assert.match(ui,/Core\.reconciliationReport/);assert.match(ui,/Core\.incomeStatement/);
  assert.match(build,/intro-version/);assert.match(build,/footer-version/);
- assert.match(tpl,/id="footer-version">v3\.1\.0/);
- assert.match(tpl,/<title>Cidade dos Negócios 1 · v3\.1\.0<\/title>/);
+ assert.match(tpl,/id="footer-version">v3\.2\.0/);
+ assert.match(tpl,/<title>Cidade dos Negócios 1 · v3\.2\.0<\/title>/);
 });

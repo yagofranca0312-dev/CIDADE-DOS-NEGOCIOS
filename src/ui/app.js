@@ -750,12 +750,33 @@
           commit('FISCAL_OP.FECHAR',{businessId:closing.dataset.fiscalOpUnit,period:closing.dataset.fiscalOpClose});
       }
     });
-    $('fiscal-acknowledge').addEventListener('change',()=>{$('fiscal-activate').disabled=!$('fiscal-acknowledge').checked;});
-    $('fiscal-activate').addEventListener('click',()=>{if(!$('fiscal-acknowledge').checked)return;
-      if(confirm('Ativar hipótese tributária DIDÁTICA de Simples Anexo I, a partir do mês seguinte? Sem efeitos retroativos nem valor fiscal real.'))commit('FISCAL.ATIVAR_CENARIO',{acceptSimplifications:true});});
-    $('fiscal-assessments').addEventListener('click',e=>{const btn=e.target.closest('[data-tax-pay]');if(!btn)return;
-      const period=btn.dataset.taxPay;
-      if(confirm(`Confirmar pagamento apenas SIMULADO da competência ${period}? Ele diminuirá o caixa do jogo.`))commit('FISCAL.PAGAR_SIMULADO',{period});});
+    $('fiscal-regime-apply').addEventListener('click',()=>{
+      const regime=$('fiscal-regime-select').value,simplesIvaMode=$('fiscal-iva-mode').value;
+      if(confirm('Confirmar regime '+regime+' do jogo? A mudança será aplicada agora ou agendada para janeiro conforme o calendário. Cálculos fictícios, sem opção legal perante o Fisco.')){
+        commit('FISCAL.ALTERAR_REGIME',{regime,simplesIvaMode});
+      }
+    });
+    $('fiscal-assessments').addEventListener('click',e=>{
+      const full=e.target.closest('[data-tax-pay]'),partial=e.target.closest('[data-tax-partial]');
+      const btn=full||partial;if(!btn)return;
+      const period=full?full.dataset.taxPay:partial.dataset.taxPartial;
+      const a=Core.taxReport(state).assessments.find(x=>x.period===period);
+      if(!a)return;
+      const pending=a.amount-a.paid;let amountCents=pending;
+      if(partial){
+        const text=prompt('Quanto deseja pagar da guia fictícia '+period+' (em R$, exemplo 120,50)?',
+          (pending/100).toFixed(2).replace('.',','));
+        if(text===null)return;
+        const normalized=text.trim().replace(/[.]/g,'').replace(',','.');
+        const money=Number(normalized);
+        if(!Number.isFinite(money)||money<=0||!Number.isSafeInteger(Math.round(money*100))||Math.round(money*100)>pending){
+          notify('Valor de pagamento parcial inválido.');return;
+        }
+        amountCents=Math.round(money*100);
+      }
+      if(confirm('Pagar '+Core.money(amountCents)+' de '+period+'? Isto reduz o caixa do jogo e baixa a obrigação fictícia.'))
+        commit('FISCAL.PAGAR_COMPETENCIA',{period,amountCents});
+    });
 
     $('unit-rows').addEventListener('click',e=>{const btn=e.target.closest('[data-unit-activate]');if(btn)commit('EMPRESA.ATIVAR',{businessId:btn.dataset.unitActivate});});
     for(const id of ['company-unit-city','company-unit-sector','company-analysis-scope','company-analysis-period','company-analysis-from','company-analysis-to','company-compare-dimension','company-compare-city','company-compare-sector','company-compare-period','company-compare-from','company-compare-to','company-compare-sort']){

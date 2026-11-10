@@ -111,7 +111,7 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   assert.equal(residual.switchHidden,true,'Letreiro SVG ainda tem caixa de texto duplicada');
   const before=await page.evaluate(async()=>{
    const raw=await CidadeDurableStore.readCurrent(CidadeCore),s=CidadeCore.importSave(raw).state;
-   return {revision:s.revision,tick:s.calendar.tick,cash:CidadeCore.overview(s).cash,schema:s.schemaVersion};
+   return {revision:s.revision,tick:s.calendar.tick,cash:CidadeCore.overview(s).cash,schema:s.schemaVersion, lastCommand:Object.keys(s.audit.commands).slice(-1)[0],lastEvent:s.audit.events.at(-1)?.type};
   });
   await page.locator('#v31-camera-plus').click();
   await page.locator('#v31-camera-minus').click();
@@ -280,7 +280,7 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   assert.equal(await page.locator('#v31-backdrop').isVisible(),false);
   const after=await page.evaluate(async()=>{
    const raw=await CidadeDurableStore.readCurrent(CidadeCore),s=CidadeCore.importSave(raw).state;
-   return {revision:s.revision,tick:s.calendar.tick,cash:CidadeCore.overview(s).cash,schema:s.schemaVersion};
+   return {revision:s.revision,tick:s.calendar.tick,cash:CidadeCore.overview(s).cash,schema:s.schemaVersion, lastCommand:Object.keys(s.audit.commands).slice(-1)[0],lastEvent:s.audit.events.at(-1)?.type};
   });
   assert.deepEqual(after,before,'Camera e overlays nao alteram save');
   assert.equal(await page.locator('.sidebar').count(),0,'Sidebar reapareceu depois dos modais');

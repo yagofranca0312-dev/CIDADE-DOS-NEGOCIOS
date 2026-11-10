@@ -22,7 +22,7 @@ const task=(state,service)=>Core.paralegalReport(state)[0].processes.find(p=>p.s
 
 test('V2.4-A: paralegal começa sem obrigações reais ou cobranças retroativas',()=>{
   const state=career();
-  assert.equal(state.schemaVersion,9);
+  assert.equal(state.schemaVersion,10);
   assert.equal(task(state,'cadastro').status,'PENDENTE');
   assert.equal(task(state,'licenca').status,'PENDENTE');
   assert.equal(state.audit.events.some(e=>e.type.startsWith('PARALEGAL.')),false);
@@ -73,7 +73,7 @@ test('V2.4-A: importação preserva eventos jurídicos fictícios e save schema 
   const before=JSON.stringify(Core.paralegalReport(state));
   const exported=Core.exportSave(state);
   const result=Core.importSave(exported);
-  assert.equal(result.state.schemaVersion,9);
+  assert.equal(result.state.schemaVersion,10);
   assert.equal(JSON.stringify(Core.paralegalReport(result.state)),before);
   assert.equal(Core.exportSave(result.state),exported);
 });
@@ -86,7 +86,7 @@ test('V2.4-A: UI expõe comandos com aviso de natureza fictícia e HTML executá
   assert.match(template,/sem equivalência com taxas ou exigências legais brasileiras/);
   assert.match(app,/renderParalegal\(\)/);
   assert.match(app,/PARALEGAL\.PROTOCOLAR/);
-  assert.match(html,/const VERSION = '3\.1\.0'/);
+  assert.match(html,/const VERSION = '3\.2\.0'/);
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(scripts.length,1);
   assert.doesNotThrow(()=>new Script(scripts[0][1]));

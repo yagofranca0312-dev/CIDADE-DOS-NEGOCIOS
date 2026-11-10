@@ -13,7 +13,7 @@ const advance=(s,days)=>{while(days>0){const d=Math.min(days,30);s=apply(s,'TEMP
 
 test('RH-B: sem folha retroativa, contratação sem custo imediato e schema 9',()=>{
  let s=career();const cash=Core.overview(s).cash,ledger=s.economy.ledger.length;
- assert.equal(Core.VERSION,'3.1.0');assert.equal(s.schemaVersion,9);
+ assert.equal(Core.VERSION,'3.2.0');assert.equal(s.schemaVersion,10);
  assert.equal(Core.rhReport(s).totalActive,0);assert.equal(Core.rhReport(s).pendingCents,0);
  s=hire(s);assert.equal(Core.overview(s).cash,cash);assert.equal(s.economy.ledger.length,ledger);
  assert.equal(Core.rhReport(s).units[0].activeCount,1);
@@ -68,7 +68,7 @@ test('RH-B: salário pró-rata de contratação e desligamento',()=>{
 test('RH-B: exportação/importação preservam histórico e folha',()=>{
  let s=hire(career());s=advance(s,30);
  const before=JSON.stringify(Core.rhReport(s)),restored=Core.importSave(Core.exportSave(s));
- assert.equal(restored.migrated,false);assert.equal(restored.state.schemaVersion,9);
+ assert.equal(restored.migrated,false);assert.equal(restored.state.schemaVersion,10);
  assert.equal(JSON.stringify(Core.rhReport(restored.state)),before);
  assert.equal(Core.balanceSheet(restored.state).balanced,true);
 });
@@ -79,5 +79,5 @@ test('RH-B: interface + HTML compilado offline sintaticamente íntegros',()=>{
  assert.match(tpl,/sem validade trabalhista ou previdenciária/);
  const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
  assert.equal(scripts.length,1);assert.doesNotThrow(()=>new Script(scripts[0][1]));
- assert.match(html,/const VERSION = '3\.1\.0'/);
+ assert.match(html,/const VERSION = '3\.2\.0'/);
 });

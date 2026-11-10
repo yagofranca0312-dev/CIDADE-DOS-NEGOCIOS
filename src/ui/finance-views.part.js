@@ -179,30 +179,74 @@
   }
   function renderFiscal(){
     if(!state)return;
-    const f=Core.taxReport(state),v=f.estimate,e=f.transition;
-    setText('fiscal-status',f.mode==='SIMULACAO_SIMPLES_COMERCIO'?`${v.coverageStatus} · cenário ${v.coverageStatus==='UNSUPPORTED'?'suspenso nesta competência':'ativado'}`:'NOT_COVERED · demonstração econômica');
-    $('fiscal-optin').hidden=f.mode!=='DEMONSTRACAO_ECONOMICA';
-    $('fiscal-activate').disabled=!$('fiscal-acknowledge').checked;
-    const rows=[
-      ['Modo atual',f.mode==='DEMONSTRACAO_ECONOMICA'?'Sem cobrança ativa':'Cenário de comércio simulado'],
-      ['Início das competências',f.effectiveFrom||'Somente após confirmação'],
-      ['Competência corrente',f.currentPeriod],
-      ['Cobertura da competência',v.coverageStatus],
-      ['Receita registrada no mês',Core.money(v.revenue)],
-      ['RBT12 anualizada (didática)',v.rbt12===null?'NÃO COBERTA':Core.money(v.rbt12)],
-      ['Faixa do Anexo I',v.bracket===null?'—':`${v.bracket}ª faixa`],
-      ['Alíquota efetiva aproximada',v.rateBasisPoints===null?'—':`${(v.rateBasisPoints/100).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}%`],
-      ['Cenário mensal estimado',v.amount===null?'NÃO CALCULADO':Core.money(v.amount)],
-      ['Saldo tributário simulado a pagar',Core.money(f.taxPayable)]
-    ];
-    $('fiscal-summary').innerHTML=rows.map(([k,val])=>`<dt>${escape(k)}</dt><dd>${escape(val)}</dd>`).join('');
-    setText('fiscal-note',`${v.reason} ${f.note} Valor corrente é apenas estimativa até o fechamento; competência não suportada não é zero.`);
-    const records=f.assessments.slice(-15).reverse();
-    $('fiscal-assessments').innerHTML=records.length?records.map(a=>`<div class="event-item"><div><strong>${escape(a.period)}</strong> · ${escape(a.status)}<p>${a.status==='UNSUPPORTED'?escape(a.reason):`Valor calculado ${escape(Core.money(a.amount))} · Pago ${escape(Core.money(a.paid))}`}</p></div>${a.status==='OPEN'?`<button type="button" class="btn btn-outline" data-tax-pay="${escape(a.period)}">Pagar ${escape(Core.money(a.amount-a.paid))}</button>`:''}</div>`).join(''):'<p class="muted">Nenhuma competência encerrada no modo de simulação. Nada foi lançado retroativamente.</p>';
-    $('fiscal-transition').innerHTML=[['Ano / etapa',`${e.year} · ${e.phase}`],
-      ['Receita corrente (referência educativa)',Core.money(e.revenueCurrentMonth)],
-      ['CBS de teste 2026 — 0,9%',e.cbsTestCents===null?'Não calculada':Core.money(e.cbsTestCents)],
-      ['IBS de teste 2026 — 0,1%',e.ibsTestCents===null?'Não calculado':Core.money(e.ibsTestCents)],
-      ['Reconhecimento contábil de teste','NENHUM']].map(([k,val])=>`<dt>${escape(k)}</dt><dd>${escape(val)}</dd>`).join('');
+    const f=Core.taxReport(state),v=f.estimate,e=f.transition,plan=f.planning;
+    const names={SIMPLES:'Simples Nacional',PRESUMIDO:'Lucro Presumido',REAL:'Lucro Real'};
+    const format=x=>Core.money(Math.max(0,Math.round(x||0)));
+    const rate=x=>(Math.round(x*100)/100).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%';
+    const current=plan.regimes.find(x=>x.regime===f.regime);
+    setText('fiscal-current-regime',names[f.regime]||f.regime);
+    setText('fiscal-regularity',f.regular?'REGULAR no jogo':'EM ATRASO · crédito bloqueado');
+    $('fiscal-status').className='v31-status-badge '+(f.regular?'v31-status-done':'v31-status-pending');
+    setText('fiscal-status',f.regular?'SIMULAÇÃO REGULAR':'GUIAS VENCIDAS');
+    setText('fiscal-total-rbt12',format(v.rbt12));
+    setText('fiscal-tax-credits',format(f.taxCreditsCents));
+    setText('fiscal-effective-rate',rate(current?.effectiveRatePercent||0));
+    $('fiscal-regime-select').value=f.regime;
+    $('fiscal-iva-mode').value=f.simplesIvaMode;
+    $('fiscal-iva-mode').disabled=Number(f.currentPeriod.slice(0,4))<2027;
+    setText('fiscal-next-regime',f.scheduledRegime?
+      'Mudança tributária para '+names[f.scheduledRegime]+' agendada para janeiro do próximo ano do jogo.':
+      'A opção inicial ou em janeiro é imediata; demais alterações ficam agendadas para janeiro. Não há mudança retroativa.');
+    $('fiscal-summary').innerHTML=[
+      ['Competência atual',f.currentPeriod],
+      ['Guia simulada a pagar',format(f.taxPayable)],
+      ['Receita contabilizada no mês',format(v.revenue)],
+      ['Créditos carregados para o futuro',format(f.taxCreditsCents)],
+      ['Módulo fiscal','ATIVO · SIMULADO']
+    ].map(([label,value])=>'<dt>'+escape(label)+'</dt><dd>'+escape(value)+'</dd>').join('');
+    setText('fiscal-note',v.warning+' '+f.note);
+    $('fiscal-comparison-table').innerHTML=plan.regimes.map(r=>{
+      const bd=r.breakdown,winner=r.regime===plan.recommendedRegime;
+      const simple=r.regime==='SIMPLES';
+      return '<tr class="'+(winner?'fiscal-v32-best':'')+'"><td><strong>'+escape(names[r.regime])+'</strong> '+
+        (winner?'<span class="v31-status-badge v31-status-done">Menor custo</span>':'')+
+        '</td><td>'+format(bd.irpj+bd.csll)+'</td><td>'+format(bd.pisCofins+(simple?0:0))+
+        '</td><td>'+format(bd.icms+bd.ibsCbs)+'</td><td>'+format(bd.cpp)+
+        '</td><td>−'+format(bd.creditsUsed)+'</td><td><strong>'+format(r.totalCents)+
+        '</strong></td><td>'+rate(r.effectiveRatePercent)+'</td></tr>';
+    }).join('');
+    setText('fiscal-planning-recommendation','Menor custo estimado no jogo: '+names[plan.recommendedRegime]+
+      '. Economia potencial versus regime atual: '+format(plan.estimatedSavingCents)+'. '+plan.note);
+    setText('fiscal-preview','Prévia '+f.currentPeriod+': '+format(v.principalCents)+' · receitas '+format(v.revenue)+
+      ' · créditos aplicáveis '+format(v.creditsUsed)+'. Só será lançada no encerramento do mês, sem retroatividade.');
+    const lines=a=>{
+      const bd=a.breakdown;if(!bd)return '';
+      return '<dl class="finance-list">'+[
+        ['IRPJ',bd.irpj],['CSLL',bd.csll],['PIS/COFINS ou DAS simplificado',bd.pisCofins],
+        ['CPP simulada',bd.cpp],['ICMS',bd.icms],['IBS/CBS (hipótese)',bd.ibsCbs],['Créditos usados',-bd.creditsUsed]
+      ].map(([k,val])=>'<dt>'+escape(k)+'</dt><dd>'+escape((val<0?'−':'')+format(Math.abs(val)))+'</dd>').join('')+'</dl>';
+    };
+    const records=f.assessments.slice(-18).reverse();
+    $('fiscal-assessments').innerHTML=records.length?records.map(a=>{
+      const open=a.amount-a.paid,canPay=open>0&&['OPEN','OVERDUE'].includes(a.status);
+      const tag=a.status==='PAID'||a.status==='SETTLED'?'v31-status-done':a.status==='OVERDUE'?'fiscal-v32-overdue':'v31-status-pending';
+      const legacy=a.principalCents===undefined;
+      return '<details class="fiscal-v32-assessment"><summary><strong>'+escape(a.period)+
+        '</strong> · '+escape(legacy?'LEGADO V1.9':names[a.regime])+
+        ' · '+escape(a.dueDate?BRDate(a.dueDate):'Vencimento legado')+
+        ' · <span class="v31-status-badge '+tag+'">'+escape(a.status)+'</span>'+
+        ' · Aberto '+format(open)+'</summary>'+
+        '<p>Principal '+format(a.principalCents??a.amount)+' · Multa '+format(a.fineCents)+
+        ' · Juros '+format(a.interestCents)+' · Pago '+format(a.paid)+'</p>'+
+        lines(a)+(canPay?'<button class="btn btn-primary" type="button" data-tax-pay="'+escape(a.period)+
+        '">Pagar guia integral '+format(open)+'</button> <button class="btn btn-outline" type="button" data-tax-partial="'+escape(a.period)+
+        '">Pagamento parcial</button>':'')+'</details>';
+    }).join(''):'<p class="muted">Nenhuma competência concluída. O motor apura automaticamente na virada de cada mês.</p>';
+    $('fiscal-transition').innerHTML=[
+      ['Etapa atual',String(e.year)+' · '+e.phase],
+      ['Receita deste mês (educativa)',format(e.revenueCurrentMonth)],
+      ['CBS 2026 (somente teste)',e.cbsTestCents===null?'—':format(e.cbsTestCents)],
+      ['IBS 2026 (somente teste)',e.ibsTestCents===null?'—':format(e.ibsTestCents)]
+    ].map(([k,val])=>'<dt>'+escape(k)+'</dt><dd>'+escape(val)+'</dd>').join('');
     setText('fiscal-transition-note',e.note);
   }

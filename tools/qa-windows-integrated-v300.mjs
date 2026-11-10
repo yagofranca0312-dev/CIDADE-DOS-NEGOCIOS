@@ -128,7 +128,7 @@ async function runChannel(channel){
       await page.locator('#career-form button[type=submit]').click();
       await page.locator('#v31-hud-turns').waitFor({state:'visible'});
       const s=await stateOf(page);
-      check(s.units.length===0&&s.schemaVersion===9&&s.balanced&&s.logistics.clearing,
+      check(s.units.length===0&&s.schemaVersion===10&&s.balanced&&s.logistics.clearing,
         'início íntegro sem compras ou empresas',channel);
     });
     await stage('02-abrir-primeira-unidade',async()=>{

@@ -3,7 +3,10 @@ import {runInNewContext} from 'node:vm';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 const load=path=>runInNewContext(readFileSync(path,'utf8')+'\nCidadeCore',{});
-const Core=load('src/core/game.js');
+// V1.9 é baseline histórica; testar exatamente o motor preservado, sem impor
+// as restrições deliberadamente removidas no FiscalEngine V3.2.
+const Core=load('tests/fixtures/core_v1_9_0.js');
+const Current=load('src/core/game.js');
 const V18=load('tests/fixtures/core_v1_8_0.js');
 const tCity=Core.CITIES.find(c=>c.name==='Tianguá').id;
 const fort=Core.CITIES.find(c=>c.name==='Fortaleza').id;
@@ -21,7 +24,8 @@ function payReady(){let s=fresh();s=cmd(s,'ESTOQUE.COMPRAR',{productId:'base',su
 const normal=value=>JSON.parse(JSON.stringify(value));
 
 test('V1.9: versão e schema9; histórico das V1.8 continua legível',()=>{
- assert.equal(Core.VERSION,'3.1.0');assert.equal(Core.SCHEMA_VERSION,9);
+ assert.equal(Core.VERSION,'1.9.0-rc.1');assert.equal(Core.SCHEMA_VERSION,9);
+ assert.equal(Current.VERSION,'3.2.0');assert.equal(Current.SCHEMA_VERSION,10);
  assert.equal(V18.VERSION,'1.8.0-rc.1');assert.equal(V18.SCHEMA_VERSION,8);
  assert.equal(Core.FISCAL_RULE_PACKS.simples2026.coverage,'SIMULATED_PARTIAL');
  const s=fresh();assert.equal(s.schemaVersion,9);assert.equal(s.fiscal.coverageStatus,'NOT_COVERED');
@@ -124,9 +128,9 @@ test('V1.9: exportação e reimportação não reexecutam apuração',()=>{
 test('V1.9: não criar nova aba principal e versionamento uniforme em todos os pontos',()=>{
  const tpl=readFileSync('src/shell/index.template.html','utf8'),css=readFileSync('src/shell/theme.css','utf8');
  const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
- for(const id of ['intro-version','build-version','footer-version'])assert.ok(tpl.includes(`id="${id}">v3.1.0`));
- assert.match(tpl,/<title>Cidade dos Negócios 1 · v3\.1\.0<\/title>/);
+ for(const id of ['intro-version','build-version','footer-version'])assert.ok(tpl.includes(`id="${id}">v3.2.0`));
+ assert.match(tpl,/<title>Cidade dos Negócios 1 · v3\.2\.0<\/title>/);
  for(const id of ['fiscal-status','fiscal-optin','fiscal-acknowledge','fiscal-assessments','fiscal-transition'])assert.ok(tpl.includes(`id="${id}"`));
- assert.match(ui,/function renderFiscal/);assert.match(ui,/FISCAL\.ATIVAR_CENARIO/);assert.match(css,/fiscal-dashboard/);
+ assert.match(ui,/function renderFiscal/);assert.match(ui,/FISCAL\.ALTERAR_REGIME/);assert.match(css,/fiscal-dashboard/);
  const navs=(tpl.match(/data-tab="fiscal"/g)||[]).length;assert.equal(navs,1);
 });

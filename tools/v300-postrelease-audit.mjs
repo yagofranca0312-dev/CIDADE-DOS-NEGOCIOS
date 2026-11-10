@@ -40,8 +40,8 @@ insist(exception.contract==='V300_OWNER_EXCEPTION_V1'&&
   'Autorizacao excepcional ou qualificacao de risco ausente');
 insist(JSON.stringify(waived)===JSON.stringify(unresolved.filter(x=>!['RG-17','RG-18'].includes(x)).sort()),
   'Dispensas nao coincidem com pendencias tecnicas originais');
-insist(['3.0.0','3.1.0','3.2.0'].includes(pkg.version)&&core.includes("const VERSION = '"+pkg.version+"';")&&
-  core.includes('const SCHEMA_VERSION = '+(pkg.version==='3.2.0'?10:9)+';'),
+insist(['3.0.0','3.1.0','3.2.0','3.3.0'].includes(pkg.version)&&core.includes("const VERSION = '"+pkg.version+"';")&&
+  core.includes('const SCHEMA_VERSION = '+(['3.2.0','3.3.0'].includes(pkg.version)?10:9)+';'),
   'Baseline 3.0.0/schema 9 foi alterada sem novo contrato');
 insist(manifest.stableBaseline.sha==='082faa4626cf5cb0fc54c9ef092bddd86ffce54c',
   'Ponto de recuperacao V2.9 divergente');

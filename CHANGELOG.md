@@ -1,3 +1,13 @@
+# V3.2.0 — Motor Fiscal Estratégico (09/11/2026)
+
+- Motor Fiscal ativo, com regimes Simples Nacional (Anexos I/II), Lucro Presumido e Lucro Real como cenários de gameplay; planejamento comparativo puro.
+- Competência mensal, vencimento didático no dia 20, pagamentos parciais/totais, mora diária e bloqueio simulado de crédito.
+- Regime programado para janeiro, créditos não cumulativos agregados e cronograma IBS/CBS 2026–2033 em parâmetros hipotéticos.
+- Schema 9 → 10 sem retroatividade fiscal nem perda dos lançamentos existentes; saves schema 10 não possuem compatibilidade inversa garantida.
+- Interface Fiscal reformulada em quatro painéis, checklist V2.4-C preservado; CSS imersivo e cidade V3.1.0 inalterados.
+- HTML único offline, PR #45 e QA Linux/Windows no SHA da candidata validados. CI final da main e checkpoint de homologação obrigatórios.
+- Não usar parâmetros do jogo como cálculo de tributo real; consultar [documento formal](docs/HOMOLOGACAO_V320.md).
+
 # V3.1.0 — Homologação para atualização (09/11/2026)
 
 - Titular autorizou merge e homologação no projeto principal e atualização local mesmo sem satisfação estética com a cidade atual.

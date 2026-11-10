@@ -1,3 +1,15 @@
+# Cidade dos Negócios — V3.2.0 · FiscalEngine estratégico
+
+**Homologação autorizada em rodada única (09/11/2026)** com motor Fiscal jogável, regimes Simples/Presumido/Real, guias por competência, mora, planejamento, reforma tributária didática e nova interface Fiscal. O jogo continua **100% fictício e educativo**: não é apuração fiscal legal. Versão `3.2.0`, saves `schema 10`, e a cidade V3.1.0 permanece visualmente inalterada.
+
+**Antes de atualizar:** exporte backup JSON V1 da sua carreira V3.1.0 em pasta externa; o novo schema 10 não garante downgrade do save para V3.1.0. Após o checkpoint e CI final, execute `ATUALIZAR_E_JOGAR.bat` (consulta a `main`) ou baixe o ZIP completo. Nenhum save privado ou aparelho pessoal foi testado na CI.
+
+[Registro de homologação V3.2.0](docs/HOMOLOGACAO_V320.md) · [Atualizador Windows](docs/ATUALIZADOR_WINDOWS.md) · [PR #45](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/pull/45)
+
+---
+
+## Histórico anterior V3.1.0
+
 # Cidade dos Negócios — V3.1.0 HOMOLOGADA (09/11/2026)
 
 **Publicação autorizada pelo titular com ressalva visual:** o jogo pode ser atualizado e utilizado na forma atual, mas a apresentação da cidade será reconstruída em um ciclo futuro; não foi considerada esteticamente concluída. A V3.1.0 inclui interface imersiva city-first, câmera em 100%, HUD, dock e modais, preservando motor e schema 9.

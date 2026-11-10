@@ -2,7 +2,10 @@
 
 **CP-001 · 2026-11-01 · Integração de atualização local**
 
-**ATUALIZAÇÃO DE STATUS — 09/11/2026:** a V3.1.0 foi autorizada para homologação e integração à `main`, com **aceite provisório do visual da cidade**; o acabamento urbano será reconstruído futuramente. O atualizador consulta `main`, portanto execute-o **somente após confirmação de CI da `main` e checkpoint `releases/v3.1.0-homologada`**. Antes de atualizar, faça backup JSON tradicional externo, feche o navegador e confira a instalação existente. [Registro V3.1.0](HOMOLOGACAO_V310.md). A CI aprovou a candidata, mas não executou o BAT no Windows pessoal nem inspecionou o save privado. **Histórico:** o alerta de 07/11/2026 sobre `3.0.0-alpha.1` foi superado pela promoção homologada.
+**VERSÃO DE DESTINO — V3.2.0 (09/11/2026):** nova interface Fiscal e FiscalEngine com **schema 10**. A `main` contém a V3.2.0 depois da integração da PR #45, mas **confirme que a CI final da `main` passou e que `releases/v3.2.0-homologada` aponta ao mesmo SHA antes de executar o BAT**. Exporte e preserve em pasta externa um backup JSON V1 da carreira V3.1.0, pois o downgrade de saves schema 10 para V3.1.0 não é garantido. [Registro formal](HOMOLOGACAO_V320.md). Os testes não executaram o BAT no computador pessoal.
+
+
+**REGISTRO HISTÓRICO — atualização V3.1.0 (09/11/2026):** a V3.1.0 foi autorizada para homologação e integração à `main`, com **aceite provisório do visual da cidade**; o acabamento urbano será reconstruído futuramente. O atualizador consulta `main`, portanto execute-o **somente após confirmação de CI da `main` e checkpoint `releases/v3.1.0-homologada`**. Antes de atualizar, faça backup JSON tradicional externo, feche o navegador e confira a instalação existente. [Registro V3.1.0](HOMOLOGACAO_V310.md). A CI aprovou a candidata, mas não executou o BAT no Windows pessoal nem inspecionou o save privado. **Histórico:** o alerta de 07/11/2026 sobre `3.0.0-alpha.1` foi superado pela promoção homologada.
 
 ## Instruções (uso diário)
 

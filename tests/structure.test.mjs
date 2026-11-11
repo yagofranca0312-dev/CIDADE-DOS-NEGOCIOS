@@ -50,7 +50,7 @@ test('Hotfix: preço próprio visível, concorrente independente e confirmação
 test('V1.3: schema 5 com migração da V1 e formato de exportação validado',()=>{
  const core=readFileSync('src/core/game.js','utf8');
  assert.match(core,/SCHEMA_VERSION = 10/);
- assert.match(core,/VERSION = '3\.3\.0'/);
+ assert.match(core,/VERSION = '3\.3\.1'/);
  assert.match(core,/function importSave\(raw\)/);
  assert.match(core,/function upgradedState\(original\)/);
 });

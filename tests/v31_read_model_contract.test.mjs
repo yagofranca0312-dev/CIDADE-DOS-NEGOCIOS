@@ -209,5 +209,5 @@ test('V3.0-07: nenhuma mudança no build/HTML; adapter separado para V3.1',()=>{
   assert.match(contract,/ADVISORY_ONLY/);
   assert.match(contract,/V31_READ_MODEL_VERSION = 1/);
   const pkg=JSON.parse(readFileSync('package.json','utf8'));
-  assert.equal(pkg.version,'3.3.0');
+  assert.equal(pkg.version,'3.3.1');
 });

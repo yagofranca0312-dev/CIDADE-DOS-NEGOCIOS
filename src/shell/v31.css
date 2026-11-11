@@ -688,14 +688,13 @@ body.v31-immersive.v221-city-mode.v221-tiangua-scene .map-panel>.v221-city-switc
   }
 }
 
-/* V3.3.0 / microetapa 01 — camera responsiva sem barras vazias.
-   O SVG mantém proporção nativa. Em telas estreitas, a cidade excede a largura
-   da viewport: o jogador acessa as bordas por arrasto, teclado ou seletor. */
+/* V3.3.1 — ajuste solicitado: mesma composição em desktop e mobile.
+   SVG com largura de tela e altura proporcional: nunca cover, crop ou stretch. */
 body.v31-immersive #map-canvas{
-  display:block!important;
-  align-items:normal!important;
-  justify-items:normal!important;
-  align-content:normal!important;
+  display:grid!important;
+  align-items:center!important;
+  justify-items:center!important;
+  align-content:center!important;
   width:100vw!important;
   height:100dvh!important;
   overflow:auto!important;
@@ -703,23 +702,50 @@ body.v31-immersive #map-canvas{
 }
 body.v31-immersive #map-canvas>svg.v221-city-svg{
   display:block!important;
-  width:max(100vw,231.325301dvh)!important; /* 1536 / 664 */
-  max-width:none!important;
-  min-width:0!important;
-  height:auto!important;
-  min-height:100dvh!important;
-  max-height:none!important;
-  aspect-ratio:1536/664!important;
-  object-fit:fill!important;
+  width:min(100vw,231.325301dvh)!important;max-width:100vw!important;min-width:0!important;
+  height:auto!important;max-height:none!important;min-height:0!important;
+  aspect-ratio:1536/664!important;object-fit:contain!important;
 }
 body.v31-immersive #map-canvas>svg.v22-city-svg{
   display:block!important;
-  width:max(100vw,158.024691dvh)!important; /* 640 / 405 */
-  max-width:none!important;
-  min-width:0!important;
-  height:auto!important;
-  min-height:100dvh!important;
-  max-height:none!important;
-  aspect-ratio:640/405!important;
-  object-fit:fill!important;
+  width:min(100vw,158.024691dvh)!important;max-width:100vw!important;min-width:0!important;
+  height:auto!important;max-height:none!important;min-height:0!important;
+  aspect-ratio:640/405!important;object-fit:contain!important;
+}
+/* Os quatro controles de camera ficam dentro da faixa de tempo e caixa. */
+body.v31-immersive .v31-top-controls{
+  position:fixed!important;top:calc(6px + env(safe-area-inset-top))!important;
+  left:clamp(8px,1.25vw,16px)!important;right:clamp(8px,1.25vw,16px)!important;
+  transform:none!important;width:auto!important;max-width:none!important;
+  display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+  align-items:center!important;justify-content:flex-start!important;gap:6px!important;
+  overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none;
+  overscroll-behavior-x:contain;
+}
+body.v31-immersive .v31-top-controls::-webkit-scrollbar{display:none}
+body.v31-immersive .v31-top-controls .v31-camera{
+  position:static!important;inset:auto!important;top:auto!important;right:auto!important;
+  bottom:auto!important;left:auto!important;transform:none!important;z-index:auto!important;
+  display:flex!important;flex:0 0 auto!important;align-items:center!important;
+  gap:4px!important;margin:0 0 0 4px!important;padding:0 0 0 8px!important;
+  border:0!important;border-left:1px solid #7397a5!important;border-radius:0!important;
+  box-shadow:none!important;background:transparent!important;backdrop-filter:none!important;
+}
+body.v31-immersive .v31-top-controls .v31-camera button{
+  flex:0 0 auto!important;min-width:34px!important;min-height:34px!important;padding:4px 7px!important;
+}
+body.v31-immersive .v31-top-controls .v31-camera output{
+  min-width:38px!important;flex:0 0 auto!important;
+}
+@media(max-width:768px){
+  body.v31-immersive .v31-top-controls{
+    left:8px!important;right:8px!important;height:48px!important;
+    max-height:48px!important;gap:4px!important;
+  }
+  body.v31-immersive .v31-top-controls .v31-camera{
+    margin-left:2px!important;padding-left:6px!important;gap:3px!important;
+  }
+  body.v31-immersive .v31-top-controls .v31-camera button{
+    min-width:30px!important;min-height:34px!important;padding:3px 5px!important;
+  }
 }

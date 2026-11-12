@@ -39,13 +39,13 @@ test('B-01: doc e campos de atalhos existem, rotas ancoradas em abas reais',()=>
 });
 
 test('B-02: menu mobile acessivel, dock principal preservado e botoes reais',()=>{
-  const dock=template.slice(template.indexOf('<nav class="v31-dock v332-dock"'),
-    template.indexOf('</nav>',template.indexOf('<nav class="v31-dock v332-dock"'))+6);
+  const dock=template.slice(template.indexOf('<nav class="v31-dock" data-v332-dock="true"'),
+    template.indexOf('</nav>',template.indexOf('<nav class="v31-dock" data-v332-dock="true"'))+6);
   for(const old of ['empresa:dashboard','mercado:compras','administrativo:rh-dp','administrativo:contabilidade','sistema']){
     assert.ok(dock.includes('data-v31-open="'+old+'"'),'rota de regressao ausente '+old);
   }
   for(const item of ['Compras','Estoque','Financeiro','Fiscal','Preços','Mais'])assert.ok(dock.includes(item));
-  assert.match(css,/body\.v31-immersive #v31-dock\.v332-dock\{/);
+  assert.match(css,/body\.v31-immersive #v31-dock\[data-v332-dock\]\{/);
   assert.match(css,/\.v332-dock-extra\{display:none!important\}/);
   assert.match(css,/--v332-map-bottom:174px/);
   assert.match(css,/--v332-map-bottom:157px/);

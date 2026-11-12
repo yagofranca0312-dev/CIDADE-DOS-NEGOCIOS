@@ -110,12 +110,13 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   const headerMetrics=await page.evaluate(async()=>{
     const raw=await CidadeDurableStore.readCurrent(CidadeCore),saved=CidadeCore.importSave(raw).state;
     const daily=CidadeCore.financialReport(saved,'day',saved.calendar.date);
+    const hasUnits=CidadeCore.businesses(saved).length>0;
     const overview=CidadeCore.overview(saved);
     const value=id=>document.getElementById(id).textContent.trim();
     return {cash:value('v31-hud-cash'),daily:value('v332-hud-sales'),result:value('v332-hud-result'),
       critical:value('v332-hud-stock'),advisory:value('v332-hud-advisory'),due:value('v332-hud-due'),
-      expectedCash:CidadeCore.money(overview.cash),expectedDaily:CidadeCore.money(daily.revenue),
-      expectedResult:CidadeCore.money(overview.profit)};
+      expectedCash:CidadeCore.money(overview.cash),expectedDaily:hasUnits?CidadeCore.money(daily.revenue):'—',
+      expectedResult:hasUnits?CidadeCore.money(overview.profit):'—'};
   });
   assert.equal(headerMetrics.cash,headerMetrics.expectedCash,'Caixa no HUD nao e o saldo');
   assert.equal(headerMetrics.daily,headerMetrics.expectedDaily,'Vendas do dia nao batem com ledger');

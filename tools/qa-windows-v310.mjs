@@ -114,7 +114,7 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
     const overview=CidadeCore.overview(saved);
     const value=id=>document.getElementById(id).textContent.trim();
     return {cash:value('v31-hud-cash'),daily:value('v332-hud-sales'),result:value('v332-hud-result'),
-      critical:value('v332-hud-stock'),advisory:value('v332-hud-advisory'),due:value('v332-hud-due'),
+      hasUnits,critical:value('v332-hud-stock'),advisory:value('v332-hud-advisory'),due:value('v332-hud-due'),
       expectedCash:CidadeCore.money(overview.cash),expectedDaily:hasUnits?CidadeCore.money(daily.revenue):'—',
       expectedResult:hasUnits?CidadeCore.money(overview.profit):'—'};
   });
@@ -122,7 +122,7 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   assert.equal(headerMetrics.daily,headerMetrics.expectedDaily,'Vendas do dia nao batem com ledger');
   assert.equal(headerMetrics.result,headerMetrics.expectedResult,'Resultado acumulado diverge do Core');
   assert.equal(headerMetrics.advisory,'—','Nao inventar alertas antes do Patch C');
-  assert.ok(headerMetrics.critical.includes('item'),'Estoque ativo nao e identificado');
+  assert.ok(headerMetrics.hasUnits?headerMetrics.critical.includes('item'):headerMetrics.critical==='—','Estoque ativo nao e identificado');
   assert.ok(headerMetrics.due==='—'||/em 3 dias|vencida/.test(headerMetrics.due),'Prazo do painel sem evidencia');
   assert.equal(await page.locator('#v31-camera-label').textContent(),'100%');
   assert.ok(geometry.scrollWidth<=width+4,'Rolagem horizontal fora do viewport');

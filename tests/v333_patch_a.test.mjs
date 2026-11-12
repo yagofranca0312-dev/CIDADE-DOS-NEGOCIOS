@@ -166,7 +166,7 @@ test('A-12: leitura real da engine e compatibilidade de save V3.3.2',()=>{
     const result=Core.dispatch(s,{type,payload,id:'v333-a-'+(++seq)});
     assert.equal(result.ok,true,String(result.error));return result.state;
   };
-  const start=send(null,'CARREIRA.CRIAR',{name:'QA gestão',companyName:'QA',cityId:'CE-TIANGUA',seed:333001});
+  const start=send(null,'CARREIRA.CRIAR',{name:'QA Gestor Completo',companyName:'Empresa de Testes',cityId:'CE-TIANGUA',seed:333001});
   const opened=send(start,'EMPRESA.ABRIR',{sector:'mercado',cityId:'CE-TIANGUA',lot:3});
   const before=JSON.stringify(opened);
   const result=engine.candidates(opened);

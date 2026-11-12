@@ -167,6 +167,46 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
    const raw=await CidadeDurableStore.readCurrent(CidadeCore),s=CidadeCore.importSave(raw).state;
    return {revision:s.revision,tick:s.calendar.tick,cash:CidadeCore.overview(s).cash,schema:s.schemaVersion, lastCommand:Object.keys(s.audit.commands).slice(-1)[0],lastEvent:s.audit.events.at(-1)?.type};
   });
+  // Gate B: abrir menu, agenda e rota sem empresa não pode alterar o save.
+  const bBefore=await page.evaluate(async()=>{
+    const raw=await CidadeDurableStore.readCurrent(CidadeCore);
+    const st=CidadeCore.importSave(raw).state;
+    return {revision:st.revision,checksum:CidadeCore.hash(JSON.stringify(st)),schema:st.schemaVersion};
+  });
+  assert.equal(await page.locator('#v332-bottom-zone').isVisible(),true);
+  await page.locator('#v332-agenda-toggle').click();
+  assert.equal(await page.locator('#v332-agenda-list').isVisible(),true);
+  assert.equal(await page.locator('#v332-agenda-toggle').getAttribute('aria-expanded'),'true');
+  await page.locator('#v332-agenda-toggle').click();
+  assert.equal(await page.locator('#v332-agenda-list').isVisible(),false);
+  await page.locator('#v332-more-toggle').click();
+  assert.equal(await page.locator('#v332-more-menu').isVisible(),true);
+  assert.equal(await page.locator('#v332-more-toggle').getAttribute('aria-expanded'),'true');
+  await page.locator('#v332-more-toggle').click();
+  assert.equal(await page.locator('#v332-more-menu').isVisible(),false);
+  await page.locator('.v332-quick-actions [data-v332-route="mercado:outros"]').click();
+  assert.equal(await page.locator('[data-view="empresa"]').isVisible(),true,
+    'Preços sem unidade deve orientar o jogador à área de empresas');
+  await page.locator('#v31-overlay-close').click();
+  const bAfter=await page.evaluate(async()=>{
+    const raw=await CidadeDurableStore.readCurrent(CidadeCore);
+    const st=CidadeCore.importSave(raw).state;
+    return {revision:st.revision,checksum:CidadeCore.hash(JSON.stringify(st)),schema:st.schemaVersion};
+  });
+  assert.deepEqual(bAfter,bBefore,'Abrir agenda, menu e atalho não pode alterar o save');
+  const bottomGeometry=await page.evaluate(()=>{
+    const map=document.getElementById('map-canvas').getBoundingClientRect();
+    const bottom=document.getElementById('v332-bottom-zone').getBoundingClientRect();
+    const ops=document.querySelector('.v332-ops-panel').getBoundingClientRect();
+    const dock=document.getElementById('v31-dock').getBoundingClientRect();
+    return {mapBottom:map.bottom,bottomTop:bottom.top,
+      opsBottom:ops.bottom,dockBottom:dock.bottom,dockW:dock.width,
+      viewportW:innerWidth,opsW:ops.width};
+  });
+  assert.ok(bottomGeometry.mapBottom<=bottomGeometry.bottomTop+21,
+    'As ações inferiores encobrem o mapa utilizável: '+JSON.stringify(bottomGeometry));
+  assert.ok(bottomGeometry.dockW<=bottomGeometry.viewportW+2,
+    'Dock ultrapassa viewport');
   await page.locator('#v31-camera-plus').click();
   await page.locator('#v31-camera-minus').click();
   await page.locator('#v31-camera-plus').click();

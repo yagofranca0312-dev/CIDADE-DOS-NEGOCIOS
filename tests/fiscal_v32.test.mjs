@@ -21,7 +21,7 @@ function balanced(s){
   for(const j of s.economy.ledger)assert.equal(j.entries.reduce((n,e)=>n+e.debit,0),j.entries.reduce((n,e)=>n+e.credit,0),j.id);
 }
 test('V3.2: novo motor e estado inicial no schema 10, sem alterar história fiscal',()=>{
-  assert.equal(Core.VERSION,'3.3.1');assert.equal(Core.SCHEMA_VERSION,10);
+  assert.equal(Core.VERSION,'3.3.2');assert.equal(Core.SCHEMA_VERSION,10);
   const s=fresh();assert.equal(s.schemaVersion,10);assert.equal(s.fiscal.mode,'ATIVO');
   assert.equal(s.fiscal.regime,'SIMPLES');assert.equal(s.fiscal.simplesIvaMode,'DENTRO_DAS');
   assert.equal(s.fiscal.taxCreditsCents,0);assert.equal(s.fiscal.assessments.length,0);

@@ -50,9 +50,9 @@ test('V3.3.1: zoom, 100%, + e centralizar na mesma barra superior',()=>{
 
 test('V3.3.1: mantém motor fiscal, integridade do save, lotes e comandos',()=>{
  assert.equal(lots.length,18);
- assert.equal(JSON.parse(readFileSync('package.json','utf8')).version,'3.3.1');
+ assert.equal(JSON.parse(readFileSync('package.json','utf8')).version,'3.3.2');
  const core=readFileSync('src/core/game.js','utf8');
- assert.match(core,/const VERSION = '3\.3\.1'/);
+ assert.match(core,/const VERSION = '3\.3\.2'/);
  assert.match(core,/const SCHEMA_VERSION = 10/);
  for(const needle of ['v31CameraChange','v31CameraApply','v31-camera-home','canvas.scrollLeft','canvas.scrollTop'])assert.ok(ui.includes(needle));
 });

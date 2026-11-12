@@ -16,9 +16,9 @@ const changelogTop=changelog.split('## 2.9.0 —')[0];
 const roadmapTop=roadmap.split('## Histórico de planejamento')[0];
 
 test('V3.0-06: documentos distinguem promocao excepcional e arquivo historico',()=>{
-  assert.equal(pkg.version,'3.3.1');
-  assert.match(core,/const VERSION = '3\.3\.1'/);
-  assert.match(template,/<title>Cidade dos Negócios 1 · v3\.3\.1<\/title>/);
+  assert.equal(pkg.version,'3.3.2');
+  assert.match(core,/const VERSION = '3\.3\.2'/);
+  assert.match(template,/<title>Cidade dos Negócios 1 · v3\.3\.2<\/title>/);
   assert.match(readmeTop,/3\.0\.0/);
   assert.match(readmeTop,/2\.9\.0/);
   assert.match(readmeTop,/excepcional/i);

@@ -200,6 +200,37 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
     return {revision:st.revision,checksum:CidadeCore.hash(JSON.stringify(st)),schema:st.schemaVersion};
   });
   assert.deepEqual(bAfter,bBefore,'Abrir agenda, menu e atalho não pode alterar o save');
+
+  // Gate C: sem empresa, a Central não pode fabricar pendencias.
+  assert.equal((await page.locator('#v332-hud-advisory').textContent()).trim(),'0',
+    'Central inventou alerta em carreira sem empresa');
+  assert.equal(await page.locator('#v332-advisor-panel').isVisible(),true);
+  await page.locator('#v332-advisor-toggle').click();
+  assert.equal(await page.locator('#v332-advisor-drawer').isVisible(),true);
+  assert.equal(await page.locator('#v332-advisor-toggle').getAttribute('aria-expanded'),'true');
+  assert.match(await page.locator('#v332-advisor-active-list').textContent(),
+    /Nenhuma ação prioritária identificada/);
+  await page.locator('#v332-advisor-history-tab').click();
+  assert.equal(await page.locator('#v332-advisor-history-list').isVisible(),true);
+  assert.match(await page.locator('#v332-advisor-history-list').textContent(),
+    /Nenhum aviso resolvido ou dispensado/);
+  await page.locator('#v332-advisor-active-tab').click();
+  assert.equal(await page.locator('#v332-advisor-active-list').isVisible(),true);
+  await page.keyboard.press('Escape');
+  assert.equal(await page.locator('#v332-advisor-drawer').isVisible(),false);
+  await page.locator('#v332-hud-advice-trigger').click();
+  assert.equal(await page.locator('#v332-advisor-drawer').isVisible(),true,
+    'Cartão de alertas do HUD não abre a Central');
+  await page.locator('#v332-advisor-close').click();
+  assert.equal(await page.locator('#v332-advisor-drawer').isVisible(),false);
+  const cAfter=await page.evaluate(async()=>{
+    const raw=await CidadeDurableStore.readCurrent(CidadeCore);
+    const st=CidadeCore.importSave(raw).state;
+    return {revision:st.revision,checksum:CidadeCore.hash(JSON.stringify(st)),schema:st.schemaVersion};
+  });
+  assert.deepEqual(cAfter,bBefore,
+    'Central de Gestão, abas, histórico e navegação alteraram o save econômico');
+
   const bottomGeometry=await page.evaluate(()=>{
     const map=document.getElementById('map-canvas').getBoundingClientRect();
     const bottom=document.getElementById('v332-bottom-zone').getBoundingClientRect();

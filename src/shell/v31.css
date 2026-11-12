@@ -1019,3 +1019,124 @@ body.v31-immersive .v332-agenda-list button:focus-visible{
   }
   body.v31-immersive .v332-ops-panel{padding:4px 5px!important}
 }
+
+/* V3.3.2-C — Central de Gestao. Layout de recomendacoes sem mudar o SVG. */
+body.v31-immersive .v332-advisor-panel{
+  grid-column:3;align-self:end;justify-self:end;position:relative;
+  box-sizing:border-box;min-width:0;width:100%;max-width:336px;
+  padding:9px 10px;border:1px solid #7596a1;border-radius:13px;
+  background:rgba(7,32,48,.96);box-shadow:0 10px 28px #0008;
+  color:#eaf3f3;
+}
+.v332-advisor-heading{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.v332-advisor-heading strong{display:block;color:#f6daa0;font-size:.78rem;white-space:nowrap}
+.v332-advisor-heading small{display:block;color:#a0c8d5;font-size:.49rem;letter-spacing:.02em}
+body.v31-immersive .v332-advisor-heading button{
+  flex:0 0 auto;min-height:29px;padding:4px 7px;
+  border-radius:7px;border:1px solid #7096a4;background:#194258;
+  color:#f4e4bc;font-size:.66rem;font-weight:750;
+}
+.v332-advisor-preview{display:flex;gap:7px;align-items:center;min-width:0;margin-top:8px}
+.v332-advisor-preview p{
+  flex:1;margin:0;color:#d9e7e6;font-size:.67rem;line-height:1.34;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;overflow-wrap:anywhere;
+}
+.v332-advisor-dot{
+  display:block;flex:0 0 8px;width:8px;height:8px;
+  border-radius:50%;background:#7ac9a6;
+}
+.v332-advisor-panel[data-severity="urgente"] .v332-advisor-dot{background:#f5a280}
+.v332-advisor-panel[data-severity="atenção"] .v332-advisor-dot{background:#f7d588}
+body.v31-immersive .v332-kpi-advisor.v332-kpi-has-alerts strong{color:#ffe0a1}
+.v332-advisor-drawer[hidden],.v332-advisor-items[hidden]{display:none!important}
+body.v31-immersive .v332-advisor-drawer{
+  position:absolute;right:0;bottom:calc(100% + 7px);
+  z-index:190;box-sizing:border-box;width:min(405px,calc(100vw - 24px));
+  max-height:min(65dvh,530px);overflow:auto;
+  padding:11px;border:1px solid #8caeb8;border-radius:14px;
+  background:#0a2b40;box-shadow:0 18px 38px #000c;
+  overscroll-behavior:contain;
+}
+.v332-advisor-drawer-title{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.v332-advisor-drawer-title strong{color:#f4daaa;font-size:.86rem}
+body.v31-immersive .v332-advisor-drawer-title button{
+  min-width:34px;min-height:34px;border:1px solid #7596a5;border-radius:8px;
+  background:#194056;color:#eaf5f2;
+}
+.v332-advisor-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:10px 0 8px}
+body.v31-immersive .v332-advisor-tabs button{
+  min-height:34px;background:#173c53;color:#cfdee4;border:1px solid #507c8c;border-radius:7px;
+  font-size:.70rem;font-weight:700;
+}
+body.v31-immersive .v332-advisor-tabs button[aria-pressed="true"]{
+  color:#ffe2a7;border-color:#d5b370;background:#31516b;
+}
+.v332-advisor-items{padding:0;margin:0;list-style:none;display:flex;flex-direction:column;gap:7px}
+.v332-advisor-item{
+  padding:9px;border-radius:10px;border:1px solid #52778b;
+  background:linear-gradient(130deg,#143b50,#0d3045);
+  border-left:3px solid #8dbda7;overflow-wrap:anywhere;
+}
+.v332-advisor-item.v332-severity-urgente{border-left-color:#f0a486}
+.v332-advisor-item.v332-severity-atenção{border-left-color:#ead085}
+.v332-advisor-item-head{display:flex;justify-content:space-between;gap:6px;align-items:center}
+.v332-advisor-item-head strong{color:#f1e2c2;font-size:.72rem}
+.v332-advisor-item-head span{color:#e5cfa4;font-size:.59rem}
+.v332-advisor-item-title{font-weight:760;font-size:.73rem;margin:6px 0 4px;color:#f8e0ac}
+.v332-advisor-item-message{font-size:.70rem;line-height:1.35;margin:0;color:#d4e6ec}
+.v332-advisor-item-actions{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:8px}
+body.v31-immersive .v332-advisor-item-actions button{
+  flex:1 1 auto;min-height:33px;padding:5px 7px;border-radius:7px;
+  border:1px solid #618b9e;background:#1a4358;color:#ebf5f6;font-size:.68rem;
+}
+body.v31-immersive .v332-advisor-item-actions button:first-child{
+  color:#ffebc1;border-color:#d0ab74;
+}
+.v332-advisor-item-actions small{color:#bcd2db;font-size:.62rem}
+.v332-advisor-proof{
+  margin:7px 0 0;padding:7px;border:1px solid #5c8291;border-radius:7px;
+  font-size:.62rem;line-height:1.4;word-break:break-word;color:#c7dce5;
+}
+.v332-advisor-proof[hidden]{display:none!important}
+.v332-advisor-empty{padding:12px;color:#c5d9df;font-size:.72rem}
+.v332-advisor-disclaimer{font-size:.60rem;line-height:1.35;color:#a8c3d0;margin:9px 0 0}
+body.v31-immersive .v332-advisor-panel button:focus-visible,
+body.v31-immersive .v332-kpi-advisor:focus-visible{
+  outline:2px solid #ffe1a7;outline-offset:2px;
+}
+@media(max-width:900px){
+  body.v31-immersive{--v332-map-bottom:217px}
+  body.v31-immersive .v332-bottom-zone{
+    height:206px!important;
+    padding:4px 6px calc(5px + env(safe-area-inset-bottom))!important;
+    gap:5px!important;
+  }
+  body.v31-immersive .v332-advisor-panel{
+    order:0;align-self:stretch;max-width:none;width:100%;
+    padding:5px 7px;min-height:43px;display:flex;align-items:center;gap:9px;
+  }
+  body.v31-immersive .v332-ops-panel{order:1;flex-shrink:0}
+  body.v31-immersive #v31-dock[data-v332-dock]{order:2}
+  .v332-advisor-heading{flex:0 0 auto;gap:7px}
+  .v332-advisor-heading strong{font-size:.67rem}
+  .v332-advisor-heading small{display:none}
+  body.v31-immersive .v332-advisor-heading button{
+    min-height:30px;padding:3px 6px;font-size:.62rem;
+  }
+  .v332-advisor-preview{flex:1;min-width:0;margin:0}
+  .v332-advisor-preview p{
+    display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+    font-size:.60rem;line-height:1.2;
+  }
+  body.v31-immersive .v332-advisor-drawer{
+    width:min(430px,calc(100vw - 12px));max-height:58dvh;
+    bottom:calc(100% + 5px);right:0;
+  }
+  body.v31-immersive .v332-advisor-item-actions button{min-height:38px}
+}
+@media(max-width:390px){
+  body.v31-immersive .v332-advisor-heading strong{font-size:.61rem}
+  body.v31-immersive .v332-advisor-heading button{font-size:.58rem}
+  .v332-advisor-preview p{font-size:.56rem}
+}

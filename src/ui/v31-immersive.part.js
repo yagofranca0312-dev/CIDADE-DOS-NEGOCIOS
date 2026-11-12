@@ -129,40 +129,16 @@
     setText('v332-hud-advisory','—');
   }
 
-  // V3.3.2-B: agenda deterministica, somente itens com vencimentos no calendario.
+  // V3.3.3-B: Agenda Executiva e Central consomem a identidade V333-A.
+  // A dispensa visual de aviso não cancela compromisso datado.
   function v332AgendaItems(current){
     if(!current?.player?.cityId)return [];
-    const today=current.calendar.date,rows=[];
-    const fromFinance=Core.financialCommitmentsReport(current,30).events;
-    for(const event of fromFinance){
-      if(!['LOAN_SCHEDULE','LOAN_DUE','SUPPLIER_COMMITMENT'].includes(event.kind))continue;
-      if(!/^\d{4}-\d{2}-\d{2}$/.test(event.date)||event.amountCents<=0)continue;
-      const kind=event.kind==='LOAN_DUE'?'Parcela exigível':
-        event.kind==='LOAN_SCHEDULE'?'Parcela prevista':'Compra contratada';
-      rows.push({id:event.kind+'|'+event.id+'|'+event.date,
-        date:event.date,label:kind+' · '+Core.money(event.amountCents),
-        route:'administrativo:financas',focus:'credit-calendar-summary'});
-    }
-    for(const tax of current.fiscal?.assessments||[]){
-      if(!['OPEN','OVERDUE'].includes(tax.status)||tax.amount<=tax.paid||!/^\d{4}-\d{2}-\d{2}$/.test(tax.dueDate))continue;
-      rows.push({id:'TAX|'+tax.id,date:tax.dueDate,
-        label:'Guia simulada '+tax.period+' · '+Core.money(tax.amount-tax.paid),
-        route:'administrativo:fiscal',focus:'v23-pane-administrativo-fiscal'});
-    }
-    const op=Core.fiscalOperationsReport(current);
-    for(const unit of op.units)for(const period of unit.periods){
-      if(period.closed||!/^\d{4}-\d{2}-\d{2}$/.test(period.dueDate))continue;
-      rows.push({id:'FIS-OP|'+unit.businessId+'|'+period.period,date:period.dueDate,
-        label:'Checklist fiscal '+period.period+' · '+unit.businessId,
-        route:'administrativo:fiscal',focus:'v23-pane-administrativo-fiscal'});
-    }
-    const severity=date=>date<today?0:date===today?1:2;
-    return rows.sort((a,b)=>severity(a.date)-severity(b.date)||
-      a.date.localeCompare(b.date)||a.id.localeCompare(b.id)).slice(0,3);
+    const occurrences=v333DecisionTracker.inspect(current).all;
+    return CidadeV333DecisionEngine.agenda(current,{limit:3,occurrences});
   }
   function v332RenderAgenda(){
     const list=$('v332-agenda-list');if(!list)return;
-    const items=v332AgendaItems(state),today=state.calendar.date;
+    const items=v332AgendaItems(state);
     list.replaceChildren();
     if(!items.length){
       const li=document.createElement('li');
@@ -172,7 +148,10 @@
       const li=document.createElement('li');
       const button=document.createElement('button');button.type='button';
       button.dataset.v332Route=item.route;button.dataset.v332Focus=item.focus;
-      button.textContent=(item.date<today?'Vencido · ':item.date===today?'Hoje · ':'Previsto · ')+
+      if(item.scope?.businessId)button.dataset.v332BusinessId=item.scope.businessId;
+      if(item.occurrenceId)button.dataset.v333OccurrenceId=item.occurrenceId;
+      button.textContent=(item.status==='vencido'?'Vencido · ':
+        item.status==='hoje'?'Hoje · ':'Previsto · ')+
         item.date.split('-').reverse().join('/')+' · '+item.label;
       button.title='Abrir '+item.route.replace(':',' / ');
       li.appendChild(button);list.appendChild(li);
@@ -207,9 +186,9 @@
     // sobre a empresa errada quando o aviso pertence a outra unidade.
     const targetBusiness=button.dataset.v332BusinessId;
     if(targetBusiness&&Core.activeBusiness(state)?.id!==targetBusiness){
-      setText('v332-action-hint','Aviso da unidade '+targetBusiness+
+      setText('v332-action-hint','Item da unidade '+targetBusiness+
         '. Selecione essa empresa antes de continuar.');
-      notify('Este aviso pertence à unidade '+targetBusiness+
+      notify('Este item pertence à unidade '+targetBusiness+
         '. Selecione-a no painel Empresas antes de agir.');
       v31OpenPanel('empresa','dashboard',source);
       return;

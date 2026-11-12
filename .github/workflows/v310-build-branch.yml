@@ -12,6 +12,7 @@ on:
       - feat/v3.3.2-c-central-de-gestao
       - feat/v3.3.2-d-polimento-homologacao
       - feat/v3.3.3-a-central-confiabilidade
+      - feat/v3.3.3-b-agenda-integrada
     paths:
       - '.github/workflows/v310-build-branch.yml'
       - 'src/**'

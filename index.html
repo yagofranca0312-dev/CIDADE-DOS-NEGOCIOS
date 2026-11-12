@@ -2118,6 +2118,23 @@ body.v31-immersive :is(#v332-advisor-toggle,#v332-advisor-close,
   body.v31-immersive .v332-kpi span{font-size:.58rem!important}
 }
 
+/* Gate D: painel de lote sempre ACIMA da barra inferior.
+   Antes ele terminava em bottom:100px, atras do dock de ~220px. */
+body.v31-immersive.v31-lot-selected .city-stage>.right-column{
+  bottom:calc(var(--v332-map-bottom) + 10px)!important;
+  z-index:180!important;
+  max-height:min(48dvh,calc(100dvh - var(--v332-map-top) - var(--v332-map-bottom) - 20px))!important;
+}
+body.v31-immersive.v31-lot-selected #v221-inspector{
+  max-height:min(48dvh,calc(100dvh - var(--v332-map-top) - var(--v332-map-bottom) - 20px))!important;
+  overflow-y:auto!important;
+}
+body.v31-immersive .right-column .world-drawer[open]{
+  bottom:calc(var(--v332-map-bottom) + 10px)!important;
+  z-index:181!important;
+  max-height:min(58dvh,calc(100dvh - var(--v332-map-top) - var(--v332-map-bottom) - 12px))!important;
+}
+
 /* V3.2 fiscal: classes novas, sem modificar o CSS imersivo da V3.1. */
 .fiscal-v32-section{margin:8px 0 18px;padding:16px}
 .fiscal-v32-section .panel-heading h3{font-size:1.08rem}

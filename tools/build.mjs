@@ -30,6 +30,10 @@ const v31contract=readFileSync(resolve(cwd,'src/contracts/v31-read-model.mjs'),'
  .replace('export const V31_READ_MODEL_VERSION','const V31_READ_MODEL_VERSION')
  .replace('export function createV31ReadModel','function createV31ReadModel')+
  '\nconst CidadeV31ReadModel=createV31ReadModel(CidadeCore);';
+// Contrato puro de ocorrências: compartilhável com Agenda e Ações Rápidas.
+const v333engine=readFileSync(resolve(cwd,'src/contracts/v333-decision-engine.mjs'),'utf8')
+ .replace('export function createV333DecisionEngine','function createV333DecisionEngine')+
+ '\nconst CidadeV333DecisionEngine=createV333DecisionEngine(CidadeCore);';
 const v31ui=readFileSync(resolve(cwd,'src/ui/v31-immersive.part.js'),'utf8');
 const durableStore=readFileSync(resolve(cwd,'src/ui/durable-store.part.js'),'utf8');
 const uiShell=readFileSync(resolve(cwd,'src/ui/app.js'),'utf8');
@@ -50,7 +54,7 @@ for (const id of ['intro-version','build-version','footer-version']) {
 if (!template.includes(`<title>Cidade dos Negócios 1 · v${coreVersion}</title>`)) throw Error('Versão incorreta no título HTML');
 // Os checkouts Windows podem usar CRLF nos fragmentos. O artefato offline tem
 // serialização canônica LF em qualquer SO: mesmo arquivo deve ter mesmo SHA-256.
-const html=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21Inline).replace('/* CDN_V22_CSS */',v22css).replace('/* CDN_V221_CSS */',v221css).replace('/* CDN_V31_CSS */',v31css+'\n'+v32css).replace('/* CDN_CORE */',core+'\n'+v31contract).replace('/* CDN_VISUAL */',visual+'\n'+tianguaVisual).replace('/* CDN_UI */',durableStore+'\n'+ui).replace(/\r\n?/g,'\n');
+const html=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21Inline).replace('/* CDN_V22_CSS */',v22css).replace('/* CDN_V221_CSS */',v221css).replace('/* CDN_V31_CSS */',v31css+'\n'+v32css).replace('/* CDN_CORE */',core+'\n'+v31contract+'\n'+v333engine).replace('/* CDN_VISUAL */',visual+'\n'+tianguaVisual).replace('/* CDN_UI */',durableStore+'\n'+ui).replace(/\r\n?/g,'\n');
 if (/\/\* CDN_(CSS|V2_CSS|V21_CSS|V22_CSS|V221_CSS|V31_CSS|CORE|VISUAL|UI) \*\//.test(html)) throw Error('Build incompleto');
 writeFileSync(resolve(cwd,'index.html'),html,'utf8');
 const hash=createHash('sha256').update(html).digest('hex');

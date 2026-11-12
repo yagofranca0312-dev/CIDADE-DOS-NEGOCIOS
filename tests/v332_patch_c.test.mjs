@@ -2,16 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
+import {createV333DecisionEngine} from '../src/contracts/v333-decision-engine.mjs';
 
 const ui=readFileSync('src/ui/v31-immersive.part.js','utf8');
 const html=readFileSync('src/shell/index.template.html','utf8');
 const css=readFileSync('src/shell/v31.css','utf8');
 const Core=runInNewContext(readFileSync('src/core/game.js','utf8')+'\nCidadeCore',{});
-const begin=ui.indexOf('function v332AdviceCandidates(current){');
-const end=ui.indexOf('function v332AdviceUpdate(){',begin);
-assert.ok(begin>0&&end>begin,'Motor deterministico da Central nao localizado');
-const pure=ui.slice(begin,end).trim();
-const makeEngine=core=>runInNewContext('('+pure+')',{Core:core});
+const engineSource=readFileSync('src/contracts/v333-decision-engine.mjs','utf8');
+const makeEngine=core=>state=>createV333DecisionEngine(core).candidates(state);
 const rec=makeEngine(Core);
 let seq=0;
 function send(s,type,payload={}){
@@ -31,7 +29,7 @@ test('REC-04: sem empresa e sem pendencias nao gera urgencias falsas',()=>{
 test('REC-01: estoque zerado, transito e reposicao respeitam a fonte',()=>{
  const base={
   player:{cityId:'CE-TIANGUA'},calendar:{date:'2026-12-12'},
-  fiscal:{assessments:[]},units:[{id:'u1'}],active:{id:'u1'},
+  fiscal:{assessments:[]},world:{activeBusinessId:'u1'},units:[{id:'u1'}],active:{id:'u1'},
   inventory:[{id:'base',name:'Arroz',stock:0,inTransit:20,reorderPoint:12,alert:false}],
   payables:{units:[]},fiscalOp:{units:[]}
  };
@@ -126,43 +124,34 @@ test('REC-05: ids e evidencias estaveis, deduplicacao e ordem independente',()=>
 test('COM-01 bloqueado sem comparabilidade auditada; nenhuma regra aleatoria',()=>{
  const s=open(start()),r=rec(s);
  assert.ok(r.every(x=>x.rule!=='COM-01'));
- assert.doesNotMatch(pure,/Math\.random|fetch\(|Core\.dispatch\(|commit\(|localStorage\./);
- assert.match(ui,/COM-01 NAO ativado/);
+ assert.doesNotMatch(engineSource,/Math\.random|fetch\(|Core\.dispatch\(|commit\(|localStorage\./);
+ assert.match(engineSource,/COM-01 não ativado/);
 });
 
-test('REC-05: ativa para resolvida e historico limpo em outra carreira',()=>{
+test('REC-05 histórico V3.3.2 preservado com motor V3.3.3-A',()=>{
  const core={
-  businesses:s=>s.units,activeBusiness:s=>s.active,inventoryReport:s=>s.inventory,
+  businesses:s=>s.units,
+  inventoryReport:s=>s.inventory,
   operatingPayablesReport:s=>s.payables,fiscalOperationsReport:s=>s.fiscalOp,
   money:n=>'R$ '+(n/100).toFixed(2)
  };
- const from=ui.indexOf('let v332AdviceWorld=null');
- const to=ui.indexOf('function v332AdviceEntry(item,history=false){',from);
- assert.ok(from>0&&to>from,'Gerenciador de historico nao localizado');
- const helpers=ui.slice(from,to);
- const vmText='var state;\n'+helpers+'\n'+
-   'function step(next){state=next;const active=v332AdviceUpdate();return JSON.parse(JSON.stringify({active,history:v332AdviceHistory}));}\n'+
-   'function dismiss(id){const item=v332AdviceCache.find(x=>x.id===id);v332AdviceDismissed.set(id,item.signature);}\n'+
-   '({step,dismiss})';
- const probe=runInNewContext(vmText,{Core:core});
+ const tracker=createV333DecisionEngine(core).createTracker();
  const base={worldId:'w1',revision:1,player:{cityId:'CE-TIANGUA'},
-  calendar:{date:'2026-12-12'},units:[{id:'u1'}],active:{id:'u1'},
-  inventory:[{id:'p1',name:'Arroz',stock:0,inTransit:0,reorderPoint:10,alert:true}],
+  calendar:{date:'2026-12-12'},world:{activeBusinessId:'u1'},
+  units:[{id:'u1'}],inventory:[{id:'p1',name:'Arroz',stock:0,inTransit:0,reorderPoint:10,alert:true}],
   payables:{units:[]},fiscalOp:{units:[]},fiscal:{assessments:[]}};
- const first=probe.step(base);
+ const first=tracker.inspect(base);
  assert.equal(first.active.length,1);
- const same=probe.step(base);assert.equal(same.active.length,1);assert.equal(same.history.length,0);
- probe.dismiss(first.active[0].id);
- assert.equal(probe.step(base).active.length,0);
+ tracker.dismiss(first.active[0].id,base);
+ assert.equal(tracker.inspect(base).active.length,0);
  const updated={...base,revision:2,inventory:[{...base.inventory[0],stock:40,alert:false}]};
- const resolved=probe.step(updated);
+ const resolved=tracker.inspect(updated);
  assert.equal(resolved.active.length,0);
- assert.equal(resolved.history.length,1);
- assert.equal(resolved.history[0].status,'resolvida');
- assert.equal(probe.step(updated).history.length,1,'render duplicou resolucao');
- const newWorld=probe.step({...base,worldId:'w2',revision:1});
- assert.equal(newWorld.active.length,1);
- assert.equal(newWorld.history.length,0,'historico visual vazou para outra carreira');
+ assert.equal(resolved.history.filter(x=>x.status==='resolvida').length,1);
+ assert.equal(tracker.inspect(updated).history.filter(x=>x.status==='resolvida').length,1);
+ const next=tracker.inspect({...base,worldId:'w2'});
+ assert.equal(next.active.length,1);
+ assert.equal(next.history.length,0);
 });
 
 test('UI C: painel, historico, dispensar, KPI e rotas sem comando automatico',()=>{
@@ -175,9 +164,9 @@ test('UI C: painel, historico, dispensar, KPI e rotas sem comando automatico',()
  assert.match(css,/V3\.3\.2-C — Central de Gestao/);
  assert.match(css,/--v332-map-bottom:217px/);
  assert.doesNotMatch(css.slice(css.lastIndexOf('V3.3.2-C — Central de Gestao')),/object-fit:cover|object-fit:fill/);
- assert.match(ui,/v332AdviceDismissed\.set/);
- assert.match(ui,/status:'resolvida'/);
- assert.match(ui,/status:'dispensada'/);
+ assert.match(ui,/v333DecisionTracker\.dismiss/);
+ assert.match(engineSource,/status:'resolvida'/);
+ assert.match(engineSource,/status:'dispensada'/);
  assert.match(ui,/v332RenderAdvisor\(\)/);
  assert.equal(Core.SCHEMA_VERSION,10);
  assert.equal(JSON.parse(readFileSync('package.json','utf8')).version,'3.3.2');

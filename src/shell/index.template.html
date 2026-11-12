@@ -91,20 +91,55 @@
             <button type="button" class="v221-hud-cell" id="v221-hud-units" title="Gerenciar a rede de empresas"><span>▣ ESTABELECIMENTOS</span><strong id="v221-hud-count">0/5</strong><small>Unidades do grupo ▾</small></button>
             <div class="v221-city-actions"><button type="button" id="v221-event-open" title="Atividade da carreira" aria-label="Atividade da carreira">♧</button><button type="button" id="v221-help-open" title="Como jogar" aria-label="Ajuda do distrito">?</button><button type="button" id="v221-config-open" title="Backup e configurações" aria-label="Configurações e backup">⚙</button></div>
           </div>
-          <div class="v31-top-controls" role="toolbar" aria-label="HUD: caixa, data, eventos e ritmo">
-            <div class="v31-hud-metric"><small>CAIXA ÚNICO · SIMULADO</small><strong id="v31-hud-cash">—</strong></div>
-            <div class="v31-hud-metric"><small>DATA / TURNO</small><strong id="v31-hud-date">—</strong></div>
-            <button type="button" id="v31-hud-alerts" aria-controls="v31-alert-panel" aria-expanded="false" title="Eventos confirmados">♧ <span id="v31-alert-count">0</span></button>
-            <button type="button" id="v31-hud-pause" aria-label="Iniciar simulação" title="Iniciar simulação">▶</button>
-            <button type="button" id="v31-next-day" aria-label="Avançar um dia de simulação" title="Avançar um dia">+1</button>
-            <button type="button" id="v31-hud-turns" aria-label="Opções de avanço de turnos" aria-expanded="false" aria-controls="v221-time-menu" title="Avançar turnos">⏭</button>
-            <label for="v31-hud-speed">Ritmo</label><select id="v31-hud-speed" aria-label="Velocidade do tempo"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select>
-                <div class="v31-camera" role="group" aria-label="Câmera do mapa">
-                  <button type="button" id="v31-camera-minus" aria-label="Reduzir zoom">−</button>
-                  <output id="v31-camera-label">100%</output>
-                  <button type="button" id="v31-camera-plus" aria-label="Aumentar zoom">+</button>
-                  <button type="button" id="v31-camera-home" aria-label="Centralizar câmera">⌂</button>
+          <!-- V3.3.2-A: indicadores derivados do jogo; sem Central de Gestao/atalhos do Patch B/C. -->
+          <div class="v31-top-controls v332-hud" role="region" aria-label="Indicadores e controles da carreira">
+            <div class="v332-hud-primary">
+              <div class="v332-brand" aria-label="Cidade dos Negócios, simulação offline">
+                <span aria-hidden="true" class="v332-brand-icon">▥</span>
+                <span><strong>Cidade dos<br>Negócios</strong><small>SIMULAÇÃO OFFLINE</small></span>
+              </div>
+              <div class="v332-kpi-strip" role="group" tabindex="0" aria-label="Indicadores empresariais; deslize horizontalmente para ver todos">
+                <button type="button" class="v332-kpi" data-v31-open="administrativo:financas" title="Caixa consolidado do grupo, não representa lucro">
+                  <small>CAIXA ÚNICO</small><strong id="v31-hud-cash">—</strong><span>Saldo do grupo</span>
+                </button>
+                <div class="v332-kpi"><small>DATA / TURNO</small><strong id="v31-hud-date">—</strong><span>Calendário do jogo</span></div>
+                <button type="button" class="v332-kpi" data-v31-open="mercado:vendas" title="Receita de vendas efetivamente registradas na data do jogo">
+                  <small>VENDAS DO DIA</small><strong id="v332-hud-sales">—</strong><span>Vendas realizadas hoje</span>
+                </button>
+                <button type="button" class="v332-kpi" data-v31-open="administrativo:contabilidade" title="Resultado acumulado da carreira após tributos simulados">
+                  <small>RESULTADO ACUMULADO</small><strong id="v332-hud-result">—</strong><span>Após tributos simulados</span>
+                </button>
+                <button type="button" class="v332-kpi" data-v31-open="mercado:estoque" title="Produtos da unidade ativa abaixo do ponto de reposição, considerando trânsito">
+                  <small>ESTOQUE CRÍTICO</small><strong id="v332-hud-stock">—</strong><span>Unidade ativa</span>
+                </button>
+                <button type="button" class="v332-kpi" data-v31-open="administrativo:financas" id="v332-due-card" title="Somente vencimentos com datas conhecidas; passivos sem prazo não são incluídos">
+                  <small>CONTAS A VENCER</small><strong id="v332-hud-due">—</strong><span id="v332-hud-due-note">Prazos confirmados</span>
+                </button>
+                <button type="button" class="v332-kpi" data-v31-open="administrativo:fiscal" title="Guias fiscais simuladas em aberto e checklists operacionais, sem equiparar a legislação real">
+                  <small>OBRIGAÇÕES FISCAIS</small><strong id="v332-hud-tax">—</strong><span id="v332-hud-tax-note">Simulação educativa</span>
+                </button>
+                <div class="v332-kpi v332-kpi-unavailable" aria-label="Alertas da Central de Gestão: disponíveis no Patch C">
+                  <small>ALERTAS DE GESTÃO</small><strong id="v332-hud-advisory">—</strong><span>Disponível no Patch C</span>
                 </div>
+              </div>
+            </div>
+            <div class="v332-hud-secondary">
+              <div class="v332-time-controls" role="toolbar" aria-label="Eventos, tempo e ritmo do jogo">
+                <span class="v332-time-title">TEMPO DO JOGO</span>
+                <button type="button" id="v31-hud-alerts" aria-controls="v31-alert-panel" aria-expanded="false" title="Eventos recentes confirmados, não alertas de gestão">♧ <span id="v31-alert-count">0</span></button>
+                <button type="button" id="v31-hud-pause" aria-label="Iniciar simulação" title="Iniciar simulação">▶</button>
+                <button type="button" id="v31-next-day" aria-label="Avançar um dia de simulação" title="Avançar um dia">+1</button>
+                <button type="button" id="v31-hud-turns" aria-label="Opções de avanço de turnos" aria-expanded="false" aria-controls="v221-time-menu" title="Avançar turnos">⏭</button>
+                <label for="v31-hud-speed">Ritmo</label><select id="v31-hud-speed" aria-label="Velocidade do tempo"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select>
+              </div>
+              <div class="v31-camera" role="group" aria-label="Câmera do mapa">
+                <span class="v332-camera-title">CÂMERA</span>
+                <button type="button" id="v31-camera-minus" aria-label="Reduzir zoom">−</button>
+                <output id="v31-camera-label">100%</output>
+                <button type="button" id="v31-camera-plus" aria-label="Aumentar zoom">+</button>
+                <button type="button" id="v31-camera-home" aria-label="Centralizar câmera">⌂</button>
+              </div>
+            </div>
           </div>
           <p class="v221-trust-ribbon" role="note"><span aria-hidden="true" class="v221-trust-dot"></span><strong>SIMULAÇÃO EDUCATIVA</strong><span>Valores financeiros fictícios do jogo · operações locais · não são saldos reais</span></p>
           <div class="v221-popover v221-time-menu" id="v221-time-menu" hidden><strong>Calendário e ritmo</strong><p>Controles do motor real.</p><div class="v221-time-actions"><button type="button" data-v221-time="play">▶ / ❚❚</button><button type="button" data-v221-time="1">+ 1 dia</button><button type="button" data-v221-time="7">+ 7 dias</button><button type="button" data-v221-time="30">+ 30 dias</button></div><label for="v221-time-speed">Velocidade</label><select id="v221-time-speed"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select></div>

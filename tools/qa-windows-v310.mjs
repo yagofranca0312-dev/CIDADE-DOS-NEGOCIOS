@@ -49,6 +49,8 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
     const metric=(id)=>document.getElementById(id).textContent;
     return {width:innerWidth,height:innerHeight,map:{x:r.x,y:r.y,w:r.width,h:r.height},
       svg:{x:sr.x,y:sr.y,w:sr.width,h:sr.height},canvasScroll:{x:canvas.scrollLeft,y:canvas.scrollTop},
+      mapTop:parseFloat(getComputedStyle(document.body).getPropertyValue('--v332-map-top')),
+      mapBottom:parseFloat(getComputedStyle(document.body).getPropertyValue('--v332-map-bottom')),
       dock:{x:dock.x,w:dock.width},
       sidebarRemoved:sidebar===null,
       classicControls:document.querySelectorAll('#v31-classic-switch,#v31-classic-return').length,
@@ -66,62 +68,88 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
     assert.equal(geometry.sidebarRemoved,true,'Sidebar ERP nao foi removida do HTML');
   assert.equal(geometry.classicControls,0,'Alternancia classica ainda existe');
   assert.equal(geometry.topbarHidden,true,'Topbar antigo ainda ocupa a tela');
-  assert.ok(Math.abs(geometry.map.x)<=2 && Math.abs(geometry.map.y)<=2,'Mapa nao inicia na origem da viewport');
-  assert.ok(geometry.map.w>=width-2 && geometry.map.h>=geometry.height-2,'Mapa nao ocupa 100% da viewport');
-  // V3.3.1: o mapa tem a MESMA proporcao em desktop e mobile; sem crop.
+  // V3.3.2-A: mapa integral na area sob as duas faixas informativas.
+  assert.ok(Math.abs(geometry.map.x)<=2,'Mapa deslocado horizontalmente');
+  assert.ok(Math.abs(geometry.map.y-geometry.mapTop)<3,'Area do mapa invade o HUD');
+  assert.ok(Math.abs(geometry.map.w-width)<3,'Mapa perdeu largura da viewport');
+  assert.ok(Math.abs(geometry.map.h-(geometry.height-geometry.mapTop-geometry.mapBottom))<4,
+    'Reserva superior/inferior inconsistente');
   const ratio=1536/664;
-  const expectedWidth=Math.min(width,geometry.height*ratio);
+  const expectedWidth=Math.min(width,geometry.map.h*ratio);
   const expectedHeight=expectedWidth/ratio;
-  assert.ok(Math.abs(geometry.svg.w-expectedWidth)<5,'SVG foi ampliado ou cortado horizontalmente: '+JSON.stringify(geometry.svg));
-  assert.ok(Math.abs(geometry.svg.h-expectedHeight)<5,'SVG foi esticado ou cortado verticalmente: '+JSON.stringify(geometry.svg));
-  assert.ok(Math.abs(geometry.svg.x-(width-expectedWidth)/2)<5,'Mapa deve ficar centralizado horizontalmente');
-  assert.ok(Math.abs(geometry.svg.y-(geometry.height-expectedHeight)/2)<5,'Mapa deve ficar centralizado verticalmente');
-  assert.ok(Math.abs(geometry.canvasScroll.x)<3,'Mapa em 100% nao deve ter pan horizontal inicial');
-  assert.ok(Math.abs(geometry.canvasScroll.y)<3,'Mapa em 100% nao deve ter pan vertical inicial');
+  assert.ok(Math.abs(geometry.svg.w-expectedWidth)<5,'SVG cortado horizontalmente: '+JSON.stringify(geometry.svg));
+  assert.ok(Math.abs(geometry.svg.h-expectedHeight)<5,'SVG distorcido: '+JSON.stringify(geometry.svg));
+  assert.ok(Math.abs(geometry.svg.x-(width-expectedWidth)/2)<5,'Cidade fora do centro horizontal');
+  assert.ok(Math.abs(geometry.svg.y-(geometry.map.y+(geometry.map.h-expectedHeight)/2))<5,'Cidade fora do centro vertical');
+  assert.ok(Math.abs(geometry.canvasScroll.x)<3&&Math.abs(geometry.canvasScroll.y)<3,'Pan inicial inesperado');
   const cameraAlignment=await page.evaluate(()=>{
-    const bar=document.querySelector('.v31-top-controls');
+    const hud=document.querySelector('.v31-top-controls');
+    const primary=hud.querySelector('.v332-hud-primary');
+    const secondary=hud.querySelector('.v332-hud-secondary');
     const speed=document.getElementById('v31-hud-speed');
-    const camera=document.querySelector('.v31-camera');
+    const camera=hud.querySelector('.v31-camera');
     const cr=camera.getBoundingClientRect(),sr=speed.getBoundingClientRect();
-    return {inside:camera.parentElement===bar,
-      nextToSpeed:speed.nextElementSibling===camera,
-      cameraTop:cr.top,speedTop:sr.top,
-      cameraHeight:cr.height,cameraPosition:getComputedStyle(camera).position,
-      row:getComputedStyle(bar).flexWrap};
+    const hr=hud.getBoundingClientRect(),pr=primary.getBoundingClientRect(),ss=secondary.getBoundingClientRect();
+    return {inside:camera.parentElement===secondary,
+      nextToSpeed:speed.parentElement.classList.contains('v332-time-controls'),
+      cameraTop:cr.top,speedTop:sr.top,cameraHeight:cr.height,speedHeight:sr.height,
+      cameraPosition:getComputedStyle(camera).position,
+      hudBottom:hr.bottom,primaryBottom:pr.bottom,secondaryTop:ss.top,
+      primaryOverflow:primary.scrollWidth>primary.clientWidth,
+      stripScrollWidth:hud.querySelector('.v332-kpi-strip').scrollWidth,
+      stripClientWidth:hud.querySelector('.v332-kpi-strip').clientWidth,
+      secondaryScrollWidth:secondary.scrollWidth,secondaryClientWidth:secondary.clientWidth};
   });
-  assert.equal(cameraAlignment.inside,true,'Controles de camera fora do HUD');
-  assert.equal(cameraAlignment.nextToSpeed,true,'Camera nao esta ao lado do ritmo');
-  assert.equal(cameraAlignment.cameraPosition,'static','Camera continua flutuante');
-  assert.equal(cameraAlignment.row,'nowrap','HUD quebrou em mais de uma linha');
+  assert.equal(cameraAlignment.inside,true,'Camera fora da segunda faixa do HUD');
+  assert.equal(cameraAlignment.nextToSpeed,true,'Ritmo fora da faixa de tempo');
+  assert.equal(cameraAlignment.cameraPosition,'static','Camera flutuante reapareceu');
   assert.ok(Math.abs(cameraAlignment.cameraTop+cameraAlignment.cameraHeight/2-
-    (cameraAlignment.speedTop+17))<9,'Camera e ritmo nao estao na mesma linha');
+    (cameraAlignment.speedTop+cameraAlignment.speedHeight/2))<8,'Camera e tempo desalinhados');
+  assert.ok(cameraAlignment.primaryBottom<=cameraAlignment.secondaryTop+3,'Faixas sobrepostas');
+  assert.ok(cameraAlignment.hudBottom<=geometry.map.y+12,'HUD invade mapa util');
+  const headerMetrics=await page.evaluate(async()=>{
+    const raw=await CidadeDurableStore.readCurrent(CidadeCore),saved=CidadeCore.importSave(raw).state;
+    const daily=CidadeCore.financialReport(saved,'day',saved.calendar.date);
+    const hasUnits=CidadeCore.businesses(saved).length>0;
+    const overview=CidadeCore.overview(saved);
+    const value=id=>document.getElementById(id).textContent.trim();
+    return {cash:value('v31-hud-cash'),daily:value('v332-hud-sales'),result:value('v332-hud-result'),
+      hasUnits,critical:value('v332-hud-stock'),advisory:value('v332-hud-advisory'),due:value('v332-hud-due'),
+      expectedCash:CidadeCore.money(overview.cash),expectedDaily:hasUnits?CidadeCore.money(daily.revenue):'—',
+      expectedResult:hasUnits?CidadeCore.money(overview.profit):'—'};
+  });
+  assert.equal(headerMetrics.cash,headerMetrics.expectedCash,'Caixa no HUD nao e o saldo');
+  assert.equal(headerMetrics.daily,headerMetrics.expectedDaily,'Vendas do dia nao batem com ledger');
+  assert.equal(headerMetrics.result,headerMetrics.expectedResult,'Resultado acumulado diverge do Core');
+  assert.equal(headerMetrics.advisory,'—','Nao inventar alertas antes do Patch C');
+  assert.ok(headerMetrics.hasUnits?headerMetrics.critical.includes('item'):headerMetrics.critical==='—','Estoque ativo nao e identificado');
+  assert.ok(headerMetrics.due==='—'||/em 3 dias|vencida/.test(headerMetrics.due),'Prazo do painel sem evidencia');
   assert.equal(await page.locator('#v31-camera-label').textContent(),'100%');
   assert.ok(geometry.scrollWidth<=width+4,'Rolagem horizontal fora do viewport');
   assert.ok(Math.abs(geometry.dock.x+geometry.dock.w/2-width/2)<=4,'Dock nao centralizada');
   assert.ok(geometry.cash!=='—' && geometry.date!=='—','HUD sem dados reais da carreira');
-  // HUD mobile rigidamente em uma única linha e semanticamente acessível.
+  // Patch A: no mobile, cada faixa e uma linha própria; scroll interno, sem 8 microcolunas.
   if(width<=768){
     const hud=await page.evaluate(()=>{
-      const el=document.querySelector('.v31-top-controls'),r=el.getBoundingClientRect(),
-        cs=getComputedStyle(el),items=[...el.children].filter(x=>getComputedStyle(x).display!=='none');
-      const centers=items.map(x=>Math.round(x.getBoundingClientRect().top+x.getBoundingClientRect().height/2));
-      return {height:r.height,wrap:cs.flexWrap,overflow:cs.overflowX,
-        maxHeight:cs.maxHeight,rowSpread:Math.max(...centers)-Math.min(...centers),
+      const el=document.querySelector('.v31-top-controls'),r=el.getBoundingClientRect();
+      const primary=el.querySelector('.v332-hud-primary').getBoundingClientRect();
+      const secondary=el.querySelector('.v332-hud-secondary').getBoundingClientRect();
+      const strip=el.querySelector('.v332-kpi-strip');
+      return {height:r.height,primaryBottom:primary.bottom,secondaryTop:secondary.top,
+        scrollableKpis:strip.scrollWidth>strip.clientWidth,
         pause:document.querySelector('#v31-hud-pause').textContent.trim(),
         day:document.querySelector('#v31-next-day').textContent.trim(),
         turns:document.querySelector('#v31-hud-turns').textContent.trim(),
         events:document.querySelector('#v31-alert-count').textContent.trim(),
-        speedLabel:document.querySelector('#v31-hud-speed').getAttribute('aria-label'),
-        scrollable:el.scrollWidth>=el.clientWidth};
+        speedLabel:document.querySelector('#v31-hud-speed').getAttribute('aria-label')};
     });
-    assert.ok(hud.height<=48.6,'HUD excedeu 48px: '+JSON.stringify(hud));
-    assert.equal(hud.wrap,'nowrap','HUD mobile quebrou linha');
-    assert.equal(hud.overflow,'auto','HUD mobile não é horizontalmente rolável');
-    assert.ok(hud.rowSpread<7,'Controles estão em mais de uma linha: '+JSON.stringify(hud));
-    assert.ok(['▶','❚❚'].includes(hud.pause),'Tempo ainda exibe texto longo');
-    assert.equal(hud.day,'+1','Botão dia ainda exibe texto longo');
-    assert.equal(hud.turns,'⏭','Botão turnos ainda exibe texto longo');
-    assert.match(hud.events,/^\d+$/,'Contador de eventos não é compacto');
+    assert.ok(hud.height>=90&&hud.height<=125,'HUD mobile fora de duas faixas: '+JSON.stringify(hud));
+    assert.ok(hud.primaryBottom<=hud.secondaryTop+3,'Linhas do HUD colidem');
+    assert.equal(hud.scrollableKpis,true,'KPIs no mobile sem scroll horizontal');
+    assert.ok(['▶','❚❚'].includes(hud.pause),'Controle de play perdeu acessibilidade');
+    assert.equal(hud.day,'+1');
+    assert.equal(hud.turns,'⏭');
+    assert.match(hud.events,/^\d+$/);
     assert.equal(hud.speedLabel,'Velocidade do tempo');
   }
   // Componentes legados nunca podem aparecer por trás da dock.

@@ -1603,6 +1603,140 @@ body.v31-immersive .v31-top-controls .v31-camera output{
   }
 }
 
+/* V3.3.2-A — topo informativo, duas faixas e KPIs de leitura.
+   Preservar geometria 1536x664 / 640x405: viewport reservada abaixo do HUD,
+   arte dimensionada SEM cover, sem estiramento e sem recorte. */
+body.v31-immersive{
+  --v332-map-top:122px;
+  --v332-map-bottom:82px;
+}
+body.v31-immersive .v31-top-controls.v332-hud{
+  position:fixed!important;
+  top:calc(5px + env(safe-area-inset-top))!important;
+  left:10px!important;right:10px!important;
+  width:auto!important;max-width:none!important;height:auto!important;max-height:none!important;
+  transform:none!important;z-index:120!important;
+  box-sizing:border-box!important;
+  display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;
+  align-items:stretch!important;justify-content:flex-start!important;gap:5px!important;
+  padding:6px 8px!important;border-radius:15px!important;
+  overflow:visible!important;
+  background:rgba(5,26,42,.93)!important;
+  border:1px solid #a8c6c68f!important;
+}
+.v332-hud-primary{
+  display:flex;align-items:stretch;gap:8px;min-width:0;
+  width:100%;min-height:53px;max-height:60px;
+}
+.v332-brand{
+  flex:0 0 140px;display:flex;align-items:center;gap:7px;min-width:0;
+  padding:4px 9px 4px 3px;color:#f7e2b1;border-right:1px solid #7993a17c;
+}
+.v332-brand-icon{font-size:1.8rem;line-height:1;color:#f6d783}
+.v332-brand strong{display:block;font-size:.83rem;line-height:1.03;letter-spacing:.01em}
+.v332-brand small{display:block;margin-top:3px;color:#abcbd7;font-size:.46rem;white-space:nowrap}
+.v332-kpi-strip{
+  flex:1 1 auto;display:flex;align-items:stretch;gap:5px;min-width:0;width:0;
+  overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain;
+  scroll-snap-type:x proximity;
+}
+.v332-kpi-strip::-webkit-scrollbar{display:none}
+.v332-kpi-strip:focus-visible{outline:2px solid #ffe2a4;outline-offset:-2px}
+body.v31-immersive .v332-kpi{
+  box-sizing:border-box!important;flex:0 0 141px!important;
+  display:flex!important;flex-direction:column!important;justify-content:center!important;
+  align-items:flex-start!important;gap:2px!important;
+  min-width:141px!important;min-height:53px!important;
+  margin:0!important;padding:5px 9px!important;
+  border:1px solid #44748b!important;border-radius:10px!important;
+  background:linear-gradient(130deg,#0f3549,#092536)!important;
+  box-shadow:none!important;text-align:left!important;color:#e7f4f5!important;
+  scroll-snap-align:start;
+}
+.v332-kpi small{
+  font-weight:800;font-size:.56rem;line-height:1.18;color:#bed7e4;
+  letter-spacing:.02em;white-space:nowrap;
+}
+.v332-kpi strong{
+  font-size:.84rem;line-height:1.15;font-weight:850;color:#ffe1a0;
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.v332-kpi span{
+  color:#a3c5d2;font-size:.53rem;line-height:1.15;
+  white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;
+}
+body.v31-immersive .v332-kpi-unavailable{opacity:.73}
+body.v31-immersive .v332-kpi-unavailable strong{color:#a9bcc7}
+.v332-hud-secondary{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  width:100%;min-width:0;min-height:41px;
+  border-top:1px solid #6b94a44d;padding-top:4px;
+  overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain;
+}
+.v332-hud-secondary::-webkit-scrollbar{display:none}
+.v332-time-controls{
+  flex:0 0 auto;display:flex;align-items:center;gap:5px;
+  min-width:0;white-space:nowrap;
+}
+.v332-time-title,.v332-camera-title{
+  flex:0 0 auto;color:#b7d5de;font-size:.58rem;font-weight:850;white-space:nowrap;
+}
+body.v31-immersive .v332-hud-secondary button,
+body.v31-immersive .v332-hud-secondary select{
+  box-sizing:border-box!important;min-width:35px!important;min-height:35px!important;
+  padding:4px 7px!important;font-size:.75rem!important;
+}
+body.v31-immersive .v332-hud-secondary label{
+  display:inline!important;white-space:nowrap;font-size:.66rem!important;
+}
+body.v31-immersive .v31-top-controls .v332-hud-secondary .v31-camera{
+  flex:0 0 auto!important;display:flex!important;align-items:center!important;gap:4px!important;
+  border-left:1px solid #7397a5!important;margin:0!important;padding:0 0 0 9px!important;
+  background:transparent!important;position:static!important;transform:none!important;
+}
+body.v31-immersive .v332-hud-secondary .v31-camera output{
+  min-width:35px!important;text-align:center!important;font-size:.72rem!important;
+}
+/* Reserva apenas espaço de composição, não modifica os 18 lotes nem o SVG. */
+body.v31-immersive #map-canvas{
+  inset:var(--v332-map-top) 0 var(--v332-map-bottom) 0!important;
+  top:var(--v332-map-top)!important;bottom:var(--v332-map-bottom)!important;
+  width:100vw!important;height:calc(100dvh - var(--v332-map-top) - var(--v332-map-bottom))!important;
+  display:grid!important;place-content:center!important;place-items:center!important;
+}
+body.v31-immersive #map-canvas>svg.v221-city-svg{
+  width:min(100vw,calc((100dvh - var(--v332-map-top) - var(--v332-map-bottom))*2.313253012))!important;
+  max-width:100vw!important;height:auto!important;min-height:0!important;max-height:none!important;
+  aspect-ratio:1536/664!important;object-fit:contain!important;
+}
+body.v31-immersive #map-canvas>svg.v22-city-svg{
+  width:min(100vw,calc((100dvh - var(--v332-map-top) - var(--v332-map-bottom))*1.580246914))!important;
+  max-width:100vw!important;height:auto!important;min-height:0!important;max-height:none!important;
+  aspect-ratio:640/405!important;object-fit:contain!important;
+}
+@media(max-width:768px){
+  body.v31-immersive{--v332-map-top:119px;--v332-map-bottom:68px}
+  body.v31-immersive .v31-top-controls.v332-hud{
+    left:5px!important;right:5px!important;padding:5px!important;gap:4px!important;
+    height:auto!important;max-height:none!important;
+  }
+  .v332-hud-primary{min-height:53px;max-height:55px;gap:5px}
+  .v332-brand{flex-basis:88px;padding:3px 5px 3px 1px;gap:3px}
+  .v332-brand-icon{font-size:1.1rem}
+  .v332-brand strong{font-size:.60rem}
+  .v332-brand small{font-size:.37rem}
+  body.v31-immersive .v332-kpi{min-width:128px!important;flex-basis:128px!important}
+  .v332-kpi small{font-size:.52rem}
+  .v332-kpi strong{font-size:.79rem}
+  .v332-kpi span{font-size:.48rem}
+  .v332-hud-secondary{min-height:39px;gap:9px;padding-top:3px}
+  .v332-time-title,.v332-camera-title{display:none}
+  body.v31-immersive .v332-hud-secondary label{display:none!important}
+  body.v31-immersive .v332-hud-secondary button,
+  body.v31-immersive .v332-hud-secondary select{min-width:34px!important;min-height:34px!important;padding:4px 5px!important}
+  body.v31-immersive .v31-top-controls .v332-hud-secondary .v31-camera{padding-left:6px!important;gap:3px!important}
+}
+
 /* V3.2 fiscal: classes novas, sem modificar o CSS imersivo da V3.1. */
 .fiscal-v32-section{margin:8px 0 18px;padding:16px}
 .fiscal-v32-section .panel-heading h3{font-size:1.08rem}
@@ -1701,20 +1835,55 @@ body.v31-immersive .v31-top-controls .v31-camera output{
             <button type="button" class="v221-hud-cell" id="v221-hud-units" title="Gerenciar a rede de empresas"><span>▣ ESTABELECIMENTOS</span><strong id="v221-hud-count">0/5</strong><small>Unidades do grupo ▾</small></button>
             <div class="v221-city-actions"><button type="button" id="v221-event-open" title="Atividade da carreira" aria-label="Atividade da carreira">♧</button><button type="button" id="v221-help-open" title="Como jogar" aria-label="Ajuda do distrito">?</button><button type="button" id="v221-config-open" title="Backup e configurações" aria-label="Configurações e backup">⚙</button></div>
           </div>
-          <div class="v31-top-controls" role="toolbar" aria-label="HUD: caixa, data, eventos e ritmo">
-            <div class="v31-hud-metric"><small>CAIXA ÚNICO · SIMULADO</small><strong id="v31-hud-cash">—</strong></div>
-            <div class="v31-hud-metric"><small>DATA / TURNO</small><strong id="v31-hud-date">—</strong></div>
-            <button type="button" id="v31-hud-alerts" aria-controls="v31-alert-panel" aria-expanded="false" title="Eventos confirmados">♧ <span id="v31-alert-count">0</span></button>
-            <button type="button" id="v31-hud-pause" aria-label="Iniciar simulação" title="Iniciar simulação">▶</button>
-            <button type="button" id="v31-next-day" aria-label="Avançar um dia de simulação" title="Avançar um dia">+1</button>
-            <button type="button" id="v31-hud-turns" aria-label="Opções de avanço de turnos" aria-expanded="false" aria-controls="v221-time-menu" title="Avançar turnos">⏭</button>
-            <label for="v31-hud-speed">Ritmo</label><select id="v31-hud-speed" aria-label="Velocidade do tempo"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select>
-                <div class="v31-camera" role="group" aria-label="Câmera do mapa">
-                  <button type="button" id="v31-camera-minus" aria-label="Reduzir zoom">−</button>
-                  <output id="v31-camera-label">100%</output>
-                  <button type="button" id="v31-camera-plus" aria-label="Aumentar zoom">+</button>
-                  <button type="button" id="v31-camera-home" aria-label="Centralizar câmera">⌂</button>
+          <!-- V3.3.2-A: indicadores derivados do jogo; sem Central de Gestao/atalhos do Patch B/C. -->
+          <div class="v31-top-controls v332-hud" role="region" aria-label="Indicadores e controles da carreira">
+            <div class="v332-hud-primary">
+              <div class="v332-brand" aria-label="Cidade dos Negócios, simulação offline">
+                <span aria-hidden="true" class="v332-brand-icon">▥</span>
+                <span><strong>Cidade dos<br>Negócios</strong><small>SIMULAÇÃO OFFLINE</small></span>
+              </div>
+              <div class="v332-kpi-strip" role="group" tabindex="0" aria-label="Indicadores empresariais; deslize horizontalmente para ver todos">
+                <button type="button" class="v332-kpi" data-v31-open="administrativo:financas" title="Caixa consolidado do grupo, não representa lucro">
+                  <small>CAIXA ÚNICO</small><strong id="v31-hud-cash">—</strong><span>Saldo do grupo</span>
+                </button>
+                <div class="v332-kpi"><small>DATA / TURNO</small><strong id="v31-hud-date">—</strong><span>Calendário do jogo</span></div>
+                <button type="button" class="v332-kpi" data-v31-open="mercado:vendas" title="Receita de vendas efetivamente registradas na data do jogo">
+                  <small>VENDAS DO DIA</small><strong id="v332-hud-sales">—</strong><span>Vendas realizadas hoje</span>
+                </button>
+                <button type="button" class="v332-kpi" data-v31-open="administrativo:contabilidade" title="Resultado acumulado da carreira após tributos simulados">
+                  <small>RESULTADO ACUMULADO</small><strong id="v332-hud-result">—</strong><span>Após tributos simulados</span>
+                </button>
+                <button type="button" class="v332-kpi" data-v31-open="mercado:estoque" title="Produtos da unidade ativa abaixo do ponto de reposição, considerando trânsito">
+                  <small>ESTOQUE CRÍTICO</small><strong id="v332-hud-stock">—</strong><span>Unidade ativa</span>
+                </button>
+                <button type="button" class="v332-kpi" data-v31-open="administrativo:financas" id="v332-due-card" title="Somente vencimentos com datas conhecidas; passivos sem prazo não são incluídos">
+                  <small>CONTAS A VENCER</small><strong id="v332-hud-due">—</strong><span id="v332-hud-due-note">Prazos confirmados</span>
+                </button>
+                <button type="button" class="v332-kpi" data-v31-open="administrativo:fiscal" title="Guias fiscais simuladas em aberto e checklists operacionais, sem equiparar a legislação real">
+                  <small>OBRIGAÇÕES FISCAIS</small><strong id="v332-hud-tax">—</strong><span id="v332-hud-tax-note">Simulação educativa</span>
+                </button>
+                <div class="v332-kpi v332-kpi-unavailable" aria-label="Alertas da Central de Gestão: disponíveis no Patch C">
+                  <small>ALERTAS DE GESTÃO</small><strong id="v332-hud-advisory">—</strong><span>Disponível no Patch C</span>
                 </div>
+              </div>
+            </div>
+            <div class="v332-hud-secondary">
+              <div class="v332-time-controls" role="toolbar" aria-label="Eventos, tempo e ritmo do jogo">
+                <span class="v332-time-title">TEMPO DO JOGO</span>
+                <button type="button" id="v31-hud-alerts" aria-controls="v31-alert-panel" aria-expanded="false" title="Eventos recentes confirmados, não alertas de gestão">♧ <span id="v31-alert-count">0</span></button>
+                <button type="button" id="v31-hud-pause" aria-label="Iniciar simulação" title="Iniciar simulação">▶</button>
+                <button type="button" id="v31-next-day" aria-label="Avançar um dia de simulação" title="Avançar um dia">+1</button>
+                <button type="button" id="v31-hud-turns" aria-label="Opções de avanço de turnos" aria-expanded="false" aria-controls="v221-time-menu" title="Avançar turnos">⏭</button>
+                <label for="v31-hud-speed">Ritmo</label><select id="v31-hud-speed" aria-label="Velocidade do tempo"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select>
+              </div>
+              <div class="v31-camera" role="group" aria-label="Câmera do mapa">
+                <span class="v332-camera-title">CÂMERA</span>
+                <button type="button" id="v31-camera-minus" aria-label="Reduzir zoom">−</button>
+                <output id="v31-camera-label">100%</output>
+                <button type="button" id="v31-camera-plus" aria-label="Aumentar zoom">+</button>
+                <button type="button" id="v31-camera-home" aria-label="Centralizar câmera">⌂</button>
+              </div>
+            </div>
           </div>
           <p class="v221-trust-ribbon" role="note"><span aria-hidden="true" class="v221-trust-dot"></span><strong>SIMULAÇÃO EDUCATIVA</strong><span>Valores financeiros fictícios do jogo · operações locais · não são saldos reais</span></p>
           <div class="v221-popover v221-time-menu" id="v221-time-menu" hidden><strong>Calendário e ritmo</strong><p>Controles do motor real.</p><div class="v221-time-actions"><button type="button" data-v221-time="play">▶ / ❚❚</button><button type="button" data-v221-time="1">+ 1 dia</button><button type="button" data-v221-time="7">+ 7 dias</button><button type="button" data-v221-time="30">+ 30 dias</button></div><label for="v221-time-speed">Velocidade</label><select id="v221-time-speed"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select></div>
@@ -7479,6 +7648,67 @@ function bindBalancePlan(){
     $('v31-backdrop').hidden=false;
     $('v31-overlay-close').focus();
   }
+  // Patch V3.3.2-A: leitura exclusivamente derivada. Nao altera estado nem save.
+  function v332HudSnapshot(current){
+    if(!current?.player?.cityId)return null;
+    const units=Core.businesses(current);
+    const info=Core.overview(current);
+    const today=current.calendar.date;
+    const day=units.length?Core.financialReport(current,'day',today):null;
+    const active=Core.activeBusiness(current);
+    const items=active?Core.inventoryReport(current):null;
+    const critical=items?items.filter(item=>item.alert).length:null;
+    // Somente compromissos com data, e com tipo discriminado; jamais supor
+    // que todo PAYABLE operacional vence em tres dias.
+    const calendar=Core.financialCommitmentsReport(current,30);
+    const limit=new Date(Date.parse(today+'T12:00:00Z')+3*86400000).toISOString().slice(0,10);
+    const dated=calendar.events.filter(item=>
+      (item.kind==='LOAN_SCHEDULE'||item.kind==='SUPPLIER_COMMITMENT')&&
+      /^\d{4}-\d{2}-\d{2}$/.test(item.date));
+    const upcoming=dated.filter(item=>item.date>=today&&item.date<=limit);
+    const immediatelyDue=calendar.events.filter(item=>item.kind==='LOAN_DUE'&&item.amountCents>0);
+    const undated=Core.operatingPayablesReport(current).total>0;
+    const dueValue=!units.length?'—':immediatelyDue.length?
+      immediatelyDue.length+' vencida(s)':dated.length?upcoming.length+' em 3 dias':'—';
+    const dueNote=!units.length?'Abra uma empresa':immediatelyDue.length?
+      'Parcelas exigíveis':dated.length?'Crédito/contratos com prazo':
+      undated?'Passivos sem prazo definido':'Nenhum prazo confirmado';
+    const taxAssessments=(current.fiscal?.assessments||[]).filter(row=>
+      (row.status==='OPEN'||row.status==='OVERDUE')&&row.amount>row.paid);
+    const tasks=units.length?Core.fiscalOperationsReport(current):null;
+    const openTasks=tasks?.openPeriods||0;
+    const taxValue=!units.length?'—':taxAssessments.length?
+      taxAssessments.length+' guia(s)':openTasks?
+      openTasks+' checklist(s)':'0 pendências';
+    const taxNote=!units.length?'Sem empresa':taxAssessments.length?
+      'Guias simuladas em aberto':openTasks?'Checklists operacionais':'Simulação educativa';
+    return {
+      cash:Core.money(info.cash),date:today.split('-').reverse().join('/'),
+      sales:day?Core.money(day.revenue):'—',
+      result:units.length?Core.money(info.profit):'—',
+      stock:critical===null?'—':critical+' item(ns)',
+      due:dueValue,dueNote,tax:taxValue,taxNote,
+      salesTitle:day?'Vendas efetivas em '+today.split('-').reverse().join('/'):'Sem unidade: vendas indisponíveis',
+      resultTitle:'Resultado acumulado da carreira depois das despesas e tributos simulados',
+      stockTitle:active?
+        'Unidade '+active.id+': '+critical+' produto(s) abaixo do ponto de reposição, considerando trânsito':
+        'Sem unidade ativa; não há estoque para avaliar'
+    };
+  }
+  function v332RenderHud(){
+    const metrics=v332HudSnapshot(state);if(!metrics)return;
+    for(const [id,value] of [
+      ['v31-hud-cash',metrics.cash],['v31-hud-date',metrics.date],
+      ['v332-hud-sales',metrics.sales],['v332-hud-result',metrics.result],
+      ['v332-hud-stock',metrics.stock],['v332-hud-due',metrics.due],
+      ['v332-hud-due-note',metrics.dueNote],['v332-hud-tax',metrics.tax],
+      ['v332-hud-tax-note',metrics.taxNote]])setText(id,value);
+    $('v332-hud-sales').closest('.v332-kpi').title=metrics.salesTitle;
+    $('v332-hud-result').closest('.v332-kpi').title=metrics.resultTitle;
+    $('v332-hud-stock').closest('.v332-kpi').title=metrics.stockTitle;
+    // Contador de recomendações nao existe antes do Patch C.
+    setText('v332-hud-advisory','—');
+  }
   function v31Render(){
     if(!state?.player?.cityId)return;
     const immersive=true;
@@ -7488,8 +7718,7 @@ function bindBalancePlan(){
     $('v31-backdrop').hidden=!immersiveOpen;
     $('v31-overlay-close').hidden=!immersiveOpen;
     document.body.classList.toggle('v31-lot-selected',!!inspectorOpen);
-    setText('v31-hud-cash',$('v221-hud-cash').textContent);
-    setText('v31-hud-date',$('v221-date-label').textContent);
+    v332RenderHud();
     v31CameraLoad(viewCityId);v31CameraApply();
     const city=CidadeV31ReadModel.readCity(state,{cityId:viewCityId,selectedLot});
     const owner=city.lots.find(x=>x.lot===selectedLot)?.unit;

@@ -1252,3 +1252,15 @@ body.v31-immersive :is(#v332-advisor-toggle,#v332-advisor-close,
     animation:none!important;
   }
 }
+
+/* Em monitores largos, os indicadores ocupam o HUD inteiro;
+   a arte do mapa mantém sua geometria nativa. */
+@media(min-width:1500px){
+  body.v31-immersive .v332-kpi{
+    flex:1 1 141px!important;
+    min-width:141px!important;
+  }
+  body.v31-immersive .v332-kpi strong{font-size:.95rem!important}
+  body.v31-immersive .v332-kpi small{font-size:.62rem!important}
+  body.v31-immersive .v332-kpi span{font-size:.58rem!important}
+}

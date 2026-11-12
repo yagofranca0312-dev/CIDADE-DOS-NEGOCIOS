@@ -112,6 +112,16 @@ for(const channel of ['chrome','msedge'])for(const {width,height} of v332GateDVi
     (cameraAlignment.speedTop+cameraAlignment.speedHeight/2))<8,'Camera e tempo desalinhados');
   assert.ok(cameraAlignment.primaryBottom<=cameraAlignment.secondaryTop+3,'Faixas sobrepostas');
   assert.ok(cameraAlignment.hudBottom<=geometry.map.y+12,'HUD invade mapa util');
+  if(width>=1500){
+    const metricsFill=await page.evaluate(()=>{
+      const strip=document.querySelector('.v332-kpi-strip');
+      const all=strip.querySelectorAll('.v332-kpi');
+      const end=all[all.length-1].getBoundingClientRect().right;
+      return {end,stripEnd:strip.getBoundingClientRect().right};
+    });
+    assert.ok(Math.abs(metricsFill.stripEnd-metricsFill.end)<=8,
+      'HUD desktop largo ainda deixou faixa vazia: '+JSON.stringify(metricsFill));
+  }
   const headerMetrics=await page.evaluate(async()=>{
     const raw=await CidadeDurableStore.readCurrent(CidadeCore),saved=CidadeCore.importSave(raw).state;
     const daily=CidadeCore.financialReport(saved,'day',saved.calendar.date);

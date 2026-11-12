@@ -121,7 +121,7 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   assert.equal(headerMetrics.cash,headerMetrics.expectedCash,'Caixa no HUD nao e o saldo');
   assert.equal(headerMetrics.daily,headerMetrics.expectedDaily,'Vendas do dia nao batem com ledger');
   assert.equal(headerMetrics.result,headerMetrics.expectedResult,'Resultado acumulado diverge do Core');
-  assert.equal(headerMetrics.advisory,'—','Nao inventar alertas antes do Patch C');
+  assert.equal(headerMetrics.advisory,'0','Sem empresa, a Central nao deve inventar pendencias');
   assert.ok(headerMetrics.hasUnits?headerMetrics.critical.includes('item'):headerMetrics.critical==='—','Estoque ativo nao e identificado');
   assert.ok(headerMetrics.due==='—'||/em 3 dias|vencida/.test(headerMetrics.due),'Prazo do painel sem evidencia');
   assert.equal(await page.locator('#v31-camera-label').textContent(),'100%');

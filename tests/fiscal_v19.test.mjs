@@ -128,7 +128,7 @@ test('V1.9: exportação e reimportação não reexecutam apuração',()=>{
 test('V1.9: não criar nova aba principal e versionamento uniforme em todos os pontos',()=>{
  const tpl=readFileSync('src/shell/index.template.html','utf8'),css=readFileSync('src/shell/theme.css','utf8');
  const ui=(readFileSync('src/ui/app.js','utf8')+readFileSync('src/ui/market-views.part.js','utf8')+readFileSync('src/ui/finance-views.part.js','utf8'));
- for(const id of ['intro-version','build-version','footer-version'])assert.ok(tpl.includes(`id="${id}">v3.3.1`));
+ for(const id of ['intro-version','build-version','footer-version'])assert.ok(tpl.includes(`id="${id}">v3.3.2`));
  assert.match(tpl,/<title>Cidade dos Negócios 1 · v3\.3\.2<\/title>/);
  for(const id of ['fiscal-status','fiscal-optin','fiscal-acknowledge','fiscal-assessments','fiscal-transition'])assert.ok(tpl.includes(`id="${id}"`));
  assert.match(ui,/function renderFiscal/);assert.match(ui,/FISCAL\.ALTERAR_REGIME/);assert.match(css,/fiscal-dashboard/);

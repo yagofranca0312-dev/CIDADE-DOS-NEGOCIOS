@@ -72,3 +72,16 @@ test('D-05: proteção econômica e ausência de operações automáticas',()=>{
   assert.match(html,/Dispensar oculta o aviso, mas não resolve a pendência/);
   assert.doesNotMatch(last,/display:none!important;\s*\/\* esconder mapa/);
 });
+
+test('D-06: loteamento preservado e controles de camera e acesso a areas existentes',()=>{
+ const scene=JSON.parse(readFileSync('src/visual/scenes/tiangua/lots.json','utf8'));
+ assert.equal(scene.lots.length,18);
+ assert.equal(new Set(scene.lots.map(l=>l.lot)).size,18);
+ for(const id of ['v31-camera-minus','v31-camera-label','v31-camera-plus','v31-camera-home',
+   'v31-hud-speed','v31-hud-pause','v31-next-day','v332-more-toggle']){
+  assert.equal((html.match(new RegExp('id="'+id+'"','g'))||[]).length,1,id);
+ }
+ assert.ok(html.includes('data-v332-route="mercado:outros" data-v332-focus="price-form"'));
+ assert.ok(html.includes('data-v332-route="mercado:compras" data-v332-focus="restock-assistant"'));
+ assert.ok(html.includes('data-v332-route="administrativo:fiscal"'));
+});

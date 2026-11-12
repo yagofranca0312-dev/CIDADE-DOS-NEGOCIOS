@@ -180,5 +180,5 @@ test('UI C: painel, historico, dispensar, KPI e rotas sem comando automatico',()
  assert.match(ui,/status:'dispensada'/);
  assert.match(ui,/v332RenderAdvisor\(\)/);
  assert.equal(Core.SCHEMA_VERSION,10);
- assert.equal(JSON.parse(readFileSync('package.json','utf8')).version,'3.3.1');
+ assert.equal(JSON.parse(readFileSync('package.json','utf8')).version,'3.3.2');
 });

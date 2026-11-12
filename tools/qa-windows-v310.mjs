@@ -7,10 +7,15 @@ import {chromium} from 'playwright';
 const url=pathToFileURL(resolve('index.html')).href,out=join(process.env.RUNNER_TEMP||tmpdir(),'v310-visual-evidence');
 mkdirSync(out,{recursive:true});
 const results=[];
-for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
+const v332GateDViewports=[
+ {width:320,height:700},{width:390,height:844},{width:430,height:932},
+ {width:768,height:1024},{width:1024,height:768},
+ {width:1366,height:768},{width:1920,height:1080}
+];
+for(const channel of ['chrome','msedge'])for(const {width,height} of v332GateDViewports){
  const folder=mkdtempSync(join(tmpdir(),'cidade-v310-'+channel+'-'));let ctx;
  try{
-  ctx=await chromium.launchPersistentContext(folder,{channel,headless:true,viewport:{width,height:width<600?844:900},isMobile:width<600,hasTouch:width<600});
+  ctx=await chromium.launchPersistentContext(folder,{channel,headless:true,viewport:{width,height},isMobile:width<600,hasTouch:width<600});
   const page=ctx.pages()[0]||await ctx.newPage(),errors=[];
   page.on('pageerror',e=>errors.push(e.message));
   await page.goto(url,{waitUntil:'load'});await page.waitForFunction(()=>document.body.dataset.storageReady==='ready');
@@ -107,6 +112,16 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
     (cameraAlignment.speedTop+cameraAlignment.speedHeight/2))<8,'Camera e tempo desalinhados');
   assert.ok(cameraAlignment.primaryBottom<=cameraAlignment.secondaryTop+3,'Faixas sobrepostas');
   assert.ok(cameraAlignment.hudBottom<=geometry.map.y+12,'HUD invade mapa util');
+  if(width>=1500){
+    const metricsFill=await page.evaluate(()=>{
+      const strip=document.querySelector('.v332-kpi-strip');
+      const all=strip.querySelectorAll('.v332-kpi');
+      const end=all[all.length-1].getBoundingClientRect().right;
+      return {end,stripEnd:strip.getBoundingClientRect().right};
+    });
+    assert.ok(Math.abs(metricsFill.stripEnd-metricsFill.end)<=8,
+      'HUD desktop largo ainda deixou faixa vazia: '+JSON.stringify(metricsFill));
+  }
   const headerMetrics=await page.evaluate(async()=>{
     const raw=await CidadeDurableStore.readCurrent(CidadeCore),saved=CidadeCore.importSave(raw).state;
     const daily=CidadeCore.financialReport(saved,'day',saved.calendar.date);
@@ -208,6 +223,30 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   await page.locator('#v332-advisor-toggle').click();
   assert.equal(await page.locator('#v332-advisor-drawer').isVisible(),true);
   assert.equal(await page.locator('#v332-advisor-toggle').getAttribute('aria-expanded'),'true');
+  // Gate D: o painel nao deve cobrir o HUD, inclusive em 320x700.
+  const dAdvisorGeom=await page.evaluate(()=>{
+    const drawer=document.getElementById('v332-advisor-drawer').getBoundingClientRect();
+    const hud=document.querySelector('.v332-hud').getBoundingClientRect();
+    return {drawerTop:drawer.top,drawerBottom:drawer.bottom,
+      drawerRight:drawer.right,hudBottom:hud.bottom,
+      viewportWidth:innerWidth,viewportHeight:innerHeight};
+  });
+  assert.ok(dAdvisorGeom.drawerTop>=dAdvisorGeom.hudBottom-12,
+    'Central expandida invade indicadores superiores: '+JSON.stringify(dAdvisorGeom));
+  assert.ok(dAdvisorGeom.drawerRight<=width+3,
+    'Central expandida ultrapassa margem da viewport');
+  await page.screenshot({path:join(out,channel+'-'+width+'-gate-d-advisor.png')});
+  if(width<=900){
+    const touchTargets=await page.evaluate(()=>[
+      '#v332-advisor-toggle','#v332-agenda-toggle',
+      '.v332-quick-actions button','#v332-more-toggle','#v31-hud-pause'
+    ].map(sel=>{
+      const el=document.querySelector(sel),r=el.getBoundingClientRect();
+      return {sel,w:r.width,h:r.height};
+    }));
+    for(const t of touchTargets)assert.ok(t.h>=38&&t.w>=28,
+      'Alvo de toque reduzido: '+JSON.stringify(touchTargets));
+  }
   assert.match(await page.locator('#v332-advisor-active-list').textContent(),
     /Nenhuma ação prioritária identificada/);
   await page.locator('#v332-advisor-history-tab').click();
@@ -221,8 +260,11 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   await page.locator('#v332-hud-advice-trigger').click();
   assert.equal(await page.locator('#v332-advisor-drawer').isVisible(),true,
     'Cartão de alertas do HUD não abre a Central');
-  await page.locator('#v332-advisor-close').click();
+  await page.locator('#v332-advisor-close').focus();
+  await page.keyboard.press('Enter');
   assert.equal(await page.locator('#v332-advisor-drawer').isVisible(),false);
+  assert.equal(await page.evaluate(()=>document.activeElement.id),'v332-hud-advice-trigger',
+    'Ao fechar via teclado, foco nao retornou ao botao que abriu a Central');
   const cAfter=await page.evaluate(async()=>{
     const raw=await CidadeDurableStore.readCurrent(CidadeCore);
     const st=CidadeCore.importSave(raw).state;
@@ -230,6 +272,8 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   });
   assert.deepEqual(cAfter,bBefore,
     'Central de Gestão, abas, histórico e navegação alteraram o save econômico');
+
+  await page.screenshot({path:join(out,channel+'-'+width+'-gate-d-city.png')});
 
   const bottomGeometry=await page.evaluate(()=>{
     const map=document.getElementById('map-canvas').getBoundingClientRect();
@@ -251,11 +295,35 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   await page.locator('#map-canvas [data-lot="10"]').click();
   assert.match(await page.locator('#selected-lot').textContent(),/Lote 10/);
   assert.equal(await page.locator('#v31-lot-quick').isVisible(),true);
-  const panBefore=await page.locator('#map-canvas').evaluate(el=>el.scrollLeft);
+  // Gate D: lote selecionado mantém ação de abrir empresa acima do dock.
+  const plotAction=await page.evaluate(()=>{
+    const inspector=document.getElementById('v221-inspector').getBoundingClientRect();
+    const action=document.getElementById('map-open-company').getBoundingClientRect();
+    const dockZone=document.getElementById('v332-bottom-zone').getBoundingClientRect();
+    return {inspectorBottom:inspector.bottom,actionBottom:action.bottom,
+      actionTop:action.top,bottomZoneTop:dockZone.top};
+  });
+  assert.ok(plotAction.inspectorBottom<=plotAction.bottomZoneTop+3,
+    'Inspetor de lote coberto pela barra inferior: '+JSON.stringify(plotAction));
+  assert.ok(plotAction.actionTop<plotAction.bottomZoneTop+3,
+    'Abrir empresa inacessível por toque: '+JSON.stringify(plotAction));
+  // Em paisagem/desktop baixo, 110% ainda pode ser menor que a viewport.
+  // Ampliar ate haver area rolavel, depois mover para o lado disponivel.
+  for(let k=0;k<9;k++){
+    const space=await page.locator('#map-canvas').evaluate(el=>el.scrollWidth-el.clientWidth);
+    if(space>30)break;
+    await page.locator('#v31-camera-plus').click();
+  }
+  const panBefore=await page.locator('#map-canvas').evaluate(el=>({
+    x:el.scrollLeft,range:el.scrollWidth-el.clientWidth
+  }));
+  assert.ok(panBefore.range>5,'Zoom nao criou area navegavel: '+JSON.stringify(panBefore));
   await page.locator('#map-canvas').focus();
-  await page.keyboard.press('ArrowRight');
-  const panAfter=await page.locator('#map-canvas').evaluate(el=>el.scrollLeft);
-  assert.ok(panAfter>panBefore,'Pan por teclado nao moveu a camera');
+  const panDirection=panBefore.x>=panBefore.range-2?'ArrowLeft':'ArrowRight';
+  await page.keyboard.press(panDirection);
+  await page.waitForFunction(({before})=>
+    Math.abs(document.getElementById('map-canvas').scrollLeft-before)>1,
+    {before:panBefore.x},{timeout:3000});
   // O seletor é SR-only fora do foco, mas é alcançável por Tab/teclado.
   await page.locator('#v221-inspector-close').click();
   const lotBefore=await page.evaluate(()=>{

@@ -24,7 +24,7 @@ test('V3.0-08: inventário possui oito checkpoints em ordem e 18 requisitos expl
 });
 
 test('V3.0-08: cores históricos e branch ainda não são release V3.0 homologada',()=>{
-  assert.equal(pkg.version,'3.3.1');
+  assert.equal(pkg.version,'3.3.2');
   assert.equal(evidence.stableBaseline.version,'2.9.0');
   assert.equal(evidence.stableBaseline.sha,'082faa4626cf5cb0fc54c9ef092bddd86ffce54c');
   assert.equal(evidence.mainAtAudit,'871df2b1cd133bcad717c0194a474a35fbabcd3c');

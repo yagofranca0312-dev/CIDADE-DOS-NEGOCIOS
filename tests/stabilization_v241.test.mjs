@@ -107,14 +107,14 @@ test('V3.0.0: novos controles ficam no HTML único e script compilado é sintati
   const tpl=readFileSync('src/shell/index.template.html','utf8');
   const app=readFileSync('src/ui/app.js','utf8'),html=readFileSync('index.html','utf8');
   const pkg=JSON.parse(readFileSync('package.json','utf8'));
-  assert.equal(pkg.version,'3.3.1');
+  assert.equal(pkg.version,'3.3.2');
   for(const id of ['payable-operating-form','payable-operating-unit','restore-prior-save-btn','safety-backup-status'])
     assert.ok(tpl.includes('id="'+id+'"'));
   assert.match(app,/SAFETY_KEY/);
   assert.match(app,/backupCurrent\(\)/);
   assert.match(app,/if\(!await persistDurable\(incoming\.state\)\)/);
   assert.match(app,/if\(!await persistDurable\(result\.state\)\)return false;/);
-  assert.match(html,/const VERSION = '3\.3\.1'/);
+  assert.match(html,/const VERSION = '3\.3\.2'/);
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];
   assert.equal(scripts.length,1);
   assert.doesNotThrow(()=>new Script(scripts[0][1]));

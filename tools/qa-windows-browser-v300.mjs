@@ -13,6 +13,7 @@ import {runInNewContext} from 'node:vm';
 import {createHash} from 'node:crypto';
 import {chromium} from 'playwright';
 
+const releaseVersion=JSON.parse(readFileSync('package.json','utf8')).version;
 const KEY='cidade-dos-negocios-save-v1';
 const webFile=resolve('index.html');
 const target=pathToFileURL(webFile).href;
@@ -54,7 +55,7 @@ async function open(context,errors){
   // file:// pode produzir resposta nula conforme versão do Playwright; prova é DOM + app.
   await page.locator('#career-form').waitFor({state:'attached',timeout:15000});
   await page.waitForFunction(()=>document.body.dataset.storageReady==='ready',{timeout:20000});
-  await page.waitForFunction(()=>document.title.includes('3.3.1'),{timeout:15000});
+  await page.waitForFunction(version=>document.title.includes(version),releaseVersion,{timeout:15000});
   return page;
 }
 function validateWindowsHosted(){

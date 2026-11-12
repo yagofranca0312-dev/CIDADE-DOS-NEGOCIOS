@@ -92,6 +92,6 @@ test('B-05: navegação de atalhos nao executa comando economico',()=>{
  assert.match(ui,/v332-agenda-toggle'\)\.addEventListener\('click'/);
  assert.match(ui,/v332-more-toggle'\)\.addEventListener\('click'/);
  assert.equal(Core.SCHEMA_VERSION,10);
- assert.equal(JSON.parse(readFileSync('package.json','utf8')).version,'3.3.1',
-  'candidata B nao pode publicar sem gate');
+ assert.equal(JSON.parse(readFileSync('package.json','utf8')).version,'3.3.2',
+  'release final V3.3.2 aprovado pelo titular');
 });

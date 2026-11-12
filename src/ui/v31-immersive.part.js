@@ -190,15 +190,21 @@
     if(!['empresa','mercado','administrativo','sistema'].includes(root)||
       (section&&!document.querySelector('[data-section-pane="'+root+':'+section+'"]')))return;
     v332MoreClose();
+    const fromTeam=!!button.closest('#v332-advisor-panel');
+    const source=fromTeam?$('v332-advisor-toggle'):button;
+    if(fromTeam){
+      v332AdviceExpanded=false;
+      v332RenderAdvisor();
+    }
     const needsUnit=button.dataset.v332Requires==='unit';
     if(needsUnit&&!Core.activeBusiness(state)){
       setText('v332-action-hint','Abra ou selecione uma empresa antes de usar este atalho.');
       notify('É necessário abrir ou selecionar uma empresa. Escolha um lote para começar.');
-      v31OpenPanel('empresa','dashboard',button);
+      v31OpenPanel('empresa','dashboard',source);
       return;
     }
     setText('v332-action-hint','Destino aberto para revisão. Nenhuma operação executada.');
-    v31OpenPanel(root,section||null,button);
+    v31OpenPanel(root,section||null,source);
     if(button.dataset.v332Focus){
       const target=$(button.dataset.v332Focus);
       const pane=document.querySelector('[data-section-pane="'+root+':'+section+'"]');
@@ -219,6 +225,7 @@
   let v332AdviceWorld=null,v332AdviceCacheKey=null,v332AdviceCache=[];
   let v332AdviceSeen=new Map(),v332AdviceDismissed=new Map(),v332AdviceHistory=[];
   let v332AdviceExpanded=false,v332AdviceTab='ativas',v332AdviceDetails=new Set();
+  let v332AdvisorReturnFocus=null;
 
   function v332AdviceCandidates(current){
     if(!current?.player?.cityId)return [];
@@ -300,6 +307,7 @@
       v332AdviceWorld=world;v332AdviceCacheKey=null;v332AdviceCache=[];
       v332AdviceSeen=new Map();v332AdviceDismissed=new Map();v332AdviceHistory=[];
       v332AdviceExpanded=false;v332AdviceTab='ativas';v332AdviceDetails=new Set();
+      v332AdvisorReturnFocus=null;
     }
     const active=Core.activeBusiness(state);
     const key=world+'|'+state.revision+'|'+(active?.id||'sem-unidade');
@@ -346,13 +354,15 @@
       const details=document.createElement('button');details.type='button';
       details.dataset.v332AdvisorDetail=item.id;details.textContent='Detalhes';
       details.setAttribute('aria-expanded',String(v332AdviceDetails.has(item.id)));
+      const detailId='v332-advisor-evidence-'+item.id.replace(/[^a-zA-Z0-9_-]/g,'_');
+      details.setAttribute('aria-controls',detailId);
       controls.appendChild(details);
       const dismiss=document.createElement('button');dismiss.type='button';
       dismiss.dataset.v332AdvisorDismiss=item.id;dismiss.textContent='Dispensar';
       dismiss.title='Ocultar apenas este aviso; não quita obrigações';
       controls.appendChild(dismiss);
       const proof=document.createElement('p');proof.className='v332-advisor-proof';
-      proof.textContent='Regra '+item.rule+' · data do jogo '+item.dateReference+
+      proof.id=detailId;proof.textContent='Regra '+item.rule+' · data do jogo '+item.dateReference+
         ' · evidência '+JSON.stringify(item.evidence);
       proof.hidden=!v332AdviceDetails.has(item.id);li.appendChild(proof);
     }else{
@@ -375,11 +385,15 @@
     $('v332-hud-advice-trigger').setAttribute('aria-expanded',String(v332AdviceExpanded));
     const preview=count?visible[0].role+': '+visible[0].title:
       'Nenhuma ação prioritária identificada neste momento.';
-    setText('v332-advisor-preview-text',preview);
+    // Evitar anúncios repetidos por leitores de tela em cada render do jogo.
+    const previewNode=$('v332-advisor-preview-text');
+    if(previewNode.textContent!==preview)previewNode.textContent=preview;
     $('v332-advisor-panel').dataset.severity=count?visible[0].severity:'normal';
     const drawer=$('v332-advisor-drawer');drawer.hidden=!v332AdviceExpanded;
     $('v332-advisor-toggle').setAttribute('aria-expanded',String(v332AdviceExpanded));
     $('v332-advisor-toggle').textContent=v332AdviceExpanded?'Recolher ▾':'Ver equipe ▴';
+    // Quando fechada, a lista de cards não precisa ser recriada a cada turno.
+    if(!v332AdviceExpanded)return;
     const isHistory=v332AdviceTab==='historico';
     $('v332-advisor-active-tab').setAttribute('aria-pressed',String(!isHistory));
     $('v332-advisor-history-tab').setAttribute('aria-pressed',String(isHistory));
@@ -401,13 +415,17 @@
 
   function v332AdvisorCollapse(){
     v332AdviceExpanded=false;v332RenderAdvisor();
-    $('v332-advisor-toggle').focus();
+    const target=v332AdvisorReturnFocus?.isConnected?v332AdvisorReturnFocus:
+      $('v332-advisor-toggle');
+    v332AdvisorReturnFocus=null;target.focus({preventScroll:true});
   }
   function v332AdvisorExpand(){
+    if(!v332AdviceExpanded)v332AdvisorReturnFocus=document.activeElement;
     v332AdviceExpanded=!v332AdviceExpanded;
     if(v332AdviceExpanded)v332MoreClose();
     v332RenderAdvisor();
-    if(v332AdviceExpanded)$('v332-advisor-close').focus();
+    if(v332AdviceExpanded)$('v332-advisor-close').focus({preventScroll:true});
+    else v332AdvisorCollapse();
   }
 
   function v31Render(){
@@ -640,7 +658,12 @@
       if(detail){
         const id=detail.dataset.v332AdvisorDetail;
         if(v332AdviceDetails.has(id))v332AdviceDetails.delete(id);else v332AdviceDetails.add(id);
-        v332RenderAdvisor();return;
+        v332RenderAdvisor();
+        // O render recria o card; devolver o foco ao mesmo botao de detalhes.
+        const next=[...$('v332-advisor-active-list').querySelectorAll('[data-v332-advisor-detail]')]
+          .find(node=>node.dataset.v332AdvisorDetail===id);
+        next?.focus({preventScroll:true});
+        return;
       }
       const dismiss=event.target.closest('[data-v332-advisor-dismiss]');
       if(dismiss){
@@ -650,6 +673,9 @@
         v332AdviceHistory.unshift({...item,status:'dispensada',resolutionDate:state.calendar.date});
         v332AdviceHistory=v332AdviceHistory.slice(0,80);
         v332RenderAdvisor();
+        // O aviso foi dispensado; manter o teclado dentro da lista, sem foco perdido.
+        const next=$('v332-advisor-active-list').querySelector('[data-v332-route]');
+        (next||$('v332-advisor-active-tab')).focus({preventScroll:true});
         return;
       }
     });
@@ -664,12 +690,14 @@
       if(route){event.preventDefault();v332ShortcutOpen(route);}
     });
     $('v332-more-toggle').addEventListener('click',()=>{
+      if(v332AdviceExpanded){v332AdviceExpanded=false;v332RenderAdvisor();}
       const menu=$('v332-more-menu');
       menu.hidden=!menu.hidden;
       $('v332-more-toggle').setAttribute('aria-expanded',String(!menu.hidden));
       if(!menu.hidden)menu.querySelector('button')?.focus();
     });
     $('v332-agenda-toggle').addEventListener('click',()=>{
+      if(v332AdviceExpanded){v332AdviceExpanded=false;v332RenderAdvisor();}
       const list=$('v332-agenda-list');list.hidden=!list.hidden;
       $('v332-agenda-toggle').setAttribute('aria-expanded',String(!list.hidden));
     });

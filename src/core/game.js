@@ -1,7 +1,7 @@
 /* Cidade dos Negócios 1 — núcleo puro, sem DOM e sem rede. v3.0.0 — Patch A Economia e Balanceamento */
 const CidadeCore = (() => {
   'use strict';
-  const VERSION = '3.3.1';
+  const VERSION = '3.3.2';
   const SCHEMA_VERSION = 10;
   const START_DATE = '2026-11-01';
   const MAX_SAVE_CHARS = 25_000_000;

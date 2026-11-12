@@ -13,6 +13,7 @@ test('D-01: nenhuma mudanca na arte ou no save e mapa matematicamente integral',
   assert.equal(JSON.parse(readFileSync('package.json','utf8')).version,'3.3.1');
   assert.equal(Core.SCHEMA_VERSION,10);
   assert.match(last,/V3\.3\.2-D/);
+  assert.match(last,/@media\(min-width:1500px\)/,'Desktop largo deve preencher cartões, não escalar mapa');
   assert.doesNotMatch(last,/(object-fit:cover|object-fit:fill|transform:scale\(|viewBox=)/);
   const screens=[[320,700],[390,844],[430,932],[768,1024],[1024,768],[1366,768],[1920,1080]];
   for(const [w,h] of screens){

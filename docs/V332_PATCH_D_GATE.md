@@ -10,6 +10,7 @@
 - Ajuste de alvos de toque no mobile: tempo/câmera, ações rápidas, Agenda e Central de Gestão.
 - Em desktop largo (a partir de 1500 px), distribuição proporcional da largura dos cartões superiores para remover espaço ocioso, sem mudar a proporção do SVG.
 - Painel expandido limitado pela área entre HUD e barra inferior, reduzindo sobreposição.
+- Inspetor de lote e drawers da cidade reposicionados acima da barra inferior: o comando **Abrir unidade neste lote** fica tocável em tablet/mobile.
 - Restauração de foco em controles de teclado ao fechar a equipe, exibir evidência, dispensar avisos e voltar da função aberta.
 - Prevenir sobreposição da Central com os painéis `Mais` e `Agenda`.
 - Sem recriar elementos de lista enquanto a Central estiver recolhida. Prévia com `aria-live` muda apenas quando o texto mudar.

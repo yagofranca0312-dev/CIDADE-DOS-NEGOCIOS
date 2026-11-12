@@ -295,6 +295,18 @@ for(const channel of ['chrome','msedge'])for(const {width,height} of v332GateDVi
   await page.locator('#map-canvas [data-lot="10"]').click();
   assert.match(await page.locator('#selected-lot').textContent(),/Lote 10/);
   assert.equal(await page.locator('#v31-lot-quick').isVisible(),true);
+  // Gate D: lote selecionado mantém ação de abrir empresa acima do dock.
+  const plotAction=await page.evaluate(()=>{
+    const inspector=document.getElementById('v221-inspector').getBoundingClientRect();
+    const action=document.getElementById('map-open-company').getBoundingClientRect();
+    const dockZone=document.getElementById('v332-bottom-zone').getBoundingClientRect();
+    return {inspectorBottom:inspector.bottom,actionBottom:action.bottom,
+      actionTop:action.top,bottomZoneTop:dockZone.top};
+  });
+  assert.ok(plotAction.inspectorBottom<=plotAction.bottomZoneTop+3,
+    'Inspetor de lote coberto pela barra inferior: '+JSON.stringify(plotAction));
+  assert.ok(plotAction.actionTop<plotAction.bottomZoneTop+3,
+    'Abrir empresa inacessível por toque: '+JSON.stringify(plotAction));
   // Em paisagem/desktop baixo, 110% ainda pode ser menor que a viewport.
   // Ampliar ate haver area rolavel, depois mover para o lado disponivel.
   for(let k=0;k<9;k++){

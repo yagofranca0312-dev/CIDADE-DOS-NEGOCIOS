@@ -285,11 +285,23 @@ for(const channel of ['chrome','msedge'])for(const {width,height} of v332GateDVi
   await page.locator('#map-canvas [data-lot="10"]').click();
   assert.match(await page.locator('#selected-lot').textContent(),/Lote 10/);
   assert.equal(await page.locator('#v31-lot-quick').isVisible(),true);
-  const panBefore=await page.locator('#map-canvas').evaluate(el=>el.scrollLeft);
+  // Em paisagem/desktop baixo, 110% ainda pode ser menor que a viewport.
+  // Ampliar ate haver area rolavel, depois mover para o lado disponivel.
+  for(let k=0;k<9;k++){
+    const space=await page.locator('#map-canvas').evaluate(el=>el.scrollWidth-el.clientWidth);
+    if(space>30)break;
+    await page.locator('#v31-camera-plus').click();
+  }
+  const panBefore=await page.locator('#map-canvas').evaluate(el=>({
+    x:el.scrollLeft,range:el.scrollWidth-el.clientWidth
+  }));
+  assert.ok(panBefore.range>5,'Zoom nao criou area navegavel: '+JSON.stringify(panBefore));
   await page.locator('#map-canvas').focus();
-  await page.keyboard.press('ArrowRight');
-  const panAfter=await page.locator('#map-canvas').evaluate(el=>el.scrollLeft);
-  assert.ok(panAfter>panBefore,'Pan por teclado nao moveu a camera');
+  const panDirection=panBefore.x>=panBefore.range-2?'ArrowLeft':'ArrowRight';
+  await page.keyboard.press(panDirection);
+  await page.waitForFunction(({before})=>
+    Math.abs(document.getElementById('map-canvas').scrollLeft-before)>1,
+    {before:panBefore.x},{timeout:3000});
   // O seletor é SR-only fora do foco, mas é alcançável por Tab/teclado.
   await page.locator('#v221-inspector-close').click();
   const lotBefore=await page.evaluate(()=>{

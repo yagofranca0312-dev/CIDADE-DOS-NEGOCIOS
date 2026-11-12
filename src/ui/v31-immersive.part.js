@@ -128,6 +128,91 @@
     // Contador de recomendações nao existe antes do Patch C.
     setText('v332-hud-advisory','—');
   }
+
+  // V3.3.2-B: agenda deterministica, somente itens com vencimentos no calendario.
+  function v332AgendaItems(current){
+    if(!current?.player?.cityId)return [];
+    const today=current.calendar.date,rows=[];
+    const fromFinance=Core.financialCommitmentsReport(current,30).events;
+    for(const event of fromFinance){
+      if(!['LOAN_SCHEDULE','LOAN_DUE','SUPPLIER_COMMITMENT'].includes(event.kind))continue;
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(event.date)||event.amountCents<=0)continue;
+      const kind=event.kind==='LOAN_DUE'?'Parcela exigível':
+        event.kind==='LOAN_SCHEDULE'?'Parcela prevista':'Compra contratada';
+      rows.push({id:event.kind+'|'+event.id+'|'+event.date,
+        date:event.date,label:kind+' · '+Core.money(event.amountCents),
+        route:'administrativo:financas',focus:'credit-calendar-summary'});
+    }
+    for(const tax of current.fiscal?.assessments||[]){
+      if(!['OPEN','OVERDUE'].includes(tax.status)||tax.amount<=tax.paid||!/^\d{4}-\d{2}-\d{2}$/.test(tax.dueDate))continue;
+      rows.push({id:'TAX|'+tax.id,date:tax.dueDate,
+        label:'Guia simulada '+tax.period+' · '+Core.money(tax.amount-tax.paid),
+        route:'administrativo:fiscal',focus:'v23-pane-administrativo-fiscal'});
+    }
+    const op=Core.fiscalOperationsReport(current);
+    for(const unit of op.units)for(const period of unit.periods){
+      if(period.closed||!/^\d{4}-\d{2}-\d{2}$/.test(period.dueDate))continue;
+      rows.push({id:'FIS-OP|'+unit.businessId+'|'+period.period,date:period.dueDate,
+        label:'Checklist fiscal '+period.period+' · '+unit.businessId,
+        route:'administrativo:fiscal',focus:'v23-pane-administrativo-fiscal'});
+    }
+    const severity=date=>date<today?0:date===today?1:2;
+    return rows.sort((a,b)=>severity(a.date)-severity(b.date)||
+      a.date.localeCompare(b.date)||a.id.localeCompare(b.id)).slice(0,3);
+  }
+  function v332RenderAgenda(){
+    const list=$('v332-agenda-list');if(!list)return;
+    const items=v332AgendaItems(state),today=state.calendar.date;
+    list.replaceChildren();
+    if(!items.length){
+      const li=document.createElement('li');
+      li.textContent='Nenhum compromisso com data confirmada na agenda.';
+      list.appendChild(li);
+    }else for(const item of items){
+      const li=document.createElement('li');
+      const button=document.createElement('button');button.type='button';
+      button.dataset.v332Route=item.route;button.dataset.v332Focus=item.focus;
+      button.textContent=(item.date<today?'Vencido · ':item.date===today?'Hoje · ':'Previsto · ')+
+        item.date.split('-').reverse().join('/')+' · '+item.label;
+      button.title='Abrir '+item.route.replace(':',' / ');
+      li.appendChild(button);list.appendChild(li);
+    }
+    const count=items.length;
+    $('v332-agenda-toggle').textContent='Agenda'+(count?' ('+count+')':'')+' ▾';
+  }
+  function v332MoreClose(){
+    $('v332-more-menu').hidden=true;
+    $('v332-more-toggle').setAttribute('aria-expanded','false');
+  }
+  function v332ShortcutOpen(button){
+    if(!state)return;
+    const [root,section]=String(button.dataset.v332Route||'').split(':');
+    if(!['empresa','mercado','administrativo','sistema'].includes(root)||
+      (section&&!document.querySelector('[data-section-pane="'+root+':'+section+'"]')))return;
+    v332MoreClose();
+    const needsUnit=button.dataset.v332Requires==='unit';
+    if(needsUnit&&!Core.activeBusiness(state)){
+      setText('v332-action-hint','Abra ou selecione uma empresa antes de usar este atalho.');
+      notify('É necessário abrir ou selecionar uma empresa. Escolha um lote para começar.');
+      v31OpenPanel('empresa','dashboard',button);
+      return;
+    }
+    setText('v332-action-hint','Destino aberto para revisão. Nenhuma operação executada.');
+    v31OpenPanel(root,section||null,button);
+    if(button.dataset.v332Focus){
+      const target=$(button.dataset.v332Focus);
+      const pane=document.querySelector('[data-section-pane="'+root+':'+section+'"]');
+      if(target&&target.getClientRects().length&&(!pane||pane.contains(target)||target===pane)){
+        const focusable=target.matches('input,select,button,textarea')?target:
+          target.querySelector('input:not([disabled]),select:not([disabled]),button:not([disabled]),textarea:not([disabled])');
+        const focus=focusable||target;
+        if(!focusable)focus.setAttribute('tabindex','-1');
+        focus.scrollIntoView({block:'start',behavior:'instant'});
+        focus.focus({preventScroll:true});
+      }
+    }
+  }
+
   function v31Render(){
     if(!state?.player?.cityId)return;
     const immersive=true;
@@ -138,6 +223,7 @@
     $('v31-overlay-close').hidden=!immersiveOpen;
     document.body.classList.toggle('v31-lot-selected',!!inspectorOpen);
     v332RenderHud();
+    v332RenderAgenda();
     v31CameraLoad(viewCityId);v31CameraApply();
     const city=CidadeV31ReadModel.readCity(state,{cityId:viewCityId,selectedLot});
     const owner=city.lots.find(x=>x.lot===selectedLot)?.unit;
@@ -343,6 +429,26 @@
     });
     saves.prepend($('v221-city-pick'));
     saves.prepend(cityAction);
+    // Os novos atalhos nao despacham comandos de negocio; apenas navegam e focam.
+    $('v332-bottom-zone').addEventListener('click',event=>{
+      const route=event.target.closest('[data-v332-route]');
+      if(route){event.preventDefault();v332ShortcutOpen(route);}
+    });
+    $('v332-more-toggle').addEventListener('click',()=>{
+      const menu=$('v332-more-menu');
+      menu.hidden=!menu.hidden;
+      $('v332-more-toggle').setAttribute('aria-expanded',String(!menu.hidden));
+      if(!menu.hidden)menu.querySelector('button')?.focus();
+    });
+    $('v332-agenda-toggle').addEventListener('click',()=>{
+      const list=$('v332-agenda-list');list.hidden=!list.hidden;
+      $('v332-agenda-toggle').setAttribute('aria-expanded',String(!list.hidden));
+    });
+    document.addEventListener('keydown',event=>{
+      if(event.key==='Escape'&&!$('v332-more-menu').hidden){
+        event.preventDefault();v332MoreClose();$('v332-more-toggle').focus();
+      }
+    });
     for(const button of document.querySelectorAll('[data-v31-open]')){
       button.addEventListener('click',()=>{
         const [root,section]=button.dataset.v31Open.split(':');

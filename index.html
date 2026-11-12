@@ -1737,6 +1737,142 @@ body.v31-immersive #map-canvas>svg.v22-city-svg{
   body.v31-immersive .v31-top-controls .v332-hud-secondary .v31-camera{padding-left:6px!important;gap:3px!important}
 }
 
+/* V3.3.2-B — dock e agenda empresarial. O mapa usa a MESMA proporcao do Patch A. */
+body.v31-immersive{--v332-map-bottom:174px}
+body.v31-immersive .v332-bottom-zone{
+  position:fixed!important;left:0!important;right:0!important;bottom:0!important;
+  z-index:155!important;box-sizing:border-box!important;
+  width:100vw!important;height:158px!important;
+  display:grid!important;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important;
+  align-items:end!important;column-gap:8px!important;
+  padding:5px 12px calc(9px + env(safe-area-inset-bottom))!important;
+  background:linear-gradient(to top,rgba(4,21,34,.88),rgba(4,21,34,.28) 85%,transparent)!important;
+  pointer-events:none!important;
+}
+body.v31-immersive .v332-bottom-zone>*{pointer-events:auto}
+body.v31-immersive .v332-ops-panel{
+  align-self:end;justify-self:stretch;grid-column:1;min-width:0;max-width:312px;
+  box-sizing:border-box;padding:8px 9px;border-radius:13px;
+  background:rgba(7,32,48,.93);border:1px solid #688c98;
+  box-shadow:0 10px 26px #0008;color:#eaf4f5;
+}
+.v332-ops-heading{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px}
+.v332-ops-heading strong{font-size:.73rem;color:#f7dfa9;white-space:nowrap}
+body.v31-immersive .v332-ops-heading button{
+  padding:3px 6px;min-height:28px;border:1px solid #7295a4;border-radius:6px;
+  color:#e9f3f6;background:#174258;font-size:.61rem;font-weight:750;
+}
+.v332-quick-actions{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;
+}
+body.v31-immersive .v332-quick-actions button{
+  display:flex;justify-content:flex-start;align-items:center;gap:5px;
+  white-space:nowrap;min-height:35px;min-width:0;
+  padding:5px 7px;border-radius:7px;border:1px solid #638b99;
+  background:#123b51;color:#f7ebce;font-size:.64rem;font-weight:780;
+}
+.v332-action-hint{font-size:.51rem;line-height:1.3;margin:6px 0 0;color:#bbd1da}
+.v332-agenda-list[hidden],.v332-more-menu[hidden]{display:none!important}
+.v332-agenda-list{
+  position:absolute;bottom:calc(100% + 4px);left:12px;
+  box-sizing:border-box;width:min(345px,calc(100vw - 24px));max-height:40dvh;
+  overflow:auto;display:flex;flex-direction:column;gap:4px;
+  background:#0b2b40;border:1px solid #8fb0b8;border-radius:11px;
+  box-shadow:0 12px 32px #000b;list-style:none;margin:0;padding:9px;z-index:159;
+}
+.v332-agenda-list li{font-size:.69rem;color:#d5e6ea}
+body.v31-immersive .v332-agenda-list li button{
+  width:100%;padding:8px;min-height:39px;text-align:left;
+  border-radius:7px;border:1px solid #527f90;background:#143b50;color:#f0e7cc;
+  font-size:.7rem;
+}
+body.v31-immersive #v31-dock[data-v332-dock]{
+  position:relative!important;grid-column:2;align-self:end;justify-self:center;
+  left:auto!important;right:auto!important;bottom:auto!important;top:auto!important;
+  transform:none!important;box-sizing:border-box!important;z-index:155!important;
+  display:flex!important;flex-wrap:nowrap!important;align-items:center;gap:4px!important;
+  max-width:min(850px,calc(100vw - 590px))!important;
+  width:max-content!important;min-width:0;overflow-x:auto;overflow-y:hidden;
+  scrollbar-width:none;overscroll-behavior-x:contain;
+  padding:6px!important;border-radius:13px!important;
+}
+body.v31-immersive #v31-dock[data-v332-dock]::-webkit-scrollbar{display:none}
+body.v31-immersive #v31-dock[data-v332-dock] button{
+  flex:0 0 auto!important;min-width:62px!important;min-height:58px!important;
+  padding:4px 6px!important;font-size:.60rem!important;white-space:nowrap;
+}
+body.v31-immersive #v31-dock[data-v332-dock] button span{font-size:1.10rem}
+.v332-bottom-reserve{grid-column:3;min-width:0;pointer-events:none!important}
+body.v31-immersive .v332-more-menu{
+  position:absolute;bottom:calc(100% - 12px);right:14px;
+  z-index:170;box-sizing:border-box;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px;width:min(390px,calc(100vw - 28px));max-height:60dvh;overflow:auto;
+  padding:10px;background:#0b293f;border:1px solid #93b6bc;border-radius:12px;
+  box-shadow:0 16px 38px #000b;
+}
+body.v31-immersive .v332-more-menu button{
+  min-height:42px;border:1px solid #557c8e;border-radius:8px;
+  background:#163a52;color:#f0eaca;padding:7px;font-size:.75rem;font-weight:750;
+}
+body.v31-immersive .v332-ops-panel button:focus-visible,
+body.v31-immersive .v332-more-menu button:focus-visible,
+body.v31-immersive #v31-dock[data-v332-dock] button:focus-visible,
+body.v31-immersive .v332-agenda-list button:focus-visible{
+  outline:2px solid #ffe3aa;outline-offset:2px;
+}
+@media(max-width:1250px){
+  body.v31-immersive #v31-dock[data-v332-dock]{max-width:min(690px,calc(100vw - 480px))!important}
+  body.v31-immersive .v332-ops-panel{max-width:250px}
+  body.v31-immersive #v31-dock[data-v332-dock] button{min-width:54px!important;font-size:.54rem!important}
+}
+@media(max-width:900px){
+  body.v31-immersive{--v332-map-bottom:157px}
+  body.v31-immersive .v332-bottom-zone{
+    height:150px!important;display:flex!important;flex-direction:column!important;
+    justify-content:flex-end!important;align-items:stretch!important;
+    gap:5px!important;padding:4px 6px calc(5px + env(safe-area-inset-bottom))!important;
+  }
+  body.v31-immersive .v332-ops-panel{
+    align-self:stretch!important;max-width:none!important;padding:5px 7px!important;
+    display:flex;flex-direction:column;gap:3px;
+  }
+  .v332-ops-heading{margin:0}
+  .v332-ops-heading strong{font-size:.66rem}
+  body.v31-immersive .v332-ops-heading button{min-height:22px;font-size:.56rem}
+  .v332-quick-actions{
+    display:flex;gap:5px;width:100%;overflow-x:auto;overflow-y:hidden;
+    scrollbar-width:none;overscroll-behavior-x:contain;
+  }
+  .v332-quick-actions::-webkit-scrollbar{display:none}
+  body.v31-immersive .v332-quick-actions button{
+    flex:0 0 auto;min-width:104px;min-height:33px;font-size:.62rem;
+    justify-content:center;padding:4px 7px;
+  }
+  .v332-action-hint{display:none}
+  body.v31-immersive #v31-dock[data-v332-dock]{
+    width:100%!important;max-width:100%!important;
+    flex:0 0 auto!important;min-height:53px!important;
+    justify-content:space-between!important;gap:3px!important;padding:4px!important;
+  }
+  body.v31-immersive #v31-dock[data-v332-dock] button:not(.v332-dock-extra){
+    flex:1 1 0!important;min-width:0!important;min-height:49px!important;
+    font-size:.56rem!important;padding:3px 2px!important;
+  }
+  body.v31-immersive #v31-dock[data-v332-dock] .v332-dock-extra{display:none!important}
+  body.v31-immersive .v332-bottom-reserve{display:none!important}
+  body.v31-immersive .v332-more-menu{
+    right:6px!important;bottom:calc(100% - 6px)!important;
+    width:min(360px,calc(100vw - 12px));
+  }
+  .v332-agenda-list{left:6px;bottom:calc(100% + 3px)}
+}
+@media(max-width:360px){
+  body.v31-immersive #v31-dock[data-v332-dock] button:not(.v332-dock-extra){
+    font-size:.48rem!important;min-height:48px!important;
+  }
+  body.v31-immersive .v332-ops-panel{padding:4px 5px!important}
+}
+
 /* V3.2 fiscal: classes novas, sem modificar o CSS imersivo da V3.1. */
 .fiscal-v32-section{margin:8px 0 18px;padding:16px}
 .fiscal-v32-section .panel-heading h3{font-size:1.08rem}
@@ -1930,13 +2066,48 @@ body.v31-immersive #map-canvas>svg.v22-city-svg{
               <button type="button" data-v31-open="administrativo:financas">Finanças</button>
             </div>
           </div>
-          <nav class="v31-dock" id="v31-dock" aria-label="Dock imersivo" hidden>
-            <button type="button" data-v31-open="empresa:dashboard"><span aria-hidden="true">▣</span>Empresas</button>
-            <button type="button" data-v31-open="mercado:compras"><span aria-hidden="true">⇅</span>Mercado</button>
-            <button type="button" data-v31-open="administrativo:rh-dp"><span aria-hidden="true">▥</span>Administrativo</button>
-            <button type="button" data-v31-open="administrativo:contabilidade"><span aria-hidden="true">▤</span>Relatórios</button>
-            <button type="button" data-v31-open="sistema"><span aria-hidden="true">⚙</span>Configurações</button>
-          </nav>
+          <!-- V3.3.2-B: agenda compacta e atalhos. Somente roteamento, sem comandos econômicos. -->
+          <div class="v332-bottom-zone" id="v332-bottom-zone" aria-label="Agenda e navegação empresarial">
+            <section class="v332-ops-panel" aria-label="Agenda e ações rápidas">
+              <div class="v332-ops-heading">
+                <strong>Agenda &amp; Ações Rápidas</strong>
+                <button type="button" id="v332-agenda-toggle" aria-expanded="false" aria-controls="v332-agenda-list" title="Expandir ou recolher a agenda">Agenda ▾</button>
+              </div>
+              <ul id="v332-agenda-list" class="v332-agenda-list" aria-label="Compromissos datados da carreira" hidden>
+                <li>Nenhum compromisso confirmado.</li>
+              </ul>
+              <div class="v332-quick-actions" role="group" aria-label="Atalhos para tarefas frequentes">
+                <button type="button" data-v332-route="mercado:compras" data-v332-focus="restock-assistant" data-v332-requires="unit"><span aria-hidden="true">📦</span> Repor Estoque</button>
+                <button type="button" data-v332-route="administrativo:financas" data-v332-focus="payable-operating-form"><span aria-hidden="true">▤</span> Pagar Contas</button>
+                <button type="button" data-v332-route="mercado:outros" data-v332-focus="price-form" data-v332-requires="unit"><span aria-hidden="true">＄</span> Preços</button>
+                <button type="button" data-v332-route="administrativo:fiscal" data-v332-focus="v23-pane-administrativo-fiscal"><span aria-hidden="true">🧾</span> Fiscal</button>
+              </div>
+              <p id="v332-action-hint" class="v332-action-hint" role="status" aria-live="polite">Os atalhos abrem formulários; nenhuma ação é executada automaticamente.</p>
+            </section>
+            <nav class="v31-dock" data-v332-dock="true" id="v31-dock" aria-label="Navegação empresarial" hidden>
+              <button type="button" data-v31-open="empresa:dashboard"><span aria-hidden="true">▣</span>Empresas</button>
+              <button type="button" data-v31-open="mercado:compras"><span aria-hidden="true">⇅</span>Mercado</button>
+              <button type="button" class="v332-dock-extra" data-v332-route="mercado:compras" data-v332-focus="restock-assistant" data-v332-requires="unit"><span aria-hidden="true">🛒</span>Compras</button>
+              <button type="button" class="v332-dock-extra" data-v332-route="mercado:estoque" data-v332-requires="unit"><span aria-hidden="true">▥</span>Estoque</button>
+              <button type="button" class="v332-dock-extra" data-v332-route="administrativo:financas"><span aria-hidden="true">＄</span>Financeiro</button>
+              <button type="button" class="v332-dock-extra" data-v332-route="administrativo:fiscal"><span aria-hidden="true">▤</span>Fiscal</button>
+              <button type="button" class="v332-dock-extra" data-v332-route="mercado:outros" data-v332-focus="price-form" data-v332-requires="unit"><span aria-hidden="true">％</span>Preços</button>
+              <button type="button" data-v31-open="administrativo:rh-dp"><span aria-hidden="true">▥</span>Administrativo</button>
+              <button type="button" data-v31-open="administrativo:contabilidade"><span aria-hidden="true">▤</span>Relatórios</button>
+              <button type="button" data-v31-open="sistema"><span aria-hidden="true">⚙</span>Configurações</button>
+              <button type="button" id="v332-more-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="v332-more-menu"><span aria-hidden="true">☷</span>Mais</button>
+            </nav>
+            <div class="v332-bottom-reserve" aria-hidden="true"></div>
+            <div class="v332-more-menu" id="v332-more-menu" role="group" aria-label="Mais funções da carreira" hidden>
+              <button type="button" data-v332-route="mercado:compras" data-v332-focus="restock-assistant" data-v332-requires="unit">Compras / Reposição</button>
+              <button type="button" data-v332-route="mercado:estoque" data-v332-requires="unit">Estoque</button>
+              <button type="button" data-v332-route="mercado:outros" data-v332-focus="price-form" data-v332-requires="unit">Alterar preços</button>
+              <button type="button" data-v332-route="administrativo:financas" data-v332-focus="payable-operating-form">Financeiro / Contas</button>
+              <button type="button" data-v332-route="administrativo:fiscal">Fiscal</button>
+              <button type="button" data-v332-route="administrativo:contabilidade">Relatórios</button>
+              <button type="button" data-v332-route="sistema:saves">Configurações e backup</button>
+            </div>
+          </div>
           <button type="button" class="v31-overlay-close" id="v31-overlay-close" aria-label="Fechar janela e voltar à cidade" title="Fechar janela" hidden>✕</button>
         </section>
         <section data-view="empresa" class="view" hidden><header class="v31-command-header" data-v31-header="empresa">
@@ -7709,6 +7880,91 @@ function bindBalancePlan(){
     // Contador de recomendações nao existe antes do Patch C.
     setText('v332-hud-advisory','—');
   }
+
+  // V3.3.2-B: agenda deterministica, somente itens com vencimentos no calendario.
+  function v332AgendaItems(current){
+    if(!current?.player?.cityId)return [];
+    const today=current.calendar.date,rows=[];
+    const fromFinance=Core.financialCommitmentsReport(current,30).events;
+    for(const event of fromFinance){
+      if(!['LOAN_SCHEDULE','LOAN_DUE','SUPPLIER_COMMITMENT'].includes(event.kind))continue;
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(event.date)||event.amountCents<=0)continue;
+      const kind=event.kind==='LOAN_DUE'?'Parcela exigível':
+        event.kind==='LOAN_SCHEDULE'?'Parcela prevista':'Compra contratada';
+      rows.push({id:event.kind+'|'+event.id+'|'+event.date,
+        date:event.date,label:kind+' · '+Core.money(event.amountCents),
+        route:'administrativo:financas',focus:'credit-calendar-summary'});
+    }
+    for(const tax of current.fiscal?.assessments||[]){
+      if(!['OPEN','OVERDUE'].includes(tax.status)||tax.amount<=tax.paid||!/^\d{4}-\d{2}-\d{2}$/.test(tax.dueDate))continue;
+      rows.push({id:'TAX|'+tax.id,date:tax.dueDate,
+        label:'Guia simulada '+tax.period+' · '+Core.money(tax.amount-tax.paid),
+        route:'administrativo:fiscal',focus:'v23-pane-administrativo-fiscal'});
+    }
+    const op=Core.fiscalOperationsReport(current);
+    for(const unit of op.units)for(const period of unit.periods){
+      if(period.closed||!/^\d{4}-\d{2}-\d{2}$/.test(period.dueDate))continue;
+      rows.push({id:'FIS-OP|'+unit.businessId+'|'+period.period,date:period.dueDate,
+        label:'Checklist fiscal '+period.period+' · '+unit.businessId,
+        route:'administrativo:fiscal',focus:'v23-pane-administrativo-fiscal'});
+    }
+    const severity=date=>date<today?0:date===today?1:2;
+    return rows.sort((a,b)=>severity(a.date)-severity(b.date)||
+      a.date.localeCompare(b.date)||a.id.localeCompare(b.id)).slice(0,3);
+  }
+  function v332RenderAgenda(){
+    const list=$('v332-agenda-list');if(!list)return;
+    const items=v332AgendaItems(state),today=state.calendar.date;
+    list.replaceChildren();
+    if(!items.length){
+      const li=document.createElement('li');
+      li.textContent='Nenhum compromisso com data confirmada na agenda.';
+      list.appendChild(li);
+    }else for(const item of items){
+      const li=document.createElement('li');
+      const button=document.createElement('button');button.type='button';
+      button.dataset.v332Route=item.route;button.dataset.v332Focus=item.focus;
+      button.textContent=(item.date<today?'Vencido · ':item.date===today?'Hoje · ':'Previsto · ')+
+        item.date.split('-').reverse().join('/')+' · '+item.label;
+      button.title='Abrir '+item.route.replace(':',' / ');
+      li.appendChild(button);list.appendChild(li);
+    }
+    const count=items.length;
+    $('v332-agenda-toggle').textContent='Agenda'+(count?' ('+count+')':'')+' ▾';
+  }
+  function v332MoreClose(){
+    $('v332-more-menu').hidden=true;
+    $('v332-more-toggle').setAttribute('aria-expanded','false');
+  }
+  function v332ShortcutOpen(button){
+    if(!state)return;
+    const [root,section]=String(button.dataset.v332Route||'').split(':');
+    if(!['empresa','mercado','administrativo','sistema'].includes(root)||
+      (section&&!document.querySelector('[data-section-pane="'+root+':'+section+'"]')))return;
+    v332MoreClose();
+    const needsUnit=button.dataset.v332Requires==='unit';
+    if(needsUnit&&!Core.activeBusiness(state)){
+      setText('v332-action-hint','Abra ou selecione uma empresa antes de usar este atalho.');
+      notify('É necessário abrir ou selecionar uma empresa. Escolha um lote para começar.');
+      v31OpenPanel('empresa','dashboard',button);
+      return;
+    }
+    setText('v332-action-hint','Destino aberto para revisão. Nenhuma operação executada.');
+    v31OpenPanel(root,section||null,button);
+    if(button.dataset.v332Focus){
+      const target=$(button.dataset.v332Focus);
+      const pane=document.querySelector('[data-section-pane="'+root+':'+section+'"]');
+      if(target&&target.getClientRects().length&&(!pane||pane.contains(target)||target===pane)){
+        const focusable=target.matches('input,select,button,textarea')?target:
+          target.querySelector('input:not([disabled]),select:not([disabled]),button:not([disabled]),textarea:not([disabled])');
+        const focus=focusable||target;
+        if(!focusable)focus.setAttribute('tabindex','-1');
+        focus.scrollIntoView({block:'start',behavior:'instant'});
+        focus.focus({preventScroll:true});
+      }
+    }
+  }
+
   function v31Render(){
     if(!state?.player?.cityId)return;
     const immersive=true;
@@ -7719,6 +7975,7 @@ function bindBalancePlan(){
     $('v31-overlay-close').hidden=!immersiveOpen;
     document.body.classList.toggle('v31-lot-selected',!!inspectorOpen);
     v332RenderHud();
+    v332RenderAgenda();
     v31CameraLoad(viewCityId);v31CameraApply();
     const city=CidadeV31ReadModel.readCity(state,{cityId:viewCityId,selectedLot});
     const owner=city.lots.find(x=>x.lot===selectedLot)?.unit;
@@ -7924,6 +8181,26 @@ function bindBalancePlan(){
     });
     saves.prepend($('v221-city-pick'));
     saves.prepend(cityAction);
+    // Os novos atalhos nao despacham comandos de negocio; apenas navegam e focam.
+    $('v332-bottom-zone').addEventListener('click',event=>{
+      const route=event.target.closest('[data-v332-route]');
+      if(route){event.preventDefault();v332ShortcutOpen(route);}
+    });
+    $('v332-more-toggle').addEventListener('click',()=>{
+      const menu=$('v332-more-menu');
+      menu.hidden=!menu.hidden;
+      $('v332-more-toggle').setAttribute('aria-expanded',String(!menu.hidden));
+      if(!menu.hidden)menu.querySelector('button')?.focus();
+    });
+    $('v332-agenda-toggle').addEventListener('click',()=>{
+      const list=$('v332-agenda-list');list.hidden=!list.hidden;
+      $('v332-agenda-toggle').setAttribute('aria-expanded',String(!list.hidden));
+    });
+    document.addEventListener('keydown',event=>{
+      if(event.key==='Escape'&&!$('v332-more-menu').hidden){
+        event.preventDefault();v332MoreClose();$('v332-more-toggle').focus();
+      }
+    });
     for(const button of document.querySelectorAll('[data-v31-open]')){
       button.addEventListener('click',()=>{
         const [root,section]=button.dataset.v31Open.split(':');

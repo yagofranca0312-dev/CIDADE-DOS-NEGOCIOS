@@ -30,7 +30,7 @@ test('V3.3.1: composiçao proporcional mobile, tablet, desktop e tela ultrawide'
 });
 
 test('V3.3.1: zoom, 100%, + e centralizar na mesma barra superior',()=>{
- const start=tpl.indexOf('<div class="v31-top-controls"');
+ const start=tpl.indexOf('<div class="v31-top-controls');
  const end=tpl.indexOf('<p class="v221-trust-ribbon"',start);
  assert.ok(start>0&&end>start);
  const hud=tpl.slice(start,end);

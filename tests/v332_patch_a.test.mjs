@@ -60,7 +60,7 @@ test('V3.3.2-A: vendas do dia e resultado acumulado conferem com relatório can�
 });
 
 test('V3.3.2-A: obrigações fiscais exibem apenas pendências calculadas',()=>{
-  let state=open(make());state=send(state,'TEMPO.AVANCAR_LOTE',{days:35});
+  let state=open(make());state=send(state,'TEMPO.AVANCAR_LOTE',{days:30});state=send(state,'TEMPO.AVANCAR_LOTE',{days:5});
   const a=snapshot(state),assessments=state.fiscal.assessments.filter(x=>
     ['OPEN','OVERDUE'].includes(x.status)&&x.amount>x.paid);
   if(assessments.length)assert.equal(a.tax,assessments.length+' guia(s)');

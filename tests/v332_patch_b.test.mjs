@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
+import {createV333DecisionEngine} from '../src/contracts/v333-decision-engine.mjs';
 const template=readFileSync('src/shell/index.template.html','utf8');
 const css=readFileSync('src/shell/v31.css','utf8');
 const ui=readFileSync('src/ui/v31-immersive.part.js','utf8');
@@ -9,7 +10,10 @@ const Core=runInNewContext(readFileSync('src/core/game.js','utf8')+'\nCidadeCore
 const extract=(from,to)=>ui.slice(ui.indexOf(from),ui.indexOf(to,ui.indexOf(from))).trim();
 const f=extract('function v332AgendaItems(current){','function v332RenderAgenda(){');
 assert.ok(f.startsWith('function v332AgendaItems'));
-const agenda=runInNewContext('('+f+')',{Core});
+const v333Engine=createV333DecisionEngine(Core);
+const agenda=runInNewContext('('+f+')',{
+  Core,CidadeV333DecisionEngine:v333Engine,v333DecisionTracker:v333Engine.createTracker()
+});
 let serial=0;
 function dispatch(state,type,payload={}){
  const r=Core.dispatch(state,{type,payload,id:'v332b-'+(++serial)});
@@ -64,7 +68,9 @@ test('B-03: agenda nao inventa vencimentos, sem alteracao do save',()=>{
  for(const row of b){
    assert.match(row.date,/^\d{4}-\d{2}-\d{2}$/);
    assert.ok(row.route.startsWith('administrativo:'));
-   assert.ok(now.some(v=>v.date===row.date)||s2.fiscal.assessments.some(a=>a.dueDate===row.date));
+   assert.ok(now.some(v=>v.date===row.date)||s2.fiscal.assessments.some(a=>a.dueDate===row.date)||
+     Core.fiscalOperationsReport(s2).units.some(u=>u.periods.some(p=>
+       p.tasks.some(t=>t.dueDate===row.date))));
  }
 });
 

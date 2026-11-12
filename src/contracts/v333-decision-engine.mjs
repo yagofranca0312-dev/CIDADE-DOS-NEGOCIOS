@@ -86,6 +86,8 @@ export function createV333DecisionEngine(Core){
         const pending=period.tasks.filter(task=>task.status!=='CONCLUIDA');
         if(!pending.length)continue;
         const late=pending.filter(task=>task.status==='ATRASADA').length;
+        const taskDates=pending.map(task=>task.dueDate).filter(validDate).sort();
+        const nextDueDate=taskDates[0]||null;
         put({id:'FIS-02|'+safeId(unit.businessId)+'|'+safeId(period.period),
           category:'FIS',rule:'FIS-02',role:roleFor.FIS,
           severity:late?'urgente':'atenção',phase:late?'checklist-atrasado':'checklist-pendente',
@@ -94,7 +96,8 @@ export function createV333DecisionEngine(Core){
             pending.length+' tarefa(s) pendente(s)'+(late?' ('+late+' atrasada(s)).':'.'),
           scope:{businessId:unit.businessId,kind:'checklist-fiscal',period:period.period},
           evidence:{businessId:unit.businessId,period:period.period,
-            pending:pending.map(task=>task.id).sort(),late},
+            pending:pending.map(task=>task.id).sort(),late,dueDate:nextDueDate,
+            periodDueDate:validDate(period.dueDate)?period.dueDate:null},
           route:'administrativo:fiscal',focus:'v23-pane-administrativo-fiscal',
           requiresUnit:false});
       }
@@ -105,6 +108,59 @@ export function createV333DecisionEngine(Core){
     for(const item of rows)if(!unique.has(item.id))unique.set(item.id,item);
     return [...unique.values()];
   }
+  // V3.3.3-B: agenda usa as MESMAS ocorrências da Central para tributos e
+  // checklists. Compromissos financeiros datados vêm do calendário canônico.
+  // Passivos sem vencimento (FIN-01) não ganham datas artificiais.
+  function agenda(current,{limit=3,occurrences=null}={}){
+    if(!current?.player?.cityId||!current.world)return [];
+    const today=current.calendar.date,items=[];
+    const dueStatus=date=>date<today?'vencido':date===today?'hoje':'previsto';
+    const fromCentral=Array.isArray(occurrences)?occurrences:candidates(current);
+    for(const occurrence of fromCentral){
+      if(!['FIS-01','FIS-02'].includes(occurrence.rule))continue;
+      const date=occurrence.evidence?.dueDate;
+      if(!validDate(date))continue; // Aviso não é prova de vencimento.
+      const isTax=occurrence.rule==='FIS-01';
+      const label=isTax?
+        'Guia simulada '+occurrence.scope.period+' · '+Core.money(occurrence.evidence.amountCents):
+        'Checklist fiscal '+occurrence.scope.period+' · '+occurrence.scope.businessId;
+      items.push({
+        id:'AGENDA|'+occurrence.id,occurrenceId:occurrence.id,
+        sourceKind:'CENTRAL_OCORRENCIA',sourceVersion,
+        date,status:dueStatus(date),severity:occurrence.severity,
+        label,route:occurrence.route,focus:occurrence.focus,
+        scope:occurrence.scope,evidence:occurrence.evidence,
+        certainty:'DATA_DO_REGISTRO',requiresUnit:occurrence.requiresUnit
+      });
+    }
+    const schedule=Core.financialCommitmentsReport(current,30).events;
+    for(const event of schedule){
+      if(!['LOAN_SCHEDULE','LOAN_DUE','SUPPLIER_COMMITMENT'].includes(event.kind)||
+        !validDate(event.date)||!Number.isSafeInteger(event.amountCents)||
+        event.amountCents<=0||event.id===null||event.id===undefined)continue;
+      const type=event.kind==='LOAN_DUE'?'Parcela exigível':
+        event.kind==='LOAN_SCHEDULE'?'Parcela prevista':'Compra contratada';
+      items.push({
+        id:'AGENDA|FIN|'+safeId(event.kind)+'|'+safeId(event.id)+'|'+event.date,
+        occurrenceId:null,sourceKind:'COMPROMISSO_FINANCEIRO',sourceVersion,
+        date:event.date,status:dueStatus(event.date),
+        severity:event.date<=today?'urgente':'atenção',
+        label:type+' · '+Core.money(event.amountCents),
+        route:'administrativo:financas',focus:'credit-calendar-summary',
+        scope:{kind:event.kind,referenceId:event.id},
+        evidence:{amountCents:event.amountCents,date:event.date,
+          kind:event.kind,referenceId:event.id,certainty:event.certainty},
+        certainty:event.certainty,requiresUnit:false
+      });
+    }
+    const priority={vencido:0,hoje:1,previsto:2};
+    items.sort((a,b)=>priority[a.status]-priority[b.status]||
+      a.date.localeCompare(b.date)||a.id.localeCompare(b.id));
+    const unique=new Map();
+    for(const item of items)if(!unique.has(item.id))unique.set(item.id,item);
+    return [...unique.values()].slice(0,Number.isSafeInteger(limit)?Math.max(0,Math.min(limit,100)):3);
+  }
+
   function createTracker(){
     let world=null,previous=new Map(),dismissed=new Map(),history=[],snapshot=null,key=null;
     const reset=nextWorld=>{
@@ -163,5 +219,5 @@ export function createV333DecisionEngine(Core){
     }
     return Object.freeze({inspect,dismiss});
   }
-  return Object.freeze({sourceVersion,candidates,createTracker});
+  return Object.freeze({sourceVersion,candidates,agenda,createTracker});
 }

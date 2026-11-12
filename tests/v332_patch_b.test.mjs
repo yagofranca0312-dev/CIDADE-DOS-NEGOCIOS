@@ -81,7 +81,7 @@ test('B-04: obrigações fiscais aparecem só após apuracao real',()=>{
  s=dispatch(s,'TEMPO.AVANCAR_LOTE',{days:5});
  const before=JSON.stringify(s),rows=agenda(s);
  for(const row of rows){
-   assert.match(row.id,/^(TAX|FIS-OP|LOAN|SUPPLIER)/);
+   assert.match(row.id,/^AGENDA\|(FIS-01|FIS-02|FIN\|)/);
    assert.ok(row.date<='9999-12-31');
  }
  assert.equal(JSON.stringify(s),before,'agenda nao pode gravar no save');

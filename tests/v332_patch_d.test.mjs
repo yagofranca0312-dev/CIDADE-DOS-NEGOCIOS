@@ -68,7 +68,7 @@ test('D-04: retorno de foco, detalhes acessíveis e menus mutuamente exclusivos'
 });
 
 test('D-05: proteção econômica e ausência de operações automáticas',()=>{
-  const region=ui.slice(ui.indexOf('function v332AdviceCandidates'),
+  const region=ui.slice(ui.indexOf('// V3.3.3-A'),
     ui.indexOf('function v31Render(){'));
   assert.ok(region.includes('function v332AdvisorCollapse'));
   assert.doesNotMatch(region,/Core\.dispatch\(|commit\(|localStorage\.|indexedDB\.|fetch\(/);

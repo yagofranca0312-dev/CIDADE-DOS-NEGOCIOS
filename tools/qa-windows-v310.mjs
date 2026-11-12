@@ -121,7 +121,7 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   assert.equal(headerMetrics.cash,headerMetrics.expectedCash,'Caixa no HUD nao e o saldo');
   assert.equal(headerMetrics.daily,headerMetrics.expectedDaily,'Vendas do dia nao batem com ledger');
   assert.equal(headerMetrics.result,headerMetrics.expectedResult,'Resultado acumulado diverge do Core');
-  assert.equal(headerMetrics.advisory,'—','Nao inventar alertas antes do Patch C');
+  assert.equal(headerMetrics.advisory,'0','Sem empresa, a Central nao deve inventar pendencias');
   assert.ok(headerMetrics.hasUnits?headerMetrics.critical.includes('item'):headerMetrics.critical==='—','Estoque ativo nao e identificado');
   assert.ok(headerMetrics.due==='—'||/em 3 dias|vencida/.test(headerMetrics.due),'Prazo do painel sem evidencia');
   assert.equal(await page.locator('#v31-camera-label').textContent(),'100%');
@@ -200,6 +200,37 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
     return {revision:st.revision,checksum:CidadeCore.hash(JSON.stringify(st)),schema:st.schemaVersion};
   });
   assert.deepEqual(bAfter,bBefore,'Abrir agenda, menu e atalho não pode alterar o save');
+
+  // Gate C: sem empresa, a Central não pode fabricar pendencias.
+  assert.equal((await page.locator('#v332-hud-advisory').textContent()).trim(),'0',
+    'Central inventou alerta em carreira sem empresa');
+  assert.equal(await page.locator('#v332-advisor-panel').isVisible(),true);
+  await page.locator('#v332-advisor-toggle').click();
+  assert.equal(await page.locator('#v332-advisor-drawer').isVisible(),true);
+  assert.equal(await page.locator('#v332-advisor-toggle').getAttribute('aria-expanded'),'true');
+  assert.match(await page.locator('#v332-advisor-active-list').textContent(),
+    /Nenhuma ação prioritária identificada/);
+  await page.locator('#v332-advisor-history-tab').click();
+  assert.equal(await page.locator('#v332-advisor-history-list').isVisible(),true);
+  assert.match(await page.locator('#v332-advisor-history-list').textContent(),
+    /Nenhum aviso resolvido ou dispensado/);
+  await page.locator('#v332-advisor-active-tab').click();
+  assert.equal(await page.locator('#v332-advisor-active-list').isVisible(),true);
+  await page.keyboard.press('Escape');
+  assert.equal(await page.locator('#v332-advisor-drawer').isVisible(),false);
+  await page.locator('#v332-hud-advice-trigger').click();
+  assert.equal(await page.locator('#v332-advisor-drawer').isVisible(),true,
+    'Cartão de alertas do HUD não abre a Central');
+  await page.locator('#v332-advisor-close').click();
+  assert.equal(await page.locator('#v332-advisor-drawer').isVisible(),false);
+  const cAfter=await page.evaluate(async()=>{
+    const raw=await CidadeDurableStore.readCurrent(CidadeCore);
+    const st=CidadeCore.importSave(raw).state;
+    return {revision:st.revision,checksum:CidadeCore.hash(JSON.stringify(st)),schema:st.schemaVersion};
+  });
+  assert.deepEqual(cAfter,bBefore,
+    'Central de Gestão, abas, histórico e navegação alteraram o save econômico');
+
   const bottomGeometry=await page.evaluate(()=>{
     const map=document.getElementById('map-canvas').getBoundingClientRect();
     const bottom=document.getElementById('v332-bottom-zone').getBoundingClientRect();

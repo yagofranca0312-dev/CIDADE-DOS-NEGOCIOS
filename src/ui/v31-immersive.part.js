@@ -213,6 +213,203 @@
     }
   }
 
+
+  // V3.3.2-C — perfis de gestao (somente leitura de fontes canonicas).
+  // Estado da UI e historico sao efemeros por carreira, fora do save economico.
+  let v332AdviceWorld=null,v332AdviceCacheKey=null,v332AdviceCache=[];
+  let v332AdviceSeen=new Map(),v332AdviceDismissed=new Map(),v332AdviceHistory=[];
+  let v332AdviceExpanded=false,v332AdviceTab='ativas',v332AdviceDetails=new Set();
+
+  function v332AdviceCandidates(current){
+    if(!current?.player?.cityId)return [];
+    const today=current.calendar.date,rows=[],ranks={urgente:0,'atenção':1,informativa:2};
+    const add=(rule,id,role,severity,title,message,evidence,route,focus,requiresUnit=false)=>{
+      rows.push({id:rule+'|'+id,rule,role,severity,title,message,evidence,
+        dateReference:today,route,focus,requiresUnit,signature:JSON.stringify(evidence),
+        status:'ativa'});
+    };
+    const units=Core.businesses(current),active=Core.activeBusiness(current);
+    // SUP: o limite usa estoque fisico + transito; estoque fisico zero e mostrado
+    // separadamente para nao insinuar que um pedido em transito ja foi recebido.
+    if(active)for(const item of Core.inventoryReport(current)){
+      if(item.stock===0){
+        add('SUP-02',active.id+'|'+item.id,'Gerente de Suprimentos',
+          item.inTransit>0?'atenção':'urgente','Produto sem estoque físico',
+          item.name+' está sem estoque disponível. '+(item.inTransit>0?
+            item.inTransit+' unidade(s) em trânsito; confira a entrega antes de comprar novamente.':
+            'Verifique a necessidade de reposição.'),
+          {stock:item.stock,inTransit:item.inTransit,productId:item.id},
+          'mercado:compras','restock-assistant',true);
+      }else if(item.alert){
+        add('SUP-01',active.id+'|'+item.id,'Gerente de Suprimentos','atenção',
+          'Reposição recomendada',
+          item.name+': '+item.stock+' física(s), '+item.inTransit+
+            ' em trânsito; ponto de reposição '+item.reorderPoint+'.',
+          {stock:item.stock,inTransit:item.inTransit,reorderPoint:item.reorderPoint,productId:item.id},
+          'mercado:compras','restock-assistant',true);
+      }
+    }
+    // FIN: passivo operacional escriturado, SEM vencimento presumido.
+    const payable=Core.operatingPayablesReport(current);
+    for(const unit of payable.units)if(unit.outstanding>0){
+      add('FIN-01',unit.businessId,'Controller Financeiro','atenção',
+        'Conta operacional a liquidar',
+        'A unidade '+unit.businessId+' possui '+Core.money(unit.outstanding)+
+          ' em passivos operacionais registrados. O sistema não informa vencimento.',
+        {amountCents:unit.outstanding,businessId:unit.businessId},
+        'administrativo:financas','payable-operating-form');
+    }
+    // FIS-01: apenas guias de apuracao fiscal do jogo com saldo e status aberto.
+    for(const tax of current.fiscal?.assessments||[]){
+      if(!['OPEN','OVERDUE'].includes(tax.status)||!Number.isSafeInteger(tax.amount)||
+        !Number.isSafeInteger(tax.paid)||tax.amount<=tax.paid)continue;
+      const late=/^\d{4}-\d{2}-\d{2}$/.test(tax.dueDate)&&tax.dueDate<today;
+      add('FIS-01',tax.id,'Analista Tributário',late?'urgente':'atenção',
+        late?'Guia simulada vencida':'Guia simulada em aberto',
+        'Competência '+tax.period+': saldo '+Core.money(tax.amount-tax.paid)+
+          (late?' · vencimento '+tax.dueDate.split('-').reverse().join('/')+'.':
+           ' · consulte a apuração e o vencimento cadastrado.'),
+        {amountCents:tax.amount-tax.paid,dueDate:tax.dueDate,status:tax.status,period:tax.period},
+        'administrativo:fiscal','v23-pane-administrativo-fiscal');
+    }
+    // FIS-02: checklist operacional educacional, agrupado por unidade e periodo.
+    const fiscal=units.length?Core.fiscalOperationsReport(current):{units:[]};
+    for(const unit of fiscal.units)for(const period of unit.periods){
+      if(period.closed)continue;
+      const pending=period.tasks.filter(task=>task.status!=='CONCLUIDA');
+      if(!pending.length)continue;
+      const late=pending.filter(task=>task.status==='ATRASADA').length;
+      add('FIS-02',unit.businessId+'|'+period.period,'Analista Tributário',
+        late?'urgente':'atenção','Checklist fiscal pendente',
+        'Unidade '+unit.businessId+', competência '+period.period+': '+
+          pending.length+' tarefa(s) pendente(s)'+(late?' ('+late+' atrasada(s)).':'.'),
+        {period:period.period,pending:pending.map(x=>x.id).sort(),late,businessId:unit.businessId},
+        'administrativo:fiscal','v23-pane-administrativo-fiscal');
+    }
+    // COM-01 NAO ativado: falta benchmark confiavel de demanda por produto em
+    // janelas completas comparaveis. Nao inventar queda de vendas ou sugerir precos.
+    rows.sort((a,b)=>ranks[a.severity]-ranks[b.severity]||
+      a.dateReference.localeCompare(b.dateReference)||a.id.localeCompare(b.id));
+    const unique=new Map();for(const r of rows)if(!unique.has(r.id))unique.set(r.id,r);
+    return [...unique.values()];
+  }
+
+  function v332AdviceUpdate(){
+    const world=String(state?.worldId||'sem-carreira');
+    if(v332AdviceWorld!==world){
+      v332AdviceWorld=world;v332AdviceCacheKey=null;v332AdviceCache=[];
+      v332AdviceSeen=new Map();v332AdviceDismissed=new Map();v332AdviceHistory=[];
+      v332AdviceExpanded=false;v332AdviceTab='ativas';v332AdviceDetails=new Set();
+    }
+    const active=Core.activeBusiness(state);
+    const key=world+'|'+state.revision+'|'+(active?.id||'sem-unidade');
+    if(key!==v332AdviceCacheKey){
+      const next=v332AdviceCandidates(state),now=new Map(next.map(x=>[x.id,x]));
+      for(const [id,old] of v332AdviceSeen){
+        if(!now.has(id)){
+          v332AdviceHistory.unshift({...old,status:'resolvida',resolutionDate:state.calendar.date});
+          v332AdviceDismissed.delete(id);v332AdviceDetails.delete(id);
+        }
+      }
+      for(const item of next){
+        const was=v332AdviceSeen.get(item.id);
+        if(was&&was.signature!==item.signature){
+          v332AdviceDismissed.delete(item.id);v332AdviceDetails.delete(item.id);
+        }
+      }
+      v332AdviceSeen=now;v332AdviceCache=next;v332AdviceCacheKey=key;
+      v332AdviceHistory=v332AdviceHistory.slice(0,80);
+    }
+    return v332AdviceCache.filter(x=>v332AdviceDismissed.get(x.id)!==x.signature);
+  }
+
+  function v332AdviceEntry(item,history=false){
+    const li=document.createElement('li');
+    li.className='v332-advisor-item v332-severity-'+item.severity;
+    const title=document.createElement('div');title.className='v332-advisor-item-head';
+    const role=document.createElement('strong');role.textContent=item.role;
+    const level=document.createElement('span');level.textContent=history?
+      (item.status==='dispensada'?'Dispensada':'Resolvida'):
+      (item.severity==='urgente'?'Urgente':item.severity==='atenção'?'Atenção':'Informativa');
+    title.append(role,level);li.appendChild(title);
+    const heading=document.createElement('p');heading.className='v332-advisor-item-title';
+    heading.textContent=item.title;li.appendChild(heading);
+    const message=document.createElement('p');message.className='v332-advisor-item-message';
+    message.textContent=item.message;li.appendChild(message);
+    const controls=document.createElement('div');controls.className='v332-advisor-item-actions';
+    if(!history){
+      const open=document.createElement('button');open.type='button';
+      open.dataset.v332Route=item.route;open.dataset.v332Focus=item.focus;
+      if(item.requiresUnit)open.dataset.v332Requires='unit';
+      open.textContent='Ir à ação';open.title='Abrir a tela correspondente, sem executar a operação';
+      controls.appendChild(open);
+      const details=document.createElement('button');details.type='button';
+      details.dataset.v332AdvisorDetail=item.id;details.textContent='Detalhes';
+      details.setAttribute('aria-expanded',String(v332AdviceDetails.has(item.id)));
+      controls.appendChild(details);
+      const dismiss=document.createElement('button');dismiss.type='button';
+      dismiss.dataset.v332AdvisorDismiss=item.id;dismiss.textContent='Dispensar';
+      dismiss.title='Ocultar apenas este aviso; não quita obrigações';
+      controls.appendChild(dismiss);
+      const proof=document.createElement('p');proof.className='v332-advisor-proof';
+      proof.textContent='Regra '+item.rule+' · data do jogo '+item.dateReference+
+        ' · evidência '+JSON.stringify(item.evidence);
+      proof.hidden=!v332AdviceDetails.has(item.id);li.appendChild(proof);
+    }else{
+      const note=document.createElement('small');
+      note.textContent=(item.status==='dispensada'?'Dispensado visualmente em ':'Resolvido em ')+
+        (item.resolutionDate||item.dateReference);
+      controls.appendChild(note);
+    }
+    li.appendChild(controls);return li;
+  }
+
+  function v332RenderAdvisor(){
+    if(!state?.player?.cityId)return;
+    const visible=v332AdviceUpdate(),count=visible.length;
+    setText('v332-hud-advisory',String(count));
+    setText('v332-hud-advice-note',count?'Recomendações pendentes':'Nenhuma prioridade atual');
+    $('v332-hud-advice-trigger').classList.toggle('v332-kpi-has-alerts',count>0);
+    $('v332-hud-advice-trigger').setAttribute('aria-label',
+      count+' recomendação(ões) atuais na Central de Gestão; abrir equipe');
+    $('v332-hud-advice-trigger').setAttribute('aria-expanded',String(v332AdviceExpanded));
+    const preview=count?visible[0].role+': '+visible[0].title:
+      'Nenhuma ação prioritária identificada neste momento.';
+    setText('v332-advisor-preview-text',preview);
+    $('v332-advisor-panel').dataset.severity=count?visible[0].severity:'normal';
+    const drawer=$('v332-advisor-drawer');drawer.hidden=!v332AdviceExpanded;
+    $('v332-advisor-toggle').setAttribute('aria-expanded',String(v332AdviceExpanded));
+    $('v332-advisor-toggle').textContent=v332AdviceExpanded?'Recolher ▾':'Ver equipe ▴';
+    const isHistory=v332AdviceTab==='historico';
+    $('v332-advisor-active-tab').setAttribute('aria-pressed',String(!isHistory));
+    $('v332-advisor-history-tab').setAttribute('aria-pressed',String(isHistory));
+    $('v332-advisor-active-list').hidden=isHistory;
+    $('v332-advisor-history-list').hidden=!isHistory;
+    const activeList=$('v332-advisor-active-list');activeList.replaceChildren();
+    if(count)for(const item of visible.slice(0,50))activeList.append(v332AdviceEntry(item));
+    else{
+      const li=document.createElement('li');li.className='v332-advisor-empty';
+      li.textContent='Nenhuma ação prioritária identificada neste momento.';activeList.append(li);
+    }
+    const historyList=$('v332-advisor-history-list');historyList.replaceChildren();
+    if(v332AdviceHistory.length)for(const item of v332AdviceHistory)historyList.append(v332AdviceEntry(item,true));
+    else{
+      const li=document.createElement('li');li.className='v332-advisor-empty';
+      li.textContent='Nenhum aviso resolvido ou dispensado nesta sessão.';historyList.append(li);
+    }
+  }
+
+  function v332AdvisorCollapse(){
+    v332AdviceExpanded=false;v332RenderAdvisor();
+    $('v332-advisor-toggle').focus();
+  }
+  function v332AdvisorExpand(){
+    v332AdviceExpanded=!v332AdviceExpanded;
+    if(v332AdviceExpanded)v332MoreClose();
+    v332RenderAdvisor();
+    if(v332AdviceExpanded)$('v332-advisor-close').focus();
+  }
+
   function v31Render(){
     if(!state?.player?.cityId)return;
     const immersive=true;
@@ -224,6 +421,7 @@
     document.body.classList.toggle('v31-lot-selected',!!inspectorOpen);
     v332RenderHud();
     v332RenderAgenda();
+    v332RenderAdvisor();
     v31CameraLoad(viewCityId);v31CameraApply();
     const city=CidadeV31ReadModel.readCity(state,{cityId:viewCityId,selectedLot});
     const owner=city.lots.find(x=>x.lot===selectedLot)?.unit;
@@ -429,6 +627,37 @@
     });
     saves.prepend($('v221-city-pick'));
     saves.prepend(cityAction);
+
+    // Central de Gestao: so muda estado visual; nunca executa comandos economicos.
+    $('v332-advisor-toggle').addEventListener('click',v332AdvisorExpand);
+    $('v332-hud-advice-trigger').addEventListener('click',v332AdvisorExpand);
+    $('v332-advisor-close').addEventListener('click',v332AdvisorCollapse);
+    $('v332-advisor-panel').addEventListener('click',event=>{
+      const tab=event.target.closest('[data-v332-advisor-tab]');
+      if(tab){v332AdviceTab=tab.dataset.v332AdvisorTab==='historico'?'historico':'ativas';
+        v332RenderAdvisor();return;}
+      const detail=event.target.closest('[data-v332-advisor-detail]');
+      if(detail){
+        const id=detail.dataset.v332AdvisorDetail;
+        if(v332AdviceDetails.has(id))v332AdviceDetails.delete(id);else v332AdviceDetails.add(id);
+        v332RenderAdvisor();return;
+      }
+      const dismiss=event.target.closest('[data-v332-advisor-dismiss]');
+      if(dismiss){
+        const item=v332AdviceCache.find(x=>x.id===dismiss.dataset.v332AdvisorDismiss);
+        if(!item)return;
+        v332AdviceDismissed.set(item.id,item.signature);
+        v332AdviceHistory.unshift({...item,status:'dispensada',resolutionDate:state.calendar.date});
+        v332AdviceHistory=v332AdviceHistory.slice(0,80);
+        v332RenderAdvisor();
+        return;
+      }
+    });
+    document.addEventListener('keydown',event=>{
+      if(event.key==='Escape'&&v332AdviceExpanded&&!immersiveOpen){
+        event.preventDefault();v332AdvisorCollapse();
+      }
+    });
     // Os novos atalhos nao despacham comandos de negocio; apenas navegam e focam.
     $('v332-bottom-zone').addEventListener('click',event=>{
       const route=event.target.closest('[data-v332-route]');

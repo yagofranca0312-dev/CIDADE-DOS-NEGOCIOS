@@ -1,7 +1,7 @@
 name: Validacao do Cidade dos Negocios 1
 on:
   push:
-    branches: [main, feat/v3.3.2-b-atalhos-agenda]
+    branches: [main, feat/v3.3.2-b-atalhos-agenda, feat/v3.3.2-c-central-de-gestao]
   pull_request:
     branches: [main]
 permissions:

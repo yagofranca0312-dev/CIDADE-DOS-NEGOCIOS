@@ -1873,6 +1873,127 @@ body.v31-immersive .v332-agenda-list button:focus-visible{
   body.v31-immersive .v332-ops-panel{padding:4px 5px!important}
 }
 
+/* V3.3.2-C — Central de Gestao. Layout de recomendacoes sem mudar o SVG. */
+body.v31-immersive .v332-advisor-panel{
+  grid-column:3;align-self:end;justify-self:end;position:relative;
+  box-sizing:border-box;min-width:0;width:100%;max-width:336px;
+  padding:9px 10px;border:1px solid #7596a1;border-radius:13px;
+  background:rgba(7,32,48,.96);box-shadow:0 10px 28px #0008;
+  color:#eaf3f3;
+}
+.v332-advisor-heading{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.v332-advisor-heading strong{display:block;color:#f6daa0;font-size:.78rem;white-space:nowrap}
+.v332-advisor-heading small{display:block;color:#a0c8d5;font-size:.49rem;letter-spacing:.02em}
+body.v31-immersive .v332-advisor-heading button{
+  flex:0 0 auto;min-height:29px;padding:4px 7px;
+  border-radius:7px;border:1px solid #7096a4;background:#194258;
+  color:#f4e4bc;font-size:.66rem;font-weight:750;
+}
+.v332-advisor-preview{display:flex;gap:7px;align-items:center;min-width:0;margin-top:8px}
+.v332-advisor-preview p{
+  flex:1;margin:0;color:#d9e7e6;font-size:.67rem;line-height:1.34;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;overflow-wrap:anywhere;
+}
+.v332-advisor-dot{
+  display:block;flex:0 0 8px;width:8px;height:8px;
+  border-radius:50%;background:#7ac9a6;
+}
+.v332-advisor-panel[data-severity="urgente"] .v332-advisor-dot{background:#f5a280}
+.v332-advisor-panel[data-severity="atenção"] .v332-advisor-dot{background:#f7d588}
+body.v31-immersive .v332-kpi-advisor.v332-kpi-has-alerts strong{color:#ffe0a1}
+.v332-advisor-drawer[hidden],.v332-advisor-items[hidden]{display:none!important}
+body.v31-immersive .v332-advisor-drawer{
+  position:absolute;right:0;bottom:calc(100% + 7px);
+  z-index:190;box-sizing:border-box;width:min(405px,calc(100vw - 24px));
+  max-height:min(65dvh,530px);overflow:auto;
+  padding:11px;border:1px solid #8caeb8;border-radius:14px;
+  background:#0a2b40;box-shadow:0 18px 38px #000c;
+  overscroll-behavior:contain;
+}
+.v332-advisor-drawer-title{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.v332-advisor-drawer-title strong{color:#f4daaa;font-size:.86rem}
+body.v31-immersive .v332-advisor-drawer-title button{
+  min-width:34px;min-height:34px;border:1px solid #7596a5;border-radius:8px;
+  background:#194056;color:#eaf5f2;
+}
+.v332-advisor-tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:10px 0 8px}
+body.v31-immersive .v332-advisor-tabs button{
+  min-height:34px;background:#173c53;color:#cfdee4;border:1px solid #507c8c;border-radius:7px;
+  font-size:.70rem;font-weight:700;
+}
+body.v31-immersive .v332-advisor-tabs button[aria-pressed="true"]{
+  color:#ffe2a7;border-color:#d5b370;background:#31516b;
+}
+.v332-advisor-items{padding:0;margin:0;list-style:none;display:flex;flex-direction:column;gap:7px}
+.v332-advisor-item{
+  padding:9px;border-radius:10px;border:1px solid #52778b;
+  background:linear-gradient(130deg,#143b50,#0d3045);
+  border-left:3px solid #8dbda7;overflow-wrap:anywhere;
+}
+.v332-advisor-item.v332-severity-urgente{border-left-color:#f0a486}
+.v332-advisor-item.v332-severity-atenção{border-left-color:#ead085}
+.v332-advisor-item-head{display:flex;justify-content:space-between;gap:6px;align-items:center}
+.v332-advisor-item-head strong{color:#f1e2c2;font-size:.72rem}
+.v332-advisor-item-head span{color:#e5cfa4;font-size:.59rem}
+.v332-advisor-item-title{font-weight:760;font-size:.73rem;margin:6px 0 4px;color:#f8e0ac}
+.v332-advisor-item-message{font-size:.70rem;line-height:1.35;margin:0;color:#d4e6ec}
+.v332-advisor-item-actions{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:8px}
+body.v31-immersive .v332-advisor-item-actions button{
+  flex:1 1 auto;min-height:33px;padding:5px 7px;border-radius:7px;
+  border:1px solid #618b9e;background:#1a4358;color:#ebf5f6;font-size:.68rem;
+}
+body.v31-immersive .v332-advisor-item-actions button:first-child{
+  color:#ffebc1;border-color:#d0ab74;
+}
+.v332-advisor-item-actions small{color:#bcd2db;font-size:.62rem}
+.v332-advisor-proof{
+  margin:7px 0 0;padding:7px;border:1px solid #5c8291;border-radius:7px;
+  font-size:.62rem;line-height:1.4;word-break:break-word;color:#c7dce5;
+}
+.v332-advisor-proof[hidden]{display:none!important}
+.v332-advisor-empty{padding:12px;color:#c5d9df;font-size:.72rem}
+.v332-advisor-disclaimer{font-size:.60rem;line-height:1.35;color:#a8c3d0;margin:9px 0 0}
+body.v31-immersive .v332-advisor-panel button:focus-visible,
+body.v31-immersive .v332-kpi-advisor:focus-visible{
+  outline:2px solid #ffe1a7;outline-offset:2px;
+}
+@media(max-width:900px){
+  body.v31-immersive{--v332-map-bottom:217px}
+  body.v31-immersive .v332-bottom-zone{
+    height:206px!important;
+    padding:4px 6px calc(5px + env(safe-area-inset-bottom))!important;
+    gap:5px!important;
+  }
+  body.v31-immersive .v332-advisor-panel{
+    order:0;align-self:stretch;max-width:none;width:100%;
+    padding:5px 7px;min-height:43px;display:flex;align-items:center;gap:9px;
+  }
+  body.v31-immersive .v332-ops-panel{order:1;flex-shrink:0}
+  body.v31-immersive #v31-dock[data-v332-dock]{order:2}
+  .v332-advisor-heading{flex:0 0 auto;gap:7px}
+  .v332-advisor-heading strong{font-size:.67rem}
+  .v332-advisor-heading small{display:none}
+  body.v31-immersive .v332-advisor-heading button{
+    min-height:30px;padding:3px 6px;font-size:.62rem;
+  }
+  .v332-advisor-preview{flex:1;min-width:0;margin:0}
+  .v332-advisor-preview p{
+    display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+    font-size:.60rem;line-height:1.2;
+  }
+  body.v31-immersive .v332-advisor-drawer{
+    width:min(430px,calc(100vw - 12px));max-height:58dvh;
+    bottom:calc(100% + 5px);right:0;
+  }
+  body.v31-immersive .v332-advisor-item-actions button{min-height:38px}
+}
+@media(max-width:390px){
+  body.v31-immersive .v332-advisor-heading strong{font-size:.61rem}
+  body.v31-immersive .v332-advisor-heading button{font-size:.58rem}
+  .v332-advisor-preview p{font-size:.56rem}
+}
+
 /* V3.2 fiscal: classes novas, sem modificar o CSS imersivo da V3.1. */
 .fiscal-v32-section{margin:8px 0 18px;padding:16px}
 .fiscal-v32-section .panel-heading h3{font-size:1.08rem}
@@ -1998,9 +2119,9 @@ body.v31-immersive .v332-agenda-list button:focus-visible{
                 <button type="button" class="v332-kpi" data-v31-open="administrativo:fiscal" title="Guias fiscais simuladas em aberto e checklists operacionais, sem equiparar a legislação real">
                   <small>OBRIGAÇÕES FISCAIS</small><strong id="v332-hud-tax">—</strong><span id="v332-hud-tax-note">Simulação educativa</span>
                 </button>
-                <div class="v332-kpi v332-kpi-unavailable" aria-label="Alertas da Central de Gestão: disponíveis no Patch C">
-                  <small>ALERTAS DE GESTÃO</small><strong id="v332-hud-advisory">—</strong><span>Disponível no Patch C</span>
-                </div>
+                <button type="button" class="v332-kpi v332-kpi-advisor" id="v332-hud-advice-trigger" aria-controls="v332-advisor-drawer" aria-expanded="false" aria-label="Abrir Central de Gestão; recomendações ativas">
+                  <small>ALERTAS DE GESTÃO</small><strong id="v332-hud-advisory">0</strong><span id="v332-hud-advice-note">Recomendações atuais</span>
+                </button>
               </div>
             </div>
             <div class="v332-hud-secondary">
@@ -2097,7 +2218,30 @@ body.v31-immersive .v332-agenda-list button:focus-visible{
               <button type="button" data-v31-open="sistema"><span aria-hidden="true">⚙</span>Configurações</button>
               <button type="button" id="v332-more-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="v332-more-menu"><span aria-hidden="true">☷</span>Mais</button>
             </nav>
-            <div class="v332-bottom-reserve" aria-hidden="true"></div>
+            <!-- V3.3.2-C: somente recomendações determinísticas do estado persistido. -->
+            <aside class="v332-advisor-panel" id="v332-advisor-panel" aria-label="Central de Gestão — recomendações da equipe">
+              <div class="v332-advisor-heading">
+                <div><strong>Central de Gestão</strong><small>RECOMENDAÇÕES DA EQUIPE</small></div>
+                <button type="button" id="v332-advisor-toggle" aria-controls="v332-advisor-drawer" aria-expanded="false">Abrir equipe ▴</button>
+              </div>
+              <div class="v332-advisor-preview" id="v332-advisor-preview" aria-live="polite">
+                <span class="v332-advisor-dot" aria-hidden="true"></span>
+                <p id="v332-advisor-preview-text">Nenhuma ação prioritária identificada neste momento.</p>
+              </div>
+              <div class="v332-advisor-drawer" id="v332-advisor-drawer" hidden>
+                <div class="v332-advisor-drawer-title">
+                  <strong>Minha equipe empresarial</strong>
+                  <button type="button" id="v332-advisor-close" aria-label="Recolher Central de Gestão">✕</button>
+                </div>
+                <div class="v332-advisor-tabs" role="group" aria-label="Exibir recomendações atuais ou histórico visual">
+                  <button type="button" id="v332-advisor-active-tab" data-v332-advisor-tab="ativas" aria-pressed="true">Ativas</button>
+                  <button type="button" id="v332-advisor-history-tab" data-v332-advisor-tab="historico" aria-pressed="false">Histórico</button>
+                </div>
+                <ul class="v332-advisor-items" id="v332-advisor-active-list" aria-label="Recomendações atuais"></ul>
+                <ul class="v332-advisor-items" id="v332-advisor-history-list" aria-label="Histórico visual de recomendações" hidden></ul>
+                <p class="v332-advisor-disclaimer">Avisos derivados da simulação, não aconselhamento profissional. Dispensar oculta o aviso, mas não resolve a pendência. Nenhuma operação é automática.</p>
+              </div>
+            </aside>
             <div class="v332-more-menu" id="v332-more-menu" role="group" aria-label="Mais funções da carreira" hidden>
               <button type="button" data-v332-route="mercado:compras" data-v332-focus="restock-assistant" data-v332-requires="unit">Compras / Reposição</button>
               <button type="button" data-v332-route="mercado:estoque" data-v332-requires="unit">Estoque</button>
@@ -7965,6 +8109,203 @@ function bindBalancePlan(){
     }
   }
 
+
+  // V3.3.2-C — perfis de gestao (somente leitura de fontes canonicas).
+  // Estado da UI e historico sao efemeros por carreira, fora do save economico.
+  let v332AdviceWorld=null,v332AdviceCacheKey=null,v332AdviceCache=[];
+  let v332AdviceSeen=new Map(),v332AdviceDismissed=new Map(),v332AdviceHistory=[];
+  let v332AdviceExpanded=false,v332AdviceTab='ativas',v332AdviceDetails=new Set();
+
+  function v332AdviceCandidates(current){
+    if(!current?.player?.cityId)return [];
+    const today=current.calendar.date,rows=[],ranks={urgente:0,'atenção':1,informativa:2};
+    const add=(rule,id,role,severity,title,message,evidence,route,focus,requiresUnit=false)=>{
+      rows.push({id:rule+'|'+id,rule,role,severity,title,message,evidence,
+        dateReference:today,route,focus,requiresUnit,signature:JSON.stringify(evidence),
+        status:'ativa'});
+    };
+    const units=Core.businesses(current),active=Core.activeBusiness(current);
+    // SUP: o limite usa estoque fisico + transito; estoque fisico zero e mostrado
+    // separadamente para nao insinuar que um pedido em transito ja foi recebido.
+    if(active)for(const item of Core.inventoryReport(current)){
+      if(item.stock===0){
+        add('SUP-02',active.id+'|'+item.id,'Gerente de Suprimentos',
+          item.inTransit>0?'atenção':'urgente','Produto sem estoque físico',
+          item.name+' está sem estoque disponível. '+(item.inTransit>0?
+            item.inTransit+' unidade(s) em trânsito; confira a entrega antes de comprar novamente.':
+            'Verifique a necessidade de reposição.'),
+          {stock:item.stock,inTransit:item.inTransit,productId:item.id},
+          'mercado:compras','restock-assistant',true);
+      }else if(item.alert){
+        add('SUP-01',active.id+'|'+item.id,'Gerente de Suprimentos','atenção',
+          'Reposição recomendada',
+          item.name+': '+item.stock+' física(s), '+item.inTransit+
+            ' em trânsito; ponto de reposição '+item.reorderPoint+'.',
+          {stock:item.stock,inTransit:item.inTransit,reorderPoint:item.reorderPoint,productId:item.id},
+          'mercado:compras','restock-assistant',true);
+      }
+    }
+    // FIN: passivo operacional escriturado, SEM vencimento presumido.
+    const payable=Core.operatingPayablesReport(current);
+    for(const unit of payable.units)if(unit.outstanding>0){
+      add('FIN-01',unit.businessId,'Controller Financeiro','atenção',
+        'Conta operacional a liquidar',
+        'A unidade '+unit.businessId+' possui '+Core.money(unit.outstanding)+
+          ' em passivos operacionais registrados. O sistema não informa vencimento.',
+        {amountCents:unit.outstanding,businessId:unit.businessId},
+        'administrativo:financas','payable-operating-form');
+    }
+    // FIS-01: apenas guias de apuracao fiscal do jogo com saldo e status aberto.
+    for(const tax of current.fiscal?.assessments||[]){
+      if(!['OPEN','OVERDUE'].includes(tax.status)||!Number.isSafeInteger(tax.amount)||
+        !Number.isSafeInteger(tax.paid)||tax.amount<=tax.paid)continue;
+      const late=/^\d{4}-\d{2}-\d{2}$/.test(tax.dueDate)&&tax.dueDate<today;
+      add('FIS-01',tax.id,'Analista Tributário',late?'urgente':'atenção',
+        late?'Guia simulada vencida':'Guia simulada em aberto',
+        'Competência '+tax.period+': saldo '+Core.money(tax.amount-tax.paid)+
+          (late?' · vencimento '+tax.dueDate.split('-').reverse().join('/')+'.':
+           ' · consulte a apuração e o vencimento cadastrado.'),
+        {amountCents:tax.amount-tax.paid,dueDate:tax.dueDate,status:tax.status,period:tax.period},
+        'administrativo:fiscal','v23-pane-administrativo-fiscal');
+    }
+    // FIS-02: checklist operacional educacional, agrupado por unidade e periodo.
+    const fiscal=units.length?Core.fiscalOperationsReport(current):{units:[]};
+    for(const unit of fiscal.units)for(const period of unit.periods){
+      if(period.closed)continue;
+      const pending=period.tasks.filter(task=>task.status!=='CONCLUIDA');
+      if(!pending.length)continue;
+      const late=pending.filter(task=>task.status==='ATRASADA').length;
+      add('FIS-02',unit.businessId+'|'+period.period,'Analista Tributário',
+        late?'urgente':'atenção','Checklist fiscal pendente',
+        'Unidade '+unit.businessId+', competência '+period.period+': '+
+          pending.length+' tarefa(s) pendente(s)'+(late?' ('+late+' atrasada(s)).':'.'),
+        {period:period.period,pending:pending.map(x=>x.id).sort(),late,businessId:unit.businessId},
+        'administrativo:fiscal','v23-pane-administrativo-fiscal');
+    }
+    // COM-01 NAO ativado: falta benchmark confiavel de demanda por produto em
+    // janelas completas comparaveis. Nao inventar queda de vendas ou sugerir precos.
+    rows.sort((a,b)=>ranks[a.severity]-ranks[b.severity]||
+      a.dateReference.localeCompare(b.dateReference)||a.id.localeCompare(b.id));
+    const unique=new Map();for(const r of rows)if(!unique.has(r.id))unique.set(r.id,r);
+    return [...unique.values()];
+  }
+
+  function v332AdviceUpdate(){
+    const world=String(state?.worldId||'sem-carreira');
+    if(v332AdviceWorld!==world){
+      v332AdviceWorld=world;v332AdviceCacheKey=null;v332AdviceCache=[];
+      v332AdviceSeen=new Map();v332AdviceDismissed=new Map();v332AdviceHistory=[];
+      v332AdviceExpanded=false;v332AdviceTab='ativas';v332AdviceDetails=new Set();
+    }
+    const active=Core.activeBusiness(state);
+    const key=world+'|'+state.revision+'|'+(active?.id||'sem-unidade');
+    if(key!==v332AdviceCacheKey){
+      const next=v332AdviceCandidates(state),now=new Map(next.map(x=>[x.id,x]));
+      for(const [id,old] of v332AdviceSeen){
+        if(!now.has(id)){
+          v332AdviceHistory.unshift({...old,status:'resolvida',resolutionDate:state.calendar.date});
+          v332AdviceDismissed.delete(id);v332AdviceDetails.delete(id);
+        }
+      }
+      for(const item of next){
+        const was=v332AdviceSeen.get(item.id);
+        if(was&&was.signature!==item.signature){
+          v332AdviceDismissed.delete(item.id);v332AdviceDetails.delete(item.id);
+        }
+      }
+      v332AdviceSeen=now;v332AdviceCache=next;v332AdviceCacheKey=key;
+      v332AdviceHistory=v332AdviceHistory.slice(0,80);
+    }
+    return v332AdviceCache.filter(x=>v332AdviceDismissed.get(x.id)!==x.signature);
+  }
+
+  function v332AdviceEntry(item,history=false){
+    const li=document.createElement('li');
+    li.className='v332-advisor-item v332-severity-'+item.severity;
+    const title=document.createElement('div');title.className='v332-advisor-item-head';
+    const role=document.createElement('strong');role.textContent=item.role;
+    const level=document.createElement('span');level.textContent=history?
+      (item.status==='dispensada'?'Dispensada':'Resolvida'):
+      (item.severity==='urgente'?'Urgente':item.severity==='atenção'?'Atenção':'Informativa');
+    title.append(role,level);li.appendChild(title);
+    const heading=document.createElement('p');heading.className='v332-advisor-item-title';
+    heading.textContent=item.title;li.appendChild(heading);
+    const message=document.createElement('p');message.className='v332-advisor-item-message';
+    message.textContent=item.message;li.appendChild(message);
+    const controls=document.createElement('div');controls.className='v332-advisor-item-actions';
+    if(!history){
+      const open=document.createElement('button');open.type='button';
+      open.dataset.v332Route=item.route;open.dataset.v332Focus=item.focus;
+      if(item.requiresUnit)open.dataset.v332Requires='unit';
+      open.textContent='Ir à ação';open.title='Abrir a tela correspondente, sem executar a operação';
+      controls.appendChild(open);
+      const details=document.createElement('button');details.type='button';
+      details.dataset.v332AdvisorDetail=item.id;details.textContent='Detalhes';
+      details.setAttribute('aria-expanded',String(v332AdviceDetails.has(item.id)));
+      controls.appendChild(details);
+      const dismiss=document.createElement('button');dismiss.type='button';
+      dismiss.dataset.v332AdvisorDismiss=item.id;dismiss.textContent='Dispensar';
+      dismiss.title='Ocultar apenas este aviso; não quita obrigações';
+      controls.appendChild(dismiss);
+      const proof=document.createElement('p');proof.className='v332-advisor-proof';
+      proof.textContent='Regra '+item.rule+' · data do jogo '+item.dateReference+
+        ' · evidência '+JSON.stringify(item.evidence);
+      proof.hidden=!v332AdviceDetails.has(item.id);li.appendChild(proof);
+    }else{
+      const note=document.createElement('small');
+      note.textContent=(item.status==='dispensada'?'Dispensado visualmente em ':'Resolvido em ')+
+        (item.resolutionDate||item.dateReference);
+      controls.appendChild(note);
+    }
+    li.appendChild(controls);return li;
+  }
+
+  function v332RenderAdvisor(){
+    if(!state?.player?.cityId)return;
+    const visible=v332AdviceUpdate(),count=visible.length;
+    setText('v332-hud-advisory',String(count));
+    setText('v332-hud-advice-note',count?'Recomendações pendentes':'Nenhuma prioridade atual');
+    $('v332-hud-advice-trigger').classList.toggle('v332-kpi-has-alerts',count>0);
+    $('v332-hud-advice-trigger').setAttribute('aria-label',
+      count+' recomendação(ões) atuais na Central de Gestão; abrir equipe');
+    $('v332-hud-advice-trigger').setAttribute('aria-expanded',String(v332AdviceExpanded));
+    const preview=count?visible[0].role+': '+visible[0].title:
+      'Nenhuma ação prioritária identificada neste momento.';
+    setText('v332-advisor-preview-text',preview);
+    $('v332-advisor-panel').dataset.severity=count?visible[0].severity:'normal';
+    const drawer=$('v332-advisor-drawer');drawer.hidden=!v332AdviceExpanded;
+    $('v332-advisor-toggle').setAttribute('aria-expanded',String(v332AdviceExpanded));
+    $('v332-advisor-toggle').textContent=v332AdviceExpanded?'Recolher ▾':'Ver equipe ▴';
+    const isHistory=v332AdviceTab==='historico';
+    $('v332-advisor-active-tab').setAttribute('aria-pressed',String(!isHistory));
+    $('v332-advisor-history-tab').setAttribute('aria-pressed',String(isHistory));
+    $('v332-advisor-active-list').hidden=isHistory;
+    $('v332-advisor-history-list').hidden=!isHistory;
+    const activeList=$('v332-advisor-active-list');activeList.replaceChildren();
+    if(count)for(const item of visible.slice(0,50))activeList.append(v332AdviceEntry(item));
+    else{
+      const li=document.createElement('li');li.className='v332-advisor-empty';
+      li.textContent='Nenhuma ação prioritária identificada neste momento.';activeList.append(li);
+    }
+    const historyList=$('v332-advisor-history-list');historyList.replaceChildren();
+    if(v332AdviceHistory.length)for(const item of v332AdviceHistory)historyList.append(v332AdviceEntry(item,true));
+    else{
+      const li=document.createElement('li');li.className='v332-advisor-empty';
+      li.textContent='Nenhum aviso resolvido ou dispensado nesta sessão.';historyList.append(li);
+    }
+  }
+
+  function v332AdvisorCollapse(){
+    v332AdviceExpanded=false;v332RenderAdvisor();
+    $('v332-advisor-toggle').focus();
+  }
+  function v332AdvisorExpand(){
+    v332AdviceExpanded=!v332AdviceExpanded;
+    if(v332AdviceExpanded)v332MoreClose();
+    v332RenderAdvisor();
+    if(v332AdviceExpanded)$('v332-advisor-close').focus();
+  }
+
   function v31Render(){
     if(!state?.player?.cityId)return;
     const immersive=true;
@@ -7976,6 +8317,7 @@ function bindBalancePlan(){
     document.body.classList.toggle('v31-lot-selected',!!inspectorOpen);
     v332RenderHud();
     v332RenderAgenda();
+    v332RenderAdvisor();
     v31CameraLoad(viewCityId);v31CameraApply();
     const city=CidadeV31ReadModel.readCity(state,{cityId:viewCityId,selectedLot});
     const owner=city.lots.find(x=>x.lot===selectedLot)?.unit;
@@ -8181,6 +8523,37 @@ function bindBalancePlan(){
     });
     saves.prepend($('v221-city-pick'));
     saves.prepend(cityAction);
+
+    // Central de Gestao: so muda estado visual; nunca executa comandos economicos.
+    $('v332-advisor-toggle').addEventListener('click',v332AdvisorExpand);
+    $('v332-hud-advice-trigger').addEventListener('click',v332AdvisorExpand);
+    $('v332-advisor-close').addEventListener('click',v332AdvisorCollapse);
+    $('v332-advisor-panel').addEventListener('click',event=>{
+      const tab=event.target.closest('[data-v332-advisor-tab]');
+      if(tab){v332AdviceTab=tab.dataset.v332AdvisorTab==='historico'?'historico':'ativas';
+        v332RenderAdvisor();return;}
+      const detail=event.target.closest('[data-v332-advisor-detail]');
+      if(detail){
+        const id=detail.dataset.v332AdvisorDetail;
+        if(v332AdviceDetails.has(id))v332AdviceDetails.delete(id);else v332AdviceDetails.add(id);
+        v332RenderAdvisor();return;
+      }
+      const dismiss=event.target.closest('[data-v332-advisor-dismiss]');
+      if(dismiss){
+        const item=v332AdviceCache.find(x=>x.id===dismiss.dataset.v332AdvisorDismiss);
+        if(!item)return;
+        v332AdviceDismissed.set(item.id,item.signature);
+        v332AdviceHistory.unshift({...item,status:'dispensada',resolutionDate:state.calendar.date});
+        v332AdviceHistory=v332AdviceHistory.slice(0,80);
+        v332RenderAdvisor();
+        return;
+      }
+    });
+    document.addEventListener('keydown',event=>{
+      if(event.key==='Escape'&&v332AdviceExpanded&&!immersiveOpen){
+        event.preventDefault();v332AdvisorCollapse();
+      }
+    });
     // Os novos atalhos nao despacham comandos de negocio; apenas navegam e focam.
     $('v332-bottom-zone').addEventListener('click',event=>{
       const route=event.target.closest('[data-v332-route]');

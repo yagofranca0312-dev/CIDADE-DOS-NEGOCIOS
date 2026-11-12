@@ -21,7 +21,7 @@ const make=()=>send(null,'CARREIRA.CRIAR',{
 });
 const open=s=>send(s,'EMPRESA.ABRIR',{sector:'mercado',cityId:'CE-TIANGUA',lot:3});
 
-test('V3.3.2-A: oito indicadores reais/indisponíveis; sem Central do Patch C',()=>{
+test('V3.3.2-A+C: oito indicadores mantidos com Central ativada',()=>{
   const a=html.indexOf('class="v31-top-controls v332-hud"');
   const b=html.indexOf('class="v221-trust-ribbon"',a);
   assert.ok(a>0&&b>a);
@@ -33,7 +33,7 @@ test('V3.3.2-A: oito indicadores reais/indisponíveis; sem Central do Patch C',(
   }
   for(const id of ['v31-hud-pause','v31-next-day','v31-hud-turns','v31-hud-speed',
     'v31-camera-minus','v31-camera-label','v31-camera-plus','v31-camera-home'])assert.ok(hud.includes('id="'+id+'"'));
-  assert.ok(hud.includes('Disponível no Patch C'));
+  assert.ok(hud.includes('id="v332-hud-advice-trigger"')); // Patch C ativa o indicador
   assert.ok(!hud.includes('2 em 3 dias'));
   assert.ok(!hud.includes('R$ 4.320,00'));
 });
@@ -87,5 +87,5 @@ test('V3.3.2-A: somente leitura, sem fluxos da Central de Gestão nem atalhos no
   assert.ok(ui.includes('function v332RenderHud'));
   const block=ui.slice(from,to);
   assert.doesNotMatch(block,/Core\.dispatch\(|commit\(|persistDurable\(|localStorage\.|sessionStorage\./);
-  assert.doesNotMatch(html,/id="v332-advisor-panel"|id="v332-quick-actions"/);
+  assert.ok(html.includes('id="v332-advisor-panel"')); // Central passou a existir no Patch C
 });

@@ -118,9 +118,9 @@
                 <button type="button" class="v332-kpi" data-v31-open="administrativo:fiscal" title="Guias fiscais simuladas em aberto e checklists operacionais, sem equiparar a legislação real">
                   <small>OBRIGAÇÕES FISCAIS</small><strong id="v332-hud-tax">—</strong><span id="v332-hud-tax-note">Simulação educativa</span>
                 </button>
-                <div class="v332-kpi v332-kpi-unavailable" aria-label="Alertas da Central de Gestão: disponíveis no Patch C">
-                  <small>ALERTAS DE GESTÃO</small><strong id="v332-hud-advisory">—</strong><span>Disponível no Patch C</span>
-                </div>
+                <button type="button" class="v332-kpi v332-kpi-advisor" id="v332-hud-advice-trigger" aria-controls="v332-advisor-drawer" aria-expanded="false" aria-label="Abrir Central de Gestão; recomendações ativas">
+                  <small>ALERTAS DE GESTÃO</small><strong id="v332-hud-advisory">0</strong><span id="v332-hud-advice-note">Recomendações atuais</span>
+                </button>
               </div>
             </div>
             <div class="v332-hud-secondary">
@@ -217,7 +217,30 @@
               <button type="button" data-v31-open="sistema"><span aria-hidden="true">⚙</span>Configurações</button>
               <button type="button" id="v332-more-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="v332-more-menu"><span aria-hidden="true">☷</span>Mais</button>
             </nav>
-            <div class="v332-bottom-reserve" aria-hidden="true"></div>
+            <!-- V3.3.2-C: somente recomendações determinísticas do estado persistido. -->
+            <aside class="v332-advisor-panel" id="v332-advisor-panel" aria-label="Central de Gestão — recomendações da equipe">
+              <div class="v332-advisor-heading">
+                <div><strong>Central de Gestão</strong><small>RECOMENDAÇÕES DA EQUIPE</small></div>
+                <button type="button" id="v332-advisor-toggle" aria-controls="v332-advisor-drawer" aria-expanded="false">Abrir equipe ▴</button>
+              </div>
+              <div class="v332-advisor-preview" id="v332-advisor-preview" aria-live="polite">
+                <span class="v332-advisor-dot" aria-hidden="true"></span>
+                <p id="v332-advisor-preview-text">Nenhuma ação prioritária identificada neste momento.</p>
+              </div>
+              <div class="v332-advisor-drawer" id="v332-advisor-drawer" hidden>
+                <div class="v332-advisor-drawer-title">
+                  <strong>Minha equipe empresarial</strong>
+                  <button type="button" id="v332-advisor-close" aria-label="Recolher Central de Gestão">✕</button>
+                </div>
+                <div class="v332-advisor-tabs" role="group" aria-label="Exibir recomendações atuais ou histórico visual">
+                  <button type="button" id="v332-advisor-active-tab" data-v332-advisor-tab="ativas" aria-pressed="true">Ativas</button>
+                  <button type="button" id="v332-advisor-history-tab" data-v332-advisor-tab="historico" aria-pressed="false">Histórico</button>
+                </div>
+                <ul class="v332-advisor-items" id="v332-advisor-active-list" aria-label="Recomendações atuais"></ul>
+                <ul class="v332-advisor-items" id="v332-advisor-history-list" aria-label="Histórico visual de recomendações" hidden></ul>
+                <p class="v332-advisor-disclaimer">Avisos derivados da simulação, não aconselhamento profissional. Dispensar oculta o aviso, mas não resolve a pendência. Nenhuma operação é automática.</p>
+              </div>
+            </aside>
             <div class="v332-more-menu" id="v332-more-menu" role="group" aria-label="Mais funções da carreira" hidden>
               <button type="button" data-v332-route="mercado:compras" data-v332-focus="restock-assistant" data-v332-requires="unit">Compras / Reposição</button>
               <button type="button" data-v332-route="mercado:estoque" data-v332-requires="unit">Estoque</button>

@@ -9,6 +9,7 @@ on:
       - fix/v3.3.1-map-proportion-hud
       - feat/v3.3.2-a-indicadores-superiores
       - feat/v3.3.2-b-atalhos-agenda
+      - feat/v3.3.2-c-central-de-gestao
     paths:
       - '.github/workflows/v310-build-branch.yml'
       - 'src/**'

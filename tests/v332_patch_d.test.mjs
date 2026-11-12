@@ -14,6 +14,7 @@ test('D-01: nenhuma mudanca na arte ou no save e mapa matematicamente integral',
   assert.equal(Core.SCHEMA_VERSION,10);
   assert.match(last,/V3\.3\.2-D/);
   assert.match(last,/v31-lot-selected \.city-stage>\.right-column/);
+  assert.match(last,/\.right-column \.world-drawer\[open\]/);
   assert.match(last,/bottom:calc\(var\(--v332-map-bottom\) \+ 10px\)/);
   assert.match(last,/@media\(min-width:1500px\)/,'Desktop largo deve preencher cartões, não escalar mapa');
   assert.doesNotMatch(last,/(object-fit:cover|object-fit:fill|transform:scale\(|viewBox=)/);

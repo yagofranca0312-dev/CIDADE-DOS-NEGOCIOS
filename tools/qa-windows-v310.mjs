@@ -184,6 +184,12 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   assert.equal(await page.locator('#v332-more-toggle').getAttribute('aria-expanded'),'true');
   await page.locator('#v332-more-toggle').click();
   assert.equal(await page.locator('#v332-more-menu').isVisible(),false);
+  // Abrir uma seção real a partir do menu Mais, inclusive em viewport mobile.
+  await page.locator('#v332-more-toggle').click();
+  await page.locator('#v332-more-menu [data-v332-route="sistema:saves"]').click();
+  assert.equal(await page.locator('[data-view="sistema"]').isVisible(),true,
+    'Mais > Configurações não abriu seção de saves');
+  await page.locator('#v31-overlay-close').click();
   await page.locator('.v332-quick-actions [data-v332-route="mercado:outros"]').click();
   assert.equal(await page.locator('[data-view="empresa"]').isVisible(),true,
     'Preços sem unidade deve orientar o jogador à área de empresas');

@@ -1140,3 +1140,115 @@ body.v31-immersive .v332-kpi-advisor:focus-visible{
   body.v31-immersive .v332-advisor-heading button{font-size:.58rem}
   .v332-advisor-preview p{font-size:.56rem}
 }
+
+/* V3.3.2-D — acabamento responsivo e alvos de toque.
+   A arte, o zoom e as hitboxes permanecem inalterados. */
+body.v31-immersive .v332-advisor-drawer{
+  max-height:min(55dvh,calc(100dvh - var(--v332-map-top) - var(--v332-map-bottom) + 8px))!important;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+}
+body.v31-immersive .v332-advisor-drawer button{
+  touch-action:manipulation;
+}
+body.v31-immersive .v332-advisor-tabs button,
+body.v31-immersive .v332-advisor-item-actions button,
+body.v31-immersive .v332-advisor-drawer-title button{
+  min-height:40px!important;
+}
+body.v31-immersive .v332-more-menu button,
+body.v31-immersive .v332-agenda-list button{
+  min-height:42px!important;
+}
+body.v31-immersive :is(.v332-kpi-strip,.v332-hud-secondary,
+  #v31-dock[data-v332-dock],.v332-quick-actions){
+  scroll-behavior:auto;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+}
+body.v31-immersive :is(#v332-advisor-toggle,#v332-advisor-close,
+  #v332-more-toggle,#v332-agenda-toggle,[data-v332-route]):focus-visible{
+  outline:3px solid #ffe1a4!important;
+  outline-offset:2px;
+}
+@media(max-width:900px){
+  body.v31-immersive{--v332-map-bottom:237px}
+  body.v31-immersive .v332-bottom-zone{
+    height:222px!important;
+    min-height:222px!important;
+    gap:5px!important;
+  }
+  body.v31-immersive .v332-hud-secondary{
+    min-height:43px!important;
+  }
+  body.v31-immersive .v332-hud-secondary :is(button,select){
+    min-height:42px!important;
+    min-width:40px!important;
+  }
+  body.v31-immersive .v332-time-controls{
+    gap:5px!important;
+  }
+  body.v31-immersive .v332-quick-actions button{
+    min-height:42px!important;
+    padding:7px 9px!important;
+    font-size:.68rem!important;
+  }
+  body.v31-immersive .v332-ops-heading button,
+  body.v31-immersive .v332-advisor-heading button{
+    min-height:40px!important;
+    padding:6px 9px!important;
+  }
+  body.v31-immersive .v332-ops-panel{
+    gap:3px!important;
+  }
+  body.v31-immersive .v332-advisor-panel{
+    min-height:51px!important;
+  }
+  body.v31-immersive .v332-advisor-drawer{
+    max-height:min(52dvh,calc(100dvh - var(--v332-map-top) - var(--v332-map-bottom) + 12px))!important;
+  }
+  body.v31-immersive #v31-dock[data-v332-dock] button:not(.v332-dock-extra){
+    min-height:50px!important;
+  }
+}
+@media(max-width:600px){
+  body.v31-immersive .v332-brand{
+    flex-basis:82px!important;
+  }
+  body.v31-immersive .v332-kpi{
+    flex-basis:130px!important;
+    min-width:130px!important;
+  }
+  body.v31-immersive .v332-advisor-panel{
+    padding:4px 6px!important;
+  }
+  body.v31-immersive .v332-advisor-preview p{
+    font-size:.60rem;
+  }
+  body.v31-immersive .v332-advisor-heading{
+    gap:5px;
+  }
+  body.v31-immersive .v332-advisor-heading button{
+    padding:6px!important;
+  }
+}
+@media(max-height:750px) and (max-width:900px){
+  body.v31-immersive{--v332-map-bottom:226px}
+  body.v31-immersive .v332-bottom-zone{
+    height:213px!important;
+    min-height:213px!important;
+  }
+  body.v31-immersive .v332-advisor-panel{min-height:46px!important}
+  body.v31-immersive .v332-ops-panel{padding:4px 6px!important}
+  body.v31-immersive .v332-advisor-drawer{
+    max-height:min(48dvh,calc(100dvh - var(--v332-map-top) - var(--v332-map-bottom) + 12px))!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  body.v31-immersive .v332-advisor-drawer,
+  body.v31-immersive .v332-more-menu,
+  body.v31-immersive .v332-agenda-list{
+    transition:none!important;
+    animation:none!important;
+  }
+}

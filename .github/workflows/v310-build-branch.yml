@@ -10,6 +10,7 @@ on:
       - feat/v3.3.2-a-indicadores-superiores
       - feat/v3.3.2-b-atalhos-agenda
       - feat/v3.3.2-c-central-de-gestao
+      - feat/v3.3.2-d-polimento-homologacao
     paths:
       - '.github/workflows/v310-build-branch.yml'
       - 'src/**'

@@ -7,10 +7,15 @@ import {chromium} from 'playwright';
 const url=pathToFileURL(resolve('index.html')).href,out=join(process.env.RUNNER_TEMP||tmpdir(),'v310-visual-evidence');
 mkdirSync(out,{recursive:true});
 const results=[];
-for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
+const v332GateDViewports=[
+ {width:320,height:700},{width:390,height:844},{width:430,height:932},
+ {width:768,height:1024},{width:1024,height:768},
+ {width:1366,height:768},{width:1920,height:1080}
+];
+for(const channel of ['chrome','msedge'])for(const {width,height} of v332GateDViewports){
  const folder=mkdtempSync(join(tmpdir(),'cidade-v310-'+channel+'-'));let ctx;
  try{
-  ctx=await chromium.launchPersistentContext(folder,{channel,headless:true,viewport:{width,height:width<600?844:900},isMobile:width<600,hasTouch:width<600});
+  ctx=await chromium.launchPersistentContext(folder,{channel,headless:true,viewport:{width,height},isMobile:width<600,hasTouch:width<600});
   const page=ctx.pages()[0]||await ctx.newPage(),errors=[];
   page.on('pageerror',e=>errors.push(e.message));
   await page.goto(url,{waitUntil:'load'});await page.waitForFunction(()=>document.body.dataset.storageReady==='ready');
@@ -208,6 +213,30 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   await page.locator('#v332-advisor-toggle').click();
   assert.equal(await page.locator('#v332-advisor-drawer').isVisible(),true);
   assert.equal(await page.locator('#v332-advisor-toggle').getAttribute('aria-expanded'),'true');
+  // Gate D: o painel nao deve cobrir o HUD, inclusive em 320x700.
+  const dAdvisorGeom=await page.evaluate(()=>{
+    const drawer=document.getElementById('v332-advisor-drawer').getBoundingClientRect();
+    const hud=document.querySelector('.v332-hud').getBoundingClientRect();
+    return {drawerTop:drawer.top,drawerBottom:drawer.bottom,
+      drawerRight:drawer.right,hudBottom:hud.bottom,
+      viewportWidth:innerWidth,viewportHeight:innerHeight};
+  });
+  assert.ok(dAdvisorGeom.drawerTop>=dAdvisorGeom.hudBottom-12,
+    'Central expandida invade indicadores superiores: '+JSON.stringify(dAdvisorGeom));
+  assert.ok(dAdvisorGeom.drawerRight<=width+3,
+    'Central expandida ultrapassa margem da viewport');
+  await page.screenshot({path:join(out,channel+'-'+width+'-gate-d-advisor.png')});
+  if(width<=900){
+    const touchTargets=await page.evaluate(()=>[
+      '#v332-advisor-toggle','#v332-agenda-toggle',
+      '.v332-quick-actions button','#v332-more-toggle','#v31-hud-pause'
+    ].map(sel=>{
+      const el=document.querySelector(sel),r=el.getBoundingClientRect();
+      return {sel,w:r.width,h:r.height};
+    }));
+    for(const t of touchTargets)assert.ok(t.h>=38&&t.w>=28,
+      'Alvo de toque reduzido: '+JSON.stringify(touchTargets));
+  }
   assert.match(await page.locator('#v332-advisor-active-list').textContent(),
     /Nenhuma ação prioritária identificada/);
   await page.locator('#v332-advisor-history-tab').click();
@@ -221,8 +250,11 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   await page.locator('#v332-hud-advice-trigger').click();
   assert.equal(await page.locator('#v332-advisor-drawer').isVisible(),true,
     'Cartão de alertas do HUD não abre a Central');
-  await page.locator('#v332-advisor-close').click();
+  await page.locator('#v332-advisor-close').focus();
+  await page.keyboard.press('Enter');
   assert.equal(await page.locator('#v332-advisor-drawer').isVisible(),false);
+  assert.equal(await page.evaluate(()=>document.activeElement.id),'v332-hud-advice-trigger',
+    'Ao fechar via teclado, foco nao retornou ao botao que abriu a Central');
   const cAfter=await page.evaluate(async()=>{
     const raw=await CidadeDurableStore.readCurrent(CidadeCore);
     const st=CidadeCore.importSave(raw).state;
@@ -230,6 +262,8 @@ for(const channel of ['chrome','msedge'])for(const width of [320,390,768,1366]){
   });
   assert.deepEqual(cAfter,bBefore,
     'Central de Gestão, abas, histórico e navegação alteraram o save econômico');
+
+  await page.screenshot({path:join(out,channel+'-'+width+'-gate-d-city.png')});
 
   const bottomGeometry=await page.evaluate(()=>{
     const map=document.getElementById('map-canvas').getBoundingClientRect();

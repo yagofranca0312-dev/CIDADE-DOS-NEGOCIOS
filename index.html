@@ -1786,7 +1786,7 @@ body.v31-immersive .v332-agenda-list li button{
   border-radius:7px;border:1px solid #527f90;background:#143b50;color:#f0e7cc;
   font-size:.7rem;
 }
-body.v31-immersive #v31-dock.v332-dock{
+body.v31-immersive #v31-dock[data-v332-dock]{
   position:relative!important;grid-column:2;align-self:end;justify-self:center;
   left:auto!important;right:auto!important;bottom:auto!important;top:auto!important;
   transform:none!important;box-sizing:border-box!important;z-index:155!important;
@@ -1796,12 +1796,12 @@ body.v31-immersive #v31-dock.v332-dock{
   scrollbar-width:none;overscroll-behavior-x:contain;
   padding:6px!important;border-radius:13px!important;
 }
-body.v31-immersive #v31-dock.v332-dock::-webkit-scrollbar{display:none}
-body.v31-immersive #v31-dock.v332-dock button{
+body.v31-immersive #v31-dock[data-v332-dock]::-webkit-scrollbar{display:none}
+body.v31-immersive #v31-dock[data-v332-dock] button{
   flex:0 0 auto!important;min-width:62px!important;min-height:58px!important;
   padding:4px 6px!important;font-size:.60rem!important;white-space:nowrap;
 }
-body.v31-immersive #v31-dock.v332-dock button span{font-size:1.10rem}
+body.v31-immersive #v31-dock[data-v332-dock] button span{font-size:1.10rem}
 .v332-bottom-reserve{grid-column:3;min-width:0;pointer-events:none!important}
 body.v31-immersive .v332-more-menu{
   position:absolute;bottom:calc(100% - 12px);right:14px;
@@ -1816,14 +1816,14 @@ body.v31-immersive .v332-more-menu button{
 }
 body.v31-immersive .v332-ops-panel button:focus-visible,
 body.v31-immersive .v332-more-menu button:focus-visible,
-body.v31-immersive .v332-dock button:focus-visible,
+body.v31-immersive #v31-dock[data-v332-dock] button:focus-visible,
 body.v31-immersive .v332-agenda-list button:focus-visible{
   outline:2px solid #ffe3aa;outline-offset:2px;
 }
 @media(max-width:1250px){
-  body.v31-immersive #v31-dock.v332-dock{max-width:min(690px,calc(100vw - 480px))!important}
+  body.v31-immersive #v31-dock[data-v332-dock]{max-width:min(690px,calc(100vw - 480px))!important}
   body.v31-immersive .v332-ops-panel{max-width:250px}
-  body.v31-immersive #v31-dock.v332-dock button{min-width:54px!important;font-size:.54rem!important}
+  body.v31-immersive #v31-dock[data-v332-dock] button{min-width:54px!important;font-size:.54rem!important}
 }
 @media(max-width:900px){
   body.v31-immersive{--v332-map-bottom:157px}
@@ -1849,16 +1849,16 @@ body.v31-immersive .v332-agenda-list button:focus-visible{
     justify-content:center;padding:4px 7px;
   }
   .v332-action-hint{display:none}
-  body.v31-immersive #v31-dock.v332-dock{
+  body.v31-immersive #v31-dock[data-v332-dock]{
     width:100%!important;max-width:100%!important;
     flex:0 0 auto!important;min-height:53px!important;
     justify-content:space-between!important;gap:3px!important;padding:4px!important;
   }
-  body.v31-immersive #v31-dock.v332-dock button:not(.v332-dock-extra){
+  body.v31-immersive #v31-dock[data-v332-dock] button:not(.v332-dock-extra){
     flex:1 1 0!important;min-width:0!important;min-height:49px!important;
     font-size:.56rem!important;padding:3px 2px!important;
   }
-  body.v31-immersive #v31-dock.v332-dock .v332-dock-extra{display:none!important}
+  body.v31-immersive #v31-dock[data-v332-dock] .v332-dock-extra{display:none!important}
   body.v31-immersive .v332-bottom-reserve{display:none!important}
   body.v31-immersive .v332-more-menu{
     right:6px!important;bottom:calc(100% - 6px)!important;
@@ -1867,7 +1867,7 @@ body.v31-immersive .v332-agenda-list button:focus-visible{
   .v332-agenda-list{left:6px;bottom:calc(100% + 3px)}
 }
 @media(max-width:360px){
-  body.v31-immersive #v31-dock.v332-dock button:not(.v332-dock-extra){
+  body.v31-immersive #v31-dock[data-v332-dock] button:not(.v332-dock-extra){
     font-size:.48rem!important;min-height:48px!important;
   }
   body.v31-immersive .v332-ops-panel{padding:4px 5px!important}
@@ -2084,7 +2084,7 @@ body.v31-immersive .v332-agenda-list button:focus-visible{
               </div>
               <p id="v332-action-hint" class="v332-action-hint" role="status" aria-live="polite">Os atalhos abrem formulários; nenhuma ação é executada automaticamente.</p>
             </section>
-            <nav class="v31-dock v332-dock" id="v31-dock" aria-label="Navegação empresarial" hidden>
+            <nav class="v31-dock" data-v332-dock="true" id="v31-dock" aria-label="Navegação empresarial" hidden>
               <button type="button" data-v31-open="empresa:dashboard"><span aria-hidden="true">▣</span>Empresas</button>
               <button type="button" data-v31-open="mercado:compras"><span aria-hidden="true">⇅</span>Mercado</button>
               <button type="button" class="v332-dock-extra" data-v332-route="mercado:compras" data-v332-focus="restock-assistant" data-v332-requires="unit"><span aria-hidden="true">🛒</span>Compras</button>

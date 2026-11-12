@@ -67,6 +67,67 @@
     $('v31-backdrop').hidden=false;
     $('v31-overlay-close').focus();
   }
+  // Patch V3.3.2-A: leitura exclusivamente derivada. Nao altera estado nem save.
+  function v332HudSnapshot(current){
+    if(!current?.player?.cityId)return null;
+    const units=Core.businesses(current);
+    const info=Core.overview(current);
+    const today=current.calendar.date;
+    const day=units.length?Core.financialReport(current,'day',today):null;
+    const active=Core.activeBusiness(current);
+    const items=active?Core.inventoryReport(current):null;
+    const critical=items?items.filter(item=>item.alert).length:null;
+    // Somente compromissos com data, e com tipo discriminado; jamais supor
+    // que todo PAYABLE operacional vence em tres dias.
+    const calendar=Core.financialCommitmentsReport(current,30);
+    const limit=new Date(Date.parse(today+'T12:00:00Z')+3*86400000).toISOString().slice(0,10);
+    const dated=calendar.events.filter(item=>
+      (item.kind==='LOAN_SCHEDULE'||item.kind==='SUPPLIER_COMMITMENT')&&
+      /^\d{4}-\d{2}-\d{2}$/.test(item.date));
+    const upcoming=dated.filter(item=>item.date>=today&&item.date<=limit);
+    const immediatelyDue=calendar.events.filter(item=>item.kind==='LOAN_DUE'&&item.amountCents>0);
+    const undated=Core.operatingPayablesReport(current).total>0;
+    const dueValue=!units.length?'—':immediatelyDue.length?
+      immediatelyDue.length+' vencida(s)':dated.length?upcoming.length+' em 3 dias':'—';
+    const dueNote=!units.length?'Abra uma empresa':immediatelyDue.length?
+      'Parcelas exigíveis':dated.length?'Crédito/contratos com prazo':
+      undated?'Passivos sem prazo definido':'Nenhum prazo confirmado';
+    const taxAssessments=(current.fiscal?.assessments||[]).filter(row=>
+      (row.status==='OPEN'||row.status==='OVERDUE')&&row.amount>row.paid);
+    const tasks=units.length?Core.fiscalOperationsReport(current):null;
+    const openTasks=tasks?.openPeriods||0;
+    const taxValue=!units.length?'—':taxAssessments.length?
+      taxAssessments.length+' guia(s)':openTasks?
+      openTasks+' checklist(s)':'0 pendências';
+    const taxNote=!units.length?'Sem empresa':taxAssessments.length?
+      'Guias simuladas em aberto':openTasks?'Checklists operacionais':'Simulação educativa';
+    return {
+      cash:Core.money(info.cash),date:today.split('-').reverse().join('/'),
+      sales:day?Core.money(day.revenue):'—',
+      result:units.length?Core.money(info.profit):'—',
+      stock:critical===null?'—':critical+' item(ns)',
+      due:dueValue,dueNote,tax:taxValue,taxNote,
+      salesTitle:day?'Vendas efetivas em '+today.split('-').reverse().join('/'):'Sem unidade: vendas indisponíveis',
+      resultTitle:'Resultado acumulado da carreira depois das despesas e tributos simulados',
+      stockTitle:active?
+        'Unidade '+active.id+': '+critical+' produto(s) abaixo do ponto de reposição, considerando trânsito':
+        'Sem unidade ativa; não há estoque para avaliar'
+    };
+  }
+  function v332RenderHud(){
+    const metrics=v332HudSnapshot(state);if(!metrics)return;
+    for(const [id,value] of [
+      ['v31-hud-cash',metrics.cash],['v31-hud-date',metrics.date],
+      ['v332-hud-sales',metrics.sales],['v332-hud-result',metrics.result],
+      ['v332-hud-stock',metrics.stock],['v332-hud-due',metrics.due],
+      ['v332-hud-due-note',metrics.dueNote],['v332-hud-tax',metrics.tax],
+      ['v332-hud-tax-note',metrics.taxNote]])setText(id,value);
+    $('v332-hud-sales').closest('.v332-kpi').title=metrics.salesTitle;
+    $('v332-hud-result').closest('.v332-kpi').title=metrics.resultTitle;
+    $('v332-hud-stock').closest('.v332-kpi').title=metrics.stockTitle;
+    // Contador de recomendações nao existe antes do Patch C.
+    setText('v332-hud-advisory','—');
+  }
   function v31Render(){
     if(!state?.player?.cityId)return;
     const immersive=true;
@@ -76,8 +137,7 @@
     $('v31-backdrop').hidden=!immersiveOpen;
     $('v31-overlay-close').hidden=!immersiveOpen;
     document.body.classList.toggle('v31-lot-selected',!!inspectorOpen);
-    setText('v31-hud-cash',$('v221-hud-cash').textContent);
-    setText('v31-hud-date',$('v221-date-label').textContent);
+    v332RenderHud();
     v31CameraLoad(viewCityId);v31CameraApply();
     const city=CidadeV31ReadModel.readCity(state,{cityId:viewCityId,selectedLot});
     const owner=city.lots.find(x=>x.lot===selectedLot)?.unit;

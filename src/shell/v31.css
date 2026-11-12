@@ -749,3 +749,137 @@ body.v31-immersive .v31-top-controls .v31-camera output{
     min-width:30px!important;min-height:34px!important;padding:3px 5px!important;
   }
 }
+
+/* V3.3.2-A — topo informativo, duas faixas e KPIs de leitura.
+   Preservar geometria 1536x664 / 640x405: viewport reservada abaixo do HUD,
+   arte dimensionada SEM cover, sem estiramento e sem recorte. */
+body.v31-immersive{
+  --v332-map-top:122px;
+  --v332-map-bottom:82px;
+}
+body.v31-immersive .v31-top-controls.v332-hud{
+  position:fixed!important;
+  top:calc(5px + env(safe-area-inset-top))!important;
+  left:10px!important;right:10px!important;
+  width:auto!important;max-width:none!important;height:auto!important;max-height:none!important;
+  transform:none!important;z-index:120!important;
+  box-sizing:border-box!important;
+  display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;
+  align-items:stretch!important;justify-content:flex-start!important;gap:5px!important;
+  padding:6px 8px!important;border-radius:15px!important;
+  overflow:visible!important;
+  background:rgba(5,26,42,.93)!important;
+  border:1px solid #a8c6c68f!important;
+}
+.v332-hud-primary{
+  display:flex;align-items:stretch;gap:8px;min-width:0;
+  width:100%;min-height:53px;max-height:60px;
+}
+.v332-brand{
+  flex:0 0 140px;display:flex;align-items:center;gap:7px;min-width:0;
+  padding:4px 9px 4px 3px;color:#f7e2b1;border-right:1px solid #7993a17c;
+}
+.v332-brand-icon{font-size:1.8rem;line-height:1;color:#f6d783}
+.v332-brand strong{display:block;font-size:.83rem;line-height:1.03;letter-spacing:.01em}
+.v332-brand small{display:block;margin-top:3px;color:#abcbd7;font-size:.46rem;white-space:nowrap}
+.v332-kpi-strip{
+  flex:1 1 auto;display:flex;align-items:stretch;gap:5px;min-width:0;width:0;
+  overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain;
+  scroll-snap-type:x proximity;
+}
+.v332-kpi-strip::-webkit-scrollbar{display:none}
+.v332-kpi-strip:focus-visible{outline:2px solid #ffe2a4;outline-offset:-2px}
+body.v31-immersive .v332-kpi{
+  box-sizing:border-box!important;flex:0 0 141px!important;
+  display:flex!important;flex-direction:column!important;justify-content:center!important;
+  align-items:flex-start!important;gap:2px!important;
+  min-width:141px!important;min-height:53px!important;
+  margin:0!important;padding:5px 9px!important;
+  border:1px solid #44748b!important;border-radius:10px!important;
+  background:linear-gradient(130deg,#0f3549,#092536)!important;
+  box-shadow:none!important;text-align:left!important;color:#e7f4f5!important;
+  scroll-snap-align:start;
+}
+.v332-kpi small{
+  font-weight:800;font-size:.56rem;line-height:1.18;color:#bed7e4;
+  letter-spacing:.02em;white-space:nowrap;
+}
+.v332-kpi strong{
+  font-size:.84rem;line-height:1.15;font-weight:850;color:#ffe1a0;
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.v332-kpi span{
+  color:#a3c5d2;font-size:.53rem;line-height:1.15;
+  white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;
+}
+body.v31-immersive .v332-kpi-unavailable{opacity:.73}
+body.v31-immersive .v332-kpi-unavailable strong{color:#a9bcc7}
+.v332-hud-secondary{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  width:100%;min-width:0;min-height:41px;
+  border-top:1px solid #6b94a44d;padding-top:4px;
+  overflow-x:auto;overflow-y:hidden;scrollbar-width:none;overscroll-behavior-x:contain;
+}
+.v332-hud-secondary::-webkit-scrollbar{display:none}
+.v332-time-controls{
+  flex:0 0 auto;display:flex;align-items:center;gap:5px;
+  min-width:0;white-space:nowrap;
+}
+.v332-time-title,.v332-camera-title{
+  flex:0 0 auto;color:#b7d5de;font-size:.58rem;font-weight:850;white-space:nowrap;
+}
+body.v31-immersive .v332-hud-secondary button,
+body.v31-immersive .v332-hud-secondary select{
+  box-sizing:border-box!important;min-width:35px!important;min-height:35px!important;
+  padding:4px 7px!important;font-size:.75rem!important;
+}
+body.v31-immersive .v332-hud-secondary label{
+  display:inline!important;white-space:nowrap;font-size:.66rem!important;
+}
+body.v31-immersive .v31-top-controls .v332-hud-secondary .v31-camera{
+  flex:0 0 auto!important;display:flex!important;align-items:center!important;gap:4px!important;
+  border-left:1px solid #7397a5!important;margin:0!important;padding:0 0 0 9px!important;
+  background:transparent!important;position:static!important;transform:none!important;
+}
+body.v31-immersive .v332-hud-secondary .v31-camera output{
+  min-width:35px!important;text-align:center!important;font-size:.72rem!important;
+}
+/* Reserva apenas espaço de composição, não modifica os 18 lotes nem o SVG. */
+body.v31-immersive #map-canvas{
+  inset:var(--v332-map-top) 0 var(--v332-map-bottom) 0!important;
+  top:var(--v332-map-top)!important;bottom:var(--v332-map-bottom)!important;
+  width:100vw!important;height:calc(100dvh - var(--v332-map-top) - var(--v332-map-bottom))!important;
+  display:grid!important;place-content:center!important;place-items:center!important;
+}
+body.v31-immersive #map-canvas>svg.v221-city-svg{
+  width:min(100vw,calc((100dvh - var(--v332-map-top) - var(--v332-map-bottom))*2.313253012))!important;
+  max-width:100vw!important;height:auto!important;min-height:0!important;max-height:none!important;
+  aspect-ratio:1536/664!important;object-fit:contain!important;
+}
+body.v31-immersive #map-canvas>svg.v22-city-svg{
+  width:min(100vw,calc((100dvh - var(--v332-map-top) - var(--v332-map-bottom))*1.580246914))!important;
+  max-width:100vw!important;height:auto!important;min-height:0!important;max-height:none!important;
+  aspect-ratio:640/405!important;object-fit:contain!important;
+}
+@media(max-width:768px){
+  body.v31-immersive{--v332-map-top:119px;--v332-map-bottom:68px}
+  body.v31-immersive .v31-top-controls.v332-hud{
+    left:5px!important;right:5px!important;padding:5px!important;gap:4px!important;
+    height:auto!important;max-height:none!important;
+  }
+  .v332-hud-primary{min-height:53px;max-height:55px;gap:5px}
+  .v332-brand{flex-basis:88px;padding:3px 5px 3px 1px;gap:3px}
+  .v332-brand-icon{font-size:1.1rem}
+  .v332-brand strong{font-size:.60rem}
+  .v332-brand small{font-size:.37rem}
+  body.v31-immersive .v332-kpi{min-width:128px!important;flex-basis:128px!important}
+  .v332-kpi small{font-size:.52rem}
+  .v332-kpi strong{font-size:.79rem}
+  .v332-kpi span{font-size:.48rem}
+  .v332-hud-secondary{min-height:39px;gap:9px;padding-top:3px}
+  .v332-time-title,.v332-camera-title{display:none}
+  body.v31-immersive .v332-hud-secondary label{display:none!important}
+  body.v31-immersive .v332-hud-secondary button,
+  body.v31-immersive .v332-hud-secondary select{min-width:34px!important;min-height:34px!important;padding:4px 5px!important}
+  body.v31-immersive .v31-top-controls .v332-hud-secondary .v31-camera{padding-left:6px!important;gap:3px!important}
+}

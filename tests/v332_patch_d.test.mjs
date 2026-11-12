@@ -76,7 +76,7 @@ test('D-05: proteção econômica e ausência de operações automáticas',()=>{
 test('D-06: loteamento preservado e controles de camera e acesso a areas existentes',()=>{
  const scene=JSON.parse(readFileSync('src/visual/scenes/tiangua/lots.json','utf8'));
  assert.equal(scene.lots.length,18);
- assert.equal(new Set(scene.lots.map(l=>l.lot)).size,18);
+ assert.equal(new Set(scene.lots.map(l=>l.number)).size,18);
  for(const id of ['v31-camera-minus','v31-camera-label','v31-camera-plus','v31-camera-home',
    'v31-hud-speed','v31-hud-pause','v31-next-day','v332-more-toggle']){
   assert.equal((html.match(new RegExp('id="'+id+'"','g'))||[]).length,1,id);

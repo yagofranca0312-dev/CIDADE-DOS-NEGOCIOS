@@ -130,6 +130,41 @@ test('COM-01 bloqueado sem comparabilidade auditada; nenhuma regra aleatoria',()
  assert.match(ui,/COM-01 NAO ativado/);
 });
 
+test('REC-05: ativa para resolvida e historico limpo em outra carreira',()=>{
+ const core={
+  businesses:s=>s.units,activeBusiness:s=>s.active,inventoryReport:s=>s.inventory,
+  operatingPayablesReport:s=>s.payables,fiscalOperationsReport:s=>s.fiscalOp,
+  money:n=>'R$ '+(n/100).toFixed(2)
+ };
+ const from=ui.indexOf('let v332AdviceWorld=null');
+ const to=ui.indexOf('function v332AdviceEntry(item,history=false){',from);
+ assert.ok(from>0&&to>from,'Gerenciador de historico nao localizado');
+ const helpers=ui.slice(from,to);
+ const vmText='var state;\n'+helpers+'\n'+
+   'function step(next){state=next;const active=v332AdviceUpdate();return JSON.parse(JSON.stringify({active,history:v332AdviceHistory}));}\n'+
+   'function dismiss(id){const item=v332AdviceCache.find(x=>x.id===id);v332AdviceDismissed.set(id,item.signature);}\n'+
+   '({step,dismiss})';
+ const probe=runInNewContext(vmText,{Core:core});
+ const base={worldId:'w1',revision:1,player:{cityId:'CE-TIANGUA'},
+  calendar:{date:'2026-12-12'},units:[{id:'u1'}],active:{id:'u1'},
+  inventory:[{id:'p1',name:'Arroz',stock:0,inTransit:0,reorderPoint:10,alert:true}],
+  payables:{units:[]},fiscalOp:{units:[]},fiscal:{assessments:[]}};
+ const first=probe.step(base);
+ assert.equal(first.active.length,1);
+ const same=probe.step(base);assert.equal(same.active.length,1);assert.equal(same.history.length,0);
+ probe.dismiss(first.active[0].id);
+ assert.equal(probe.step(base).active.length,0);
+ const updated={...base,revision:2,inventory:[{...base.inventory[0],stock:40,alert:false}]};
+ const resolved=probe.step(updated);
+ assert.equal(resolved.active.length,0);
+ assert.equal(resolved.history.length,1);
+ assert.equal(resolved.history[0].status,'resolvida');
+ assert.equal(probe.step(updated).history.length,1,'render duplicou resolucao');
+ const newWorld=probe.step({...base,worldId:'w2',revision:1});
+ assert.equal(newWorld.active.length,1);
+ assert.equal(newWorld.history.length,0,'historico visual vazou para outra carreira');
+});
+
 test('UI C: painel, historico, dispensar, KPI e rotas sem comando automatico',()=>{
  for(const id of ['v332-advisor-panel','v332-advisor-toggle','v332-advisor-drawer',
   'v332-advisor-active-list','v332-advisor-history-list','v332-advisor-preview-text',

@@ -1,3 +1,17 @@
+# Cidade dos Negócios — V3.3.2 · Gestão Empresarial (12/11/2026)
+
+**VERSÃO HOMOLOGADA MEDIANTE GO EXPLÍCITO DO TITULAR EM 12/11/2026.** Os patches A, B, C e D compõem uma única atualização estável: oito indicadores empresariais, tempo e câmera integrados ao topo, agenda e ações rápidas, dock responsivo, Central de Gestão com equipe empresarial (Suprimentos, Controller Financeiro e Analista Tributário), recomendações fundamentadas com histórico visual por sessão e acessibilidade/touch aprimorados. O mapa de Tianguá e os 18 lotes permanecem proporcionais, sem esticamento.
+
+**Instalação:** feche o jogo, exporte um backup JSON de sua carreira para uma pasta externa e rode `ATUALIZAR_E_JOGAR.bat` na instalação existente; o atualizador baixa a `main` homologada. O arquivo principal é `index.html` offline. O jogo preserva `schemaVersion 10`, dados econômicos e motores fiscal/financeiro da V3.3.1. Se atualizar o executável, **não reimporte saves sem necessidade**; confira caixa, estoque e o funcionamento da carreira.
+
+**Limitações assumidas:** testes Chrome/Edge em Windows hospedado e dispositivos móveis emulados, não no computador/celular físico do jogador; nenhum save privado pessoal foi inspecionado. Histórico da Central é visual e não persistido; não existem compras ou pagamentos automáticos. A regra comercial de queda de vendas (COM-01) continua bloqueada sem histórico comparável auditado. O modelo fiscal é uma simulação educativa e não apura tributos reais.
+
+[Homologação V3.3.2](docs/HOMOLOGACAO_V332.md) · [Contrato e Gate D](docs/V332_PATCH_D_GATE.md) · [Atualizador](docs/ATUALIZADOR_WINDOWS.md) · [PRs #48–#51](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/pull/51)
+
+---
+
+## Histórico da V3.2.0
+
 # Cidade dos Negócios — V3.2.0 · FiscalEngine estratégico
 
 **Homologação autorizada em rodada única (09/11/2026)** com motor Fiscal jogável, regimes Simples/Presumido/Real, guias por competência, mora, planejamento, reforma tributária didática e nova interface Fiscal. O jogo continua **100% fictício e educativo**: não é apuração fiscal legal. Versão `3.2.0`, saves `schema 10`, e a cidade V3.1.0 permanece visualmente inalterada.

@@ -10,7 +10,7 @@ const Core=runInNewContext(readFileSync('src/core/game.js','utf8')+'\nCidadeCore
 const last=css.slice(css.lastIndexOf('V3.3.2-D — acabamento'));
 
 test('D-01: nenhuma mudanca na arte ou no save e mapa matematicamente integral',()=>{
-  assert.equal(JSON.parse(readFileSync('package.json','utf8')).version,'3.3.1');
+  assert.equal(JSON.parse(readFileSync('package.json','utf8')).version,'3.3.2');
   assert.equal(Core.SCHEMA_VERSION,10);
   assert.match(last,/V3\.3\.2-D/);
   assert.match(last,/v31-lot-selected \.city-stage>\.right-column/);

@@ -79,7 +79,7 @@ test('V3.3.2-A: mapa permanece proporcional e só desloca área útil',()=>{
   assert.match(patch,/\.v332-kpi-strip\{/);
   assert.match(patch,/overflow-x:auto/);
   assert.equal(Core.SCHEMA_VERSION,10);
-  assert.equal(JSON.parse(readFileSync('package.json','utf8')).version,'3.3.1','etapa candidata não publica nova versão sem GO');
+  assert.equal(JSON.parse(readFileSync('package.json','utf8')).version,'3.3.2','GO expresso: release V3.3.2 após Gate D');
 });
 
 test('V3.3.2-A: somente leitura, sem fluxos da Central de Gestão nem atalhos novos',()=>{

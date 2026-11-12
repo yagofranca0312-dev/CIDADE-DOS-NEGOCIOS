@@ -71,3 +71,7 @@ Após o aceite, gerar commit de release com atualização de versão e validaç�
 ## Provas
 
 Os links para CI, screenshots e commit candidato serão registrados na PR do Patch D após a execução do pipeline. Este documento não significa homologação antecipada.
+
+## Adendo de autorização — 12/11/2026
+
+O titular determinou expressamente: **“publique no jogo principal, para que eu possa atualizar e ja deixe homologado”**. A decisão configura o GO de publicação e homologação da V3.3.2 A+B+C+D e substitui a pendência de aceite pessoal como bloqueador de publicação. A ressalva permanece: não há teste no celular/PC físico nem com saves privados; CI técnica e mobile emulado não comprovam a experiência real no aparelho. O checkpoint da V3.3.1 foi preservado como `releases/v3.3.1-pre-v3.3.2`. Ver `HOMOLOGACAO_V332.md` para a evidência final e confirmação do release na `main`.

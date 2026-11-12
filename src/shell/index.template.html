@@ -186,13 +186,48 @@
               <button type="button" data-v31-open="administrativo:financas">Finanças</button>
             </div>
           </div>
-          <nav class="v31-dock" id="v31-dock" aria-label="Dock imersivo" hidden>
-            <button type="button" data-v31-open="empresa:dashboard"><span aria-hidden="true">▣</span>Empresas</button>
-            <button type="button" data-v31-open="mercado:compras"><span aria-hidden="true">⇅</span>Mercado</button>
-            <button type="button" data-v31-open="administrativo:rh-dp"><span aria-hidden="true">▥</span>Administrativo</button>
-            <button type="button" data-v31-open="administrativo:contabilidade"><span aria-hidden="true">▤</span>Relatórios</button>
-            <button type="button" data-v31-open="sistema"><span aria-hidden="true">⚙</span>Configurações</button>
-          </nav>
+          <!-- V3.3.2-B: agenda compacta e atalhos. Somente roteamento, sem comandos econômicos. -->
+          <div class="v332-bottom-zone" id="v332-bottom-zone" aria-label="Agenda e navegação empresarial">
+            <section class="v332-ops-panel" aria-label="Agenda e ações rápidas">
+              <div class="v332-ops-heading">
+                <strong>Agenda &amp; Ações Rápidas</strong>
+                <button type="button" id="v332-agenda-toggle" aria-expanded="false" aria-controls="v332-agenda-list" title="Expandir ou recolher a agenda">Agenda ▾</button>
+              </div>
+              <ul id="v332-agenda-list" class="v332-agenda-list" aria-label="Compromissos datados da carreira" hidden>
+                <li>Nenhum compromisso confirmado.</li>
+              </ul>
+              <div class="v332-quick-actions" role="group" aria-label="Atalhos para tarefas frequentes">
+                <button type="button" data-v332-route="mercado:compras" data-v332-focus="restock-assistant" data-v332-requires="unit"><span aria-hidden="true">📦</span> Repor Estoque</button>
+                <button type="button" data-v332-route="administrativo:financas" data-v332-focus="payable-operating-form"><span aria-hidden="true">▤</span> Pagar Contas</button>
+                <button type="button" data-v332-route="mercado:outros" data-v332-focus="price-form" data-v332-requires="unit"><span aria-hidden="true">＄</span> Preços</button>
+                <button type="button" data-v332-route="administrativo:fiscal" data-v332-focus="v23-pane-administrativo-fiscal"><span aria-hidden="true">🧾</span> Fiscal</button>
+              </div>
+              <p id="v332-action-hint" class="v332-action-hint" role="status" aria-live="polite">Os atalhos abrem formulários; nenhuma ação é executada automaticamente.</p>
+            </section>
+            <nav class="v31-dock v332-dock" id="v31-dock" aria-label="Navegação empresarial" hidden>
+              <button type="button" data-v31-open="empresa:dashboard"><span aria-hidden="true">▣</span>Empresas</button>
+              <button type="button" data-v31-open="mercado:compras"><span aria-hidden="true">⇅</span>Mercado</button>
+              <button type="button" class="v332-dock-extra" data-v332-route="mercado:compras" data-v332-focus="restock-assistant" data-v332-requires="unit"><span aria-hidden="true">🛒</span>Compras</button>
+              <button type="button" class="v332-dock-extra" data-v332-route="mercado:estoque" data-v332-requires="unit"><span aria-hidden="true">▥</span>Estoque</button>
+              <button type="button" class="v332-dock-extra" data-v332-route="administrativo:financas"><span aria-hidden="true">＄</span>Financeiro</button>
+              <button type="button" class="v332-dock-extra" data-v332-route="administrativo:fiscal"><span aria-hidden="true">▤</span>Fiscal</button>
+              <button type="button" class="v332-dock-extra" data-v332-route="mercado:outros" data-v332-focus="price-form" data-v332-requires="unit"><span aria-hidden="true">％</span>Preços</button>
+              <button type="button" data-v31-open="administrativo:rh-dp"><span aria-hidden="true">▥</span>Administrativo</button>
+              <button type="button" data-v31-open="administrativo:contabilidade"><span aria-hidden="true">▤</span>Relatórios</button>
+              <button type="button" data-v31-open="sistema"><span aria-hidden="true">⚙</span>Configurações</button>
+              <button type="button" id="v332-more-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="v332-more-menu"><span aria-hidden="true">☷</span>Mais</button>
+            </nav>
+            <div class="v332-bottom-reserve" aria-hidden="true"></div>
+            <div class="v332-more-menu" id="v332-more-menu" role="group" aria-label="Mais funções da carreira" hidden>
+              <button type="button" data-v332-route="mercado:compras" data-v332-focus="restock-assistant" data-v332-requires="unit">Compras / Reposição</button>
+              <button type="button" data-v332-route="mercado:estoque" data-v332-requires="unit">Estoque</button>
+              <button type="button" data-v332-route="mercado:outros" data-v332-focus="price-form" data-v332-requires="unit">Alterar preços</button>
+              <button type="button" data-v332-route="administrativo:financas" data-v332-focus="payable-operating-form">Financeiro / Contas</button>
+              <button type="button" data-v332-route="administrativo:fiscal">Fiscal</button>
+              <button type="button" data-v332-route="administrativo:contabilidade">Relatórios</button>
+              <button type="button" data-v332-route="sistema:saves">Configurações e backup</button>
+            </div>
+          </div>
           <button type="button" class="v31-overlay-close" id="v31-overlay-close" aria-label="Fechar janela e voltar à cidade" title="Fechar janela" hidden>✕</button>
         </section>
         <section data-view="empresa" class="view" hidden><header class="v31-command-header" data-v31-header="empresa">

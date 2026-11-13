@@ -14,6 +14,7 @@ function send(state,type,payload={}){
 function network(){
   let s=send(null,'CARREIRA.CRIAR',{name:'QA C',companyName:'Matriz QA',cityId:'CE-TIANGUA',seed:333031});
   s=send(s,'EMPRESA.ABRIR',{sector:'mercado',cityId:'CE-TIANGUA',lot:3});
+  s=send(s,'EMPRESA.ABRIR',{sector:'mercado',cityId:'CE-TIANGUA',lot:4});
   return s;
 }
 const readPlan=(s,opts)=>plan.planQuickAction(s,opts);
@@ -63,7 +64,7 @@ test('C-04: aviso resolvido ou inventado não permite ação stale',()=>{
 });
 
 test('C-05: pré-requisitos sem empresa e rotas não autorizadas falham com segurança',()=>{
-  const s=send(null,'CARREIRA.CRIAR',{name:'C vazio',companyName:'QA',cityId:'CE-TIANGUA',seed:333032});
+  const s=send(null,'CARREIRA.CRIAR',{name:'Carreira Sem Unidade',companyName:'Empresa Vazia de Teste',cityId:'CE-TIANGUA',seed:333032});
   assert.equal(readPlan(s,{route:'mercado:compras',requiresUnit:true}).status,'NEEDS_UNIT');
   assert.equal(readPlan(s,{route:'mercado:estoque'}).status,'NEEDS_UNIT');
   assert.equal(readPlan(s,{route:'administrativo:financas'}).status,'READY');

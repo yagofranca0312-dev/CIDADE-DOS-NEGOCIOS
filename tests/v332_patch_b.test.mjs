@@ -92,8 +92,10 @@ test('B-05: navegação de atalhos nao executa comando economico',()=>{
  assert.ok(block.includes('v31OpenPanel('));
  assert.ok(block.includes("button.dataset.v332Requires==='unit'"));
  assert.ok(block.includes('v332MoreClose()'));
- assert.ok(block.includes('focus.scrollIntoView'));
- assert.doesNotMatch(block,/Core\.dispatch\(|commit\(|persistDurable\(|localStorage\.|sessionStorage\./);
+ assert.ok(block.includes('selected.scrollIntoView'));
+ assert.doesNotMatch(block,/Core\.dispatch\(|persistDurable\(|localStorage\.|sessionStorage\./);
+ assert.match(block,/await commit\('EMPRESA\.ATIVAR'/);
+ assert.doesNotMatch(block,/commit\('(?!EMPRESA\.ATIVAR)/);
  assert.match(ui,/v332-bottom-zone'\)\.addEventListener\('click'/);
  assert.match(ui,/v332-agenda-toggle'\)\.addEventListener\('click'/);
  assert.match(ui,/v332-more-toggle'\)\.addEventListener\('click'/);

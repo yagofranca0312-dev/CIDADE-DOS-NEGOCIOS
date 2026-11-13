@@ -129,7 +129,8 @@ test('B-10: UI usa motor único e protege o alvo da unidade sem dispatch',()=>{
   assert.match(agendaBody,/v333DecisionTracker\.inspect\(current\)\.all/);
   assert.match(ui,/dataset\.v333OccurrenceId/);
   assert.match(ui,/button\.dataset\.v332BusinessId=item\.scope\.businessId/);
-  assert.match(ui,/Core\.activeBusiness\(state\)\?\.id!==targetBusiness/);
+  assert.match(ui,/CidadeV333DecisionEngine\.planQuickAction\(state/);
+  assert.match(ui,/Core\.activeBusiness\(state\)\?\.id!==plan\.switchBusinessId/);
   assert.doesNotMatch(agendaBody,/Core\.dispatch\(|commit\(|localStorage\.|indexedDB\./);
   assert.doesNotMatch(engineSrc,/Core\.dispatch\(|localStorage\.|indexedDB\.|fetch\(/);
 });

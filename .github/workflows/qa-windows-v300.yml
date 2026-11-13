@@ -10,6 +10,7 @@ on:
       - 'tools/v300-postrelease-audit.mjs'
       - 'tools/qa-windows-v310.mjs'
       - 'tools/qa-windows-v333c.mjs'
+      - 'tools/qa-windows-v333d.mjs'
       - 'tools/qa-windows-browser-v300.mjs'
       - 'tools/qa-windows-integrated-v300.mjs'
       - 'tools/qa-windows-longrun-v300.mjs'
@@ -55,6 +56,9 @@ jobs:
       - name: V3.1 QA cidade imersiva, camera, overlays e mobile
         shell: pwsh
         run: node tools/qa-windows-v310.mjs
+      - name: V3.3.3-D QA Central integrada acessibilidade e layout
+        shell: pwsh
+        run: node tools/qa-windows-v333d.mjs
       - name: V3.3.3-C QA contextual multiunidade Chrome Edge e mobile emulado
         shell: pwsh
         run: node tools/qa-windows-v333c.mjs

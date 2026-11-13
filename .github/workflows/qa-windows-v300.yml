@@ -2,7 +2,7 @@ name: QA V3.0 Windows Chrome Edge — offline e persistencia
 
 on:
   push:
-    branches: [feat/v3.3.2-b-atalhos-agenda, feat/v3.3.2-c-central-de-gestao, feat/v3.3.2-d-polimento-homologacao, feat/v3.3.3-a-central-confiabilidade, feat/v3.3.3-b-agenda-integrada, feat/v3.3.3-c-acoes-contextuais, feat/v3.3.3-d-polimento-experiencia, feat/v3.3.3-e-qualidade-prehomologacao]
+    branches: [feat/v3.3.2-b-atalhos-agenda, feat/v3.3.2-c-central-de-gestao, feat/v3.3.2-d-polimento-homologacao, feat/v3.3.3-a-central-confiabilidade, feat/v3.3.3-b-agenda-integrada, feat/v3.3.3-c-acoes-contextuais, feat/v3.3.3-d-polimento-experiencia, feat/v3.3.3-e-qualidade-prehomologacao, fix/v3.3.3-debug-prehomologacao]
   pull_request:
     branches: [main]
     paths:
@@ -66,6 +66,9 @@ jobs:
       - name: V3.3.3-E QA global adversarial e isolamento entre carreiras
         shell: pwsh
         run: node tools/qa-windows-v333e.mjs
+      - name: V3.3.3 Debug regressões de concorrência e estado visual
+        shell: pwsh
+        run: node tools/qa-windows-v333-debug.mjs
       - name: Executar Chrome e Edge reais em file offline (QA sintetico)
         shell: pwsh
         run: node tools/qa-windows-browser-v300.mjs

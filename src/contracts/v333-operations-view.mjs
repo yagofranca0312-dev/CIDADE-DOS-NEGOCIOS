@@ -18,7 +18,7 @@ export function createV333OperationsView(Core,Decision){
     const history=Array.isArray(snapshot.history)?snapshot.history:[];
     const matches=item=>(businessId==='all'||item.scope?.businessId===businessId)&&
       (severity==='all'||item.severity===severity);
-    const dated=Decision.agenda(state,{limit:100,occurrences:all});
+    const dated=Decision.agenda(state,{limit:Infinity,occurrences:all});
     const team=active.filter(matches),visibleHistory=history.filter(matches);
     const agenda=dated.filter(item=>matches(item)&&(due==='all'||item.status===due));
     return {

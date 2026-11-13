@@ -9,6 +9,7 @@ on:
       - '.github/workflows/qa-windows-v300.yml'
       - 'tools/v300-postrelease-audit.mjs'
       - 'tools/qa-windows-v310.mjs'
+      - 'tools/qa-windows-v333c.mjs'
       - 'tools/qa-windows-browser-v300.mjs'
       - 'tools/qa-windows-integrated-v300.mjs'
       - 'tools/qa-windows-longrun-v300.mjs'
@@ -54,6 +55,9 @@ jobs:
       - name: V3.1 QA cidade imersiva, camera, overlays e mobile
         shell: pwsh
         run: node tools/qa-windows-v310.mjs
+      - name: V3.3.3-C QA contextual multiunidade Chrome Edge e mobile emulado
+        shell: pwsh
+        run: node tools/qa-windows-v333c.mjs
       - name: Executar Chrome e Edge reais em file offline (QA sintetico)
         shell: pwsh
         run: node tools/qa-windows-browser-v300.mjs

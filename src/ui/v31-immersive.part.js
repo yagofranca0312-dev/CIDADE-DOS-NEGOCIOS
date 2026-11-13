@@ -131,18 +131,90 @@
 
   // V3.3.3-B: Agenda Executiva e Central consomem a identidade V333-A.
   // A dispensa visual de aviso não cancela compromisso datado.
+  // D: filtros e abas pertencem exclusivamente à apresentação (jamais ao save).
+  let v333HubWorld=null,v333HubBusiness='all',v333HubSeverity='all',v333HubDue='all';
+  let v333HubOptionsKey=null;
+  function v333HubProject(){
+    const snapshot=v333DecisionTracker.inspect(state);
+    return CidadeV333OperationsView.project(state,snapshot,{
+      businessId:v333HubBusiness,severity:v333HubSeverity,due:v333HubDue
+    });
+  }
+  function v333SyncHubTabs(){
+    const selected=v332AdviceExpanded?'equipe':
+      !$('v332-agenda-list').hidden?'agenda':'acoes';
+    for(const button of document.querySelectorAll('[data-v333-hub-tab]')){
+      button.setAttribute('aria-pressed',String(button.dataset.v333HubTab===selected));
+    }
+  }
+  function v333RenderHub(){
+    if(!state?.player?.cityId)return;
+    const world=String(state.worldId);
+    if(v333HubWorld!==world){
+      v333HubWorld=world;v333HubBusiness='all';v333HubSeverity='all';v333HubDue='all';
+      v333HubOptionsKey=null;
+    }
+    const units=Core.businesses(state);
+    if(v333HubBusiness!=='all'&&!units.some(x=>x.id===v333HubBusiness))v333HubBusiness='all';
+    const chooser=$('v333-hub-unit');
+    const optionKey=units.map(u=>u.id+'|'+u.cityId).join(';');
+    if(optionKey!==v333HubOptionsKey){
+      v333HubOptionsKey=optionKey;chooser.replaceChildren();
+      const all=document.createElement('option');all.value='all';all.textContent='Todas';
+      chooser.appendChild(all);
+      for(const unit of units){
+        const option=document.createElement('option');option.value=unit.id;
+        option.textContent=unit.id+' · '+(unit.cityId||'cidade');
+        chooser.appendChild(option);
+      }
+    }
+    chooser.value=v333HubBusiness;
+    $('v333-hub-severity').value=v333HubSeverity;
+    $('v333-hub-due').value=v333HubDue;
+    const summary=v333HubProject().summary;
+    setText('v333-hub-summary',
+      BRDate(summary.date)+' · '+summary.units+' empresa(s) · '+
+      summary.activeTotal+' aviso(s), '+summary.urgentTotal+' urgente(s) · '+
+      summary.overdueTotal+' compromisso(s) vencido(s)');
+    $('v333-command-hub').dataset.filtered=String(
+      v333HubBusiness!=='all'||v333HubSeverity!=='all'||v333HubDue!=='all');
+    v333SyncHubTabs();
+  }
+  function v333OpenHub(tab){
+    if(tab==='equipe'){
+      if(!$('v332-agenda-list').hidden){
+        $('v332-agenda-list').hidden=true;
+        $('v332-agenda-toggle').setAttribute('aria-expanded','false');
+      }
+      if(!v332AdviceExpanded)v332AdvisorExpand();
+      else $('v332-advisor-close').focus({preventScroll:true});
+    }else if(tab==='agenda'){
+      if(v332AdviceExpanded){v332AdviceExpanded=false;v332RenderAdvisor();}
+      if($('v332-agenda-list').hidden)$('v332-agenda-toggle').click();
+      $('v332-agenda-toggle').focus({preventScroll:true});
+    }else if(tab==='acoes'){
+      if(v332AdviceExpanded){v332AdviceExpanded=false;v332RenderAdvisor();}
+      if(!$('v332-agenda-list').hidden){
+        $('v332-agenda-list').hidden=true;
+        $('v332-agenda-toggle').setAttribute('aria-expanded','false');
+      }
+      $('v333-quick-actions').querySelector('button')?.focus({preventScroll:true});
+    }
+    v333SyncHubTabs();
+  }
   function v332AgendaItems(current){
     if(!current?.player?.cityId)return [];
     const occurrences=v333DecisionTracker.inspect(current).all;
     return CidadeV333DecisionEngine.agenda(current,{limit:3,occurrences});
   }
+
   function v332RenderAgenda(){
     const list=$('v332-agenda-list');if(!list)return;
-    const items=v332AgendaItems(state);
+    const items=v333HubProject().agenda;
     list.replaceChildren();
     if(!items.length){
       const li=document.createElement('li');
-      li.textContent='Nenhum compromisso com data confirmada na agenda.';
+      li.textContent='Nenhum compromisso datado corresponde aos filtros.';
       list.appendChild(li);
     }else for(const item of items){
       const li=document.createElement('li');
@@ -317,14 +389,15 @@
 
   function v332RenderAdvisor(){
     if(!state?.player?.cityId)return;
-    const visible=v332AdviceUpdate(),count=visible.length;
+    const allVisible=v332AdviceUpdate(),visible=v333HubProject().team,count=allVisible.length;
     setText('v332-hud-advisory',String(count));
     setText('v332-hud-advice-note',count?'Recomendações pendentes':'Nenhuma prioridade atual');
     $('v332-hud-advice-trigger').classList.toggle('v332-kpi-has-alerts',count>0);
     $('v332-hud-advice-trigger').setAttribute('aria-label',
       count+' recomendação(ões) atuais na Central de Gestão; abrir equipe');
     $('v332-hud-advice-trigger').setAttribute('aria-expanded',String(v332AdviceExpanded));
-    const preview=count?visible[0].role+': '+visible[0].title:
+    const preview=visible.length?visible[0].role+': '+visible[0].title:
+      count?'Nenhum aviso corresponde aos filtros.':
       'Nenhuma ação prioritária identificada neste momento.';
     // Evitar anúncios repetidos por leitores de tela em cada render do jogo.
     const previewNode=$('v332-advisor-preview-text');
@@ -341,13 +414,15 @@
     $('v332-advisor-active-list').hidden=isHistory;
     $('v332-advisor-history-list').hidden=!isHistory;
     const activeList=$('v332-advisor-active-list');activeList.replaceChildren();
-    if(count)for(const item of visible.slice(0,50))activeList.append(v332AdviceEntry(item));
+    if(visible.length)for(const item of visible.slice(0,50))activeList.append(v332AdviceEntry(item));
     else{
       const li=document.createElement('li');li.className='v332-advisor-empty';
-      li.textContent='Nenhuma ação prioritária identificada neste momento.';activeList.append(li);
+      li.textContent=count?'Nenhuma recomendação para os filtros selecionados.':
+        'Nenhuma ação prioritária identificada neste momento.';activeList.append(li);
     }
     const historyList=$('v332-advisor-history-list');historyList.replaceChildren();
-    if(v332AdviceHistory.length)for(const item of v332AdviceHistory)historyList.append(v332AdviceEntry(item,true));
+    const filteredHistory=v333HubProject().history;
+    if(filteredHistory.length)for(const item of filteredHistory)historyList.append(v332AdviceEntry(item,true));
     else{
       const li=document.createElement('li');li.className='v332-advisor-empty';
       li.textContent='Nenhum aviso resolvido ou dispensado nesta sessão.';historyList.append(li);
@@ -355,7 +430,7 @@
   }
 
   function v332AdvisorCollapse(){
-    v332AdviceExpanded=false;v332RenderAdvisor();
+    v332AdviceExpanded=false;v332RenderAdvisor();v333SyncHubTabs();
     const target=v332AdvisorReturnFocus?.isConnected?v332AdvisorReturnFocus:
       $('v332-advisor-toggle');
     v332AdvisorReturnFocus=null;target.focus({preventScroll:true});
@@ -364,7 +439,7 @@
     if(!v332AdviceExpanded)v332AdvisorReturnFocus=document.activeElement;
     v332AdviceExpanded=!v332AdviceExpanded;
     if(v332AdviceExpanded)v332MoreClose();
-    v332RenderAdvisor();
+    v332RenderAdvisor();v333SyncHubTabs();
     if(v332AdviceExpanded)$('v332-advisor-close').focus({preventScroll:true});
     else v332AdvisorCollapse();
   }
@@ -379,6 +454,7 @@
     $('v31-overlay-close').hidden=!immersiveOpen;
     document.body.classList.toggle('v31-lot-selected',!!inspectorOpen);
     v332RenderHud();
+    v333RenderHub();
     v332RenderAgenda();
     v332RenderAdvisor();
     v31CameraLoad(viewCityId);v31CameraApply();
@@ -587,6 +663,31 @@
     saves.prepend($('v221-city-pick'));
     saves.prepend(cityAction);
 
+    // D: abas integradas e filtros read-only, antes dos listeners legados.
+    for(const button of document.querySelectorAll('[data-v333-hub-tab]')){
+      button.addEventListener('click',()=>v333OpenHub(button.dataset.v333HubTab));
+    }
+    $('v333-command-hub').addEventListener('keydown',event=>{
+      const current=event.target.closest('[data-v333-hub-tab]');
+      if(!current||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+      const tabs=[...$('v333-command-hub').querySelectorAll('[data-v333-hub-tab]')];
+      const pos=tabs.indexOf(current);
+      const next=event.key==='Home'?0:event.key==='End'?tabs.length-1:
+        (pos+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;
+      event.preventDefault();tabs[next].focus({preventScroll:true});
+    });
+    for(const [id,field] of [
+      ['v333-hub-unit','v333HubBusiness'],
+      ['v333-hub-severity','v333HubSeverity'],
+      ['v333-hub-due','v333HubDue']
+    ]){
+      $(id).addEventListener('change',()=>{
+        if(field==='v333HubBusiness')v333HubBusiness=$(id).value;
+        if(field==='v333HubSeverity')v333HubSeverity=$(id).value;
+        if(field==='v333HubDue')v333HubDue=$(id).value;
+        v333RenderHub();v332RenderAgenda();v332RenderAdvisor();
+      });
+    }
     // Central de Gestao: so muda estado visual; nunca executa comandos economicos.
     $('v332-advisor-toggle').addEventListener('click',v332AdvisorExpand);
     $('v332-hud-advice-trigger').addEventListener('click',v332AdvisorExpand);
@@ -640,6 +741,7 @@
       if(v332AdviceExpanded){v332AdviceExpanded=false;v332RenderAdvisor();}
       const list=$('v332-agenda-list');list.hidden=!list.hidden;
       $('v332-agenda-toggle').setAttribute('aria-expanded',String(!list.hidden));
+      v333SyncHubTabs();
     });
     document.addEventListener('keydown',event=>{
       if(event.key==='Escape'&&!$('v332-more-menu').hidden){

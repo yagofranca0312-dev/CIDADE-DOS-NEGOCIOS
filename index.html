@@ -2135,6 +2135,86 @@ body.v31-immersive .right-column .world-drawer[open]{
   max-height:min(58dvh,calc(100dvh - var(--v332-map-top) - var(--v332-map-bottom) - 12px))!important;
 }
 
+
+/* V3.3.3-D — Central de Operações, sem alterar SVG, câmera ou hitboxes.
+   A faixa inferior reserva espaço próprio e preserva a área útil do mapa. */
+body.v31-immersive{--v332-map-bottom:229px}
+body.v31-immersive .v332-bottom-zone{
+  height:213px!important;grid-template-rows:auto 1fr!important;row-gap:6px!important;
+}
+body.v31-immersive .v333-command-hub{
+  pointer-events:auto;grid-row:1;grid-column:1/-1;
+  align-self:start;justify-self:stretch;display:grid;
+  grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;
+  width:100%;max-width:1320px;box-sizing:border-box;margin:0 auto;padding:6px 10px;
+  border:1px solid #7896a5;border-radius:11px;background:rgba(6,29,45,.96);
+  color:#edf4f5;min-width:0;box-shadow:0 8px 22px #0007;
+}
+body.v31-immersive .v332-ops-panel,
+body.v31-immersive #v31-dock[data-v332-dock],
+body.v31-immersive .v332-advisor-panel{grid-row:2}
+.v333-hub-summary{display:flex;align-items:center;gap:8px;min-width:0;white-space:nowrap;overflow:hidden}
+.v333-hub-summary strong{color:#f7dda6;font-size:.71rem;flex:0 0 auto}
+.v333-hub-summary span{overflow:hidden;text-overflow:ellipsis;font-size:.65rem;color:#d0e0e7}
+.v333-hub-tabs{display:flex;align-items:center;gap:4px;flex:0 0 auto}
+body.v31-immersive .v333-hub-tabs button{
+  min-height:35px;min-width:62px;padding:5px 9px;border:1px solid #5f8798;
+  border-radius:7px;background:#173d53;color:#e2eaf0;font-size:.69rem;font-weight:750;
+}
+body.v31-immersive .v333-hub-tabs button[aria-pressed="true"]{
+  background:#3e5870;color:#ffe7b1;border-color:#d6b879;
+}
+.v333-hub-filters{display:flex;align-items:center;gap:6px;min-width:0;max-width:100%;overflow-x:auto}
+.v333-hub-filters label{display:flex;align-items:center;gap:4px;flex:0 0 auto;font-size:.60rem;color:#cedee5}
+body.v31-immersive .v333-hub-filters select{
+  color:#eff3f2;background:#1a4055;border:1px solid #789aaa;border-radius:6px;
+  padding:4px;min-height:35px;max-width:116px;font-size:.68rem;
+}
+body.v31-immersive .v333-command-hub :is(button,select):focus-visible{
+  outline:3px solid #ffe0a2!important;outline-offset:2px;
+}
+@media(max-width:1100px){
+  body.v31-immersive .v333-command-hub{grid-template-columns:minmax(0,1fr) auto;gap:4px 8px}
+  .v333-hub-filters{grid-column:1/-1;justify-content:center}
+}
+@media(max-width:900px){
+  body.v31-immersive{--v332-map-bottom:336px}
+  body.v31-immersive .v332-bottom-zone{height:321px!important;min-height:321px!important;gap:5px!important}
+  body.v31-immersive .v333-command-hub{
+    order:-1;flex:0 0 auto;display:grid;grid-template-columns:1fr;
+    width:100%;padding:5px 7px;gap:4px;border-radius:9px;
+  }
+  .v333-hub-summary{justify-content:center;min-height:18px}
+  .v333-hub-summary strong{font-size:.64rem}
+  .v333-hub-summary span{font-size:.60rem}
+  .v333-hub-tabs{justify-content:center;gap:5px}
+  body.v31-immersive .v333-hub-tabs button{flex:1 1 0;min-height:40px}
+  .v333-hub-filters{justify-content:flex-start;gap:8px;scrollbar-width:thin}
+  .v333-hub-filters label{font-size:.58rem}
+  body.v31-immersive .v333-hub-filters select{min-height:35px;max-width:100px}
+}
+@media(max-height:750px) and (max-width:900px){
+  body.v31-immersive{--v332-map-bottom:324px}
+  body.v31-immersive .v332-bottom-zone{height:309px!important;min-height:309px!important}
+  .v333-hub-summary span{max-width:195px}
+  body.v31-immersive .v333-command-hub{padding:3px 6px;gap:2px}
+  body.v31-immersive .v333-hub-tabs button{min-height:38px}
+}
+@media(max-width:360px){
+  .v333-hub-summary span{max-width:160px}
+  body.v31-immersive .v333-hub-tabs button{min-width:0;padding:5px}
+}
+
+/* V3.3.3-D — drawer acima do centro integrado. Não encobre filtros nem abas,
+   inclusive durante a navegação por teclado e em mobile estreito. */
+body.v31-immersive .v332-advisor-drawer{bottom:calc(100% + 68px)!important}
+@media(max-width:1100px){
+  body.v31-immersive .v332-advisor-drawer{bottom:calc(100% + 95px)!important}
+}
+@media(max-width:900px){
+  body.v31-immersive .v332-advisor-drawer{bottom:calc(100% + 113px)!important}
+}
+
 /* V3.2 fiscal: classes novas, sem modificar o CSS imersivo da V3.1. */
 .fiscal-v32-section{margin:8px 0 18px;padding:16px}
 .fiscal-v32-section .panel-heading h3{font-size:1.08rem}
@@ -2330,6 +2410,35 @@ body.v31-immersive .right-column .world-drawer[open]{
           </div>
           <!-- V3.3.2-B: agenda compacta e atalhos. Somente roteamento, sem comandos econômicos. -->
           <div class="v332-bottom-zone" id="v332-bottom-zone" aria-label="Agenda e navegação empresarial">
+            <!-- V3.3.3-D: ponto de entrada integrado; reutiliza os painéis já existentes. -->
+            <section class="v333-command-hub" id="v333-command-hub" aria-label="Centro integrado de operações" aria-describedby="v333-hub-summary">
+              <div class="v333-hub-summary">
+                <strong>Central de Operações</strong>
+                <span id="v333-hub-summary" role="status" aria-live="polite">Resumo do dia simulado.</span>
+              </div>
+              <div class="v333-hub-tabs" role="group" aria-label="Abas de gestão">
+                <button type="button" data-v333-hub-tab="equipe" aria-pressed="false" aria-controls="v332-advisor-drawer">Equipe</button>
+                <button type="button" data-v333-hub-tab="agenda" aria-pressed="false" aria-controls="v332-agenda-list">Agenda</button>
+                <button type="button" data-v333-hub-tab="acoes" aria-pressed="true" aria-controls="v333-quick-actions">Ações</button>
+              </div>
+              <div class="v333-hub-filters" role="group" aria-label="Filtros dos avisos e compromissos">
+                <label for="v333-hub-unit">Empresa
+                  <select id="v333-hub-unit"><option value="all">Todas</option></select>
+                </label>
+                <label for="v333-hub-severity">Prioridade
+                  <select id="v333-hub-severity">
+                    <option value="all">Todas</option><option value="urgente">Urgente</option>
+                    <option value="atenção">Atenção</option><option value="informativa">Informativa</option>
+                  </select>
+                </label>
+                <label for="v333-hub-due">Prazo
+                  <select id="v333-hub-due">
+                    <option value="all">Todos</option><option value="vencido">Vencidos</option>
+                    <option value="hoje">Hoje</option><option value="previsto">Próximos</option>
+                  </select>
+                </label>
+              </div>
+            </section>
             <section class="v332-ops-panel" aria-label="Agenda e ações rápidas">
               <div class="v332-ops-heading">
                 <strong>Agenda &amp; Ações Rápidas</strong>
@@ -2338,7 +2447,7 @@ body.v31-immersive .right-column .world-drawer[open]{
               <ul id="v332-agenda-list" class="v332-agenda-list" aria-label="Compromissos datados da carreira" hidden>
                 <li>Nenhum compromisso confirmado.</li>
               </ul>
-              <div class="v332-quick-actions" role="group" aria-label="Atalhos para tarefas frequentes">
+              <div class="v332-quick-actions" id="v333-quick-actions" role="group" aria-label="Atalhos para tarefas frequentes">
                 <button type="button" data-v332-route="mercado:compras" data-v332-focus="restock-assistant" data-v332-requires="unit"><span aria-hidden="true">📦</span> Repor Estoque</button>
                 <button type="button" data-v332-route="administrativo:financas" data-v332-focus="payable-operating-form"><span aria-hidden="true">▤</span> Pagar Contas</button>
                 <button type="button" data-v332-route="mercado:outros" data-v332-focus="price-form" data-v332-requires="unit"><span aria-hidden="true">＄</span> Preços</button>
@@ -6474,6 +6583,44 @@ function createV333DecisionEngine(Core){
 }
 
 const CidadeV333DecisionEngine=createV333DecisionEngine(CidadeCore);
+// V3.3.3-D — projeção somente leitura de Equipe, Agenda e Ações.
+// Usa o MESMO snapshot da Central/Agenda e não cria alertas concorrentes.
+function createV333OperationsView(Core,Decision){
+  const severitySet=new Set(['urgente','atenção','informativa']);
+  const dueSet=new Set(['vencido','hoje','previsto']);
+  const allowed=Object.freeze({businessId:'all',severity:'all',due:'all'});
+  const empty=()=>({team:[],history:[],agenda:[],summary:{
+    date:null,units:0,activeTotal:0,urgentTotal:0,datedTotal:0,overdueTotal:0,
+    shownTeam:0,shownAgenda:0},filters:{...allowed}});
+  function project(state,snapshot={},requested={}){
+    if(!state?.player?.cityId||!state.world)return empty();
+    const unitIds=new Set(Core.businesses(state).map(x=>x.id));
+    const businessId=unitIds.has(requested.businessId)?requested.businessId:'all';
+    const severity=severitySet.has(requested.severity)?requested.severity:'all';
+    const due=dueSet.has(requested.due)?requested.due:'all';
+    const active=Array.isArray(snapshot.active)?snapshot.active:[];
+    const all=Array.isArray(snapshot.all)?snapshot.all:active;
+    const history=Array.isArray(snapshot.history)?snapshot.history:[];
+    const matches=item=>(businessId==='all'||item.scope?.businessId===businessId)&&
+      (severity==='all'||item.severity===severity);
+    const dated=Decision.agenda(state,{limit:100,occurrences:all});
+    const team=active.filter(matches),visibleHistory=history.filter(matches);
+    const agenda=dated.filter(item=>matches(item)&&(due==='all'||item.status===due));
+    return {
+      team:team.slice(0,50),history:visibleHistory.slice(0,80),agenda:agenda.slice(0,3),
+      summary:{
+        date:state.calendar.date,units:unitIds.size,
+        activeTotal:active.length,urgentTotal:active.filter(x=>x.severity==='urgente').length,
+        datedTotal:dated.length,overdueTotal:dated.filter(x=>x.status==='vencido').length,
+        shownTeam:team.length,shownAgenda:agenda.length
+      },
+      filters:{businessId,severity,due}
+    };
+  }
+  return Object.freeze({project});
+}
+
+const CidadeV333OperationsView=createV333OperationsView(CidadeCore,CidadeV333DecisionEngine);
 /* CIDADE DOS NEGÓCIOS V2.2 — cena SVG isométrica, estritamente visual.
    Só consome city, ownedLots e lot; sem estado mutável, RNG, rede ou regras do jogo.
    Edifícios decorativos e atlas neutro NÃO representam atividades econômicas novas. */
@@ -8431,18 +8578,90 @@ function bindBalancePlan(){
 
   // V3.3.3-B: Agenda Executiva e Central consomem a identidade V333-A.
   // A dispensa visual de aviso não cancela compromisso datado.
+  // D: filtros e abas pertencem exclusivamente à apresentação (jamais ao save).
+  let v333HubWorld=null,v333HubBusiness='all',v333HubSeverity='all',v333HubDue='all';
+  let v333HubOptionsKey=null;
+  function v333HubProject(){
+    const snapshot=v333DecisionTracker.inspect(state);
+    return CidadeV333OperationsView.project(state,snapshot,{
+      businessId:v333HubBusiness,severity:v333HubSeverity,due:v333HubDue
+    });
+  }
+  function v333SyncHubTabs(){
+    const selected=v332AdviceExpanded?'equipe':
+      !$('v332-agenda-list').hidden?'agenda':'acoes';
+    for(const button of document.querySelectorAll('[data-v333-hub-tab]')){
+      button.setAttribute('aria-pressed',String(button.dataset.v333HubTab===selected));
+    }
+  }
+  function v333RenderHub(){
+    if(!state?.player?.cityId)return;
+    const world=String(state.worldId);
+    if(v333HubWorld!==world){
+      v333HubWorld=world;v333HubBusiness='all';v333HubSeverity='all';v333HubDue='all';
+      v333HubOptionsKey=null;
+    }
+    const units=Core.businesses(state);
+    if(v333HubBusiness!=='all'&&!units.some(x=>x.id===v333HubBusiness))v333HubBusiness='all';
+    const chooser=$('v333-hub-unit');
+    const optionKey=units.map(u=>u.id+'|'+u.cityId).join(';');
+    if(optionKey!==v333HubOptionsKey){
+      v333HubOptionsKey=optionKey;chooser.replaceChildren();
+      const all=document.createElement('option');all.value='all';all.textContent='Todas';
+      chooser.appendChild(all);
+      for(const unit of units){
+        const option=document.createElement('option');option.value=unit.id;
+        option.textContent=unit.id+' · '+(unit.cityId||'cidade');
+        chooser.appendChild(option);
+      }
+    }
+    chooser.value=v333HubBusiness;
+    $('v333-hub-severity').value=v333HubSeverity;
+    $('v333-hub-due').value=v333HubDue;
+    const summary=v333HubProject().summary;
+    setText('v333-hub-summary',
+      BRDate(summary.date)+' · '+summary.units+' empresa(s) · '+
+      summary.activeTotal+' aviso(s), '+summary.urgentTotal+' urgente(s) · '+
+      summary.overdueTotal+' compromisso(s) vencido(s)');
+    $('v333-command-hub').dataset.filtered=String(
+      v333HubBusiness!=='all'||v333HubSeverity!=='all'||v333HubDue!=='all');
+    v333SyncHubTabs();
+  }
+  function v333OpenHub(tab){
+    if(tab==='equipe'){
+      if(!$('v332-agenda-list').hidden){
+        $('v332-agenda-list').hidden=true;
+        $('v332-agenda-toggle').setAttribute('aria-expanded','false');
+      }
+      if(!v332AdviceExpanded)v332AdvisorExpand();
+      else $('v332-advisor-close').focus({preventScroll:true});
+    }else if(tab==='agenda'){
+      if(v332AdviceExpanded){v332AdviceExpanded=false;v332RenderAdvisor();}
+      if($('v332-agenda-list').hidden)$('v332-agenda-toggle').click();
+      $('v332-agenda-toggle').focus({preventScroll:true});
+    }else if(tab==='acoes'){
+      if(v332AdviceExpanded){v332AdviceExpanded=false;v332RenderAdvisor();}
+      if(!$('v332-agenda-list').hidden){
+        $('v332-agenda-list').hidden=true;
+        $('v332-agenda-toggle').setAttribute('aria-expanded','false');
+      }
+      $('v333-quick-actions').querySelector('button')?.focus({preventScroll:true});
+    }
+    v333SyncHubTabs();
+  }
   function v332AgendaItems(current){
     if(!current?.player?.cityId)return [];
     const occurrences=v333DecisionTracker.inspect(current).all;
     return CidadeV333DecisionEngine.agenda(current,{limit:3,occurrences});
   }
+
   function v332RenderAgenda(){
     const list=$('v332-agenda-list');if(!list)return;
-    const items=v332AgendaItems(state);
+    const items=v333HubProject().agenda;
     list.replaceChildren();
     if(!items.length){
       const li=document.createElement('li');
-      li.textContent='Nenhum compromisso com data confirmada na agenda.';
+      li.textContent='Nenhum compromisso datado corresponde aos filtros.';
       list.appendChild(li);
     }else for(const item of items){
       const li=document.createElement('li');
@@ -8617,14 +8836,15 @@ function bindBalancePlan(){
 
   function v332RenderAdvisor(){
     if(!state?.player?.cityId)return;
-    const visible=v332AdviceUpdate(),count=visible.length;
+    const allVisible=v332AdviceUpdate(),visible=v333HubProject().team,count=allVisible.length;
     setText('v332-hud-advisory',String(count));
     setText('v332-hud-advice-note',count?'Recomendações pendentes':'Nenhuma prioridade atual');
     $('v332-hud-advice-trigger').classList.toggle('v332-kpi-has-alerts',count>0);
     $('v332-hud-advice-trigger').setAttribute('aria-label',
       count+' recomendação(ões) atuais na Central de Gestão; abrir equipe');
     $('v332-hud-advice-trigger').setAttribute('aria-expanded',String(v332AdviceExpanded));
-    const preview=count?visible[0].role+': '+visible[0].title:
+    const preview=visible.length?visible[0].role+': '+visible[0].title:
+      count?'Nenhum aviso corresponde aos filtros.':
       'Nenhuma ação prioritária identificada neste momento.';
     // Evitar anúncios repetidos por leitores de tela em cada render do jogo.
     const previewNode=$('v332-advisor-preview-text');
@@ -8641,13 +8861,15 @@ function bindBalancePlan(){
     $('v332-advisor-active-list').hidden=isHistory;
     $('v332-advisor-history-list').hidden=!isHistory;
     const activeList=$('v332-advisor-active-list');activeList.replaceChildren();
-    if(count)for(const item of visible.slice(0,50))activeList.append(v332AdviceEntry(item));
+    if(visible.length)for(const item of visible.slice(0,50))activeList.append(v332AdviceEntry(item));
     else{
       const li=document.createElement('li');li.className='v332-advisor-empty';
-      li.textContent='Nenhuma ação prioritária identificada neste momento.';activeList.append(li);
+      li.textContent=count?'Nenhuma recomendação para os filtros selecionados.':
+        'Nenhuma ação prioritária identificada neste momento.';activeList.append(li);
     }
     const historyList=$('v332-advisor-history-list');historyList.replaceChildren();
-    if(v332AdviceHistory.length)for(const item of v332AdviceHistory)historyList.append(v332AdviceEntry(item,true));
+    const filteredHistory=v333HubProject().history;
+    if(filteredHistory.length)for(const item of filteredHistory)historyList.append(v332AdviceEntry(item,true));
     else{
       const li=document.createElement('li');li.className='v332-advisor-empty';
       li.textContent='Nenhum aviso resolvido ou dispensado nesta sessão.';historyList.append(li);
@@ -8655,7 +8877,7 @@ function bindBalancePlan(){
   }
 
   function v332AdvisorCollapse(){
-    v332AdviceExpanded=false;v332RenderAdvisor();
+    v332AdviceExpanded=false;v332RenderAdvisor();v333SyncHubTabs();
     const target=v332AdvisorReturnFocus?.isConnected?v332AdvisorReturnFocus:
       $('v332-advisor-toggle');
     v332AdvisorReturnFocus=null;target.focus({preventScroll:true});
@@ -8664,7 +8886,7 @@ function bindBalancePlan(){
     if(!v332AdviceExpanded)v332AdvisorReturnFocus=document.activeElement;
     v332AdviceExpanded=!v332AdviceExpanded;
     if(v332AdviceExpanded)v332MoreClose();
-    v332RenderAdvisor();
+    v332RenderAdvisor();v333SyncHubTabs();
     if(v332AdviceExpanded)$('v332-advisor-close').focus({preventScroll:true});
     else v332AdvisorCollapse();
   }
@@ -8679,6 +8901,7 @@ function bindBalancePlan(){
     $('v31-overlay-close').hidden=!immersiveOpen;
     document.body.classList.toggle('v31-lot-selected',!!inspectorOpen);
     v332RenderHud();
+    v333RenderHub();
     v332RenderAgenda();
     v332RenderAdvisor();
     v31CameraLoad(viewCityId);v31CameraApply();
@@ -8887,6 +9110,31 @@ function bindBalancePlan(){
     saves.prepend($('v221-city-pick'));
     saves.prepend(cityAction);
 
+    // D: abas integradas e filtros read-only, antes dos listeners legados.
+    for(const button of document.querySelectorAll('[data-v333-hub-tab]')){
+      button.addEventListener('click',()=>v333OpenHub(button.dataset.v333HubTab));
+    }
+    $('v333-command-hub').addEventListener('keydown',event=>{
+      const current=event.target.closest('[data-v333-hub-tab]');
+      if(!current||!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+      const tabs=[...$('v333-command-hub').querySelectorAll('[data-v333-hub-tab]')];
+      const pos=tabs.indexOf(current);
+      const next=event.key==='Home'?0:event.key==='End'?tabs.length-1:
+        (pos+(event.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;
+      event.preventDefault();tabs[next].focus({preventScroll:true});
+    });
+    for(const [id,field] of [
+      ['v333-hub-unit','v333HubBusiness'],
+      ['v333-hub-severity','v333HubSeverity'],
+      ['v333-hub-due','v333HubDue']
+    ]){
+      $(id).addEventListener('change',()=>{
+        if(field==='v333HubBusiness')v333HubBusiness=$(id).value;
+        if(field==='v333HubSeverity')v333HubSeverity=$(id).value;
+        if(field==='v333HubDue')v333HubDue=$(id).value;
+        v333RenderHub();v332RenderAgenda();v332RenderAdvisor();
+      });
+    }
     // Central de Gestao: so muda estado visual; nunca executa comandos economicos.
     $('v332-advisor-toggle').addEventListener('click',v332AdvisorExpand);
     $('v332-hud-advice-trigger').addEventListener('click',v332AdvisorExpand);
@@ -8940,6 +9188,7 @@ function bindBalancePlan(){
       if(v332AdviceExpanded){v332AdviceExpanded=false;v332RenderAdvisor();}
       const list=$('v332-agenda-list');list.hidden=!list.hidden;
       $('v332-agenda-toggle').setAttribute('aria-expanded',String(!list.hidden));
+      v333SyncHubTabs();
     });
     document.addEventListener('keydown',event=>{
       if(event.key==='Escape'&&!$('v332-more-menu').hidden){

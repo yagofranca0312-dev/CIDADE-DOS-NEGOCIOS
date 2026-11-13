@@ -2,7 +2,7 @@ name: QA V3.0 Windows Chrome Edge — offline e persistencia
 
 on:
   push:
-    branches: [feat/v3.3.2-b-atalhos-agenda, feat/v3.3.2-c-central-de-gestao, feat/v3.3.2-d-polimento-homologacao, feat/v3.3.3-a-central-confiabilidade, feat/v3.3.3-b-agenda-integrada, feat/v3.3.3-c-acoes-contextuais]
+    branches: [feat/v3.3.2-b-atalhos-agenda, feat/v3.3.2-c-central-de-gestao, feat/v3.3.2-d-polimento-homologacao, feat/v3.3.3-a-central-confiabilidade, feat/v3.3.3-b-agenda-integrada, feat/v3.3.3-c-acoes-contextuais, feat/v3.3.3-d-polimento-experiencia]
   pull_request:
     branches: [main]
     paths:
@@ -10,6 +10,7 @@ on:
       - 'tools/v300-postrelease-audit.mjs'
       - 'tools/qa-windows-v310.mjs'
       - 'tools/qa-windows-v333c.mjs'
+      - 'tools/qa-windows-v333d.mjs'
       - 'tools/qa-windows-browser-v300.mjs'
       - 'tools/qa-windows-integrated-v300.mjs'
       - 'tools/qa-windows-longrun-v300.mjs'
@@ -55,6 +56,9 @@ jobs:
       - name: V3.1 QA cidade imersiva, camera, overlays e mobile
         shell: pwsh
         run: node tools/qa-windows-v310.mjs
+      - name: V3.3.3-D QA Central integrada acessibilidade e layout
+        shell: pwsh
+        run: node tools/qa-windows-v333d.mjs
       - name: V3.3.3-C QA contextual multiunidade Chrome Edge e mobile emulado
         shell: pwsh
         run: node tools/qa-windows-v333c.mjs

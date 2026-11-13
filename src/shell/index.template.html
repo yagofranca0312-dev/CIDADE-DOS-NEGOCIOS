@@ -188,6 +188,35 @@
           </div>
           <!-- V3.3.2-B: agenda compacta e atalhos. Somente roteamento, sem comandos econômicos. -->
           <div class="v332-bottom-zone" id="v332-bottom-zone" aria-label="Agenda e navegação empresarial">
+            <!-- V3.3.3-D: ponto de entrada integrado; reutiliza os painéis já existentes. -->
+            <section class="v333-command-hub" id="v333-command-hub" aria-label="Centro integrado de operações" aria-describedby="v333-hub-summary">
+              <div class="v333-hub-summary">
+                <strong>Central de Operações</strong>
+                <span id="v333-hub-summary" role="status" aria-live="polite">Resumo do dia simulado.</span>
+              </div>
+              <div class="v333-hub-tabs" role="group" aria-label="Abas de gestão">
+                <button type="button" data-v333-hub-tab="equipe" aria-pressed="false" aria-controls="v332-advisor-drawer">Equipe</button>
+                <button type="button" data-v333-hub-tab="agenda" aria-pressed="false" aria-controls="v332-agenda-list">Agenda</button>
+                <button type="button" data-v333-hub-tab="acoes" aria-pressed="true" aria-controls="v333-quick-actions">Ações</button>
+              </div>
+              <div class="v333-hub-filters" role="group" aria-label="Filtros dos avisos e compromissos">
+                <label for="v333-hub-unit">Empresa
+                  <select id="v333-hub-unit"><option value="all">Todas</option></select>
+                </label>
+                <label for="v333-hub-severity">Prioridade
+                  <select id="v333-hub-severity">
+                    <option value="all">Todas</option><option value="urgente">Urgente</option>
+                    <option value="atenção">Atenção</option><option value="informativa">Informativa</option>
+                  </select>
+                </label>
+                <label for="v333-hub-due">Prazo
+                  <select id="v333-hub-due">
+                    <option value="all">Todos</option><option value="vencido">Vencidos</option>
+                    <option value="hoje">Hoje</option><option value="previsto">Próximos</option>
+                  </select>
+                </label>
+              </div>
+            </section>
             <section class="v332-ops-panel" aria-label="Agenda e ações rápidas">
               <div class="v332-ops-heading">
                 <strong>Agenda &amp; Ações Rápidas</strong>
@@ -196,7 +225,7 @@
               <ul id="v332-agenda-list" class="v332-agenda-list" aria-label="Compromissos datados da carreira" hidden>
                 <li>Nenhum compromisso confirmado.</li>
               </ul>
-              <div class="v332-quick-actions" role="group" aria-label="Atalhos para tarefas frequentes">
+              <div class="v332-quick-actions" id="v333-quick-actions" role="group" aria-label="Atalhos para tarefas frequentes">
                 <button type="button" data-v332-route="mercado:compras" data-v332-focus="restock-assistant" data-v332-requires="unit"><span aria-hidden="true">📦</span> Repor Estoque</button>
                 <button type="button" data-v332-route="administrativo:financas" data-v332-focus="payable-operating-form"><span aria-hidden="true">▤</span> Pagar Contas</button>
                 <button type="button" data-v332-route="mercado:outros" data-v332-focus="price-form" data-v332-requires="unit"><span aria-hidden="true">＄</span> Preços</button>

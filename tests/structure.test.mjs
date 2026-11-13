@@ -26,7 +26,10 @@ test('Build reproduzível byte a byte',()=>{
  const expected=template.replace('/* CDN_CSS */',css).replace('/* CDN_V2_CSS */',v2css).replace('/* CDN_V21_CSS */',v21css).replace('/* CDN_V22_CSS */',readFileSync('src/shell/v22.css','utf8')).replace('/* CDN_V221_CSS */',readFileSync('src/shell/v221-city.css','utf8')).replace('/* CDN_V31_CSS */',readFileSync('src/shell/v31.css','utf8')+'\n'+readFileSync('src/shell/v32-fiscal.css','utf8')).replace('/* CDN_CORE */',core+'\n'+readFileSync('src/contracts/v31-read-model.mjs','utf8').replace('export const V31_READ_MODEL_VERSION','const V31_READ_MODEL_VERSION').replace('export function createV31ReadModel','function createV31ReadModel')+'\nconst CidadeV31ReadModel=createV31ReadModel(CidadeCore);'+
  '\n'+readFileSync('src/contracts/v333-decision-engine.mjs','utf8')
   .replace('export function createV333DecisionEngine','function createV333DecisionEngine')+
- '\nconst CidadeV333DecisionEngine=createV333DecisionEngine(CidadeCore);').replace('/* CDN_VISUAL */',visual+'\n'+scene).replace('/* CDN_UI */',readFileSync('src/ui/durable-store.part.js','utf8')+'\n'+uiBundle).replace(/\r\n?/g,'\n');
+ '\nconst CidadeV333DecisionEngine=createV333DecisionEngine(CidadeCore);'+
+ '\n'+readFileSync('src/contracts/v333-operations-view.mjs','utf8')
+  .replace('export function createV333OperationsView','function createV333OperationsView')+
+ '\nconst CidadeV333OperationsView=createV333OperationsView(CidadeCore,CidadeV333DecisionEngine);').replace('/* CDN_VISUAL */',visual+'\n'+scene).replace('/* CDN_UI */',readFileSync('src/ui/durable-store.part.js','utf8')+'\n'+uiBundle).replace(/\r\n?/g,'\n');
  assert.equal(createHash('sha256').update(expected).digest('hex'),createHash('sha256').update(html).digest('hex'));
 });
 

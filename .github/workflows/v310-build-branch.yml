@@ -14,6 +14,7 @@ on:
       - feat/v3.3.3-a-central-confiabilidade
       - feat/v3.3.3-b-agenda-integrada
       - feat/v3.3.3-c-acoes-contextuais
+      - feat/v3.3.3-d-polimento-experiencia
     paths:
       - '.github/workflows/v310-build-branch.yml'
       - 'src/**'

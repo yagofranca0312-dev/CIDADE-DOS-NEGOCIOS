@@ -23,3 +23,8 @@
 - QA humano em instalação pessoal e com save real permanece pendente, assim como aceite dos Patches A/B/C/D.
 - **Patch E/E reservado para qualidade e homologação global**, sem execução neste patch.
 - Não integrar em `main` nem mudar versão antes de aprovação expressa da V3.3.3.
+
+## Checkpoint de build reprodutível
+- A faixa D utiliza o adaptador puro e é embutida no mesmo HTML offline.
+- As proteções de sobreposição do drawer foram ajustadas para desktop e mobile sem alterar mapa ou save.
+- O gate final requer CI no mesmo SHA após a geração canônica do `index.html`, sem assumir aprovação de teste manual.

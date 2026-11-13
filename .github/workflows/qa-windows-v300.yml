@@ -2,7 +2,7 @@ name: QA V3.0 Windows Chrome Edge — offline e persistencia
 
 on:
   push:
-    branches: [feat/v3.3.2-b-atalhos-agenda, feat/v3.3.2-c-central-de-gestao, feat/v3.3.2-d-polimento-homologacao, feat/v3.3.3-a-central-confiabilidade, feat/v3.3.3-b-agenda-integrada]
+    branches: [feat/v3.3.2-b-atalhos-agenda, feat/v3.3.2-c-central-de-gestao, feat/v3.3.2-d-polimento-homologacao, feat/v3.3.3-a-central-confiabilidade, feat/v3.3.3-b-agenda-integrada, feat/v3.3.3-c-acoes-contextuais]
   pull_request:
     branches: [main]
     paths:

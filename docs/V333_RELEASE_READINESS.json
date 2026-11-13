@@ -24,9 +24,8 @@
   "automatedEvidence": {
     "A": {
       "state": "PASS",
-      "linux": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/43333273854",
-      "windows": null,
-      "notes": "Evidência no PR #52; validar gate completo antes do release"
+      "linux": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/43326816497",
+      "windows": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/43326816459"
     },
     "B": {
       "state": "PASS",

@@ -14,5 +14,6 @@
 ## Gate C
 - C-01…C-10: identidade de aviso, unidade inativa, validação read-only, aviso desatualizado, proteção de rotas, prova de `EMPRESA.ATIVAR`, produto e passivo, sem mutação econômica.
 - Linux `npm run check`, benchmarks, HTML canônico e testes cumulativos de A+B.
+- Suite específica \`tools/qa-windows-v333c.mjs\`: clique real em alerta de outra unidade em Chrome/Edge, desktop e mobile emulado, ativação persistida, produto pré-selecionado, sem mutação econômica; repetição não grava.
 - Windows hospedado: Chrome/Edge via `file://`, mobile emulado, IndexedDB e saves sintéticos, benchmark UI 365/1825; não equivale a hardware ou save pessoal.
 - Inspeção funcional do titular ainda necessária nos Patches A/B/C. **Não mesclar na `main`, não publicar V3.3.3, não iniciar Patch D automaticamente.**

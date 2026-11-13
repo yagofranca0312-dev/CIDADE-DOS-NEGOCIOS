@@ -8849,7 +8849,7 @@ function bindBalancePlan(){
     // Evitar anúncios repetidos por leitores de tela em cada render do jogo.
     const previewNode=$('v332-advisor-preview-text');
     if(previewNode.textContent!==preview)previewNode.textContent=preview;
-    $('v332-advisor-panel').dataset.severity=count?visible[0].severity:'normal';
+    $('v332-advisor-panel').dataset.severity=visible.length?visible[0].severity:'normal';
     const drawer=$('v332-advisor-drawer');drawer.hidden=!v332AdviceExpanded;
     $('v332-advisor-toggle').setAttribute('aria-expanded',String(v332AdviceExpanded));
     $('v332-advisor-toggle').textContent=v332AdviceExpanded?'Recolher ▾':'Ver equipe ▴';

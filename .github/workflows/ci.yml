@@ -1,7 +1,7 @@
 name: Validacao do Cidade dos Negocios 1
 on:
   push:
-    branches: [main, feat/v3.3.2-b-atalhos-agenda, feat/v3.3.2-c-central-de-gestao, feat/v3.3.2-d-polimento-homologacao, feat/v3.3.3-a-central-confiabilidade, feat/v3.3.3-b-agenda-integrada, feat/v3.3.3-c-acoes-contextuais, feat/v3.3.3-d-polimento-experiencia]
+    branches: [main, feat/v3.3.2-b-atalhos-agenda, feat/v3.3.2-c-central-de-gestao, feat/v3.3.2-d-polimento-homologacao, feat/v3.3.3-a-central-confiabilidade, feat/v3.3.3-b-agenda-integrada, feat/v3.3.3-c-acoes-contextuais, feat/v3.3.3-d-polimento-experiencia, feat/v3.3.3-e-qualidade-prehomologacao]
   pull_request:
     branches: [main]
 permissions:
@@ -17,6 +17,8 @@ jobs:
         with:
           node-version: '24'
       - run: npm run check
+      - name: Gate V3.3.3-E — relatório NO-GO sem aceite humano
+        run: node tools/v333-release-gate.mjs
       - name: Benchmark de carreiras 30, 365 e 1825 dias (1 e 5 unidades)
         run: npm run bench:stability
       - name: Benchmark V3 consolidacao — views, saves e 5 anos

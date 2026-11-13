@@ -15,6 +15,7 @@ on:
       - feat/v3.3.3-b-agenda-integrada
       - feat/v3.3.3-c-acoes-contextuais
       - feat/v3.3.3-d-polimento-experiencia
+      - feat/v3.3.3-e-qualidade-prehomologacao
     paths:
       - '.github/workflows/v310-build-branch.yml'
       - 'src/**'

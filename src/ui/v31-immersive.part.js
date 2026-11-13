@@ -131,12 +131,6 @@
 
   // V3.3.3-B: Agenda Executiva e Central consomem a identidade V333-A.
   // A dispensa visual de aviso não cancela compromisso datado.
-  function v332AgendaItems(current){
-    if(!current?.player?.cityId)return [];
-    const occurrences=v333DecisionTracker.inspect(current).all;
-    return CidadeV333DecisionEngine.agenda(current,{limit:3,occurrences});
-  }
-
   // D: filtros e abas pertencem exclusivamente à apresentação (jamais ao save).
   let v333HubWorld=null,v333HubBusiness='all',v333HubSeverity='all',v333HubDue='all';
   let v333HubOptionsKey=null;
@@ -208,6 +202,12 @@
     }
     v333SyncHubTabs();
   }
+  function v332AgendaItems(current){
+    if(!current?.player?.cityId)return [];
+    const occurrences=v333DecisionTracker.inspect(current).all;
+    return CidadeV333DecisionEngine.agenda(current,{limit:3,occurrences});
+  }
+
   function v332RenderAgenda(){
     const list=$('v332-agenda-list');if(!list)return;
     const items=v333HubProject().agenda;

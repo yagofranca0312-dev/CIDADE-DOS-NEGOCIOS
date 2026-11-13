@@ -6480,7 +6480,11 @@ function createV333DecisionEngine(Core){
       a.date.localeCompare(b.date)||a.id.localeCompare(b.id));
     const unique=new Map();
     for(const item of items)if(!unique.has(item.id))unique.set(item.id,item);
-    return [...unique.values()].slice(0,Number.isSafeInteger(limit)?Math.max(0,Math.min(limit,100)):3);
+    // A projeção precisa filtrar o conjunto completo antes de limitar a UI.
+    // Infinity é exclusivo da leitura interna; limites públicos finitos mantêm o teto.
+    const result=[...unique.values()];
+    return limit===Infinity?result:
+      result.slice(0,Number.isSafeInteger(limit)?Math.max(0,Math.min(limit,100)):3);
   }
 
 
@@ -6603,7 +6607,7 @@ function createV333OperationsView(Core,Decision){
     const history=Array.isArray(snapshot.history)?snapshot.history:[];
     const matches=item=>(businessId==='all'||item.scope?.businessId===businessId)&&
       (severity==='all'||item.severity===severity);
-    const dated=Decision.agenda(state,{limit:100,occurrences:all});
+    const dated=Decision.agenda(state,{limit:Infinity,occurrences:all});
     const team=active.filter(matches),visibleHistory=history.filter(matches);
     const agenda=dated.filter(item=>matches(item)&&(due==='all'||item.status===due));
     return {
@@ -8687,6 +8691,11 @@ function bindBalancePlan(){
   // por meio do commit durável já existente. Nenhuma compra/baixa/preço é enviada.
   async function v332ShortcutOpen(button){
     if(!state)return;
+    // O destino depende da seleção durável; não navegar durante import/commit.
+    if(startupBlocked||commitInFlight){
+      notify('Aguarde a confirmação do armazenamento antes de abrir este destino.',true);
+      return;
+    }
     const fromTeam=!!button.closest('#v332-advisor-panel');
     const source=fromTeam?$('v332-advisor-toggle'):button;
     const plan=CidadeV333DecisionEngine.planQuickAction(state,{
@@ -8885,7 +8894,11 @@ function bindBalancePlan(){
   function v332AdvisorExpand(){
     if(!v332AdviceExpanded)v332AdvisorReturnFocus=document.activeElement;
     v332AdviceExpanded=!v332AdviceExpanded;
-    if(v332AdviceExpanded)v332MoreClose();
+    if(v332AdviceExpanded){
+      v332MoreClose();
+      $('v332-agenda-list').hidden=true;
+      $('v332-agenda-toggle').setAttribute('aria-expanded','false');
+    }
     v332RenderAdvisor();v333SyncHubTabs();
     if(v332AdviceExpanded)$('v332-advisor-close').focus({preventScroll:true});
     else v332AdvisorCollapse();
@@ -9159,7 +9172,7 @@ function bindBalancePlan(){
         const item=v332AdviceCache.find(x=>x.id===dismiss.dataset.v332AdvisorDismiss);
         if(!item)return;
         if(!v333DecisionTracker.dismiss(item.id,state))return;
-        v332RenderAdvisor();
+        v333RenderHub();v332RenderAdvisor();
         // O aviso foi dispensado; manter o teclado dentro da lista, sem foco perdido.
         const next=$('v332-advisor-active-list').querySelector('[data-v332-route]');
         (next||$('v332-advisor-active-tab')).focus({preventScroll:true});

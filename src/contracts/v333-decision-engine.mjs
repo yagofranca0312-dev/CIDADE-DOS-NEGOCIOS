@@ -158,7 +158,11 @@ export function createV333DecisionEngine(Core){
       a.date.localeCompare(b.date)||a.id.localeCompare(b.id));
     const unique=new Map();
     for(const item of items)if(!unique.has(item.id))unique.set(item.id,item);
-    return [...unique.values()].slice(0,Number.isSafeInteger(limit)?Math.max(0,Math.min(limit,100)):3);
+    // A projeção precisa filtrar o conjunto completo antes de limitar a UI.
+    // Infinity é exclusivo da leitura interna; limites públicos finitos mantêm o teto.
+    const result=[...unique.values()];
+    return limit===Infinity?result:
+      result.slice(0,Number.isSafeInteger(limit)?Math.max(0,Math.min(limit,100)):3);
   }
 
 

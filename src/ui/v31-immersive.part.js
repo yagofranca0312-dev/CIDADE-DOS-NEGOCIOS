@@ -240,6 +240,11 @@
   // por meio do commit durável já existente. Nenhuma compra/baixa/preço é enviada.
   async function v332ShortcutOpen(button){
     if(!state)return;
+    // O destino depende da seleção durável; não navegar durante import/commit.
+    if(startupBlocked||commitInFlight){
+      notify('Aguarde a confirmação do armazenamento antes de abrir este destino.',true);
+      return;
+    }
     const fromTeam=!!button.closest('#v332-advisor-panel');
     const source=fromTeam?$('v332-advisor-toggle'):button;
     const plan=CidadeV333DecisionEngine.planQuickAction(state,{
@@ -438,7 +443,11 @@
   function v332AdvisorExpand(){
     if(!v332AdviceExpanded)v332AdvisorReturnFocus=document.activeElement;
     v332AdviceExpanded=!v332AdviceExpanded;
-    if(v332AdviceExpanded)v332MoreClose();
+    if(v332AdviceExpanded){
+      v332MoreClose();
+      $('v332-agenda-list').hidden=true;
+      $('v332-agenda-toggle').setAttribute('aria-expanded','false');
+    }
     v332RenderAdvisor();v333SyncHubTabs();
     if(v332AdviceExpanded)$('v332-advisor-close').focus({preventScroll:true});
     else v332AdvisorCollapse();
@@ -712,7 +721,7 @@
         const item=v332AdviceCache.find(x=>x.id===dismiss.dataset.v332AdvisorDismiss);
         if(!item)return;
         if(!v333DecisionTracker.dismiss(item.id,state))return;
-        v332RenderAdvisor();
+        v333RenderHub();v332RenderAdvisor();
         // O aviso foi dispensado; manter o teclado dentro da lista, sem foco perdido.
         const next=$('v332-advisor-active-list').querySelector('[data-v332-route]');
         (next||$('v332-advisor-active-tab')).focus({preventScroll:true});

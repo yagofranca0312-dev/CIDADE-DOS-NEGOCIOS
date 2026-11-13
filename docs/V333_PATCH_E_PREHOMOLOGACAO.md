@@ -49,3 +49,9 @@ Na Central expandida, se há ocorrências ativas globalmente mas o filtro de sev
 **Código testado ≠ homologação.** Após CI Linux+Windows no SHA final, o Patch E pode receber `TECHNICAL_PASS` e ficar preparado para GO do titular. Promoção exige autorização explícita para publicar a V3.3.3; somente então criar commit de versão 3.3.3, recompilar HTML, revalidar CI, integrar PRs A→E em ordem, proteger rollback V3.3.2 e criar checkpoint estável.
 
 **Até lá:** PRs #52–#56 em Draft, nenhuma integração em `main`, tag, release, mudança de versão nem update do jogo principal.
+
+## Checkpoint candidato após recompilação
+
+- A automação gerou `index.html` novamente com 1.673.974 bytes e SHA-256 `23cbde456ecc77b30a178dc460a7930e6e4cd1c6f1de5cd6aea2fa50f2fa4816`.
+- Este checkpoint documental força nova verificação Linux/Windows **sobre o blob canônico**, em vez de considerar o resultado de uma execução iniciada antes do commit do HTML.
+- A auditoria final verificará os runs de **um mesmo SHA**. Os testes pessoais/aceite e o GO permanecem pendentes.

@@ -170,7 +170,8 @@ test('E-12: gate é NO_GO por falta de GO humano e não cria arquivos',()=>{
  assert.equal(result.decision,'NO_GO');
  assert.equal(result.notAHomologation,true);
  assert.ok(result.blockers.includes('OWNER_GO_NOT_DOCUMENTED'));
- assert.ok(result.blockers.includes('AUTOMATION_NOT_PASSED_E'));
+ assert.equal(result.blockers.includes('AUTOMATION_NOT_PASSED_E'),false);
+ assert.equal(manifest.automatedEvidence.E.state,'PASS');
  assert.equal(readFileSync('docs/V333_RELEASE_READINESS.json','utf8'),before);
 });
 

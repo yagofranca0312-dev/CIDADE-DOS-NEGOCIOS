@@ -55,3 +55,12 @@ Na Central expandida, se há ocorrências ativas globalmente mas o filtro de sev
 - A automação gerou `index.html` novamente com 1.673.974 bytes e SHA-256 `23cbde456ecc77b30a178dc460a7930e6e4cd1c6f1de5cd6aea2fa50f2fa4816`.
 - Este checkpoint documental força nova verificação Linux/Windows **sobre o blob canônico**, em vez de considerar o resultado de uma execução iniciada antes do commit do HTML.
 - A auditoria final verificará os runs de **um mesmo SHA**. Os testes pessoais/aceite e o GO permanecem pendentes.
+
+## Checkpoint técnico E — automatizado e auditado
+
+- **SHA de execução código/candidato:** `cd9703f032d061d751fdc8e92805f26eac5387e1`.
+- **Linux:** [run #43511087856](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/43511087856), SUCCESS, 542/542 PASS, 0 FAIL/skip; benchmarks e fontes protegidas verificados.
+- **Windows:** [run #43511087787](https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/43511087787), SUCCESS: E próprio 4/4, D 8/8, C 4/4, visual 14, BAT 19, browser 35, integrado 66, IndexedDB 12, mobile 6/6, carreiras 365 dias 4/4 e 1.825 dias 4/4; sem bloqueios de quota.
+- **HTML:** SHA-256 `23cbde456ecc77b30a178dc460a7930e6e4cd1c6f1de5cd6aea2fa50f2fa4816` (1.673.974 bytes), byte a byte idêntico no Windows e Linux.
+- Esta atualização documental marca o **E automatizado PASS** no manifesto. Uma nova CI Linux/Windows deve validar novamente o checkpoint final porque o registro de evidência integra o SHA candidato.
+- **Decisão de release continua NO-GO:** sem aceite/dispensa consciente de testes físicos e save pessoal, sem instrução de publicação, sem commit de versão 3.3.3, sem merges e sem tag.

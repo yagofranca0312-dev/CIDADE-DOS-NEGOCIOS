@@ -10,7 +10,7 @@
     "B": 53,
     "C": 54,
     "D": 55,
-    "E": null
+    "E": 56
   },
   "protectedGitBlobs": {
     "src/core/game.js": "adc095ff707710e6a46e5cba13d13e80cd5e3e53",
@@ -43,9 +43,10 @@
       "windows": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/43508635969"
     },
     "E": {
-      "state": "PENDING",
-      "linux": null,
-      "windows": null
+      "state": "PASS",
+      "linux": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/43511087856",
+      "windows": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/43511087787",
+      "testedSha": "cd9703f032d061d751fdc8e92805f26eac5387e1"
     }
   },
   "ownerApproval": {

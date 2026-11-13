@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "contract": "CDN-V333-E-RELEASE-READINESS",
+  "targetVersion": "3.3.3",
+  "publishedVersion": "3.3.2",
+  "publishedMainSha": "8d113799cb03e9af2a3c411ba4b90024a0d1eeff",
+  "candidateBase": "83638e6526d93383805f85fc727aaafa5b0bc5ee",
+  "patchPullRequests": {
+    "A": 52,
+    "B": 53,
+    "C": 54,
+    "D": 55,
+    "E": null
+  },
+  "protectedGitBlobs": {
+    "src/core/game.js": "adc095ff707710e6a46e5cba13d13e80cd5e3e53",
+    "src/visual/city-scene.js": "f9918c55d2980ec638be797b0ffec9e887c1b1e0",
+    "src/visual/tiangua-scene.js": "c57c4cd310ed4c712a7746bc39ebb66eba80ae3d",
+    "src/visual/scenes/tiangua/lots.json": "ebaad096b4104fb44fb94d1cab334bbd35576d8f",
+    "src/ui/durable-store.part.js": "9d4e9a5798dc36c0fa49ee96903b48ead198235f",
+    "package.json": "871d6501c421fcb596a9b13213a264a32d605a9e",
+    "ATUALIZAR_E_JOGAR.bat": "951553775ac95983fd581d2c3733a2666f6c0c94"
+  },
+  "automatedEvidence": {
+    "A": {
+      "state": "PASS",
+      "linux": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/43333273854",
+      "windows": null,
+      "notes": "Evidência no PR #52; validar gate completo antes do release"
+    },
+    "B": {
+      "state": "PASS",
+      "linux": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/43333273854",
+      "windows": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/43333273864"
+    },
+    "C": {
+      "state": "PASS",
+      "linux": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/43335885190",
+      "windows": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/43335885198"
+    },
+    "D": {
+      "state": "PASS",
+      "linux": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/43508635854",
+      "windows": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/43508635969"
+    },
+    "E": {
+      "state": "PENDING",
+      "linux": null,
+      "windows": null
+    }
+  },
+  "ownerApproval": {
+    "state": "PENDING",
+    "evidence": null,
+    "acceptsHostedOnly": false
+  },
+  "functionalQA": {
+    "physicalWindows": "NOT_TESTED",
+    "physicalMobile": "NOT_TESTED",
+    "personalSave": "NOT_TESTED",
+    "exceptionEvidence": null
+  },
+  "publication": {
+    "authorized": false,
+    "releaseCommit": null,
+    "rollbackSnapshot": "releases/v3.3.2-homologada",
+    "tagCreated": false,
+    "mainMerged": false
+  },
+  "interpretation": "CI de um patch não comprova aceite humano. A ordem atual autoriza E QA, não publicação ou homologação."
+}

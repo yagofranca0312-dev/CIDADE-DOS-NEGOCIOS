@@ -161,6 +161,44 @@ export function createV333DecisionEngine(Core){
     return [...unique.values()].slice(0,Number.isSafeInteger(limit)?Math.max(0,Math.min(limit,100)):3);
   }
 
+
+  // V3.3.3-C — plano de rota PURO; apenas o clique explícito na UI pode
+  // ativar a unidade com o comando existente e salvamento confirmado.
+  // A identidade do aviso é revalidada no estado atual para evitar atalhos
+  // para alertas resolvidos, outra unidade ou produto inexistente.
+  function planQuickAction(current,request={}){
+    if(!current?.world||!current?.player?.cityId)return {status:'NO_CAREER'};
+    const allowed=new Set([
+      'empresa:dashboard','empresa:minhas-empresas',
+      'mercado:compras','mercado:estoque','mercado:outros',
+      'administrativo:financas','administrativo:fiscal',
+      'administrativo:contabilidade','sistema:saves'
+    ]);
+    const ref=safeId(request.occurrenceId||'');
+    const notice=ref?candidates(current).find(item=>item.id===ref):null;
+    if(ref&&!notice)return {status:'STALE_OCCURRENCE'};
+    const route=notice?.route||safeId(request.route||'');
+    if(!allowed.has(route))return {status:'INVALID_ROUTE'};
+    const focus=notice?.focus||safeId(request.focus||'');
+    const units=Core.businesses(current);
+    const active=units.find(unit=>unit.id===current.world.activeBusinessId)||null;
+    const businessId=notice?.scope?.businessId||null;
+    const target=businessId?units.find(unit=>unit.id===businessId):active;
+    if(businessId&&!target)return {status:'INVALID_UNIT'};
+    const needsUnit=notice?notice.requiresUnit===true:
+      request.requiresUnit===true||['mercado:compras','mercado:estoque','mercado:outros'].includes(route);
+    if(needsUnit&&!target)return {status:'NEEDS_UNIT'};
+    const productId=notice?.scope?.productId||null;
+    if(productId&&(!target||!target.products?.some(product=>product.id===productId)))
+      return {status:'INVALID_PRODUCT'};
+    return {
+      status:'READY',route,focus,occurrenceId:notice?.id||null,
+      businessId:target?.id||null,productId,
+      switchBusinessId:businessId&&active?.id!==businessId?businessId:null,
+      requiresUnit:needsUnit
+    };
+  }
+
   function createTracker(){
     let world=null,previous=new Map(),dismissed=new Map(),history=[],snapshot=null,key=null;
     const reset=nextWorld=>{
@@ -219,5 +257,5 @@ export function createV333DecisionEngine(Core){
     }
     return Object.freeze({inspect,dismiss});
   }
-  return Object.freeze({sourceVersion,candidates,agenda,createTracker});
+  return Object.freeze({sourceVersion,candidates,agenda,planQuickAction,createTracker});
 }

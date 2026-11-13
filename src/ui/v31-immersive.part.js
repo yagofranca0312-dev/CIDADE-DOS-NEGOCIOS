@@ -163,52 +163,86 @@
     $('v332-more-menu').hidden=true;
     $('v332-more-toggle').setAttribute('aria-expanded','false');
   }
-  function v332ShortcutOpen(button){
+  // V3.3.3-C: navegação contextual com identidade comprovada e fail-closed.
+  // A única escrita possível é EMPRESA.ATIVAR, sem efeitos econômicos,
+  // por meio do commit durável já existente. Nenhuma compra/baixa/preço é enviada.
+  async function v332ShortcutOpen(button){
     if(!state)return;
-    const [root,section]=String(button.dataset.v332Route||'').split(':');
-    if(!['empresa','mercado','administrativo','sistema'].includes(root)||
-      (section&&!document.querySelector('[data-section-pane="'+root+':'+section+'"]')))return;
-    v332MoreClose();
     const fromTeam=!!button.closest('#v332-advisor-panel');
     const source=fromTeam?$('v332-advisor-toggle'):button;
-    if(fromTeam){
-      v332AdviceExpanded=false;
-      v332RenderAdvisor();
+    const plan=CidadeV333DecisionEngine.planQuickAction(state,{
+      route:button.dataset.v332Route,focus:button.dataset.v332Focus,
+      requiresUnit:button.dataset.v332Requires==='unit',
+      occurrenceId:button.dataset.v333OccurrenceId
+    });
+    if(plan.status==='STALE_OCCURRENCE'){
+      notify('Este aviso não está mais ativo. Atualize a Central antes de navegar.');
+      v332RenderAdvisor();v332RenderAgenda();return;
     }
-    const needsUnit=button.dataset.v332Requires==='unit';
-    if(needsUnit&&!Core.activeBusiness(state)){
+    if(plan.status==='NEEDS_UNIT'){
       setText('v332-action-hint','Abra ou selecione uma empresa antes de usar este atalho.');
       notify('É necessário abrir ou selecionar uma empresa. Escolha um lote para começar.');
-      v31OpenPanel('empresa','dashboard',source);
+      v31OpenPanel('empresa','dashboard',source);return;
+    }
+    if(plan.status!=='READY'){
+      notify('O destino deste item não está mais disponível. Nenhuma operação realizada.',true);
       return;
     }
-    // Patch C fará a seleção direta da empresa/produto; A impede agir
-    // sobre a empresa errada quando o aviso pertence a outra unidade.
-    const targetBusiness=button.dataset.v332BusinessId;
-    if(targetBusiness&&Core.activeBusiness(state)?.id!==targetBusiness){
-      setText('v332-action-hint','Item da unidade '+targetBusiness+
-        '. Selecione essa empresa antes de continuar.');
-      notify('Este item pertence à unidade '+targetBusiness+
-        '. Selecione-a no painel Empresas antes de agir.');
-      v31OpenPanel('empresa','dashboard',source);
-      return;
+    // Um aviso de outra empresa ativa a unidade somente após gravação+readback.
+    // Se o armazenamento falhar, a rota NÃO é aberta na empresa errada.
+    if(plan.switchBusinessId){
+      const changed=await commit('EMPRESA.ATIVAR',{businessId:plan.switchBusinessId});
+      if(!changed){
+        setText('v332-action-hint','Troca de unidade não confirmada. Nenhuma ação executada.');
+        return;
+      }
+      if(Core.activeBusiness(state)?.id!==plan.switchBusinessId){
+        notify('Não foi possível confirmar a unidade alvo. Operação interrompida.',true);
+        return;
+      }
     }
-    setText('v332-action-hint','Destino aberto para revisão. Nenhuma operação executada.');
+    v332MoreClose();
+    if(fromTeam){v332AdviceExpanded=false;v332RenderAdvisor();}
+    const [root,section]=plan.route.split(':');
     v31OpenPanel(root,section||null,source);
-    if(button.dataset.v332Focus){
-      const target=$(button.dataset.v332Focus);
+
+    // Seleção apenas de formulário. Não preparar pedido, definir preço ou quitar.
+    if(plan.productId){
+      const product=Core.activeBusiness(state)?.products?.find(p=>p.id===plan.productId);
+      const chooser=$('buy-product');
+      if(product&&chooser&&[...chooser.options].some(x=>x.value===product.id)){
+        chooser.value=product.id;
+        chooser.dispatchEvent(new Event('change',{bubbles:true}));
+      }
+    }
+    if(plan.businessId&&plan.route==='administrativo:financas'){
+      const chooser=$('payable-operating-unit');
+      if(chooser&&[...chooser.options].some(x=>x.value===plan.businessId)){
+        chooser.value=plan.businessId;
+        chooser.dispatchEvent(new Event('change',{bubbles:true}));
+      }
+    }
+    const focusId=plan.productId&&plan.route==='mercado:compras'?
+      'buy-product':plan.focus;
+    if(focusId){
+      const target=$(focusId);
       const pane=document.querySelector('[data-section-pane="'+root+':'+section+'"]');
       if(target&&target.getClientRects().length&&(!pane||pane.contains(target)||target===pane)){
         const focusable=target.matches('input,select,button,textarea')?target:
           target.querySelector('input:not([disabled]),select:not([disabled]),button:not([disabled]),textarea:not([disabled])');
-        const focus=focusable||target;
-        if(!focusable)focus.setAttribute('tabindex','-1');
-        focus.scrollIntoView({block:'start',behavior:'instant'});
-        focus.focus({preventScroll:true});
+        const selected=focusable||target;
+        if(!focusable)selected.setAttribute('tabindex','-1');
+        selected.scrollIntoView({block:'start',behavior:'instant'});
+        selected.focus({preventScroll:true});
       }
     }
+    const unit=plan.businessId?' · unidade '+plan.businessId:'';
+    const product=plan.productId?' · produto '+plan.productId:'';
+    setText('v332-action-hint','Destino para revisão'+unit+product+
+      '. Nenhuma compra, pagamento ou alteração foi executada.');
+    if(plan.switchBusinessId||plan.productId)
+      notify('Contexto selecionado'+unit+product+'. Revise e confirme qualquer operação manualmente.');
   }
-
 
 
   // V3.3.3-A — todas as unidades no mesmo motor; identidade e histórico estáveis.
@@ -253,6 +287,7 @@
       open.dataset.v332Route=item.route;open.dataset.v332Focus=item.focus;
       if(item.requiresUnit)open.dataset.v332Requires='unit';
       if(item.scope?.businessId)open.dataset.v332BusinessId=item.scope.businessId;
+      open.dataset.v333OccurrenceId=item.id;
       open.textContent='Ir à ação';open.title='Abrir a tela correspondente, sem executar a operação';
       controls.appendChild(open);
       const details=document.createElement('button');details.type='button';
@@ -588,7 +623,8 @@
         event.preventDefault();v332AdvisorCollapse();
       }
     });
-    // Os novos atalhos nao despacham comandos de negocio; apenas navegam e focam.
+    // Ações Rápidas apenas navegam; aviso de outra unidade pode ativá-la
+    // exclusivamente pelo comando de seleção e salvamento confirmado.
     $('v332-bottom-zone').addEventListener('click',event=>{
       const route=event.target.closest('[data-v332-route]');
       if(route){event.preventDefault();v332ShortcutOpen(route);}

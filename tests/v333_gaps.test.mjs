@@ -95,3 +95,9 @@ test('G3: dois escritores simultâneos do fallback são serializados e apenas um
  assert.equal(result.filter(x=>x.status==='rejected'&&x.reason.code==='SAVE_CONFLICT').length,1);
  assert.equal(data.get('cidade-dos-negocios-save-v1'),'A');
 });
+
+test('G3: caminho legado conserva formato tradicional e envia token CAS',async()=>{
+ let actual,options;const c={Core,CidadeDurableStore:{mode:()=> 'legacy-localstorage',writeCurrent:async(raw,o)=>{actual=raw;options=o;}},notify(){},setText(){},resetTimer(){},document:{body:{dataset:{}}},A};
+ runInNewContext(`let durableSnapshot='original',state=A,safetyBackupAvailable=false,startupBlocked=false,autosaveStatus='';${take('  async function persistDurable(','  async function backupCurrent(){')}globalThis.persist=persistDurable`,c);
+ assert.equal(await c.persist(A),true);assert.equal(actual,Core.exportSave(A));assert.equal(options.expected,'original');
+});

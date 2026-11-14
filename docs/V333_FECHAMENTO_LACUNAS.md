@@ -88,6 +88,8 @@ final inteiramente verde e o relatório `V333_GAPS_QA` com todos os cenários PA
 
 Produção: src/ui/app.js, src/ui/durable-store.part.js, index.html.
 Testes novos: tests/v333_gaps.test.mjs, tools/qa-windows-v333-gaps.mjs.
+QA legado: tools/qa-windows-browser-v300.mjs aguarda confirmação assíncrona
+por storageBusy; formato tradicional do fallback foi mantido e tem regressão própria.
 Checks: .github/workflows/v333-gaps.yml.
 Ajustes de contratos de testes para backup atômico: persistence_p0_v300,
 release_readiness_v300, stabilization_v241 e v300_indexeddb_durability_gate.

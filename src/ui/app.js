@@ -72,7 +72,8 @@
   async function persistDurable(candidate,{backup=false}={}){
     if(!candidate)return false;
     try{
-      const raw=Core.exportSaveCompact(candidate);
+      const raw=CidadeDurableStore.mode()==='legacy-localstorage'?
+        Core.exportSave(candidate):Core.exportSaveCompact(candidate);
       await CidadeDurableStore.writeCurrent(raw,{expected:durableSnapshot,
         ...(backup&&state?{backupRaw:Core.exportSaveCompact(state)}:{})});
       durableSnapshot=raw;

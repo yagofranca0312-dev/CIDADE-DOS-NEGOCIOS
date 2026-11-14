@@ -112,7 +112,7 @@ test('V3.0.0: novos controles ficam no HTML único e script compilado é sintati
     assert.ok(tpl.includes('id="'+id+'"'));
   assert.match(app,/SAFETY_KEY/);
   assert.match(app,/backupCurrent\(\)/);
-  assert.match(app,/if\(!await persistDurable\(incoming\.state\)\)/);
+  assert.match(app,/if\(!await persistDurable\(incoming\.state,\{backup:true\}\)\)/);
   assert.match(app,/if\(!await persistDurable\(result\.state\)\)return false;/);
   assert.match(html,/const VERSION = '3\.3\.2'/);
   const scripts=[...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)];

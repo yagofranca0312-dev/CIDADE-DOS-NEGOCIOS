@@ -14,7 +14,7 @@ jobs:
         with:
           node-version: '24'
       - run: npm run build
-      - run: node --test tests/v333_gaps.test.mjs
+      - run: npm test
       - run: git diff --exit-code -- index.html
   windows:
     runs-on: windows-latest
@@ -28,6 +28,14 @@ jobs:
       - run: node tools/verify-html-byte-identical-v300.mjs
       - run: npm install --no-save --no-package-lock --ignore-scripts --no-audit --no-fund playwright@1.55.1
       - run: node tools/qa-windows-v333-gaps.mjs
+      - run: node tools/qa-windows-v333-debug.mjs
+      - run: node tools/qa-windows-v333c.mjs
+      - run: node tools/qa-windows-v333d.mjs
+      - run: node tools/qa-windows-v333e.mjs
+      - run: node tools/qa-windows-indexeddb-v300.mjs
+      - run: node tools/qa-windows-browser-v300.mjs
+      - run: node tools/qa-windows-integrated-v300.mjs
+      - run: git diff --exit-code -- index.html package.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:

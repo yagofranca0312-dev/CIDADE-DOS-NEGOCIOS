@@ -18,7 +18,7 @@ function harness(initial=A){
  let raw=Core.exportSaveCompact(initial),backup=null,writeGate=null,backupGate=null,fail=false;
  const trace={notices:[],renders:0,confirmed:true};
  const store={mode:()=> 'indexeddb',readCurrent:async()=>raw,readBackup:async()=>backup,
-  async writeCurrent(next){if(writeGate)await writeGate.promise;if(fail)throw Error('abort sintético');raw=next;},
+  async writeCurrent(next,options){if(backupGate)await backupGate.promise;if(writeGate)await writeGate.promise;if(fail)throw Error('abort sintético');if(options?.expected!==raw)throw Object.assign(Error('conflito'),{code:'SAVE_CONFLICT'});if(options.backupRaw!==undefined)backup=options.backupRaw;raw=next;},
   async writeBackup(next){if(backupGate)await backupGate.promise;backup=next;}};
  const c={Core,CidadeDurableStore:store,trace,initial,initialRaw:raw,document:{body:{dataset:{}}},
   confirm:()=>trace.confirmed,notify:m=>trace.notices.push(m),setText(){},render:()=>trace.renders++,resetTimer(){}};
@@ -49,7 +49,7 @@ test('G1: cancelamento, JSON inválido, leitura interrompida e falha de gravaç�
  for(const mode of ['cancel','invalid','read-error','write-error']){
   const h=harness(),before=h.raw();h.trace.confirmed=mode!=='cancel';h.fail(mode==='write-error');
   const f=mode==='invalid'?{size:10,text:async()=>'{'}:mode==='read-error'?{size:10,text:async()=>{throw Error('leitura interrompida');}}:file();
-  await h.d.importFile(f);assert.equal(h.raw(),before,mode);assert.deepEqual(plain(h.d.state()),plain(A),mode);assert.equal(h.d.busy(),false);
+  await h.d.importFile(f);assert.equal(h.backup(),null,'falha não deve substituir safety: '+mode);assert.equal(h.raw(),before,mode);assert.deepEqual(plain(h.d.state()),plain(A),mode);assert.equal(h.d.busy(),false);
   h.trace.confirmed=true;h.fail(false);await h.d.importFile(file());assert.deepEqual(plain(h.d.state()),plain(B));
  }
 });
@@ -62,4 +62,36 @@ test('G2: world e TODAS as estruturas persistidas sobrevivem à seleção e aos 
  assert.equal(Object.keys(after.audit.commands).length,Object.keys(A.audit.commands).length+1);
  for(const s of [A,B,after])for(const raw of [Core.exportSave(s),Core.exportSaveCompact(s)])assert.deepEqual(plain(Core.importSave(raw).state),plain(s));
  assert.deepEqual(plain(A),before);
+});
+
+test('G3 regressão P1: duas instâncias do store recusam revisão antiga, inclusive após outro world',async()=>{
+ const data=new Map(),key='cidade-dos-negocios-save-v1';let queue=Promise.resolve();
+ const localStorage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v),removeItem:k=>data.delete(k)};
+ const navigator={locks:{request:(_,fn)=>{const p=queue.then(fn);queue=p.catch(()=>{});return p;}}};
+ const source=readFileSync('src/ui/durable-store.part.js','utf8')+'\nCidadeDurableStore';
+ const x=runInNewContext(source,{localStorage,navigator}),y=runInNewContext(source,{localStorage,navigator});
+ const original=Core.exportSaveCompact(A),later=Core.exportSaveCompact(step(step(A,'TEMPO.AVANCAR_DIA'),'TEMPO.AVANCAR_DIA'));
+ data.set(key,original);await x.writeCurrent(later,{expected:original});
+ await assert.rejects(y.writeCurrent(Core.exportSaveCompact(step(A,'TEMPO.AVANCAR_DIA')),{expected:original}),e=>e.code==='SAVE_CONFLICT');assert.equal(data.get(key),later);
+ const other=Core.exportSaveCompact(B);await x.writeCurrent(other,{expected:later,backupRaw:later});
+ await assert.rejects(y.clearCurrent({expected:later}),e=>e.code==='SAVE_CONFLICT');assert.equal(data.get(key),other);assert.equal(await x.readBackup(),later);
+});
+
+test('G3: fallback sem IndexedDB e sem Web Locks recusa escrita insegura',async()=>{
+ const data=new Map([['cidade-dos-negocios-save-v1','original']]);
+ const localStorage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v),removeItem:k=>data.delete(k)};
+ const s=runInNewContext(readFileSync('src/ui/durable-store.part.js','utf8')+'\nCidadeDurableStore',{localStorage});
+ await assert.rejects(s.writeCurrent('novo',{expected:'original'}),/Gravação segura indisponível/);
+ assert.equal(data.get('cidade-dos-negocios-save-v1'),'original');
+});
+test('G3: dois escritores simultâneos do fallback são serializados e apenas um confirma',async()=>{
+ const data=new Map([['cidade-dos-negocios-save-v1','original']]);let queue=Promise.resolve();
+ const localStorage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v),removeItem:k=>data.delete(k)};
+ const navigator={locks:{request:(_,fn)=>{const p=queue.then(fn);queue=p.catch(()=>{});return p;}}};
+ const source=readFileSync('src/ui/durable-store.part.js','utf8')+'\nCidadeDurableStore';
+ const a=runInNewContext(source,{localStorage,navigator}),b=runInNewContext(source,{localStorage,navigator});
+ const result=await Promise.allSettled([a.writeCurrent('A',{expected:'original'}),b.writeCurrent('B',{expected:'original'})]);
+ assert.equal(result.filter(x=>x.status==='fulfilled').length,1);
+ assert.equal(result.filter(x=>x.status==='rejected'&&x.reason.code==='SAVE_CONFLICT').length,1);
+ assert.equal(data.get('cidade-dos-negocios-save-v1'),'A');
 });

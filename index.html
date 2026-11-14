@@ -6959,6 +6959,69 @@ const CidadeDurableStore=(()=>{
     if(previous!==null)await transact('readwrite',store=>store.put(previous,key));
     throw Error('Remoção não verificada no armazenamento');
   };
+  // V3.3.3: compare-and-swap do snapshot completo, na MESMA transação
+  // que grava current e sua cópia anterior. Revisão/worldId isolados não
+  // distinguem duas ramificações com a mesma revisão.
+  const conflict=()=>Object.assign(Error('Outra aba alterou a carreira. Exporte esta aba se necessário e recarregue antes de continuar.'),{code:'SAVE_CONFLICT'});
+  const atomicCurrent=async(raw,{expected,backupRaw})=>{
+    const db=await open();
+    return new Promise((resolve,reject)=>{
+      let tx,previous=null,previousBackup=null,failure=null;
+      try{
+        tx=db.transaction(TABLE,'readwrite');
+        const store=tx.objectStore(TABLE),request=store.get('current');
+        request.onsuccess=()=>{
+          previous=request.result??null;
+          if(previous!==expected){failure=conflict();tx.abort();return;}
+          const apply=()=>{
+            if(backupRaw!==undefined){if(backupRaw===null)store.delete('safety');else store.put(backupRaw,'safety');}
+            if(raw===null)store.delete('current');else store.put(raw,'current');
+          };
+          if(backupRaw!==undefined){
+            const safety=store.get('safety');
+            safety.onsuccess=()=>{previousBackup=safety.result??null;apply();};
+          }else apply();
+        };
+        tx.oncomplete=()=>resolve({previous,previousBackup});
+        tx.onabort=()=>reject(failure||tx.error||Error('Transação IndexedDB abortada'));
+        tx.onerror=()=>{};
+      }catch(e){if(tx)tx.abort();reject(e);}
+    });
+  };
+  const guardedCurrent=async(raw,options)=>{
+    if(raw!==null&&(typeof raw!=='string'||!raw))throw Error('Save vazio ou inválido');
+    if(!hasIdb()){
+      // localStorage não tem CAS transacional. Só permitir escritores sob
+      // Web Locks entre abas; sem suporte, leitura/exportação permanecem disponíveis.
+      if(typeof navigator==='undefined'||!navigator.locks?.request)
+        throw Error('Gravação segura indisponível: use navegador com IndexedDB ou Web Locks.');
+      return navigator.locks.request(DATABASE+'-current',async()=>{
+        const previous=localStorage.getItem(LEGACY_KEY),previousBackup=localStorage.getItem(LEGACY_SAFETY);
+        if(previous!==options.expected)throw conflict();
+        try{
+          if(options.backupRaw!==undefined){if(options.backupRaw===null)localStorage.removeItem(LEGACY_SAFETY);else localStorage.setItem(LEGACY_SAFETY,options.backupRaw);}
+          if(raw===null)localStorage.removeItem(LEGACY_KEY);else localStorage.setItem(LEGACY_KEY,raw);
+          if(localStorage.getItem(LEGACY_KEY)!==raw||
+             (options.backupRaw!==undefined&&localStorage.getItem(LEGACY_SAFETY)!==options.backupRaw))throw Error('Falha de leitura de retorno');
+        }catch(e){
+          if(previous===null)localStorage.removeItem(LEGACY_KEY);else localStorage.setItem(LEGACY_KEY,previous);
+          if(options.backupRaw!==undefined){if(previousBackup===null)localStorage.removeItem(LEGACY_SAFETY);else localStorage.setItem(LEGACY_SAFETY,previousBackup);}
+          throw e;
+        }
+      });
+    }
+    const saved=await atomicCurrent(raw,options);
+    let actual;
+    try{actual=await read('current');}
+    catch(e){
+      // Só reverter nossa escrita. Nunca restaurar por cima de outra aba.
+      await atomicCurrent(saved.previous,{expected:raw,backupRaw:options.backupRaw===undefined?undefined:saved.previousBackup});
+      if(await read('current')!==saved.previous)throw conflict();
+      throw Error('Leitura de retorno falhou; snapshot anterior preservado: '+errorText(e));
+    }
+    if(actual!==raw)throw conflict();
+    try{localStorage.removeItem(LEGACY_KEY);}catch(_){}
+  };
   const readCurrent=async(core)=>{
     if(!hasIdb())return read('current');
     // Um erro ao abrir IDB NÃO vira fallback para chave local potencialmente velha.
@@ -6972,7 +7035,8 @@ const CidadeDurableStore=(()=>{
     // Primeiro importa e valida o save antigo. Depois migra para IDB.
     // Só retira a origem legada após concluir a transação e readback da cópia.
     const loaded=core.importSave(legacy);
-    await write('current',core.exportSaveCompact(loaded.state));
+    try{await guardedCurrent(core.exportSaveCompact(loaded.state),{expected:null});}
+    catch(e){if(e.code!=='SAVE_CONFLICT')throw e;} // outra aba já migrou/gravou: reler, nunca sobrescrever
     return await read('current');
   };
   const readBackup=async()=>{
@@ -6988,7 +7052,9 @@ const CidadeDurableStore=(()=>{
   };
   return Object.freeze({
     mode:()=>hasIdb()?'indexeddb':'legacy-localstorage',
-    readCurrent,writeCurrent:raw=>write('current',raw),clearCurrent:()=>remove('current'),
+    readCurrent,
+    writeCurrent:(raw,options)=>options&&Object.hasOwn(options,'expected')?guardedCurrent(raw,options):write('current',raw),
+    clearCurrent:options=>options&&Object.hasOwn(options,'expected')?guardedCurrent(null,options):remove('current'),
     readBackup,writeBackup
   });
 })();
@@ -7004,6 +7070,7 @@ const CidadeDurableStore=(()=>{
   const SAFETY_KEY='cidade-dos-negocios-prior-save-v241';
   let state=null,viewCityId=null,selectedLot=1,tab='cidade',timer=null,speed=1,sequence=0,autosaveStatus='Backup JSON recomendado';
   let commitInFlight=false,startupBlocked=true,safetyBackupAvailable=false;
+  let durableSnapshot=null; // token exato da cópia carregada por ESTA aba
   let inspectorOpen=false; // interface somente, nunca persistido
   let restockDraft=null; // proposta de compra efêmera (não entra em saves)
   const activeSection={empresa:'dashboard',mercado:'compras',administrativo:'financas',sistema:'saves'}; // somente UI, fora do save
@@ -7554,14 +7621,23 @@ function bindBalancePlan(){
   }
   // P0-04: no IndexedDB usamos JSON compacto reversível em uma transação.
   // O estado em RAM só é ativado APÓS commit + readback da cópia durável.
-  async function persistDurable(candidate){
+  async function persistDurable(candidate,{backup=false}={}){
     if(!candidate)return false;
-    if(CidadeDurableStore.mode()==='legacy-localstorage')return persistLocal(candidate);
     try{
-      await CidadeDurableStore.writeCurrent(Core.exportSaveCompact(candidate));
-      autosaveStatus='Cópia local verificada no IndexedDB; mantenha backup JSON externo.';
+      const raw=CidadeDurableStore.mode()==='legacy-localstorage'?
+        Core.exportSave(candidate):Core.exportSaveCompact(candidate);
+      await CidadeDurableStore.writeCurrent(raw,{expected:durableSnapshot,
+        ...(backup&&state?{backupRaw:Core.exportSaveCompact(state)}:{})});
+      durableSnapshot=raw;
+      if(backup&&state)safetyBackupAvailable=true;
+      autosaveStatus='Cópia local verificada no '+CidadeDurableStore.mode()+'; mantenha backup JSON externo.';
       return true;
     }catch(error){
+      if(error.code==='SAVE_CONFLICT'){
+        startupBlocked=true;document.body.dataset.storageReady='conflict';resetTimer();
+        autosaveStatus='Conflito de gravação entre abas. '+error.message;
+        notify(autosaveStatus,true);return false;
+      }
       autosaveStatus='Salvamento local indisponível ('+error.message+'). Operação NÃO confirmada; a carreira anterior foi mantida. Exporte backup JSON e verifique o armazenamento antes de continuar.';
       notify(autosaveStatus,true);return false;
     }finally{
@@ -9403,9 +9479,8 @@ function bindBalancePlan(){
     document.body.dataset.storageBusy='true';
     try{
       const incoming=Core.importSave(await file.text());
-      if(!await backupCurrent())return;
-      if(!await persistDurable(incoming.state)){
-        notify('Importação não concluída: o novo save não pôde ser armazenado. A carreira anterior foi preservada.',true);
+      if(!await persistDurable(incoming.state,{backup:true})){
+        if(!startupBlocked)notify('Importação não concluída: o novo save não pôde ser armazenado. A carreira anterior foi preservada.',true);
         return;
       }
       resetTimer();state=incoming.state;
@@ -9689,11 +9764,9 @@ function bindBalancePlan(){
       let incoming;
       try{incoming=Core.importSave(raw);}catch(error){notify('Backup anterior inválido: '+error.message,true);return;}
       if(!confirm('Restaurar carreira anterior? A atual será preservada como cópia de segurança.'))return;
-      if(!await backupCurrent())return;
-      if(!await persistDurable(incoming.state)){
-        // Voltar a cópia recuperável à versão anterior se a restauração falhou.
-        try{await CidadeDurableStore.writeBackup(raw);}catch(_){}
-        notify('Restauração cancelada: gravação não confirmada. A carreira atual foi preservada.',true);return;
+      if(!await persistDurable(incoming.state,{backup:true})){
+        // A transação atômica preserva current e safety na falha.
+        if(!startupBlocked)notify('Restauração cancelada: gravação não confirmada. A carreira atual foi preservada.',true);return;
       }
       resetTimer();state=incoming.state;
       restockDraft=null;viewCityId=business()?.cityId||state.player.cityId;selectedLot=1;financeQuery=null;financeScope='all';statementView='summary';
@@ -9716,9 +9789,12 @@ function bindBalancePlan(){
       commitInFlight=true;document.body.dataset.storageBusy='true';
       try{
       if(!confirm('Deseja criar outra carreira? A atual será copiada para recuperação neste navegador; exporte também JSON.'))return;
-      if(!await backupCurrent())return;
-      try{await CidadeDurableStore.clearCurrent();}
-      catch(e){notify('Não foi possível confirmar a limpeza da carreira; a atual foi mantida. '+e.message,true);return;}
+      try{await CidadeDurableStore.clearCurrent({expected:durableSnapshot,
+        ...(state?{backupRaw:Core.exportSaveCompact(state)}:{})});durableSnapshot=null;safetyBackupAvailable=!!state;}
+      catch(e){
+        if(e.code==='SAVE_CONFLICT'){startupBlocked=true;document.body.dataset.storageReady='conflict';resetTimer();}
+        notify('Limpeza não confirmada nesta aba. '+e.message,true);return;
+      }
       resetTimer();state=null;viewCityId=null;financeQuery=null;financeScope='all';statementView='summary';
       setText('price-change-feedback','Alterações de preços serão confirmadas aqui.');
       render();notify('Nova carreira: preencha os dados iniciais. Exporte um backup para preservar a carreira anterior.');
@@ -9738,7 +9814,7 @@ function bindBalancePlan(){
     comparer.value=Core.CITIES.find(c=>c.name==='Sobral').id;
     cityOptions();bind();updateOpenPreview();
     try{
-      const raw=await CidadeDurableStore.readCurrent(Core);
+      const raw=await CidadeDurableStore.readCurrent(Core);durableSnapshot=raw;
       if(raw){const loaded=Core.importSave(raw);state=loaded.state;viewCityId=business()?.cityId||state.player.cityId;autosaveStatus='Cópia local verificada no '+CidadeDurableStore.mode()+'; mantenha backup JSON externo.';}
       safetyBackupAvailable=!!(await CidadeDurableStore.readBackup());
       startupBlocked=false;

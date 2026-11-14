@@ -39,7 +39,7 @@ test('P0-04: migração importa save legado validado ANTES da transação e remo
   const part=d.split('  const readCurrent=async(core)=>{')[1]?.split('  const readBackup=async()=>{')[0];
   assert.ok(part);
   const p=part.indexOf('core.importSave(legacy)');
-  const w=part.indexOf("await write('current',core.exportSaveCompact(loaded.state))");
+  const w=part.indexOf("await guardedCurrent(core.exportSaveCompact(loaded.state),{expected:null})");
   assert.ok(p>=0&&w>p);
   assert.match(d,/if\(key==='current'\)/);
   assert.match(d,/localStorage\.removeItem\(LEGACY_KEY\)/);
@@ -51,11 +51,10 @@ test('P0-04: importação, restauração e nova carreira só são confirmadas de
   const cleared=app.split("    $('new-career-btn').addEventListener('click'")[1]?.split('  function updateOpenPreview')[0];
   assert.ok(imported&&restored&&cleared);
   for(const source of [imported,restored]){
-    assert.match(source,/if\(!await backupCurrent\(\)\)return/);
-    assert.match(source,/if\(!await persistDurable\(incoming\.state\)\)/);
-    assert.ok(source.indexOf('persistDurable(incoming.state)')<source.indexOf('state=incoming.state'));
+    assert.match(source,/if\(!await persistDurable\(incoming\.state,\{backup:true\}\)\)/);
+    assert.ok(source.indexOf('persistDurable(incoming.state,{backup:true})')<source.indexOf('state=incoming.state'));
   }
-  assert.match(cleared,/await backupCurrent\(\)/);
-  assert.match(cleared,/await CidadeDurableStore\.clearCurrent\(\)/);
-  assert.ok(cleared.indexOf('clearCurrent()')<cleared.indexOf('state=null'));
+  assert.match(cleared,/clearCurrent\(\{expected:durableSnapshot/);
+  assert.match(cleared,/backupRaw:Core\.exportSaveCompact\(state\)/);
+  assert.ok(cleared.indexOf('clearCurrent(')<cleared.indexOf('state=null'));
 });

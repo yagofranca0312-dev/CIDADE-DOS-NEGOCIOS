@@ -17,7 +17,7 @@
     "src/visual/city-scene.js": "f9918c55d2980ec638be797b0ffec9e887c1b1e0",
     "src/visual/tiangua-scene.js": "c57c4cd310ed4c712a7746bc39ebb66eba80ae3d",
     "src/visual/scenes/tiangua/lots.json": "ebaad096b4104fb44fb94d1cab334bbd35576d8f",
-    "src/ui/durable-store.part.js": "9d4e9a5798dc36c0fa49ee96903b48ead198235f",
+    "src/ui/durable-store.part.js": "565cae593440ac70bc5bbea8838f2f6e8bbc4a24",
     "package.json": "871d6501c421fcb596a9b13213a264a32d605a9e",
     "ATUALIZAR_E_JOGAR.bat": "951553775ac95983fd581d2c3733a2666f6c0c94"
   },
@@ -67,5 +67,14 @@
     "tagCreated": false,
     "mainMerged": false
   },
-  "interpretation": "CI de um patch não comprova aceite humano. A ordem atual autoriza E QA, não publicação ou homologação."
+  "interpretation": "CI de um patch não comprova aceite humano. A ordem atual autoriza E QA, não publicação ou homologação.",
+  "authorizedDebugCorrections": [
+    {
+      "path": "src/ui/durable-store.part.js",
+      "originalBlob": "9d4e9a5798dc36c0fa49ee96903b48ead198235f",
+      "correctedBlob": "565cae593440ac70bc5bbea8838f2f6e8bbc4a24",
+      "reason": "P1 LOST_UPDATE comprovado em Chrome/Edge: CAS transacional e backup atômico, sem schema/version bump",
+      "reproductionRun": "https://github.com/yagofranca0312-dev/CIDADE-DOS-NEGOCIOS/actions/runs/43622117197"
+    }
+  ]
 }

@@ -24,7 +24,9 @@ const shortHash=value=>createHash('sha256').update(value).digest('hex').slice(0,
 const testedBrowsers=[];
 const findings=[];
 const check=(ok,label)=>{assert.ok(ok,label);findings.push({check:label,status:'PASS'});};
-const jsonInfo=async page=>await page.evaluate(key=>{
+const jsonInfo=async page=>{
+ await page.waitForFunction(()=>document.body.dataset.storageBusy!=='true');
+ return page.evaluate(key=>{
   const raw=localStorage.getItem(key);
   if(!raw)return {raw:null,info:null};
   const state=CidadeCore.importSave(raw).state;
@@ -37,6 +39,7 @@ const jsonInfo=async page=>await page.evaluate(key=>{
     units:CidadeCore.businesses(state).length,version:state.schemaVersion
   }};
 },KEY);
+};
 const checkClosed=(err,where)=>err.some(x=>/pageerror/i.test(x))&&
   check(false,'Exceção JS fatal em '+where);
 

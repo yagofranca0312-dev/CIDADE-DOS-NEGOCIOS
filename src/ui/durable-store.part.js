@@ -110,6 +110,69 @@ const CidadeDurableStore=(()=>{
     if(previous!==null)await transact('readwrite',store=>store.put(previous,key));
     throw Error('Remoção não verificada no armazenamento');
   };
+  // V3.3.3: compare-and-swap do snapshot completo, na MESMA transação
+  // que grava current e sua cópia anterior. Revisão/worldId isolados não
+  // distinguem duas ramificações com a mesma revisão.
+  const conflict=()=>Object.assign(Error('Outra aba alterou a carreira. Exporte esta aba se necessário e recarregue antes de continuar.'),{code:'SAVE_CONFLICT'});
+  const atomicCurrent=async(raw,{expected,backupRaw})=>{
+    const db=await open();
+    return new Promise((resolve,reject)=>{
+      let tx,previous=null,previousBackup=null,failure=null;
+      try{
+        tx=db.transaction(TABLE,'readwrite');
+        const store=tx.objectStore(TABLE),request=store.get('current');
+        request.onsuccess=()=>{
+          previous=request.result??null;
+          if(previous!==expected){failure=conflict();tx.abort();return;}
+          const apply=()=>{
+            if(backupRaw!==undefined){if(backupRaw===null)store.delete('safety');else store.put(backupRaw,'safety');}
+            if(raw===null)store.delete('current');else store.put(raw,'current');
+          };
+          if(backupRaw!==undefined){
+            const safety=store.get('safety');
+            safety.onsuccess=()=>{previousBackup=safety.result??null;apply();};
+          }else apply();
+        };
+        tx.oncomplete=()=>resolve({previous,previousBackup});
+        tx.onabort=()=>reject(failure||tx.error||Error('Transação IndexedDB abortada'));
+        tx.onerror=()=>{};
+      }catch(e){if(tx)tx.abort();reject(e);}
+    });
+  };
+  const guardedCurrent=async(raw,options)=>{
+    if(raw!==null&&(typeof raw!=='string'||!raw))throw Error('Save vazio ou inválido');
+    if(!hasIdb()){
+      // localStorage não tem CAS transacional. Só permitir escritores sob
+      // Web Locks entre abas; sem suporte, leitura/exportação permanecem disponíveis.
+      if(typeof navigator==='undefined'||!navigator.locks?.request)
+        throw Error('Gravação segura indisponível: use navegador com IndexedDB ou Web Locks.');
+      return navigator.locks.request(DATABASE+'-current',async()=>{
+        const previous=localStorage.getItem(LEGACY_KEY),previousBackup=localStorage.getItem(LEGACY_SAFETY);
+        if(previous!==options.expected)throw conflict();
+        try{
+          if(options.backupRaw!==undefined){if(options.backupRaw===null)localStorage.removeItem(LEGACY_SAFETY);else localStorage.setItem(LEGACY_SAFETY,options.backupRaw);}
+          if(raw===null)localStorage.removeItem(LEGACY_KEY);else localStorage.setItem(LEGACY_KEY,raw);
+          if(localStorage.getItem(LEGACY_KEY)!==raw||
+             (options.backupRaw!==undefined&&localStorage.getItem(LEGACY_SAFETY)!==options.backupRaw))throw Error('Falha de leitura de retorno');
+        }catch(e){
+          if(previous===null)localStorage.removeItem(LEGACY_KEY);else localStorage.setItem(LEGACY_KEY,previous);
+          if(options.backupRaw!==undefined){if(previousBackup===null)localStorage.removeItem(LEGACY_SAFETY);else localStorage.setItem(LEGACY_SAFETY,previousBackup);}
+          throw e;
+        }
+      });
+    }
+    const saved=await atomicCurrent(raw,options);
+    let actual;
+    try{actual=await read('current');}
+    catch(e){
+      // Só reverter nossa escrita. Nunca restaurar por cima de outra aba.
+      await atomicCurrent(saved.previous,{expected:raw,backupRaw:options.backupRaw===undefined?undefined:saved.previousBackup});
+      if(await read('current')!==saved.previous)throw conflict();
+      throw Error('Leitura de retorno falhou; snapshot anterior preservado: '+errorText(e));
+    }
+    if(actual!==raw)throw conflict();
+    try{localStorage.removeItem(LEGACY_KEY);}catch(_){}
+  };
   const readCurrent=async(core)=>{
     if(!hasIdb())return read('current');
     // Um erro ao abrir IDB NÃO vira fallback para chave local potencialmente velha.
@@ -123,7 +186,8 @@ const CidadeDurableStore=(()=>{
     // Primeiro importa e valida o save antigo. Depois migra para IDB.
     // Só retira a origem legada após concluir a transação e readback da cópia.
     const loaded=core.importSave(legacy);
-    await write('current',core.exportSaveCompact(loaded.state));
+    try{await guardedCurrent(core.exportSaveCompact(loaded.state),{expected:null});}
+    catch(e){if(e.code!=='SAVE_CONFLICT')throw e;} // outra aba já migrou/gravou: reler, nunca sobrescrever
     return await read('current');
   };
   const readBackup=async()=>{
@@ -139,7 +203,9 @@ const CidadeDurableStore=(()=>{
   };
   return Object.freeze({
     mode:()=>hasIdb()?'indexeddb':'legacy-localstorage',
-    readCurrent,writeCurrent:raw=>write('current',raw),clearCurrent:()=>remove('current'),
+    readCurrent,
+    writeCurrent:(raw,options)=>options&&Object.hasOwn(options,'expected')?guardedCurrent(raw,options):write('current',raw),
+    clearCurrent:options=>options&&Object.hasOwn(options,'expected')?guardedCurrent(null,options):remove('current'),
     readBackup,writeBackup
   });
 })();

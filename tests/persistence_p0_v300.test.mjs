@@ -12,7 +12,7 @@ const take=(begin,end)=>{
   assert.ok(start>=0&&stop>start,'Trecho da UI não encontrado: '+begin);
   return app.slice(start,stop);
 };
-const persistSource=take('  function persistLocal(candidate){','  async function persistDurable(candidate){');
+const persistSource=take('  function persistLocal(candidate){','  async function persistDurable(candidate,{backup=false}={}){');
 const commitSource=take('  async function commit(type,payload={}){','  // Rotas anteriores de Finanças');
 const KEY='cidade-dos-negocios-save-v1';
 
@@ -193,14 +193,14 @@ test('V3.0 P0: erro na serialização rejeita commit, mantém estado e cópia du
 });
 
 test('V3.0 P0: importação e restauração persistem candidata antes de substituir carreira',async()=>{
-  const incoming="if(!await persistDurable(incoming.state))";
+  const incoming="if(!await persistDurable(incoming.state,{backup:true}))";
   assert.equal(app.split(incoming).length-1,2);
   const importBlock=take('  async function importFile(file){','  function launchAuto(){');
   const restoreBlock=take("    $('restore-prior-save-btn').addEventListener('click'","    $('payable-operating-unit').addEventListener");
   for(const block of [importBlock,restoreBlock]){
     const saveIndex=block.indexOf(incoming),activateIndex=block.indexOf('state=incoming.state');
     assert.ok(saveIndex>=0&&activateIndex>saveIndex,'Candidata importada só se ativa após persistência');
-    assert.ok(block.includes('if(!await backupCurrent())return;'),'Backup anterior obrigatório antes de substituir');
+    assert.ok(block.includes('persistDurable(incoming.state,{backup:true})'),'Backup anterior atômico obrigatório ao substituir');
   }
 });
 

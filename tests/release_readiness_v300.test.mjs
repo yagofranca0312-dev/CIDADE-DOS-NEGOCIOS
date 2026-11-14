@@ -45,7 +45,7 @@ test('V3.0-08: gates 01–05 permanecem parciais e 06/07 somente técnica/docume
 });
 
 test('V3.0-08: persistência com write-ahead é proteção automatizada, QA real continua aberto',()=>{
-  const save=ui.split('  async function persistDurable(candidate){')[1]?.split('  async function backupCurrent(){')[0];
+  const save=ui.split('  async function persistDurable(candidate,{backup=false}={}){')[1]?.split('  async function backupCurrent(){')[0];
   const commit=ui.split('  async function commit(type,payload={}){')[1]?.split('  // Rotas anteriores')[0];
   const durable=read('src/ui/durable-store.part.js');
   assert.ok(save&&commit,'Contrato UI de persistência durável candidata não localizado');
